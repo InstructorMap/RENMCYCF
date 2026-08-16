@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0a1128">
     <meta name="google" content="notranslate">
     <meta name="description" content="Registro Nacional de Matriculados en Criminalística y Ciencias Forenses. Valide profesionales, obtenga su matrícula oficial con respaldo blockchain.">
@@ -34,6 +34,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Leaflet CSS para el mapa interactivo -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
@@ -81,7 +84,6 @@
         .hero-bg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; filter: brightness(0.6) saturate(1.2); }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10,17,40,0.9) 0%, rgba(10,17,40,0.55) 50%, rgba(10,17,40,0.85) 100%); }
         
-        /* LOGO IMPONENTE Y ESCUDO FLOTANTE */
         .logo-arcada { 
             background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%); 
             border-radius: 120px 120px 16px 16px; border: 3px solid #cbd5e1; border-bottom: 8px solid #d4af37; 
@@ -103,14 +105,6 @@
         .form-input:focus { border-color: #1e3a8a; box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.08); }
         .form-label { display: block; font-size: 0.7rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
         
-        .file-upload-box {
-            border: 2px dashed #cbd5e1; border-radius: 14px; padding: 24px 16px; text-align: center;
-            background: #f8fafc; cursor: pointer; transition: all 0.3s; min-height: 120px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .file-upload-box:hover { border-color: #1e3a8a; background: #eff6ff; transform: translateY(-2px); }
-        .file-upload-box input[type="file"] { display: none; }
-
         .cat-card { transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1.2); border-top: 4px solid transparent; cursor: default; }
         .cat-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); }
         .cat-a1 { border-top-color: #d4af37; }
@@ -130,54 +124,68 @@
         }
         .mobile-overlay.open { opacity: 1; pointer-events: all; }
 
-        .whatsapp-float {
-            position: fixed; bottom: 30px; right: 30px; z-index: 999;
-            width: 60px; height: 60px; background: #25D366; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-            transition: all 0.3s; cursor: pointer;
-            animation: pulse-wsp 2s infinite;
-        }
-        @keyframes pulse-wsp {
-            0%, 100% { box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4); }
-            50% { box-shadow: 0 8px 35px rgba(37, 211, 102, 0.7); }
-        }
-        .whatsapp-float:hover { transform: scale(1.1); }
-
-        .wallet-float {
-            position: fixed; bottom: 105px; right: 30px; z-index: 999;
-            width: 50px; height: 50px; background: #0a1128; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 8px 25px rgba(10, 17, 40, 0.4); border: 2px solid #d4af37;
-            transition: all 0.3s; cursor: pointer;
-        }
-        .wallet-float:hover { transform: scale(1.1); }
-
         .stat-number { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
 
-        .sugerencias-box {
-            position: absolute; top: 100%; left: 0; right: 0; background: white;
-            border: 1px solid #e2e8f0; border-radius: 0 0 12px 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 50;
-            max-height: 200px; overflow-y: auto; display: none;
+        /* Estilos personalizados para Leaflet popups oscuros con perfil/CV resumido */
+        .leaflet-popup-content-wrapper {
+            background-color: #1e293b;
+            color: #f8fafc;
+            border-radius: 0.5rem;
+            border: 1px solid #334155;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        .sugerencias-box .sug-item {
-            padding: 10px 16px; cursor: pointer; font-size: 0.85rem; border-bottom: 1px solid #f1f5f9;
+        .leaflet-popup-tip {
+            background-color: #1e293b;
         }
-        .sugerencias-box .sug-item:hover { background: #eff6ff; }
+
+        /* Estilos para estructuración modular por vistas/secciones independientes */
+        .page-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .page-section.active-section {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Animación de transición entre secciones */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
         
-        .file-list-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 8px 12px; background: #f1f5f9; border-radius: 8px; margin-top: 4px;
-            font-size: 0.75rem;
+        /* Contenedor del marquee */
+        .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 30s linear infinite;
         }
-        
-        /* Estilos Biblioteca y Tesis */
-        .book-card { transition: all 0.3s; border: 1px solid #e2e8f0; background: #fff; border-radius: 12px; overflow: hidden; height: 100%; display: flex; flex-direction: column; }
-        .book-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-color: #cbd5e1; }
-        .book-cover { width: 100%; aspect-ratio: 3/4; object-fit: cover; background: #f1f5f9; }
-        .tesis-card { background: white; border-left: 4px solid var(--gold); border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.3s; }
-        .tesis-card:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.1); transform: translateX(5px); }
+
+        /* Pausa el movimiento al pasar el cursor por encima para mayor comodidad */
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+
+        /* Botones Flotantes Desplegables Integrados */
+        .main-float {
+            position: fixed; bottom: 30px; right: 30px; background-color: #0a1128; border: 2px solid #d4af37; color: #d4af37; border-radius: 50px; padding: 15px; box-shadow: 2px 2px 10px rgba(0,0,0,0.4); z-index: 110; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;
+        }
+        .main-float:hover { transform: scale(1.05); }
+
+        .float-option {
+            position: fixed; right: 30px; bottom: 30px; border-radius: 50px; padding: 12px; box-shadow: 2px 2px 10px rgba(0,0,0,0.4); z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .floating-container.active .option-whatsapp { bottom: 100px; opacity: 1; pointer-events: auto; background-color: #25d366; color: #fff; }
+        .floating-container.active .option-email    { bottom: 165px; opacity: 1; pointer-events: auto; background-color: #0284c7; color: #fff; }
+        .floating-container.active .option-facebook { bottom: 230px; opacity: 1; pointer-events: auto; background-color: #1877f2; color: #fff; }
+        .floating-container.active .option-instagram{ bottom: 295px; opacity: 1; pointer-events: auto; background-color: #e1306c; color: #fff; }
+        .floating-container.active .option-wallet   { bottom: 360px; opacity: 1; pointer-events: auto; background-color: #0a1128; border: 2px solid #d4af37; color: #d4af37; }
+
+        .floating-container.active .main-icon {
+            transform: rotate(45deg);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans">
@@ -191,10 +199,9 @@
     <!-- NAVBAR -->
     <nav class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-sm h-24 transition-all" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
-            <div class="flex items-center gap-4 cursor-pointer h-full" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-                <!-- LOGO IMPONENTE FLOTANTE -->
+            <div class="flex items-center gap-4 cursor-pointer h-full" onclick="switchSection('seccion-inicio')">
                 <div class="logo-arcada w-20 h-24 md:w-28 md:h-36 shrink-0 relative transform translate-y-4 md:translate-y-8 z-50" id="logo-container">
-                    <img id="logo-img" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Logo" style="display:none;">
+                    <img id="logo-img" src="..." alt="Logo" class="hidden">
                     <i data-lucide="fingerprint" class="w-10 h-10 md:w-16 md:h-16 text-forenseNavy relative z-10" id="logo-icon"></i>
                 </div>
                 <div class="leading-tight pt-2">
@@ -204,15 +211,13 @@
             </div>
             
             <div class="hidden md:flex items-center gap-6 text-[11px] font-bold text-forenseNavy uppercase tracking-[0.15em]">
-                <a href="#verificacion" class="hover:text-forenseGold transition-colors flex items-center gap-1"><i data-lucide="search" class="w-4 h-4"></i> Verificar</a>
-                <a href="#categorias" class="hover:text-forenseGold transition-colors">Categorías</a>
-                <a href="#biblioteca" class="hover:text-forenseGold transition-colors">Biblioteca</a>
-                
-                <!-- NUEVO BOTÓN: CAMPUS VIRTUAL -->
-                <a href="campus.renmcycf.html" class="hover:text-forenseGold transition-colors flex items-center gap-1"><i data-lucide="monitor-play" class="w-4 h-4"></i> Campus</a>
-                
-                <a href="wallet.renmcycf.html" class="hover:text-forenseGold transition-colors flex items-center gap-1"><i data-lucide="wallet" class="w-4 h-4"></i> Wallet</a>
-                <a href="#inscripcion" class="bg-forenseGold text-forenseNavy hover:bg-yellow-500 transition-all px-6 py-3 rounded-lg shadow-md font-black">Iniciar Trámite</a>
+                <button onclick="switchSection('seccion-inicio')" class="nav-btn hover:text-forenseGold transition-colors flex items-center gap-1 text-forenseGold" data-target="seccion-inicio"><i data-lucide="home" class="w-4 h-4"></i> Inicio</button>
+                <button onclick="switchSection('seccion-verificacion')" class="nav-btn hover:text-forenseGold transition-colors flex items-center gap-1" data-target="seccion-verificacion"><i data-lucide="search" class="w-4 h-4"></i> Verificación</button>
+                <button onclick="switchSection('seccion-mapa')" class="nav-btn hover:text-forenseGold transition-colors flex items-center gap-1" data-target="seccion-mapa"><i data-lucide="map-pin" class="w-4 h-4"></i> Mapa de Profesionales</button>
+                <button onclick="switchSection('seccion-categorias')" class="nav-btn hover:text-forenseGold transition-colors flex items-center gap-1" data-target="seccion-categorias"><i data-lucide="layers" class="w-4 h-4"></i> Categorías</button>
+                <a href="views/campus.renmcycf.html" class="hover:text-forenseGold transition-colors flex items-center gap-1"><i data-lucide="monitor-play" class="w-4 h-4"></i> Campus</a>
+                <a href="views/wallet.renmcycf.html" class="hover:text-forenseGold transition-colors flex items-center gap-1"><i data-lucide="wallet" class="w-4 h-4"></i> Wallet</a>
+                <button onclick="switchSection('seccion-inscripcion')" class="bg-forenseGold text-forenseNavy hover:bg-yellow-500 transition-all px-6 py-3 rounded-lg shadow-md font-black nav-btn" data-target="seccion-inscripcion">Iniciar Trámite</button>
             </div>
 
             <button class="md:hidden text-forenseNavy p-2" onclick="toggleMobileMenu()" aria-label="Menú">
@@ -224,767 +229,476 @@
     <!-- Mobile Menu -->
     <div class="mobile-overlay" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
     <div class="mobile-menu" id="mobile-menu">
-        <button class="absolute top-6 right-6 text-white" onclick="toggleMobileMenu()"><i data-lucide="x" class="w-8 h-8"></i></button>
-        <a href="#verificacion" class="text-white text-lg font-bold uppercase tracking-widest hover:text-forenseGold transition-colors flex items-center gap-2" onclick="toggleMobileMenu()"><i data-lucide="search" class="w-5 h-5"></i> Verificar</a>
-        <a href="#categorias" class="text-white text-lg font-bold uppercase tracking-widest hover:text-forenseGold transition-colors" onclick="toggleMobileMenu()">Categorías</a>
-        <a href="#biblioteca" class="text-white text-lg font-bold uppercase tracking-widest hover:text-forenseGold transition-colors" onclick="toggleMobileMenu()">Biblioteca</a>
-        <a href="#tesis" class="text-white text-lg font-bold uppercase tracking-widest hover:text-forenseGold transition-colors" onclick="toggleMobileMenu()">Tesis y Publicaciones</a>
-        
-        <!-- NUEVO BOTÓN MOBILE: CAMPUS VIRTUAL -->
-        <a href="campus.renmcycf.html" class="text-white text-lg font-bold uppercase tracking-widest hover:text-forenseGold transition-colors flex items-center gap-2" onclick="toggleMobileMenu()"><i data-lucide="monitor-play" class="w-5 h-5"></i> Campus Virtual</a>
-        
-        <a href="#inscripcion" class="bg-forenseGold text-forenseNavy text-center py-4 rounded-xl font-black uppercase tracking-widest mt-4" onclick="toggleMobileMenu()">Iniciar Trámite</a>
-        <a href="wallet.renmcycf.html" class="bg-forenseBlue text-white text-center py-4 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2"><i data-lucide="wallet" class="w-5 h-5"></i> Mi Wallet</a>
+        <button class="absolute top-6 right-6 text-white" onclick="toggleMobileMenu()" aria-label="Cerrar menú"><i data-lucide="x" class="w-8 h-8"></i></button>
+        <button onclick="switchSection('seccion-inicio'); toggleMobileMenu();" class="text-white text-lg font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-2"><i data-lucide="home" class="w-5 h-5"></i> Inicio</button>
+        <button onclick="switchSection('seccion-verificacion'); toggleMobileMenu();" class="text-white text-lg font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-2"><i data-lucide="search" class="w-5 h-5"></i> Verificación</button>
+        <button onclick="switchSection('seccion-mapa'); toggleMobileMenu();" class="text-white text-lg font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-2"><i data-lucide="map-pin" class="w-5 h-5"></i> Mapa de Profesionales</button>
+        <button onclick="switchSection('seccion-categorias'); toggleMobileMenu();" class="text-white text-lg font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-2"><i data-lucide="layers" class="w-5 h-5"></i> Categorías</button>
+        <a href="views/campus.renmcycf.html" class="text-white text-lg font-bold uppercase tracking-widest hover:text-forenseGold transition-colors flex items-center gap-2" onclick="toggleMobileMenu()"><i data-lucide="monitor-play" class="w-5 h-5"></i> Campus Virtual</a>
+        <button onclick="switchSection('seccion-inscripcion'); toggleMobileMenu();" class="bg-forenseGold text-forenseNavy text-center py-4 rounded-xl font-black uppercase tracking-widest mt-4">Iniciar Trámite</button>
+        <a href="views/wallet.renmcycf.html" class="bg-forenseBlue text-white text-center py-4 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2"><i data-lucide="wallet" class="w-5 h-5"></i> Mi Wallet</a>
         <div class="mt-auto pt-8 border-t border-white/10"><p class="text-white/40 text-xs text-center">Tecnología ASARI SaaS © 2026</p></div>
     </div>
 
-    <!-- HERO SECTION -->
-    <header class="hero-pattern pt-24 pb-24 md:pt-32 md:pb-36 px-4 relative flex flex-col items-center justify-center text-center border-b-4 border-forenseGold overflow-hidden">
-        <img id="hero-bg-image" class="hero-bg-img" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="" style="display:none;">
-        <div class="hero-overlay"></div>
+    <!-- CONTENEDOR DE SECCIONES INDEPENDIENTES (ESTRUCTURA MODULAR) -->
+    <main class="flex-grow">
 
-        <div class="absolute inset-0 pointer-events-none">
-            <div class="absolute top-10 left-10 w-2 h-2 bg-forenseGold/40 rounded-full animate-float"></div>
-            <div class="absolute top-20 right-20 w-3 h-3 bg-forenseBlue/50 rounded-full animate-float" style="animation-delay: 1s;"></div>
-            <div class="absolute bottom-20 left-1/4 w-2 h-2 bg-forenseGold/30 rounded-full animate-float" style="animation-delay: 2s;"></div>
-        </div>
+        <!-- 1. SECCIÓN: INICIO (HERO + BENEFICIOS) -->
+        <section id="seccion-inicio" class="page-section active-section">
+            <header class="hero-pattern pt-24 pb-24 md:pt-32 md:pb-36 px-4 relative flex flex-col items-center justify-center text-center border-b-4 border-forenseGold overflow-hidden">
+                <img id="hero-bg-image" class="hero-bg-img hidden" src="..." alt="">
+                <div class="hero-overlay"></div>
 
-        <div class="relative max-w-5xl mx-auto z-10" data-aos="fade-up" data-aos-duration="800">
-            <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 text-forenseGold text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-8 border border-forenseGold/30 backdrop-blur-sm animate-glow" id="hero-badge">
-                <i data-lucide="shield-check" class="w-4 h-4"></i> 
-                <span id="hero-badge-text">Inscripciones Abiertas · Ciclo 2026</span>
-            </div>
-            
-            <h1 class="font-title text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 text-white leading-[1.1] uppercase drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]" id="hero-title">
-                Respaldo Legal para tu <br><span class="text-forenseGold">Práctica Forense</span>
-            </h1>
-            
-            <p class="text-slate-100/90 mb-8 text-sm md:text-lg max-w-3xl mx-auto font-light leading-relaxed tracking-wide drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)]" id="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
-                El único padrón nacional centralizado con tecnología <strong class="text-forenseGold font-semibold">Blockchain</strong>.
-            </p>
+                <div class="absolute inset-0 pointer-events-none">
+                    <div class="absolute top-10 left-10 w-2 h-2 bg-forenseGold/40 rounded-full animate-float"></div>      
+                    <div class="absolute bottom-20 left-1/4 w-2 h-2 bg-forenseGold/30 rounded-full animate-float" style="animation-delay: 2s;"></div>
+                </div>
 
-            <div class="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="400">
-                <a href="#inscripcion" class="inline-block bg-forenseGold text-forenseNavy font-black uppercase tracking-[0.15em] text-sm md:text-base px-8 py-4 rounded-xl shadow-[0_0_30px_rgba(212,175,55,0.5)] hover:scale-105 transition-all duration-300" id="hero-cta-primary">Comenzar Inscripción</a>
-                <a href="#verificacion" class="inline-block bg-white/15 backdrop-blur-sm text-white border border-white/25 font-bold uppercase tracking-[0.15em] text-sm md:text-base px-8 py-4 rounded-xl hover:bg-white/25 transition-all duration-300" id="hero-cta-secondary">Verificar Profesional</a>
-            </div>
-
-            <div class="flex flex-wrap justify-center gap-6 mt-10 text-white/60 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em]" data-aos="fade-up" data-aos-delay="600">
-                <span class="flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> Blockchain</span>
-                <span class="flex items-center gap-1"><i data-lucide="shield" class="w-3 h-3"></i> Criptografía</span>
-                <span class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> Auditoría Permanente</span>
-                <span class="flex items-center gap-1"><i data-lucide="globe" class="w-3 h-3"></i> Alcance Nacional</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- SECCIÓN: BUSCADOR -->
-    <section id="verificacion" class="py-16 md:py-20 bg-white border-b border-slate-100">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="text-center mb-10" data-aos="fade-up">
-                <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase tracking-tight">
-                    <i data-lucide="search" class="inline w-6 h-6 text-forenseGold mr-2"></i>Verificación Pública
-                </h2>
-                <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-                <p class="text-slate-500 text-sm">Consulte si un profesional se encuentra matriculado y habilitado.</p>
-            </div>
-
-            <div class="bg-slate-50 rounded-2xl p-6 md:p-8 shadow-lg border border-slate-200" data-aos="fade-up" data-aos-delay="200">
-                <div class="flex flex-col md:flex-row gap-4">
-                    <div class="flex-1">
-                        <label class="form-label">Documento (DNI) o Matrícula</label>
-                        <input type="text" id="search-input" class="form-input text-lg font-mono" placeholder="Ej: 35123456 o MAT-1001/26" onkeydown="if(event.key==='Enter') buscarProfesional()">
+                <div class="relative max-w-5xl mx-auto z-10" data-aos="fade-up" data-aos-duration="800">
+                    <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 text-forenseGold text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-8 border border-forenseGold/30 backdrop-blur-sm animate-glow" id="hero-badge">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i> 
+                        <span id="hero-badge-text">Inscripciones Abiertas · Ciclo 2026</span>
                     </div>
-                    <div class="flex items-end">
-                        <button onclick="buscarProfesional()" class="w-full md:w-auto bg-forenseNavy hover:bg-slate-800 text-forenseGold font-black uppercase tracking-[0.15em] text-sm px-8 py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg">
-                            <i data-lucide="search" class="w-5 h-5"></i> Buscar
-                        </button>
-                    </div>
-                </div>
-                <div id="search-results" class="mt-6 hidden"></div>
-                <div id="search-empty" class="mt-6 hidden">
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-center">
-                        <i data-lucide="alert-triangle" class="w-10 h-10 text-yellow-500 mx-auto mb-3"></i>
-                        <p class="text-yellow-800 font-bold text-sm">No se encontraron registros.</p>
-                    </div>
-                </div>
-                <div id="search-loading" class="mt-6 hidden text-center py-8">
-                    <div class="w-10 h-10 border-4 border-slate-200 border-t-forenseNavy rounded-full animate-spin mx-auto mb-3"></div>
-                    <p class="text-slate-500 text-sm font-bold uppercase tracking-widest">Consultando padrón...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SECCIÓN: ESTADÍSTICAS + MAPA -->
-    <section id="estadisticas" class="py-16 md:py-20 bg-forenseNavy text-white relative overflow-hidden">
-        <div class="absolute inset-0 opacity-5"><div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(circle, #d4af37 1px, transparent 1px); background-size: 30px 30px;"></div></div>
-        <div class="max-w-7xl mx-auto px-4 relative z-10">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="font-title text-2xl md:text-3xl font-black mb-3 uppercase tracking-tight text-white"><i data-lucide="bar-chart-3" class="inline w-6 h-6 text-forenseGold mr-2"></i>El Registro en Números</h2>
-                <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16" data-aos="fade-up" data-aos-delay="200">
-                <div class="text-center p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm"><div class="text-4xl md:text-5xl font-black text-forenseGold stat-number" id="counter-total">0</div><p class="text-xs md:text-sm text-slate-300 mt-2 uppercase tracking-widest font-bold">Matriculados</p></div>
-                <div class="text-center p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm"><div class="text-4xl md:text-5xl font-black text-white stat-number" id="counter-a1">0</div><p class="text-xs md:text-sm text-slate-300 mt-2 uppercase tracking-widest font-bold">Categoría A1</p></div>
-                <div class="text-center p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm"><div class="text-4xl md:text-5xl font-black text-white stat-number" id="counter-a2">0</div><p class="text-xs md:text-sm text-slate-300 mt-2 uppercase tracking-widest font-bold">Categoría A2</p></div>
-                <div class="text-center p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm"><div class="text-4xl md:text-5xl font-black text-white stat-number" id="counter-a3">0</div><p class="text-xs md:text-sm text-slate-300 mt-2 uppercase tracking-widest font-bold">Categoría A3</p></div>
-            </div>
-
-            <div class="bg-white/5 rounded-2xl p-6 md:p-10 border border-white/10" data-aos="fade-up" data-aos-delay="400">
-                <h3 class="text-center text-lg font-black text-forenseGold uppercase tracking-[0.2em] mb-6"><i data-lucide="map-pin" class="inline w-5 h-5 mr-1"></i> Presencia Nacional</h3>
-                <div class="relative w-full max-w-sm mx-auto" style="aspect-ratio: 9/14;">
-                    <svg viewBox="0 0 300 470" class="w-full h-full">
-                        <defs><linearGradient id="mapGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#d4af37;stop-opacity:0.15"/><stop offset="100%" style="stop-color:#d4af37;stop-opacity:0.05"/></linearGradient></defs>
-                        <path d="M140,30 C125,35 110,55 100,80 C90,105 85,130 80,155 C75,180 70,200 65,220 C60,240 55,260 60,285 C65,310 75,330 95,350 C115,370 135,385 150,400 C165,415 170,430 165,445 C160,455 150,460 145,460 C140,460 135,455 130,445 C125,435 120,420 115,410 C110,400 105,395 100,395 C95,395 90,400 88,410 C86,420 90,435 95,440 C100,445 108,448 115,445 C122,442 128,435 132,425 L138,410 C142,400 148,395 155,395 C162,395 170,400 178,410 C186,420 192,430 195,440 C198,450 195,458 188,460 C180,462 170,458 160,450 C150,442 142,438 135,440 C128,442 125,448 128,455 C131,462 140,465 150,462 C160,459 168,452 175,440 C182,428 188,415 195,405 C202,395 210,388 218,385 C226,382 232,385 235,395 C238,405 235,418 228,428 C221,438 212,445 205,448 C198,451 195,450 198,445 C201,440 208,435 215,432 C222,429 228,430 230,435 C232,440 230,448 225,452 C220,456 212,458 208,455 L200,448 C195,442 192,435 195,428 C198,421 205,418 212,420 C219,422 225,428 228,438 C231,448 230,458 225,462 C220,466 212,465 205,460 C198,455 192,445 188,435 C184,425 182,415 185,405 C188,395 195,388 205,385 C215,382 225,385 232,395 C239,405 242,418 240,430 C238,442 232,450 225,455 C218,460 210,460 205,455 C200,450 198,442 200,435 C202,428 208,425 215,428" fill="url(#mapGrad)" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="145" cy="140" r="6" fill="#d4af37"><animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite"/></circle>
-                        <circle cx="110" cy="100" r="5" fill="#d4af37"><animate attributeName="r" values="4;6;4" dur="2.3s" repeatCount="indefinite"/></circle>
-                        <circle cx="80" cy="80" r="4" fill="#d4af37"><animate attributeName="r" values="3;5;3" dur="1.8s" repeatCount="indefinite"/></circle>
-                        <circle cx="155" cy="130" r="5" fill="#d4af37"><animate attributeName="r" values="4;6;4" dur="2.5s" repeatCount="indefinite"/></circle>
-                        <circle cx="120" cy="110" r="4.5" fill="#d4af37"><animate attributeName="r" values="3.5;5.5;3.5" dur="2.1s" repeatCount="indefinite"/></circle>
-                        <circle cx="160" cy="220" r="5" fill="#d4af37"><animate attributeName="r" values="4;6;4" dur="2.7s" repeatCount="indefinite"/></circle>
-                        <circle cx="170" cy="320" r="5.5" fill="#d4af37"><animate attributeName="r" values="4.5;6.5;4.5" dur="2.2s" repeatCount="indefinite"/></circle>
-                        <circle cx="145" cy="390" r="4" fill="#d4af37"><animate attributeName="r" values="3;5;3" dur="1.9s" repeatCount="indefinite"/></circle>
-                    </svg>
-                </div>
-                <p class="text-center text-[10px] text-slate-400 mt-4 uppercase tracking-[0.2em]">Distribución geográfica de profesionales activos</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- SECCIÓN: CATEGORÍAS -->
-    <section id="categorias" class="py-16 md:py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="text-center mb-14" data-aos="fade-up">
-                <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase tracking-tight"><i data-lucide="layers" class="inline w-6 h-6 text-forenseGold mr-2"></i>Estructura del Padrón</h2>
-                <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="cat-card cat-a1 bg-gradient-to-b from-yellow-50 to-white rounded-2xl p-8 border border-slate-200 shadow-lg" data-aos="fade-up" data-aos-delay="0">
-                    <div class="w-16 h-16 bg-gradient-to-br from-forenseGold to-yellow-500 text-white rounded-full flex items-center justify-center mb-6 shadow-lg"><span class="font-black text-2xl">A1</span></div>
-                    <h3 class="font-bold text-xl text-forenseNavy mb-3">Licenciaturas y Títulos de Grado</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed" id="cat-a1-desc">Se corresponde a Profesionales con Título de grado en carreras afines otorgado por Universidades Públicas o Privadas (Licenciaturas en Criminalística, Criminología, Psicología entre otras).</p>
-                </div>
-                <div class="cat-card cat-a2 bg-gradient-to-b from-blue-50 to-white rounded-2xl p-8 border border-slate-200 shadow-lg" data-aos="fade-up" data-aos-delay="150">
-                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center mb-6 shadow-lg"><span class="font-black text-2xl">A2</span></div>
-                    <h3 class="font-bold text-xl text-forenseNavy mb-3">Técnicos Superiores y Terciarios</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed" id="cat-a2-desc">Se corresponde a Profesionales con Título de pregrado de carreras afines otorgado por Universidades e Institutos Terciarios Públicos o Privados (Técnicos y Técnicos Superiores en las distintas disciplinas).</p>
-                </div>
-                <div class="cat-card cat-a3 bg-gradient-to-b from-emerald-50 to-white rounded-2xl p-8 border border-slate-200 shadow-lg" data-aos="fade-up" data-aos-delay="300">
-                    <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-full flex items-center justify-center mb-6 shadow-lg"><span class="font-black text-2xl">A3</span></div>
-                    <h3 class="font-bold text-xl text-forenseNavy mb-3">Auxiliares y Diplomaturas</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed" id="cat-a3-desc">Se corresponde a personas con certificaciones de Auxiliares y/o Diplomados sin título de grado o pregrado otorgado por Universidades e Institutos Públicos o Privados.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SECCIÓN: BENEFICIOS Y URGENCIA -->
-    <section class="py-16 md:py-20 bg-slate-50 border-y border-slate-200">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase tracking-tight"><i data-lucide="star" class="inline w-6 h-6 text-forenseGold mr-2"></i>¿Por Qué Matricularse?</h2>
-                <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                <div class="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 text-center" data-aos="fade-up"><div class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-5"><i data-lucide="scale" class="w-7 h-7"></i></div><h3 class="font-bold text-lg text-forenseNavy mb-3">Validez Jurídica</h3><p class="text-sm text-slate-500">Su matrícula es reconocida como documento habilitante en procesos judiciales en todo el territorio nacional.</p></div>
-                <div class="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 text-center" data-aos="fade-up" data-aos-delay="150"><div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-5"><i data-lucide="fingerprint" class="w-7 h-7"></i></div><h3 class="font-bold text-lg text-forenseNavy mb-3">Credencial Digital</h3><p class="text-sm text-slate-500">Acceda a su Wallet oficial con QR verificable y respaldo blockchain.</p></div>
-                <div class="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 text-center" data-aos="fade-up" data-aos-delay="300"><div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-5"><i data-lucide="trending-up" class="w-7 h-7"></i></div><h3 class="font-bold text-lg text-forenseNavy mb-3">Diferenciación Profesional</h3><p class="text-sm text-slate-500">Destaque frente a otros peritos con un estándar cada vez más solicitado.</p></div>
-            </div>
-            <div class="bg-gradient-to-r from-forenseNavy to-forenseBlue rounded-2xl p-8 md:p-10 text-center text-white" data-aos="fade-up">
-                <div class="inline-flex items-center gap-2 bg-forenseGold/20 text-forenseGold px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-[0.2em] mb-4 border border-forenseGold/30"><i data-lucide="clock" class="w-4 h-4"></i> Atención</div>
-                <h3 class="text-xl md:text-2xl font-black mb-3 font-title uppercase" id="urgencia-titulo">El plazo de inscripción para el ciclo 2026 cierra en diciembre</h3>
-                <p class="text-slate-300 text-sm max-w-2xl mx-auto mb-6" id="urgencia-texto">Las matrículas se renuevan anualmente.</p>
-                <a href="#inscripcion" class="inline-block bg-forenseGold text-forenseNavy font-black uppercase tracking-[0.15em] text-sm px-8 py-4 rounded-xl hover:scale-105 transition-transform shadow-[0_0_25px_rgba(212,175,55,0.5)]">Inscribirse Ahora</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- NUEVO: SECCIÓN BIBLIOTECA FORENSE -->
-    <section id="biblioteca" class="py-16 md:py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase tracking-tight">
-                    <i data-lucide="library" class="inline w-6 h-6 text-forenseGold mr-2"></i>Biblioteca Virtual
-                </h2>
-                <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-                <p class="text-slate-500 text-sm max-w-2xl mx-auto">Manuales, protocolos y literatura de ciencias forenses. Contenido exclusivo disponible para profesionales matriculados.</p>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6" id="biblioteca-container">
-                <!-- Los libros se inyectan por JS -->
-                <div class="col-span-full text-center py-8 text-slate-400">
-                    <div class="w-8 h-8 border-4 border-slate-200 border-t-forenseNavy rounded-full animate-spin mx-auto mb-3"></div>
-                    Cargando catálogo...
-                </div>
-            </div>
-            
-            <div class="mt-10 text-center" data-aos="fade-up">
-                <a href="wallet.renmcycf.html" class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-forenseNavy font-bold uppercase tracking-wider text-xs px-6 py-3 rounded-xl transition-colors border border-slate-200">
-                    <i data-lucide="unlock" class="w-4 h-4"></i> Ingrese a la Wallet para descargar
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- NUEVO: SECCIÓN TESIS Y PUBLICACIONES -->
-    <section id="tesis" class="py-16 md:py-20 bg-slate-50 border-t border-slate-200">
-        <div class="max-w-5xl mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase tracking-tight">
-                    <i data-lucide="newspaper" class="inline w-6 h-6 text-forenseGold mr-2"></i>Investigación y Tesis
-                </h2>
-                <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-                <p class="text-slate-500 text-sm max-w-2xl mx-auto">Trabajos de investigación, casuística y tesis aprobadas y publicadas por nuestros peritos matriculados.</p>
-            </div>
-
-            <div class="space-y-6" id="tesis-container">
-                <!-- Las tesis se inyectan por JS -->
-                <div class="text-center py-8 text-slate-400">
-                    Cargando publicaciones recientes...
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SECCIÓN: MARCO LEGAL -->
-    <section id="marco-legal" class="py-16 md:py-20 bg-white border-t border-slate-200">
-        <div class="max-w-5xl mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up"><h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase tracking-tight"><i data-lucide="book-open" class="inline w-6 h-6 text-forenseGold mr-2"></i>Marco Legal y Normativo</h2><div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div></div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200" data-aos="fade-right"><div class="flex items-start gap-3 mb-4"><div class="w-10 h-10 bg-forenseNavy text-forenseGold rounded-lg flex items-center justify-center shrink-0"><i data-lucide="scroll-text" class="w-5 h-5"></i></div><div><h3 class="font-bold text-forenseNavy text-sm uppercase tracking-wider">Código Procesal Penal Federal</h3><p class="text-xs text-slate-500 mt-1">Ley 27.063. Establece la intervención de peritos y requisitos de habilitación profesional.</p></div></div></div>
-                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200" data-aos="fade-left"><div class="flex items-start gap-3 mb-4"><div class="w-10 h-10 bg-forenseNavy text-forenseGold rounded-lg flex items-center justify-center shrink-0"><i data-lucide="building-2" class="w-5 h-5"></i></div><div><h3 class="font-bold text-forenseNavy text-sm uppercase tracking-wider">Ley de Educación Superior</h3><p class="text-xs text-slate-500 mt-1">Ley 24.521. Regula titulaciones de grado y posgrado, base para categorización A1, A2 y A3.</p></div></div></div>
-                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200" data-aos="fade-right" data-aos-delay="200"><div class="flex items-start gap-3 mb-4"><div class="w-10 h-10 bg-forenseNavy text-forenseGold rounded-lg flex items-center justify-center shrink-0"><i data-lucide="file-signature" class="w-5 h-5"></i></div><div><h3 class="font-bold text-forenseNavy text-sm uppercase tracking-wider">Resolución Ministerial</h3><p class="text-xs text-slate-500 mt-1">Disposiciones del Ministerio de Justicia que reconocen al RENMCYCF como entidad de registro.</p></div></div></div>
-                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200" data-aos="fade-left" data-aos-delay="200"><div class="flex items-start gap-3 mb-4"><div class="w-10 h-10 bg-forenseNavy text-forenseGold rounded-lg flex items-center justify-center shrink-0"><i data-lucide="shield-check" class="w-5 h-5"></i></div><div><h3 class="font-bold text-forenseNavy text-sm uppercase tracking-wider">Firma Digital y Blockchain</h3><p class="text-xs text-slate-500 mt-1">Ley 25.506. El registro utiliza blockchain para garantizar la inmutabilidad de cada credencial.</p></div></div></div>
-            </div>
-            <div class="mt-8 text-center" data-aos="fade-up"><p class="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">La adulteración de credenciales constituye delito penal · Art. 292 y 296 del C.P.A.</p></div>
-        </div>
-    </section>
-
-    <!-- SECCIÓN: FORMULARIO DE INSCRIPCIÓN -->
-    <section id="inscripcion" class="py-16 md:py-20 bg-slate-100 border-y border-slate-200 relative overflow-hidden">
-        <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle, #0a1128 1px, transparent 1px); background-size: 25px 25px;"></div>
-        <div class="max-w-4xl mx-auto px-4 relative z-10">
-            <div class="text-center mb-10" data-aos="fade-up">
-                <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase tracking-tight"><i data-lucide="file-plus" class="inline w-6 h-6 text-forenseGold mr-2"></i>Formulario de Inscripción</h2>
-                <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200" data-aos="fade-up">
-                <div class="bg-gradient-to-r from-forenseNavy to-forenseBlue p-8 text-center text-white border-b-4 border-forenseGold">
-                    <h3 class="font-title text-xl md:text-2xl font-black uppercase tracking-tight mb-2">Solicitud de Matriculación</h3>
-                    <p class="text-sm text-slate-300 font-light">Complete sus datos para iniciar el trámite.</p>
-                    <div class="mt-4"><span class="text-[10px] text-slate-400 uppercase tracking-[0.2em]">Arancel de Matriculación</span><div class="text-3xl font-black text-forenseGold mt-1" id="precio-display">$ --</div><span class="text-[9px] text-slate-400">Pago único · válido por el ciclo completo</span></div>
-                </div>
-
-                <form id="form-publico-adhesion" class="p-6 md:p-10 space-y-8" onsubmit="enviarTramiteReal(event)">
                     
-                    <div id="error-alert" class="hidden bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg"><p class="text-red-700 text-sm font-bold flex items-center gap-2"><i data-lucide="alert-circle" class="w-5 h-5"></i><span id="error-text">Error.</span></p></div>
-                    <div id="success-alert" class="hidden bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-lg">
-                        <p class="text-emerald-700 text-sm font-bold flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5"></i>¡SOLICITUD ENVIADA! Complete el pago para finalizar.</p>
-                        <a id="payment-link" href="#" target="_blank" class="inline-block mt-3 bg-forenseGold text-forenseNavy font-black text-sm px-6 py-3 rounded-xl hover:bg-yellow-500 transition-all"><i data-lucide="credit-card" class="inline w-4 h-4 mr-1"></i> REALIZAR PAGO</a>
+                    <h1 class="font-title text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 text-white leading-[1.1] uppercase drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]" id="hero-title">
+                        Respaldo Legal para tu <br><span class="text-forenseGold">Práctica Forense</span>
+                    </h1>
+                    
+                    <p class="text-slate-100/90 mb-8 text-sm md:text-lg max-w-3xl mx-auto font-light leading-relaxed tracking-wide drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)]" id="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
+                        El único padrón nacional centralizado con tecnología <strong class="text-forenseGold font-semibold">Blockchain</strong>.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="400">
+                        <button onclick="switchSection('seccion-inscripcion')" class="inline-block bg-forenseGold text-forenseNavy font-black uppercase tracking-[0.15em] text-sm md:text-base px-8 py-4 rounded-xl shadow-[0_0_30px_rgba(212,175,55,0.5)] hover:scale-105 transition-all duration-300" id="hero-cta-primary">Comenzar Inscripción</button>
+                        <button onclick="switchSection('seccion-verificacion')" class="inline-block bg-white/15 backdrop-blur-sm text-white border border-white/25 font-bold uppercase tracking-[0.15em] text-sm md:text-base px-8 py-4 rounded-xl hover:bg-white/25 transition-all duration-300" id="hero-cta-secondary">Verificar Profesional</button>
                     </div>
 
-                    <div>
-                        <h3 class="text-lg font-bold text-forenseNavy mb-4 flex items-center gap-2 border-b pb-2"><i data-lucide="user" class="text-forenseGold w-5 h-5"></i> 1. Datos Personales</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div><label class="form-label">Nombres Completos</label><input type="text" id="pub-nombres" class="form-input" required placeholder="Ej: Juan Carlos"></div>
-                            <div><label class="form-label">Apellidos</label><input type="text" id="pub-apellidos" class="form-input" required placeholder="Ej: Perez"></div>
-                            <div><label class="form-label">DNI (sin puntos)</label><input type="text" id="pub-dni" class="form-input font-mono" required placeholder="Ej: 35123456" pattern="\d{7,8}"></div>
-                            <div><label class="form-label">Año de Nacimiento</label><input type="number" id="pub-ano" class="form-input" required placeholder="Ej: 1985" min="1940" max="2010"></div>
-                            <div><label class="form-label">Correo Electrónico</label><input type="email" id="pub-email" class="form-input" required placeholder="correo@ejemplo.com"></div>
-                            <div><label class="form-label">Teléfono Móvil</label><input type="text" id="pub-tel" class="form-input" required placeholder="Código de área + número"></div>
-                            <div class="md:col-span-2"><label class="form-label">Domicilio Completo</label><input type="text" id="pub-domicilio" class="form-input" required placeholder="Calle, Número, Ciudad, Provincia"></div>
+                    <div class="flex flex-wrap justify-center gap-6 mt-10 text-white/60 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em]" data-aos="fade-up" data-aos-delay="600">
+                        <span class="flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> Blockchain</span>
+                        <span class="flex items-center gap-1"><i data-lucide="shield" class="w-3 h-3"></i> Criptografía</span>
+                        <span class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> Auditoría Permanente</span>
+                        <span class="flex items-center gap-1"><i data-lucide="globe" class="w-3 h-3"></i> Alcance Nacional</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- BENEFICIOS -->
+            <section class="py-16 md:py-20 bg-slate-50 border-y border-slate-200">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="text-center mb-12">
+                        <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase tracking-tight"><i data-lucide="star" class="inline w-6 h-6 text-forenseGold mr-2"></i>¿Por Qué Matricularse?</h2>
+                        <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 text-center"><div class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-5"><i data-lucide="scale" class="w-7 h-7"></i></div><h3 class="font-bold text-lg text-forenseNavy mb-3">Validez Jurídica</h3><p class="text-sm text-slate-500">Su matrícula es reconocida como documento habilitante en procesos judiciales en todo el territorio nacional.</p></div>
+                        <div class="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 text-center"><div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-5"><i data-lucide="fingerprint" class="w-7 h-7"></i></div><h3 class="font-bold text-lg text-forenseNavy mb-3">Credencial Digital</h3><p class="text-sm text-slate-500">Acceda a su Wallet oficial con QR verificable y respaldo blockchain.</p></div>
+                        <div class="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 text-center"><div class="w-14 h-14 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-5"><i data-lucide="award" class="w-7 h-7"></i></div><h3 class="font-bold text-lg text-forenseNavy mb-3">Respaldo Gremial</h3><p class="text-sm text-slate-500">Defensa profesional continua y asesoramiento legal especializado en ciencias forenses.</p></div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- 2. SECCIÓN: VERIFICACIÓN PÚBLICA -->
+        <section id="seccion-verificacion" class="page-section py-16 md:py-24 bg-white min-h-[70vh]">
+            <div class="max-w-4xl mx-auto px-4">
+                <div class="text-center mb-10">
+                    <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase tracking-tight">
+                        <i data-lucide="search" class="inline w-6 h-6 text-forenseGold mr-2"></i>Verificación Pública
+                    </h2>
+                    <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
+                    <p class="text-slate-500 text-sm">Consulte si un profesional se encuentra matriculado y habilitado.</p>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl p-6 md:p-8 shadow-lg border border-slate-200">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="flex-1">
+                            <label class="form-label">Documento (DNI) o Matrícula</label>
+                            <input type="text" id="search-input" class="form-input text-lg font-mono" placeholder="Ej: 35123456 o MAT-1001/26" onkeydown="if(event.key==='Enter') buscarProfesional()">
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="buscarProfesional()" class="w-full md:w-auto bg-forenseNavy hover:bg-slate-800 text-forenseGold font-black uppercase tracking-[0.15em] text-sm px-8 py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg">
+                                <i data-lucide="search" class="w-5 h-5"></i> Buscar
+                            </button>
                         </div>
                     </div>
+                    <div id="search-results" class="mt-6 hidden"></div>
+                    <div id="search-empty" class="mt-6 hidden">
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-center">
+                            <i data-lucide="alert-triangle" class="w-10 h-10 text-yellow-500 mx-auto mb-3"></i>
+                            <p class="text-yellow-800 font-bold text-sm">No se encontraron registros.</p>
+                        </div>
+                    </div>
+                    <div id="search-loading" class="mt-6 hidden text-center py-8">
+                        <div class="w-10 h-10 border-4 border-slate-200 border-t-forenseNavy rounded-full animate-spin mx-auto mb-3"></div>
+                        <p class="text-slate-500 text-sm font-bold uppercase tracking-widest">Consultando padrón...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                    <div>
-                        <h3 class="text-lg font-bold text-forenseNavy mb-4 flex items-center gap-2 border-b pb-2"><i data-lucide="graduation-cap" class="text-forenseGold w-5 h-5"></i> 2. Formación Profesional</h3>
-                        <p class="text-xs text-slate-500 mb-3">Ingrese su título profesional. El sistema detectará automáticamente la categoría según palabras clave.</p>
-                        <div class="relative">
-                            <label class="form-label">Título Profesional</label>
-                            <input type="text" id="pub-profesion" class="form-input font-semibold" required placeholder="Ej: Licenciado en Criminalística, Técnico Eviscerador, Diplomado en..." oninput="detectarCategoria()" onfocus="mostrarSugerencias()" onblur="ocultarSugerencias()" autocomplete="off">
-                            <div id="sugerencias-box" class="sugerencias-box">
-                                <div class="sug-item" data-cat="A1" onclick="seleccionarSugerencia('Licenciado en Criminalística', 'A1')">Licenciado en Criminalística (A1)</div>
-                                <div class="sug-item" data-cat="A1" onclick="seleccionarSugerencia('Licenciado en Criminología', 'A1')">Licenciado en Criminología (A1)</div>
-                                <div class="sug-item" data-cat="A1" onclick="seleccionarSugerencia('Médico Legista', 'A1')">Médico Legista (A1)</div>
-                                <div class="sug-item" data-cat="A1" onclick="seleccionarSugerencia('Abogado Penalista', 'A1')">Abogado Penalista (A1)</div>
-                                <div class="sug-item" data-cat="A2" onclick="seleccionarSugerencia('Técnico Eviscerador', 'A2')">Técnico Eviscerador (A2)</div>
-                                <div class="sug-item" data-cat="A2" onclick="seleccionarSugerencia('Técnico en Balística', 'A2')">Técnico en Balística (A2)</div>
-                                <div class="sug-item" data-cat="A2" onclick="seleccionarSugerencia('Perito Papilóscopo', 'A2')">Perito Papilóscopo (A2)</div>
-                                <div class="sug-item" data-cat="A3" onclick="seleccionarSugerencia('Auxiliar Forense', 'A3')">Auxiliar Forense (A3)</div>
-                                <div class="sug-item" data-cat="A3" onclick="seleccionarSugerencia('Fotógrafo Pericial', 'A3')">Fotógrafo Pericial (A3)</div>
-                                <div class="sug-item" data-cat="A3" onclick="seleccionarSugerencia('Instructor Forense', 'A3')">Instructor Forense (A3)</div>
+        <!-- 3. SECCIÓN: MAPA DE PROFESIONALES Y ESTADÍSTICAS -->
+        <section id="seccion-mapa" class="page-section py-16 md:py-24 bg-forenseNavy text-white relative min-h-[80vh]">
+            <div class="absolute inset-0 opacity-5"><div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(circle, #d4af37 1px, transparent 1px); background-size: 30px 30px;"></div></div>
+            <div class="max-w-7xl mx-auto px-4 relative z-10">
+                <div class="text-center mb-12">
+                    <h2 class="font-title text-2xl md:text-3xl font-black mb-3 uppercase tracking-tight text-white"><i data-lucide="bar-chart-3" class="inline w-6 h-6 text-forenseGold mr-2"></i>El Registro en Números</h2>
+                    <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+                    <div class="text-center p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm"><div class="text-4xl md:text-5xl font-black text-forenseGold stat-number" id="counter-total">0</div><p class="text-xs md:text-sm text-slate-300 mt-2 uppercase tracking-widest font-bold">Matriculados</p></div>
+                    <div class="text-center p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm"><div class="text-4xl md:text-5xl font-black text-white stat-number" id="counter-a1">0</div><p class="text-xs md:text-sm text-slate-300 mt-2 uppercase tracking-widest font-bold">Categoría A1</p></div>
+                    <div class="text-center p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm"><div class="text-4xl md:text-5xl font-black text-white stat-number" id="counter-a2">0</div><p class="text-xs md:text-sm text-slate-300 mt-2 uppercase tracking-widest font-bold">Categoría A2</p></div>
+                    <div class="text-center p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm"><div class="text-4xl md:text-5xl font-black text-white stat-number" id="counter-a3">0</div><p class="text-xs md:text-sm text-slate-300 mt-2 uppercase tracking-widest font-bold">Categoría A3</p></div>
+                </div>
+
+                <!-- MAPA DE PROFESIONALES CON CV RESUMIDO -->
+                <div class="bg-white/5 rounded-2xl p-6 md:p-10 border border-white/10">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                        <div>
+                            <h3 class="text-xl font-black text-forenseGold uppercase tracking-[0.15em]">
+                                <i data-lucide="map-pin" class="inline w-5 h-5 mr-1"></i> Mapa de Profesionales Habilitados
+                            </h3>
+                            <p class="text-slate-300 text-xs mt-1">Especialistas disponibles para contacto institucional y peritajes. Haga clic en los marcadores para ver su CV resumido.</p>
+                        </div>
+                        <div class="bg-forenseGold/10 border border-forenseGold/30 px-4 py-2 rounded-xl text-forenseGold text-xs font-bold uppercase tracking-wider">
+                            Presencia Federal Activa
+                        </div>
+                    </div>
+                    
+                    <!-- Contenedor del Mapa Interactivo (Leaflet) -->
+                    <div id="mapa-profesionales" class="w-full h-[500px] rounded-xl z-10 border border-white/20"></div>
+                    
+                    <p class="text-center text-[10px] text-slate-400 mt-4 uppercase tracking-[0.2em]">Padrón Georreferenciado con Validación Criptográfica</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. SECCIÓN: CATEGORÍAS PROFESIONALES -->
+        <section id="seccion-categorias" class="page-section py-16 md:py-24 bg-white min-h-[70vh]">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-14">
+                    <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase tracking-tight"><i data-lucide="layers" class="inline w-6 h-6 text-forenseGold mr-2"></i>Estructura del Padrón</h2>
+                    <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="cat-card cat-a1 bg-gradient-to-b from-yellow-50 to-white rounded-2xl p-8 border border-slate-200 shadow-lg">
+                        <div class="w-16 h-16 bg-gradient-to-br from-forenseGold to-yellow-500 text-white rounded-full flex items-center justify-center mb-6 shadow-lg"><span class="font-black text-2xl">A1</span></div>
+                        <h3 class="font-bold text-xl text-forenseNavy mb-3">Licenciaturas y Títulos de Grado</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Se corresponde a Profesionales con Título de grado en carreras afines otorgado por Universidades Públicas o Privadas (Licenciaturas en Criminalística, Criminología, Psicología entre otras).</p>
+                    </div>
+                    <div class="cat-card cat-a2 bg-gradient-to-b from-blue-50 to-white rounded-2xl p-8 border border-slate-200 shadow-lg">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center mb-6 shadow-lg"><span class="font-black text-2xl">A2</span></div>
+                        <h3 class="font-bold text-xl text-forenseNavy mb-3">Técnicos Superiores y Terciarios</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Se corresponde a Profesionales con Título de pregrado de carreras afines otorgado por Universidades e Institutos Terciarios Públicos o Privados (Técnicos y Técnicos Superiores in las distintas disciplinas).</p>
+                    </div>
+                    <div class="cat-card cat-a3 bg-gradient-to-b from-emerald-50 to-white rounded-2xl p-8 border border-slate-200 shadow-lg">
+                        <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-full flex items-center justify-center mb-6 shadow-lg"><span class="font-black text-2xl">A3</span></div>
+                        <h3 class="font-bold text-xl text-forenseNavy mb-3">Auxiliares y Diplomaturas</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Se corresponde a personas con certificaciones de Auxiliares y/o Diplomados sin título de grado o pregrado otorgado por Universidades e Institutos Públicos o Privados.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. SECCIÓN: INSCRIPCIÓN / TRÁMITE -->
+        <section id="seccion-inscripcion" class="page-section py-16 md:py-24 bg-slate-50 min-h-[70vh]">
+            <div class="max-w-3xl mx-auto px-4">
+                <div class="text-center mb-10">
+                    <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase tracking-tight">
+                        <i data-lucide="file-text" class="inline w-6 h-6 text-forenseGold mr-2"></i>Iniciar Trámite de Matriculación
+                    </h2>
+                    <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
+                    <p class="text-slate-500 text-sm">Complete el formulario preliminar para solicitar su incorporación al padrón oficial.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 shadow-lg border border-slate-200">
+                    <form onsubmit="event.preventDefault(); alert('Trámite simulado enviado con éxito.');" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="form-label">Nombre y Apellido</label>
+                                <input type="text" class="form-input" placeholder="Ej: Juan Pérez" required>
+                            </div>
+                            <div>
+                                <label class="form-label">DNI / Documento</label>
+                                <input type="text" class="form-input font-mono" placeholder="Ej: 35123456" required>
                             </div>
                         </div>
-                        <div class="mt-4">
-                            <label class="form-label">Categoría Detectada</label>
-                            <div id="display-categoria" class="form-input bg-slate-100 text-slate-400 font-bold flex items-center justify-between">
-                                <span>Escriba su título para detectar categoría...</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-input" placeholder="correo@ejemplo.com" required>
                             </div>
-                            <input type="hidden" id="hidden-categoria" required>
+                            <div>
+                                <label class="form-label">Categoría Solicitada</label>
+                                <select class="form-input">
+                                    <option>Categoría A1 - Grado Universitario</option>
+                                    <option>Categoría A2 - Técnico Superior</option>
+                                    <option>Categoría A3 - Auxiliar / Diplomado</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-bold text-forenseNavy mb-4 flex items-center gap-2 border-b pb-2"><i data-lucide="file-check" class="text-forenseGold w-5 h-5"></i> 3. Documentación Respaldatoria</h3>
-                        <p class="text-xs text-slate-500 mb-4">Adjunte imágenes claras (JPG, PNG). Puede cargar hasta 10 diplomas o certificados. Peso máximo: 5MB por archivo.</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-                            <label class="file-upload-box group">
-                                <i data-lucide="image" class="w-8 h-8 mx-auto text-slate-400 group-hover:text-forenseBlue mb-2 transition-colors"></i>
-                                <span class="block text-xs font-bold text-slate-700">DNI Frente</span>
-                                <span class="block text-[10px] text-slate-500 mt-1" id="file-name-frente">Clic para subir</span>
-                                <input type="file" id="input-dni-frente" required accept="image/*" onchange="actualizarNombreArchivo(this, 'file-name-frente')">
-                            </label>
-                            <label class="file-upload-box group">
-                                <i data-lucide="image" class="w-8 h-8 mx-auto text-slate-400 group-hover:text-forenseBlue mb-2 transition-colors"></i>
-                                <span class="block text-xs font-bold text-slate-700">DNI Dorso</span>
-                                <span class="block text-[10px] text-slate-500 mt-1" id="file-name-dorso">Clic para subir</span>
-                                <input type="file" id="input-dni-dorso" required accept="image/*" onchange="actualizarNombreArchivo(this, 'file-name-dorso')">
-                            </label>
+                        <div>
+                            <label class="form-label">Título y Universidad / Institución de Origen</label>
+                            <input type="text" class="form-input" placeholder="Ej: Licenciado en Criminalística - Univ. Nacional" required>
                         </div>
-
-                        <div class="file-upload-box group border-forenseGold/30 bg-yellow-50/30 cursor-pointer" onclick="document.getElementById('input-diplomas').click()">
-                            <i data-lucide="upload-cloud" class="w-8 h-8 mx-auto text-forenseGold mb-2"></i>
-                            <span class="block text-xs font-bold text-slate-700">Diplomas / Certificados</span>
-                            <span class="block text-[10px] text-slate-500 mt-1">Clic para seleccionar (máx. 10 archivos)</span>
-                            <input type="file" id="input-diplomas" accept="image/*" multiple onchange="agregarDiplomas()" style="display:none;">
+                        <div class="pt-4 text-center">
+                            <button type="submit" class="w-full md:w-auto bg-forenseGold text-forenseNavy hover:bg-yellow-500 font-black uppercase tracking-[0.15em] px-10 py-4 rounded-xl shadow-lg transition-all">
+                                Enviar Solicitud de Matrícula
+                            </button>
                         </div>
-                        <div id="lista-diplomas" class="mt-3 space-y-1"></div>
-                        <p class="text-[10px] text-slate-400 mt-2" id="contador-diplomas">0/10 archivos cargados</p>
-                    </div>
+                    </form>
+                </div>
+            </div>
+        </section>
 
-                    <div class="pt-6 border-t border-slate-200">
-                        <label class="flex items-start gap-3 mb-6 cursor-pointer">
-                            <input type="checkbox" required class="mt-1 w-4 h-4 accent-forenseBlue">
-                            <span class="text-xs text-slate-600 leading-relaxed"><strong>Declaro bajo juramento</strong> que los datos son auténticos. La adulteración constituye delito penal (Art. 292 y 296 C.P.A.).</span>
-                        </label>
-                        <button type="submit" id="btn-submit-tramite" class="w-full bg-forenseNavy hover:bg-slate-800 text-white font-black uppercase tracking-[0.15em] py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm">
-                            <i data-lucide="send" class="w-5 h-5"></i> ENVIAR SOLICITUD AL REGISTRO
-                        </button>
-                    </div>
-                </form>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SECTOR: CARRUSEL DE INSTITUCIONES ALIADAS  -->
+    <!-- ========================================== -->
+    <section class="py-12 bg-black/40 border-y border-white/5 overflow-hidden">
+        <div class="max-w-6xl mx-auto px-4 text-center mb-8">
+            <span class="text-[10px] font-bold uppercase tracking-widest text-[#d4af37]">Red de Colaboración</span>
+            <h2 class="text-xl font-black uppercase tracking-wider text-white mt-1">Instituciones Aliadas</h2>
+            <p class="text-xs text-slate-400 mt-1">Organizaciones y entidades vinculadas al desarrollo y gestión profesional.</p>
+        </div>
+
+        <!-- Contenedor del carrusel con efecto infinito/deslizante -->
+        <div class="relative w-full overflow-hidden flex mask-gradient">
+            <div class="flex gap-8 animate-marquee whitespace-nowrap py-4 items-center">
+                
+                <!-- Item 1 -->
+                <div class="glass-card px-8 py-4 rounded-xl border border-white/10 bg-slate-900/60 flex items-center justify-center min-w-[200px] h-20 shadow-lg">
+                    <span class="text-xs font-mono uppercase tracking-widest text-slate-400">[ LOGO ALIADO 01 ]</span>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="glass-card px-8 py-4 rounded-xl border border-white/10 bg-slate-900/60 flex items-center justify-center min-w-[200px] h-20 shadow-lg">
+                    <span class="text-xs font-mono uppercase tracking-widest text-slate-400">[ LOGO ALIADO 02 ]</span>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="glass-card px-8 py-4 rounded-xl border border-white/10 bg-slate-900/60 flex items-center justify-center min-w-[200px] h-20 shadow-lg">
+                    <span class="text-xs font-mono uppercase tracking-widest text-slate-400">[ LOGO ALIADO 03 ]</span>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="glass-card px-8 py-4 rounded-xl border border-white/10 bg-slate-900/60 flex items-center justify-center min-w-[200px] h-20 shadow-lg">
+                    <span class="text-xs font-mono uppercase tracking-widest text-slate-400">[ LOGO ALIADO 04 ]</span>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="glass-card px-8 py-4 rounded-xl border border-white/10 bg-slate-900/60 flex items-center justify-center min-w-[200px] h-20 shadow-lg">
+                    <span class="text-xs font-mono uppercase tracking-widest text-slate-400">[ LOGO ALIADO 05 ]</span>
+                </div>
+
+                <!-- Duplicado exacto para garantizar la fluidez del bucle infinito -->
+                <div class="glass-card px-8 py-4 rounded-xl border border-white/10 bg-slate-900/60 flex items-center justify-center min-w-[200px] h-20 shadow-lg">
+                    <span class="text-xs font-mono uppercase tracking-widest text-slate-400">[ LOGO ALIADO 01 ]</span>
+                </div>
+                <div class="glass-card px-8 py-4 rounded-xl border border-white/10 bg-slate-900/60 flex items-center justify-center min-w-[200px] h-20 shadow-lg">
+                    <span class="text-xs font-mono uppercase tracking-widest text-slate-400">[ LOGO ALIADO 02 ]</span>
+                </div>
+
             </div>
         </div>
     </section>
 
     <!-- FOOTER -->
-    <footer class="bg-forenseDark text-slate-400 py-16 text-center border-t border-slate-800">
-        <div class="max-w-5xl mx-auto px-4">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-8 mb-10">
-                <div class="flex items-center gap-3 text-white">
-                    <i data-lucide="fingerprint" class="w-8 h-8 text-forenseGold"></i>
-                    <div class="text-left"><span class="font-title font-black text-xl tracking-widest block">RENMCYCF</span><span class="text-[9px] text-forenseGold font-bold uppercase tracking-[0.3em]">Registro Oficial</span></div>
-                </div>
-                <div class="flex flex-wrap justify-center gap-6 text-xs uppercase tracking-[0.2em] font-bold">
-                    <a href="#verificacion" class="hover:text-forenseGold transition-colors">Verificar</a>
-                    <a href="#biblioteca" class="hover:text-forenseGold transition-colors">Biblioteca</a>
-                    
-                    <!-- NUEVO BOTÓN FOOTER: CAMPUS VIRTUAL -->
-                    <a href="campus.renmcycf.html" class="hover:text-forenseGold transition-colors">Campus</a>
-                    
-                    <a href="#marco-legal" class="hover:text-forenseGold transition-colors">Marco Legal</a>
-                    <a href="#inscripcion" class="hover:text-forenseGold transition-colors">Inscripción</a>
-                </div>
-            </div>
-            
-            <div class="flex justify-center gap-4 mb-6" id="redes-sociales">
-                <a href="#" target="_blank" class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-forenseGold/20 transition-all" id="link-facebook" style="display:none;"><i data-lucide="facebook" class="w-5 h-5"></i></a>
-                <a href="#" target="_blank" class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-forenseGold/20 transition-all" id="link-instagram" style="display:none;"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                <a href="#" target="_blank" class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-forenseGold/20 transition-all" id="link-twitter" style="display:none;"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-                <a href="#" target="_blank" class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-forenseGold/20 transition-all" id="link-linkedin" style="display:none;"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
-                <a href="#" target="_blank" class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-forenseGold/20 transition-all" id="link-youtube" style="display:none;"><i data-lucide="youtube" class="w-5 h-5"></i></a>
-            </div>
-            
-            <p class="text-xs text-slate-500 max-w-lg mx-auto leading-relaxed mb-8 font-light" id="footer-texto">Plataforma auditada y asegurada criptográficamente.</p>
-            <div class="text-[10px] text-slate-600 font-bold uppercase tracking-[0.2em]">
-                <span id="email-contacto">info@renmcycf.ar</span> · Tecnología ASARI SaaS © 2026
-            </div>
+    <footer class="bg-forenseNavy text-white py-12 border-t-4 border-forenseGold mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h3 class="font-title text-2xl font-black text-forenseGold mb-2">RENMCYCF</h3>
+            <p class="text-xs text-slate-400 uppercase tracking-widest mb-6">Registro Nacional de Matriculados en Criminalística y Ciencias Forenses</p>
+            <p class="text-xs text-slate-500">Desarrollado con tecnología ASARI SaaS · Todos los derechos reservados © 2026</p>
         </div>
     </footer>
 
-    <!-- BOTÓN FLOTANTE WALLET -->
-    <a href="wallet.renmcycf.html" class="wallet-float" title="Mi Wallet" id="wallet-float-btn">
-        <i data-lucide="wallet" class="w-5 h-5 text-forenseGold"></i>
-    </a>
+    <!-- ========================================== -->
+    <!-- BOTONES FLOTANTES DESPLEGABLES             -->
+    <!-- ========================================== -->
+    <div class="floating-container" id="floatingMenu">
+        <a href="wallet.renmcycf.html" class="float-option option-wallet" aria-label="Wallet">
+            <i data-lucide="wallet" class="w-5 h-5"></i>
+        </a>
+        <a href="https://instagram.com/TU_PERFIL" target="_blank" rel="noopener noreferrer" class="float-option option-instagram" aria-label="Instagram">
+            <i data-lucide="instagram" class="w-5 h-5"></i>
+        </a>
+        <a href="https://facebook.com/TU_PERFIL" target="_blank" rel="noopener noreferrer" class="float-option option-facebook" aria-label="Facebook">
+            <i data-lucide="facebook" class="w-5 h-5"></i>
+        </a>
+        <a href="mailto:tu-correo@ejemplo.com" class="float-option option-email" aria-label="Correo Electrónico">
+            <i data-lucide="mail" class="w-5 h-5"></i>
+        </a>
+        <a href="https://wa.me/TUS_NUMERO_AQUI" target="_blank" rel="noopener noreferrer" class="float-option option-whatsapp" aria-label="WhatsApp">
+            <i data-lucide="message-circle" class="w-5 h-5"></i>
+        </a>
 
-    <!-- BOTÓN FLOTANTE WHATSAPP -->
-    <a href="#" id="whatsapp-float" target="_blank" class="whatsapp-float" title="Contactar por WhatsApp" style="display:none;">
-        <i data-lucide="message-circle" class="w-8 h-8 text-white"></i>
-    </a>
+        <button type="button" class="main-float" onclick="toggleFloatingMenu()" aria-label="Abrir menú de contacto">
+            <i data-lucide="message-circle" class="w-6 h-6 main-icon transition-transform duration-300"></i>
+        </button>
+    </div>
 
+    <!-- LEAFLET JS Y SCRIPT DE GESTIÓN DE VISTAS POR SECCIONES Y MAPA -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        AOS.init({ once: true });
         lucide.createIcons();
-        AOS.init({ duration: 700, once: true, offset: 100 });
 
-        const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
-        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
-        const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
+        let mapInitialized = false;
+        let mapInstance = null;
 
-        let preciosDB = {};
-        let configDB = {};
-        let mpLink = '';
-        let diplomasFiles = [];
+        // Función para cambiar de sección (vistas independientes dentro de la misma página)
+        function switchSection(sectionId) {
+            // Ocultar todas las secciones
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(sec => {
+                sec.classList.remove('active-section');
+            });
 
-        function cargarImagenSegura(imgElement, url, tipo) {
-            if (!imgElement || !url) return;
-            const urlConCache = url.includes('?') ? url + '&t=' + Date.now() : url + '?t=' + Date.now();
-            imgElement.src = urlConCache;
-            imgElement.style.display = 'block';
-            imgElement.onload = function() {
-                if (tipo === 'logo') {
-                    const logoIcon = document.getElementById('logo-icon');
-                    if (logoIcon) logoIcon.style.display = 'none';
+            // Mostrar la sección seleccionada
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active-section');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Actualizar estilos activos en la barra de navegación de escritorio
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => {
+                if (btn.getAttribute('data-target') === sectionId) {
+                    btn.classList.add('text-forenseGold');
+                } else {
+                    btn.classList.remove('text-forenseGold');
                 }
-            };
-            imgElement.onerror = function() {
-                this.src = url;
-                this.onerror = function() {
-                    if (tipo === 'logo') {
-                        this.style.display = 'none';
-                        const logoIcon = document.getElementById('logo-icon');
-                        if (logoIcon) logoIcon.style.display = 'block';
-                    } else if (tipo === 'hero') {
-                        this.style.display = 'none';
+            });
+
+            // Si entra en la sección del mapa, inicializar o refrescar el mapa de Leaflet para evitar problemas de renderizado
+            if (sectionId === 'seccion-mapa') {
+                setTimeout(() => {
+                    if (!mapInitialized) {
+                        initMap();
+                        mapInitialized = true;
+                    } else if (mapInstance) {
+                        mapInstance.invalidateSize();
                     }
-                };
-            };
+                }, 200);
+            }
         }
-
-        async function cargarConfiguracion() {
-            try {
-                const { data: precios } = await db.from('renmcycf_precios').select('*').eq('activo', true);
-                if (precios) precios.forEach(p => { preciosDB[p.categoria] = p.precio_ars; });
-
-                const { data: config } = await db.from('renmcycf_config').select('*').eq('id', 1).maybeSingle();
-                if (config) {
-                    configDB = config;
-                    mpLink = config.mp_link || '';
-
-                    if (config.whatsapp_number) {
-                        const wsp = document.getElementById('whatsapp-float');
-                        if (wsp) { wsp.href = `https://wa.me/${config.whatsapp_number.replace(/\D/g, '')}?text=Hola%2C%20quisiera%20informaci%C3%B3n%20sobre%20la%20matriculaci%C3%B3n%20RENMCYCF`; wsp.style.display = 'flex'; }
-                    }
-
-                    if (config.email_contacto) {
-                        const emailEl = document.getElementById('email-contacto');
-                        if (emailEl) emailEl.textContent = config.email_contacto;
-                    }
-
-                    ['facebook','instagram','twitter','linkedin','youtube'].forEach(r => {
-                        const link = document.getElementById(`link-${r}`);
-                        if (link && config[`${r}_url`]) { link.href = config[`${r}_url`]; link.style.display = 'flex'; }
-                    });
-
-                    const heroImg = document.getElementById('hero-bg-image');
-                    if (config.hero_image_url && heroImg) cargarImagenSegura(heroImg, config.hero_image_url, 'hero');
-
-                    const logoImg = document.getElementById('logo-img');
-                    if (config.logo_url && logoImg) cargarImagenSegura(logoImg, config.logo_url, 'logo');
-                }
-
-                const { data: contenido } = await db.from('renmcycf_contenido').select('*');
-                if (contenido) {
-                    contenido.forEach(c => {
-                        const el = document.getElementById(c.clave);
-                        if (el && c.valor) {
-                            if (c.tipo === 'html' || c.valor.includes('<') || c.clave.includes('title') || c.clave.includes('subtitle')) {
-                                el.innerHTML = c.valor;
-                            } else {
-                                el.textContent = c.valor;
-                            }
-                        }
-                    });
-                }
-            } catch (err) { console.warn('Offline mode:', err); }
-        }
-
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                if (configDB.hero_image_url) {
-                    const heroImg = document.getElementById('hero-bg-image');
-                    if (heroImg && (!heroImg.complete || heroImg.naturalWidth === 0)) cargarImagenSegura(heroImg, configDB.hero_image_url, 'hero');
-                }
-                if (configDB.logo_url) {
-                    const logoImg = document.getElementById('logo-img');
-                    if (logoImg && (!logoImg.complete || logoImg.naturalWidth === 0)) cargarImagenSegura(logoImg, configDB.logo_url, 'logo');
-                }
-            }, 2000);
-        });
 
         function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('open');
-            document.getElementById('mobile-overlay').classList.toggle('open');
+            const menu = document.getElementById('mobile-menu');
+            const overlay = document.getElementById('mobile-overlay');
+            menu.classList.toggle('open');
+            overlay.classList.toggle('open');
         }
 
-        async function cargarEstadisticas() {
-            try {
-                const { count: t } = await db.from('renmcycf_padron').select('*', { count: 'exact', head: true }).eq('estado_legal', 'ACTIVO');
-                const { count: a1 } = await db.from('renmcycf_padron').select('*', { count: 'exact', head: true }).eq('estado_legal', 'ACTIVO').eq('categoria', 'A1');
-                const { count: a2 } = await db.from('renmcycf_padron').select('*', { count: 'exact', head: true }).eq('estado_legal', 'ACTIVO').eq('categoria', 'A2');
-                const { count: a3 } = await db.from('renmcycf_padron').select('*', { count: 'exact', head: true }).eq('estado_legal', 'ACTIVO').eq('categoria', 'A3');
-                animarContador('counter-total', t||0); animarContador('counter-a1', a1||0); animarContador('counter-a2', a2||0); animarContador('counter-a3', a3||0);
-            } catch(e) {}
+        // Función para controlar el despliegue de los botones flotantes
+        function toggleFloatingMenu() {
+            const menu = document.getElementById('floatingMenu');
+            menu.classList.toggle('active');
         }
 
-        function animarContador(id, target) {
-            const el = document.getElementById(id); if(!el) return;
-            let c = 0; const inc = target / 94;
-            const t = setInterval(() => { c += inc; if(c >= target) { el.textContent = target; clearInterval(t); } else el.textContent = Math.floor(c); }, 16);
-        }
+        function buscarProfesional() {
+            const query = document.getElementById('search-input').value.trim();
+            const resultsDiv = document.getElementById('search-results');
+            const emptyDiv = document.getElementById('search-empty');
+            const loadingDiv = document.getElementById('search-loading');
 
-        async function buscarProfesional() {
-            const input = document.getElementById('search-input').value.trim();
-            const rDiv = document.getElementById('search-results');
-            const eDiv = document.getElementById('search-empty');
-            const lDiv = document.getElementById('search-loading');
-            if(!input) return;
-            rDiv.innerHTML = ''; rDiv.classList.add('hidden'); eDiv.classList.add('hidden'); lDiv.classList.remove('hidden');
-            try {
-                let q = db.from('renmcycf_padron').select('*').eq('estado_legal','ACTIVO');
-                q = /^\d+$/.test(input) ? q.eq('dni',input) : q.ilike('matricula_oficial',`%${input}%`);
-                const { data, error } = await q.order('fecha_alta',{ascending:false});
-                lDiv.classList.add('hidden');
-                if(error || !data?.length) { eDiv.classList.remove('hidden'); return; }
-                rDiv.classList.remove('hidden');
-                rDiv.innerHTML = `<div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4"><p class="text-emerald-800 text-sm font-bold">${data.length} matrícula(s) activa(s)</p></div>` +
-                    data.map(p => `
-                    <div class="bg-white border border-slate-200 rounded-xl p-5 mb-3 flex gap-4 items-start">
-                        <div class="w-16 h-16 rounded-full bg-slate-100 border-2 border-forenseGold overflow-hidden shrink-0 flex items-center justify-center">
-                            ${p.foto_perfil_url ? `<img src="${p.foto_perfil_url}" class="w-full h-full object-cover">` : '<i data-lucide="user" class="w-8 h-8 text-slate-400"></i>'}
-                        </div>
-                        <div>
-                            <h4 class="font-black text-forenseNavy text-lg">${p.nombres} ${p.apellidos}</h4>
-                            <div class="flex gap-2 mt-1"><span class="bg-forenseGold/20 text-forenseNavy text-[10px] font-bold px-3 py-1 rounded-full">${p.categoria}</span><span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-3 py-1 rounded-full">${p.profesion}</span></div>
-                            <p class="text-xs text-slate-500 mt-1 font-mono"><strong>Matrícula:</strong> ${p.matricula_oficial} · <strong>Vence:</strong> ${new Date(p.fecha_vencimiento).toLocaleDateString('es-AR')}</p>
-                        </div>
-                    </div>`).join('');
-                lucide.createIcons();
-            } catch(err) { lDiv.classList.add('hidden'); eDiv.classList.remove('hidden'); }
-        }
+            resultsDiv.classList.add('hidden');
+            emptyDiv.classList.add('hidden');
+            
+            if (!query) return;
 
-        async function cargarBibliotecaIndex() {
-            const container = document.getElementById('biblioteca-container');
-            try {
-                const { data, error } = await db.from('renmcycf_biblioteca').select('*').eq('activo', true).order('created_at', { ascending: false }).limit(10);
-                
-                if (error) throw error;
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<div class="col-span-full text-center py-8 text-slate-400">Próximamente nuevo material disponible.</div>';
-                    return;
-                }
+            loadingDiv.classList.remove('hidden');
 
-                container.innerHTML = data.map(libro => {
-                    const esGratis = libro.tipo_acceso === 'GRATUITO';
-                    const cover = libro.portada_url || 'https://via.placeholder.com/300x400/0a1128/d4af37?text=PDF';
-                    
-                    const btnHtml = esGratis 
-                        ? `<a href="${libro.pdf_url}" target="_blank" class="mt-3 block text-center w-full bg-forenseGold/20 hover:bg-forenseGold/30 text-forenseNavy text-[10px] font-black uppercase tracking-wider py-2 rounded-lg transition-colors">Descargar PDF</a>`
-                        : `<a href="wallet.renmcycf.html" class="mt-3 block text-center w-full bg-slate-100 text-slate-400 hover:text-forenseNavy text-[10px] font-black uppercase tracking-wider py-2 rounded-lg border border-slate-200 transition-colors flex items-center justify-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> Exclusivo</a>`;
-
-                    const badgeHtml = esGratis 
-                        ? `<span class="absolute top-2 right-2 bg-emerald-500 text-white text-[8px] font-bold px-2 py-0.5 rounded uppercase shadow-sm">Libre</span>`
-                        : `<span class="absolute top-2 right-2 bg-forenseNavy text-forenseGold text-[8px] font-bold px-2 py-0.5 rounded border border-forenseGold uppercase shadow-sm">Premium</span>`;
-
-                    return `
-                    <div class="book-card relative" data-aos="fade-up">
-                        ${badgeHtml}
-                        <img src="${cover}" class="book-cover" alt="${libro.titulo}">
-                        <div class="p-3 flex flex-col flex-1">
-                            <h4 class="font-bold text-sm text-forenseNavy leading-tight line-clamp-2" title="${libro.titulo}">${libro.titulo}</h4>
-                            <p class="text-[10px] text-slate-500 mt-1">${libro.autor || 'Autor Anónimo'}</p>
-                            <div class="mt-auto pt-2">
-                                ${btnHtml}
+            setTimeout(() => {
+                loadingDiv.classList.add('hidden');
+                if (query.toLowerCase() === '1001' || query.toLowerCase() === '35123456') {
+                    resultsDiv.innerHTML = `
+                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i data-lucide="check-circle" class="w-6 h-6 text-emerald-600"></i>
+                                <h4 class="font-bold text-emerald-900 text-base">Profesional Habilitado</h4>
                             </div>
+                            <p class="text-sm text-emerald-700"><strong>Matrícula:</strong> MAT-1001/26</p>
+                            <p class="text-sm text-emerald-700"><strong>Categoría:</strong> A1 - Licenciatura en Criminalística</p>
+                            <p class="text-sm text-emerald-700"><strong>Estado:</strong> Activo (Blockchain Verificado)</p>
                         </div>
-                    </div>`;
-                }).join('');
-                
-                lucide.createIcons();
-            } catch (err) {
-                container.innerHTML = '<div class="col-span-full text-center py-8 text-red-400">Error al cargar la biblioteca.</div>';
-            }
-        }
-
-        async function cargarTesisIndex() {
-            const container = document.getElementById('tesis-container');
-            try {
-                const { data, error } = await db.from('renmcycf_publicaciones')
-                    .select('*, renmcycf_padron(categoria, matricula_oficial, foto_perfil_url)')
-                    .eq('estado', 'APROBADO')
-                    .order('created_at', { ascending: false })
-                    .limit(5);
-                
-                if (error) throw error;
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<div class="text-center py-8 text-slate-400">Próximamente: Investigaciones de nuestros matriculados.</div>';
-                    return;
+                    `;
+                    resultsDiv.classList.remove('hidden');
+                    lucide.createIcons();
+                } else {
+                    emptyDiv.classList.add('hidden');
+                    emptyDiv.classList.remove('hidden');
                 }
-
-                container.innerHTML = data.map(tesis => {
-                    const padron = tesis.renmcycf_padron || {};
-                    const foto = padron.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
-                    const fecha = new Date(tesis.created_at).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
-
-                    return `
-                    <div class="tesis-card" data-aos="fade-up">
-                        <div class="flex gap-4 items-start">
-                            <img src="${foto}" class="w-12 h-12 rounded-full object-cover border-2 border-slate-100 hidden sm:block">
-                            <div class="flex-1">
-                                <div class="flex justify-between items-start">
-                                    <h4 class="font-black text-lg text-forenseNavy leading-tight pr-4">${tesis.titulo}</h4>
-                                    <a href="${tesis.pdf_url}" target="_blank" class="shrink-0 text-forenseBlue hover:text-forenseGold transition-colors bg-blue-50 p-2 rounded-lg" title="Leer Documento"><i data-lucide="file-text" class="w-5 h-5"></i></a>
-                                </div>
-                                <p class="text-xs text-slate-600 mt-2 line-clamp-3 leading-relaxed">${tesis.resumen || 'Sin resumen disponible.'}</p>
-                                
-                                <div class="mt-4 flex flex-wrap items-center gap-4 border-t border-slate-100 pt-3">
-                                    <div class="flex items-center gap-1.5 text-xs font-bold text-slate-700">
-                                        <i data-lucide="user" class="w-3.5 h-3.5 text-forenseGold"></i> ${tesis.autor_nombre}
-                                    </div>
-                                    <div class="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-slate-500 font-mono">
-                                        <i data-lucide="hash" class="w-3 h-3"></i> ${padron.matricula_oficial || 'MAT-PENDIENTE'}
-                                    </div>
-                                    <div class="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-slate-400 ml-auto">
-                                        <i data-lucide="calendar" class="w-3 h-3"></i> Publicado en ${fecha}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-                }).join('');
-                
-                lucide.createIcons();
-            } catch (err) {
-                container.innerHTML = '<div class="text-center py-8 text-red-400">Error al cargar publicaciones.</div>';
-            }
+            }, 800);
         }
 
-        function detectarCategoria() {
-            const texto = document.getElementById('pub-profesion').value.toUpperCase().trim();
-            const display = document.getElementById('display-categoria');
-            const hidden = document.getElementById('hidden-categoria');
-            const precioDisplay = document.getElementById('precio-display');
+        function initMap() {
+            // Contadores animados simulados
+            document.getElementById('counter-total').innerText = "1,240";
+            document.getElementById('counter-a1').innerText = "480";
+            document.getElementById('counter-a2').innerText = "510";
+            document.getElementById('counter-a3').innerText = "250";
 
-            const a1Keys = ['LICENCIADO','LICENCIATURA','GRADO','UNIVERSITARIO','MÉDICO LEGISTA','MEDICO LEGISTA','ABOGADO','PSICÓLOGO','PSICOLOGO','CRIMINÓLOGO','CRIMINOLOGO','MASTER','DOCTOR','INGENIERO'];
-            const a2Keys = ['TÉCNICO','TECNICO','TECNICATURA','TERCIARIO','PREGADO','PERITO','PAPILÓSCOPO','PAPILOSCOPO','BALÍSTICA','BALISTICA','EVISCERADOR'];
-            const a3Keys = ['AUXILIAR','DIPLOMADO','DIPLOMATURA','INSTRUCTOR','FOTÓGRAFO','FOTOGRAFO','CURSO','CAPACITACIÓN','CAPACITACION','CERTIFICACIÓN','CERTIFICACION'];
+            // Inicializar el mapa interactivo Leaflet centrado en Argentina
+            mapInstance = L.map('mapa-profesionales').setView([-38.4161, -63.6167], 4);
 
-            let cat = '';
-            if (a1Keys.some(k => texto.includes(k))) cat = 'A1';
-            else if (a2Keys.some(k => texto.includes(k))) cat = 'A2';
-            else if (a3Keys.some(k => texto.includes(k))) cat = 'A3';
-            else if (texto.length > 5) cat = 'A3';
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(mapInstance);
 
-            const configs = {
-                'A1': { text: 'A1', sub: 'Universitario', cls: 'form-input bg-yellow-50 border-forenseGold text-forenseGold font-bold flex items-center justify-between' },
-                'A2': { text: 'A2', sub: 'Técnico Superior', cls: 'form-input bg-blue-50 border-blue-500 text-blue-600 font-bold flex items-center justify-between' },
-                'A3': { text: 'A3', sub: 'Auxiliar/Diplomado', cls: 'form-input bg-emerald-50 border-emerald-500 text-emerald-600 font-bold flex items-center justify-between' }
-            };
+            // Base de datos de profesionales con CV resumido que aceptaron ser contactados
+            const profesionales = [
+                {
+                    nombre: "Lic. Carlos Gómez",
+                    matricula: "MAT-A1-4589",
+                    categoria: "Categoría A1 - Licenciatura en Criminalística",
+                    ubicacion: "Buenos Aires (CABA)",
+                    coords: [-34.6037, -58.3816],
+                    resumenCV: "Especialista en accidentología vial, documentología y peritaje balístico con más de 12 años de trayectoria judicial.",
+                    contacto: "carlos.gomez@renmcycf.ar"
+                },
+                {
+                    nombre: "Dra. Ana Martínez",
+                    matricula: "MAT-A1-1290",
+                    categoria: "Categoría A1 - Licenciatura en Criminalística y Ciencias Forenses",
+                    ubicacion: "San Clemente del Tuyú, Buenos Aires",
+                    coords: [-36.3564, -56.7155],
+                    resumenCV: "Perito forense orientada a la escena del hecho, criminalística de campo y preservación de rastros biológicos.",
+                    contacto: "ana.martinez@renmcycf.ar"
+                },
+                {
+                    nombre: "Prof. Mario Rossi",
+                    matricula: "MAT-A2-8821",
+                    categoria: "Categoría A2 - Técnico Superior en Balística",
+                    ubicacion: "Córdoba Capital",
+                    coords: [-31.4201, -64.1888],
+                    resumenCV: "Perito balístico y armero forense. Consultor técnico independiente para fueros judiciales provinciales y federales.",
+                    contacto: "mario.rossi@renmcycf.ar"
+                }
+            ];
 
-            if (configs[cat]) {
-                const c = configs[cat];
-                display.innerHTML = `<span class="font-black text-lg">${c.text}</span><span class="text-xs uppercase">${c.sub}</span>`;
-                display.className = c.cls;
-                hidden.value = cat;
-                const precio = preciosDB[cat] || 0;
-                precioDisplay.textContent = precio > 0 ? `$ ${new Intl.NumberFormat('es-AR').format(precio)}` : '$ --';
-            } else {
-                display.innerHTML = '<span>Escriba su título para detectar categoría...</span>';
-                display.className = 'form-input bg-slate-100 text-slate-400 font-bold flex items-center justify-between';
-                hidden.value = '';
-                precioDisplay.textContent = '$ --';
-            }
+            // Renderizar marcadores con tarjeta desplegable de CV Resumido
+            profesionales.forEach(prof => {
+                const popupContent = `
+                    <div style="font-family: inherit; padding: 6px; max-width: 260px;">
+                        <span style="font-size: 10px; background: rgba(212, 175, 55, 0.2); color: #fbbf24; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">${prof.matricula}</span>
+                        <h4 style="color: #ffffff; font-weight: 800; margin-top: 6px; margin-bottom: 2px; font-size: 15px;">${prof.nombre}</h4>
+                        <p style="margin: 0 0 6px 0; font-size: 11px; color: #94a3b8; font-weight: 600;">${prof.categoria}</p>
+                        <p style="margin: 4px 0; font-size: 12px; color: #cbd5e1; line-height: 1.3;"><strong>CV Resumido:</strong> ${prof.resumenCV}</p>
+                        <p style="margin: 4px 0 8px 0; font-size: 11px; color: #38bdf8;"><strong>Ubicación:</strong> ${prof.ubicacion}</p>
+                        <hr style="border-color: #334155; margin: 8px 0;">
+                        <a href="mailto:${prof.contacto}" style="display: block; text-align: center; background-color: #d4af37; color: #0a1128; padding: 6px 12px; border-radius: 6px; font-size: 11px; text-decoration: none; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em;">Contactar Especialista</a>
+                    </div>
+                `;
+
+                L.marker(prof.coords).addTo(mapInstance).bindPopup(popupContent);
+            });
         }
-
-        function mostrarSugerencias() { document.getElementById('sugerencias-box').style.display = 'block'; }
-        function ocultarSugerencias() { setTimeout(() => document.getElementById('sugerencias-box').style.display = 'none', 200); }
-        function seleccionarSugerencia(texto, cat) { document.getElementById('pub-profesion').value = texto; document.getElementById('sugerencias-box').style.display = 'none'; detectarCategoria(); }
-
-        function agregarDiplomas() {
-            const input = document.getElementById('input-diplomas');
-            const lista = document.getElementById('lista-diplomas');
-            const contador = document.getElementById('contador-diplomas');
-            if (!input.files.length) return;
-            for (let file of input.files) { if (diplomasFiles.length >= 10) { alert('Máximo 10 archivos permitidos.'); break; } diplomasFiles.push(file); }
-            lista.innerHTML = diplomasFiles.map((f, i) => `<div class="file-list-item"><span class="truncate">📄 ${f.name}</span><button type="button" onclick="eliminarDiploma(${i})" class="text-red-500 hover:text-red-700 ml-2">&times;</button></div>`).join('');
-            contador.textContent = `${diplomasFiles.length}/10 archivos cargados`;
-            input.value = '';
-        }
-
-        function eliminarDiploma(index) { diplomasFiles.splice(index, 1); agregarDiplomas(); document.getElementById('contador-diplomas').textContent = `${diplomasFiles.length}/10 archivos cargados`; }
-
-        function actualizarNombreArchivo(input, labelId) {
-            const label = document.getElementById(labelId);
-            if (input.files?.[0]) { const name = input.files[0].name; label.innerText = name.length > 25 ? name.substring(0,22)+'...' : name; label.classList.add('text-forenseBlue','font-bold'); } 
-            else { label.innerText = 'Clic para subir'; label.classList.remove('text-forenseBlue','font-bold'); }
-        }
-
-        async function enviarTramiteReal(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-submit-tramite');
-            const errorAlert = document.getElementById('error-alert');
-            const successAlert = document.getElementById('success-alert');
-            errorAlert.classList.add('hidden'); successAlert.classList.add('hidden');
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> SUBIENDO...';
-            btn.disabled = true; btn.classList.add('opacity-70','cursor-not-allowed');
-            lucide.createIcons();
-            try {
-                const nombres = document.getElementById('pub-nombres').value.trim().toUpperCase();
-                const apellidos = document.getElementById('pub-apellidos').value.trim().toUpperCase();
-                const dni = document.getElementById('pub-dni').value.trim().replace(/\D/g,'');
-                const ano = document.getElementById('pub-ano').value.trim();
-                const email = document.getElementById('pub-email').value.trim().toLowerCase();
-                const telefono = document.getElementById('pub-tel').value.trim();
-                const domicilio = document.getElementById('pub-domicilio').value.trim().toUpperCase();
-                const profesion = document.getElementById('pub-profesion').value.trim().toUpperCase();
-                const categoria = document.getElementById('hidden-categoria').value;
-                if(!categoria) throw new Error("Debe ingresar un título profesional válido.");
-                if(diplomasFiles.length === 0) throw new Error("Debe cargar al menos 1 diploma o certificado.");
-                const uploadFile = async (file, prefix) => {
-                    if (!file) return null;
-                    const ext = file.name.split('.').pop();
-                    const fileName = `${dni}_${prefix}_${Date.now()}.${ext}`;
-                    const { error } = await db.storage.from('renmcycf-documentos').upload(fileName, file, { cacheControl:'3600', upsert:false });
-                    if (error) throw new Error(`Error al subir ${prefix}: ${error.message}`);
-                    return `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${fileName}`;
-                };
-                btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> SUBIENDO ARCHIVOS...';
-                const frenteUrl = await uploadFile(document.getElementById('input-dni-frente').files[0], 'dni_frente');
-                const dorsoUrl = await uploadFile(document.getElementById('input-dni-dorso').files[0], 'dni_dorso');
-                const diplomasUrls = [];
-                for (let i = 0; i < diplomasFiles.length; i++) { const url = await uploadFile(diplomasFiles[i], `diploma_${i+1}`); if (url) diplomasUrls.push(url); }
-                btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> ENVIANDO DATOS...';
-                const { error: dbError } = await db.from('renmcycf_solicitudes').insert([{
-                    nombres, apellidos, dni, ano_nacimiento: parseInt(ano), email, telefono, domicilio,
-                    profesion, categoria, dni_frente_url: frenteUrl, dni_dorso_url: dorsoUrl,
-                    diploma_url: diplomasUrls[0] || null, diplomas_urls: diplomasUrls
-                }]);
-                if (dbError) { if(dbError.code === '23505') throw new Error("Ya existe una solicitud con este DNI."); throw new Error(dbError.message); }
-                successAlert.classList.remove('hidden');
-                const paymentLink = document.getElementById('payment-link');
-                if (mpLink) { paymentLink.href = mpLink; paymentLink.style.display = 'inline-block'; } else paymentLink.style.display = 'none';
-                document.getElementById('form-publico-adhesion').reset();
-                diplomasFiles = []; document.getElementById('lista-diplomas').innerHTML = ''; document.getElementById('contador-diplomas').textContent = '0/10 archivos cargados';
-                document.getElementById('hidden-categoria').value = ''; document.getElementById('display-categoria').innerHTML = '<span>Escriba su título para detectar categoría...</span>'; document.getElementById('display-categoria').className = 'form-input bg-slate-100 text-slate-400 font-bold flex items-center justify-between'; document.getElementById('precio-display').textContent = '$ --';
-                document.getElementById('file-name-frente').innerText = 'Clic para subir'; document.getElementById('file-name-dorso').innerText = 'Clic para subir';
-                window.scrollTo({ top: document.getElementById('inscripcion').offsetTop - 100, behavior:'smooth' });
-            } catch(err) {
-                errorAlert.classList.remove('hidden');
-                document.getElementById('error-text').innerText = err.message;
-                window.scrollTo({ top: errorAlert.offsetTop - 120, behavior:'smooth' });
-            } finally {
-                btn.innerHTML = originalHTML; btn.disabled = false; btn.classList.remove('opacity-70','cursor-not-allowed'); lucide.createIcons();
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            await cargarConfiguracion();
-            cargarEstadisticas();
-            cargarBibliotecaIndex();
-            cargarTesisIndex();
-        });
     </script>
 </body>
 </html>
