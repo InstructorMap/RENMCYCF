@@ -22,8 +22,8 @@
         :root { --neon-blue: #3b82f6; --neon-gold: #fbbf24; --glass-bg: rgba(15, 23, 42, 0.6); --glass-border: rgba(255, 255, 255, 0.08); }
         body { font-family: 'Outfit', sans-serif; background-color: #030712; color: #e2e8f0; background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.10) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(217, 119, 6, 0.05) 0%, transparent 50%); background-attachment: fixed; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 16px; }
-        .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 12px; transition: all 0.3s ease; }
+        .glass-panel { background: var(--glass-bg); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 16px; }
+        .glass-card { background: rgba(30, 41, 59, 0.4); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid var(--glass-border); border-radius: 12px; transition: all 0.3s ease; }
         .glass-card:hover { border-color: rgba(255,255,255,0.15); }
         .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; transition: all 0.3s; color: #94a3b8; cursor: pointer; }
         .sidebar-link:hover { color: white; background: rgba(255,255,255,0.05); }
@@ -55,19 +55,21 @@
 </head>
 <body class="h-screen flex overflow-hidden">
 
-    <!-- MODAL EXPEDIENTE / DOSSIER DIGITAL -->
-    <div id="modal-expediente" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto print:block print:bg-white print:p-0">
+    <!-- ========================================== -->
+    <!-- SECTOR: MODAL EXPEDIENTE / DOSSIER DIGITAL -->
+    <!-- ========================================== -->
+    <div id="modal-expediente" class="fixed inset-0 bg-black/90 -webkit-backdrop-blur-sm backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto print:block print:bg-white print:p-0">
         <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col my-auto print-container" id="dossier-print-area">
             <!-- INYECCIÓN: Cabecera actualizada para mostrar Logo y Hero dinámicamente -->
             <div class="bg-[#0a1128] text-white p-6 border-b-8 border-[#d4af37] text-center relative rounded-t-2xl print:rounded-none overflow-hidden">
-                <img id="modal-dyn-bg" src="" class="absolute inset-0 w-full h-full object-cover opacity-20 filter grayscale hidden">
+                <img id="modal-dyn-bg" src="" alt="Fondo dinámico institucional" class="absolute inset-0 w-full h-full object-cover opacity-20 filter grayscale hidden">
                 <div class="absolute inset-0 bg-[#0a1128]/80 hidden" id="modal-dyn-overlay"></div>
                 
-                <button onclick="cerrarExpediente()" class="absolute top-4 right-4 text-slate-400 hover:text-white print:hidden z-20"><i data-lucide="x-circle" class="w-8 h-8"></i></button>
+                <button type="button" aria-label="Cerrar expediente" onclick="cerrarExpediente()" class="absolute top-4 right-4 text-slate-400 hover:text-white print:hidden z-20"><i data-lucide="x-circle" class="w-8 h-8"></i></button>
                 
                 <div class="w-20 h-20 bg-white border-2 border-[#d4af37] rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg relative z-20 overflow-hidden" id="modal-logo-container">
                     <i data-lucide="fingerprint" class="w-10 h-10 text-[#0a1128]" id="modal-default-logo"></i>
-                    <img id="modal-dyn-logo" src="" class="absolute inset-0 w-full h-full object-contain p-2 hidden">
+                    <img id="modal-dyn-logo" src="" alt="Logo institucional dinámico" class="absolute inset-0 w-full h-full object-contain p-2 hidden">
                 </div>
                 
                 <h2 class="text-3xl font-black font-title uppercase tracking-widest text-[#d4af37] relative z-20">Expediente de Inscripción</h2>
@@ -100,28 +102,30 @@
             <div class="bg-slate-100 p-6 rounded-b-2xl flex justify-between items-center print:hidden border-t border-slate-300">
                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest"><i data-lucide="shield-check" class="inline w-3 h-3 mb-0.5"></i> Verificación y Control Interno</p>
                 <!-- INYECCIÓN: Botón configurado para disparar la generación del PDF -->
-                <button id="btn-imprimir-expediente" onclick="descargarExpedienteOficial()" class="bg-[#0a1128] hover:bg-slate-800 text-[#d4af37] px-6 py-3 rounded-xl font-black text-sm uppercase flex items-center gap-2 shadow-lg transition-transform active:scale-95"><i data-lucide="printer" class="w-5 h-5"></i> Guardar Legajo PDF</button>
+                <button type="button" id="btn-imprimir-expediente" aria-label="Guardar legajo en formato PDF" onclick="descargarExpedienteOficial()" class="bg-[#0a1128] hover:bg-slate-800 text-[#d4af37] px-6 py-3 rounded-xl font-black text-sm uppercase flex items-center gap-2 shadow-lg transition-transform active:scale-95"><i data-lucide="printer" class="w-5 h-5"></i> Guardar Legajo PDF</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL GESTION CLASES (CAMPUS) -->
-    <div id="modal-clases" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <!-- ========================================== -->
+    <!-- SECTOR: MODAL GESTION CLASES (CAMPUS) -->
+    <!-- ========================================== -->
+    <div id="modal-clases" class="fixed inset-0 bg-black/80 -webkit-backdrop-blur-sm backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-[#0f172a] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
             <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40">
                 <h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="layers" class="text-blue-400"></i> Módulos: <span id="modal-curso-titulo" class="text-yellow-500 font-normal"></span></h3>
-                <button onclick="cerrarModalClases()" class="text-slate-400 hover:text-red-400 transition-colors"><i data-lucide="x-circle" class="w-6 h-6"></i></button>
+                <button type="button" aria-label="Cerrar modal de clases" onclick="cerrarModalClases()" class="text-slate-400 hover:text-red-400 transition-colors"><i data-lucide="x-circle" class="w-6 h-6"></i></button>
             </div>
             <div class="p-6 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="md:col-span-1 border-r border-white/5 pr-4">
                     <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Añadir Recurso</h4>
                     <form onsubmit="subirClase(event)" id="form-clase" class="space-y-4">
                         <input type="hidden" id="clase-curso-id">
-                        <div><label>Título de la Clase/Archivo</label><input type="text" id="clase-titulo" placeholder="Ej: Clase 1 - Introducción" required></div>
-                        <div><label>Tipo de Recurso</label><select id="clase-tipo" onchange="toggleClaseInput()" required><option value="VIDEO">Video Grabado (YouTube/Vimeo)</option><option value="ZOOM">Clase en Vivo (Link Zoom/Meet)</option><option value="PDF">Archivo Adjunto (PDF)</option></select></div>
-                        <div id="clase-input-url"><label>URL (Link)</label><input type="url" id="clase-url" placeholder="https://..."></div>
-                        <div id="clase-input-file" class="hidden"><label>Subir Archivo PDF</label><input type="file" id="clase-file" accept=".pdf" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-700 file:text-white"></div>
-                        <button type="submit" id="btn-subir-clase" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl flex justify-center items-center gap-2 transition-transform active:scale-95 mt-4"><i data-lucide="upload" class="w-4 h-4"></i> GUARDAR CLASE</button>
+                        <div><label for="clase-titulo">Título de la Clase/Archivo</label><input type="text" id="clase-titulo" placeholder="Ej: Clase 1 - Introducción" required></div>
+                        <div><label for="clase-tipo">Tipo de Recurso</label><select id="clase-tipo" aria-label="Tipo de Recurso" onchange="toggleClaseInput()" required><option value="VIDEO">Video Grabado (YouTube/Vimeo)</option><option value="ZOOM">Clase en Vivo (Link Zoom/Meet)</option><option value="PDF">Archivo Adjunto (PDF)</option></select></div>
+                        <div id="clase-input-url"><label for="clase-url">URL (Link)</label><input type="url" id="clase-url" placeholder="https://..."></div>
+                        <div id="clase-input-file" class="hidden"><label for="clase-file">Subir Archivo PDF</label><input type="file" id="clase-file" accept=".pdf" aria-label="Subir Archivo PDF" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-700 file:text-white"></div>
+                        <button type="submit" id="btn-subir-clase" aria-label="Guardar clase" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl flex justify-center items-center gap-2 transition-transform active:scale-95 mt-4"><i data-lucide="upload" class="w-4 h-4"></i> GUARDAR CLASE</button>
                     </form>
                 </div>
                 <div class="md:col-span-2">
@@ -132,32 +136,39 @@
         </div>
     </div>
 
-    <!-- MODAL EDICIÓN RÁPIDA DE MATRICULADO -->
-    <div id="modal-editar-padron" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <!-- ========================================== -->
+    <!-- SECTOR: MODAL EDICIÓN RÁPIDA DE MATRICULADO -->
+    <!-- ========================================== -->
+    <div id="modal-editar-padron" class="fixed inset-0 bg-black/80 -webkit-backdrop-blur-sm backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-[#0f172a] border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40 sticky top-0 z-10">
                 <h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="user-pen" class="text-yellow-400"></i> Editar Matriculado</h3>
-                <button onclick="cerrarModalEdicion()" class="text-slate-400 hover:text-red-400 transition-colors"><i data-lucide="x-circle" class="w-6 h-6"></i></button>
+                <button type="button" aria-label="Cerrar modal de edición" onclick="cerrarModalEdicion()" class="text-slate-400 hover:text-red-400 transition-colors"><i data-lucide="x-circle" class="w-6 h-6"></i></button>
             </div>
             <form onsubmit="guardarEdicionMatriculado(event)" class="p-6 space-y-4">
                 <input type="hidden" id="edit-padron-id">
                 <div class="flex justify-center mb-4">
                     <div class="w-24 h-24 rounded-full border-2 border-dashed border-white/20 overflow-hidden bg-black/30 flex items-center justify-center relative group cursor-pointer" onclick="document.getElementById('edit-foto-file').click()">
-                        <img id="edit-foto-preview" src="https://ui-avatars.com/api/?name=E+D&background=0a1128&color=fff" class="w-full h-full object-cover">
+                        <img id="edit-foto-preview" src="https://ui-avatars.com/api/?name=E+D&background=0a1128&color=fff" alt="Vista previa de foto del matriculado" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="camera" class="w-6 h-6 text-white"></i></div>
-                        <input type="file" id="edit-foto-file" accept="image/*" class="hidden" onchange="previewFotoEdicion(this)">
+                        <input type="file" id="edit-foto-file" accept="image/*" class="hidden" aria-label="Subir foto de perfil" onchange="previewFotoEdicion(this)">
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4"><div><label>Nombres</label><input type="text" id="edit-nombres" required></div><div><label>Apellidos</label><input type="text" id="edit-apellidos" required></div></div>
-                <div><label>Profesión</label><input type="text" id="edit-profesion"></div>
-                <div class="grid grid-cols-2 gap-4"><div><label>Categoría</label><select id="edit-categoria"><option value="A1">A.1</option><option value="A2">A.2</option><option value="A3">A.3</option></select></div><div><label>Estado Legal</label><select id="edit-estado"><option value="ACTIVO">ACTIVO</option><option value="SUSPENDIDO">SUSPENDIDO</option><option value="REVOCADO">REVOCADO</option><option value="PENDIENTE">PENDIENTE</option></select></div></div>
-                <div><label>Fecha de Vencimiento</label><input type="date" id="edit-vencimiento"></div>
-                <button type="submit" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 mt-4"><i data-lucide="save" class="w-4 h-4"></i> GUARDAR CAMBIOS</button>
+                <div class="grid grid-cols-2 gap-4"><div><label for="edit-nombres">Nombres</label><input type="text" id="edit-nombres" required></div><div><label for="edit-apellidos">Apellidos</label><input type="text" id="edit-apellidos" required></div></div>
+                <div><label for="edit-profesion">Profesión</label><input type="text" id="edit-profesion"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label for="edit-categoria">Categoría</label><select id="edit-categoria" aria-label="Categoría profesional"><option value="A1">A.1</option><option value="A2">A.2</option><option value="A3">A.3</option></select></div>
+                    <div><label for="edit-estado">Estado Legal</label><select id="edit-estado" aria-label="Estado legal"><option value="ACTIVO">ACTIVO</option><option value="SUSPENDIDO">SUSPENDIDO</option><option value="REVOCADO">REVOCADO</option><option value="PENDIENTE">PENDIENTE</option></select></div>
+                </div>
+                <div><label for="edit-vencimiento">Fecha de Vencimiento</label><input type="date" id="edit-vencimiento"></div>
+                <button type="submit" aria-label="Guardar cambios del matriculado" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 mt-4"><i data-lucide="save" class="w-4 h-4"></i> GUARDAR CAMBIOS</button>
             </form>
         </div>
     </div>
 
-    <!-- SIDEBAR DE NAVEGACIÓN -->
+    <!-- ========================================== -->
+    <!-- SECTOR: SIDEBAR DE NAVEGACIÓN -->
+    <!-- ========================================== -->
     <aside class="w-64 glass-panel m-4 mr-0 flex flex-col z-20 hidden md:flex border-r border-white/5">
         <div class="h-28 flex flex-col justify-center px-6 border-b border-white/5 relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-yellow-500"></div>
@@ -166,36 +177,42 @@
         </div>
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
             <div class="px-2 py-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-2">Gestión y Análisis</div>
-            <button onclick="showTab('dashboard')" id="nav-dashboard" class="sidebar-link active w-full"><i data-lucide="pie-chart" class="w-4 h-4"></i> Dashboard Gerencial</button>
-            <button onclick="showTab('solicitudes')" id="nav-solicitudes" class="sidebar-link w-full"><i data-lucide="inbox" class="w-4 h-4"></i> Trámites (CRM)</button>
-            <button onclick="showTab('padron')" id="nav-padron" class="sidebar-link w-full"><i data-lucide="database" class="w-4 h-4"></i> Padrón Oficial</button>
+            <button type="button" onclick="showTab('dashboard')" id="nav-dashboard" class="sidebar-link active w-full"><i data-lucide="pie-chart" class="w-4 h-4"></i> Dashboard Gerencial</button>
+            <button type="button" onclick="showTab('solicitudes')" id="nav-solicitudes" class="sidebar-link w-full"><i data-lucide="inbox" class="w-4 h-4"></i> Trámites (CRM)</button>
+            <button type="button" onclick="showTab('padron')" id="nav-padron" class="sidebar-link w-full"><i data-lucide="database" class="w-4 h-4"></i> Padrón Oficial</button>
             <div id="menu-admin-section">
                 <div class="px-2 py-2 text-[9px] font-bold text-blue-400 uppercase tracking-widest mt-6">EdTech & Publicaciones</div>
-                <button onclick="showTab('campus')" id="nav-campus" class="sidebar-link w-full"><i data-lucide="monitor-play" class="w-4 h-4"></i> Campus Virtual</button>
-                <button onclick="showTab('biblioteca')" id="nav-biblioteca" class="sidebar-link w-full"><i data-lucide="book-open" class="w-4 h-4"></i> Gestión Biblioteca</button>
-                <button onclick="showTab('tesis')" id="nav-tesis" class="sidebar-link w-full"><i data-lucide="microscope" class="w-4 h-4"></i> Auditoría Tesis</button>
+                <button type="button" onclick="showTab('campus')" id="nav-campus" class="sidebar-link w-full"><i data-lucide="monitor-play" class="w-4 h-4"></i> Campus Virtual</button>
+                <button type="button" onclick="showTab('biblioteca')" id="nav-biblioteca" class="sidebar-link w-full"><i data-lucide="book-open" class="w-4 h-4"></i> Gestión Biblioteca</button>
+                <button type="button" onclick="showTab('tesis')" id="nav-tesis" class="sidebar-link w-full"><i data-lucide="microscope" class="w-4 h-4"></i> Auditoría Tesis</button>
                 <div class="px-2 py-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-6">Sistema y Core</div>
-                <button onclick="showTab('masiva')" id="nav-masiva" class="sidebar-link w-full"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Carga Masiva</button>
-                <button onclick="showTab('diseno')" id="nav-diseno" class="sidebar-link w-full"><i data-lucide="layout-template" class="w-4 h-4"></i> Diseño Credencial</button>
-                <button onclick="showTab('configuracion')" id="nav-configuracion" class="sidebar-link w-full"><i data-lucide="settings" class="w-4 h-4"></i> Configuración Precios</button>
-                <button onclick="showTab('contenido')" id="nav-contenido" class="sidebar-link w-full"><i data-lucide="palette" class="w-4 h-4"></i> Textos del Sitio</button>
-                <button onclick="showTab('usuarios')" id="nav-usuarios" class="sidebar-link w-full"><i data-lucide="users" class="w-4 h-4"></i> Accesos y Roles</button>
+                <button type="button" onclick="showTab('masiva')" id="nav-masiva" class="sidebar-link w-full"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Carga Masiva</button>
+                <button type="button" onclick="showTab('diseno')" id="nav-diseno" class="sidebar-link w-full"><i data-lucide="layout-template" class="w-4 h-4"></i> Diseño Credencial</button>
+                <button type="button" onclick="showTab('configuracion')" id="nav-configuracion" class="sidebar-link w-full"><i data-lucide="settings" class="w-4 h-4"></i> Configuración Precios</button>
+                <button type="button" onclick="showTab('contenido')" id="nav-contenido" class="sidebar-link w-full"><i data-lucide="palette" class="w-4 h-4"></i> Textos del Sitio</button>
+                <button type="button" onclick="showTab('usuarios')" id="nav-usuarios" class="sidebar-link w-full"><i data-lucide="users" class="w-4 h-4"></i> Accesos y Roles</button>
             </div>
         </nav>
     </aside>
 
     <main class="flex-1 flex flex-col min-w-0 relative">
+        <!-- ========================================== -->
+        <!-- SECTOR: CABECERA PRINCIPAL (HEADER) -->
+        <!-- ========================================== -->
         <header class="h-20 flex justify-between items-center px-8 z-10 border-b border-white/5 bg-black/20">
             <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400" id="page-title">Dashboard Gerencial</h2>
             <div class="flex items-center gap-4">
                 <span class="text-xs font-bold text-yellow-500 bg-yellow-500/10 px-3 py-1 rounded-lg uppercase tracking-wider" id="header-user-role">Conectando...</span>
-                <button onclick="cerrarSesion()" class="text-slate-400 hover:text-red-400 transition-colors flex items-center gap-2 border border-slate-700/50 hover:border-red-500/50 px-3 py-1.5 rounded-lg" title="Cerrar Sesión"><span class="text-xs font-bold hidden md:inline">SALIR</span><i data-lucide="log-out" class="w-4 h-4"></i></button>
+                <button type="button" onclick="cerrarSesion()" class="text-slate-400 hover:text-red-400 transition-colors flex items-center gap-2 border border-slate-700/50 hover:border-red-500/50 px-3 py-1.5 rounded-lg" title="Cerrar Sesión"><span class="text-xs font-bold hidden md:inline">SALIR</span><i data-lucide="log-out" class="w-4 h-4"></i></button>
             </div>
         </header>
 
+        <!-- CONTENEDOR DE VISTAS / PESTAÑAS (TABS) -->
         <div class="flex-1 overflow-y-auto p-4 md:p-8 z-10">
 
-            <!-- DASHBOARD GERENCIAL -->
+            <!-- ========================================== -->
+            <!-- SECTOR: VISTA - DASHBOARD GERENCIAL -->
+            <!-- ========================================== -->
             <div id="view-dashboard" class="tab-content active space-y-6">
                 <div id="dashboard-alerts" class="space-y-3 mb-6"></div>
                 <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
@@ -216,7 +233,7 @@
                         <p class="text-xs text-slate-400 mb-6 leading-relaxed">Genera un reporte oficial en Excel con el listado de altas y el resumen financiero exacto.</p>
                         <div class="space-y-4">
                             <div>
-                                <select id="reporte-periodo" class="mt-1 bg-black/40 border border-emerald-500/30 text-white text-sm rounded-lg focus:ring-emerald-500 block w-full p-2.5">
+                                <select id="reporte-periodo" aria-label="Período del reporte financiero" class="mt-1 bg-black/40 border border-emerald-500/30 text-white text-sm rounded-lg focus:ring-emerald-500 block w-full p-2.5">
                                     <option value="semana">Últimos 7 días (Cierre Semanal)</option>
                                     <option value="quincena">Últimos 15 días (Cierre Quincenal)</option>
                                     <option value="mes" selected>Últimos 30 días (Cierre Mensual)</option>
@@ -224,846 +241,48 @@
                                     <option value="todo">Histórico Completo</option>
                                 </select>
                             </div>
-                            <button onclick="generarReporteExcel()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg shadow-emerald-900/50"><i data-lucide="download" class="w-5 h-5"></i> DESCARGAR REPORTE EXCEL</button>
+                            <button type="button" aria-label="Descargar reporte Excel" onclick="generarReporteExcel()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg shadow-emerald-900/50"><i data-lucide="download" class="w-5 h-5"></i> DESCARGAR REPORTE EXCEL</button>
                         </div>
                     </div>
                     <div class="glass-card p-6"><h3 class="text-white font-bold text-sm uppercase tracking-wider mb-4 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4 text-blue-400"></i> Últimas Altas Registradas</h3><div id="recent-activity" class="space-y-3 overflow-y-auto max-h-[200px] pr-2"></div></div>
                 </div>
             </div>
 
-            <!-- CRM SOLICITUDES -->
-            <div id="view-solicitudes" class="tab-content space-y-6"><div class="glass-card p-6"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Bandeja de Adhesiones</h3><button onclick="cargarSolicitudes()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div><div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Solicitante</th><th class="p-3">Categoría</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="crm-body"></tbody></table></div></div></div>
+            <!-- ========================================== -->
+            <!-- SECTOR: VISTA - TRÁMITES (CRM SOLICITUDES) -->
+            <!-- ========================================== -->
+            <div id="view-solicitudes" class="tab-content space-y-6"><div class="glass-card p-6"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Bandeja de Adhesiones</h3><button type="button" aria-label="Actualizar solicitudes" onclick="cargarSolicitudes()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div><div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Solicitante</th><th class="p-3">Categoría</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="crm-body"></tbody></table></div></div></div>
             
-            <!-- PADRÓN OFICIAL -->
-            <div id="view-padron" class="tab-content space-y-6"><div class="flex justify-between items-center bg-black/20 p-4 rounded-xl border border-white/5"><div class="relative w-full max-w-md"><i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i><input type="text" id="search-padron" placeholder="Buscar por DNI, Nombre o Matrícula..." class="w-full pl-9 bg-black/50" onkeyup="if(event.key==='Enter')buscarPadron()"></div></div><div class="glass-card overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-4">Matrícula</th><th class="p-4">Profesional</th><th class="p-4">Categoría</th><th class="p-4 text-right">Acciones</th></tr></thead><tbody id="padron-body"></tbody></table></div></div></div>
+            <!-- ========================================== -->
+            <!-- SECTOR: VISTA - PADRÓN OFICIAL -->
+            <!-- ========================================== -->
+            <div id="view-padron" class="tab-content space-y-6"><div class="flex justify-between items-center bg-black/20 p-4 rounded-xl border border-white/5"><div class="relative w-full max-w-md"><i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i><input type="text" id="search-padron" aria-label="Buscar en padrón" placeholder="Buscar por DNI, Nombre o Matrícula..." class="w-full pl-9 bg-black/50" onkeyup="if(event.key==='Enter')buscarPadron()"></div></div><div class="glass-card overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-4">Matrícula</th><th class="p-4">Profesional</th><th class="p-4">Categoría</th><th class="p-4 text-right">Acciones</th></tr></thead><tbody id="padron-body"></tbody></table></div></div></div>
             
-            <!-- CAMPUS VIRTUAL -->
-            <div id="view-campus" class="tab-content space-y-6"><div class="grid grid-cols-1 xl:grid-cols-3 gap-6"><div class="glass-card p-6 xl:col-span-1"><h3 class="text-white font-bold mb-4 flex items-center gap-2 border-b border-white/10 pb-2"><i data-lucide="monitor-play" class="text-blue-500"></i> Nuevo Curso</h3><form id="form-curso" onsubmit="crearCurso(event)" class="space-y-4"><div><label>Título del Curso</label><input type="text" id="camp-titulo" placeholder="Ej: Especialización Balística" required></div><div><label>Descripción Breve</label><textarea id="camp-desc" rows="3" placeholder="Resumen del curso..."></textarea></div><div><label>Categoría Habilitada</label><select id="camp-cat"><option value="TODAS">Acceso Libre</option><option value="A1">Exclusivo A.1</option><option value="A2">Exclusivo A.2</option><option value="A3">Exclusivo A.3</option></select></div><div><label>Portada (JPG/PNG)</label><input type="file" id="camp-portada" accept="image/*" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-700 file:text-white"></div><button type="submit" id="btn-crear-curso" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 mt-4"><i data-lucide="plus" class="w-4 h-4"></i> CREAR CURSO</button></form></div><div class="glass-card p-6 xl:col-span-2"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Catálogo de Cursos</h3><button onclick="cargarCursosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div><div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Curso</th><th class="p-3">Acceso</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="campus-body"></tbody></table></div></div></div></div>
+            <!-- ========================================== -->
+            <!-- SECTOR: VISTA - CAMPUS VIRTUAL -->
+            <!-- ========================================== -->
+            <div id="view-campus" class="tab-content space-y-6"><div class="grid grid-cols-1 xl:grid-cols-3 gap-6"><div class="glass-card p-6 xl:col-span-1"><h3 class="text-white font-bold mb-4 flex items-center gap-2 border-b border-white/10 pb-2"><i data-lucide="monitor-play" class="text-blue-500"></i> Nuevo Curso</h3><form id="form-curso" onsubmit="crearCurso(event)" class="space-y-4"><div><label for="camp-titulo">Título del Curso</label><input type="text" id="camp-titulo" placeholder="Ej: Especialización Balística" required></div><div><label for="camp-desc">Descripción Breve</label><textarea id="camp-desc" rows="3" placeholder="Resumen del curso..."></textarea></div><div><label for="camp-cat">Categoría Habilitada</label><select id="camp-cat" aria-label="Categoría habilitada"><option value="TODAS">Acceso Libre</option><option value="A1">Exclusivo A.1</option><option value="A2">Exclusivo A.2</option><option value="A3">Exclusivo A.3</option></select></div><div><label for="camp-portada">Portada (JPG/PNG)</label><input type="file" id="camp-portada" accept="image/*" aria-label="Subir portada del curso" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-700 file:text-white"></div><button type="submit" id="btn-crear-curso" aria-label="Crear nuevo curso" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 mt-4"><i data-lucide="plus" class="w-4 h-4"></i> CREAR CURSO</button></form></div><div class="glass-card p-6 xl:col-span-2"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Catálogo de Cursos</h3><button type="button" aria-label="Actualizar catálogo de cursos" onclick="cargarCursosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div><div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Curso</th><th class="p-3">Acceso</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="campus-body"></tbody></table></div></div></div></div>
             
-            <!-- BIBLIOTECA -->
-            <div id="view-biblioteca" class="tab-content space-y-6"><div class="grid grid-cols-1 xl:grid-cols-3 gap-6"><div class="glass-card p-6 xl:col-span-1"><h3 class="text-white font-bold mb-4 flex items-center gap-2 border-b border-white/10 pb-2"><i data-lucide="book-up" class="text-blue-500"></i> Subir Material</h3><form id="form-biblioteca" onsubmit="subirLibro(event)" class="space-y-4"><div><label>Título</label><input type="text" id="bib-titulo" required></div><div><label>Autor</label><input type="text" id="bib-autor"></div><div><label>Tipo Acceso</label><select id="bib-acceso" required><option value="GRATUITO">Público (Gratuito)</option><option value="PREMIUM">Premium (Solo Matriculados)</option></select></div><div><label>Archivo PDF (Requerido)</label><input type="file" id="bib-pdf" accept=".pdf" required class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white"></div><div><label>Portada (Opcional)</label><input type="file" id="bib-portada" accept="image/*" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-700 file:text-white"></div><button type="submit" id="btn-subir-libro" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 mt-4"><i data-lucide="upload" class="w-4 h-4"></i> PUBLICAR</button></form></div><div class="glass-card p-6 xl:col-span-2"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Catálogo Actual</h3><button onclick="cargarBibliotecaPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div><div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Título y Autor</th><th class="p-3">Acceso</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="biblioteca-body"></tbody></table></div></div></div></div>
+            <!-- ========================================== -->
+            <!-- SECTOR: VISTA - GESTIÓN BIBLIOTECA -->
+            <!-- ========================================== -->
+            <div id="view-biblioteca" class="tab-content space-y-6"><div class="grid grid-cols-1 xl:grid-cols-3 gap-6"><div class="glass-card p-6 xl:col-span-1"><h3 class="text-white font-bold mb-4 flex items-center gap-2 border-b border-white/10 pb-2"><i data-lucide="book-up" class="text-blue-500"></i> Subir Material</h3><form id="form-biblioteca" onsubmit="subirLibro(event)" class="space-y-4"><div><label for="bib-titulo">Título</label><input type="text" id="bib-titulo" required></div><div><label for="bib-autor">Autor</label><input type="text" id="bib-autor"></div><div><label for="bib-acceso">Tipo Acceso</label><select id="bib-acceso" aria-label="Tipo de acceso al material" required><option value="GRATUITO">Público (Gratuito)</option><option value="PREMIUM">Premium (Solo Matriculados)</option></select></div><div><label for="bib-pdf">Archivo PDF (Requerido)</label><input type="file" id="bib-pdf" accept=".pdf" aria-label="Subir archivo PDF requerido" required class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white"></div><div><label for="bib-portada">Portada (Opcional)</label><input type="file" id="bib-portada" accept="image/*" aria-label="Subir portada opcional" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-700 file:text-white"></div><button type="submit" id="btn-subir-libro" aria-label="Publicar material" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 mt-4"><i data-lucide="upload" class="w-4 h-4"></i> PUBLICAR</button></form></div><div class="glass-card p-6 xl:col-span-2"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Catálogo Actual</h3><button type="button" aria-label="Actualizar catálogo de biblioteca" onclick="cargarBibliotecaPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div><div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Título y Autor</th><th class="p-3">Acceso</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="biblioteca-body"></tbody></table></div></div></div></div>
             
-            <!-- TESIS -->
-            <div id="view-tesis" class="tab-content space-y-6"><div class="glass-card p-6"><div class="flex justify-between items-center mb-4"><div><h3 class="font-bold text-lg text-white">Comité Evaluador de Tesis</h3><p class="text-xs text-slate-400">Trabajos enviados por los matriculados.</p></div><button onclick="cargarTesisPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div><div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Autor y Matrícula</th><th class="p-3">Título de la Tesis</th><th class="p-3">Estado</th><th class="p-3 text-right">Auditar</th></tr></thead><tbody id="tesis-body"></tbody></table></div></div></div>
+            <!-- ========================================== -->
+            <!-- SECTOR: VISTA - AUDITORÍA TESIS -->
+            <!-- ========================================== -->
+            <div id="view-tesis" class="tab-content space-y-6"><div class="glass-card p-6"><div class="flex justify-between items-center mb-4"><div><h3 class="font-bold text-lg text-white">Comité Evaluador de Tesis</h3><p class="text-xs text-slate-400">Trabajos enviados por los matriculados.</p></div><button type="button" aria-label="Actualizar comité de tesis" onclick="cargarTesisPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div><div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Autor y Matrícula</th><th class="p-3">Título de la Tesis</th><th class="p-3">Estado</th><th class="p-3 text-right">Auditar</th></tr></thead><tbody id="tesis-body"></tbody></table></div></div></div>
             
-            <!-- CARGA MASIVA -->
-            <div id="view-masiva" class="tab-content space-y-6"><div class="glass-card p-8 max-w-2xl mx-auto text-center border-blue-500/30"><h3 class="text-xl font-black text-white mb-2"><i data-lucide="upload-cloud" class="inline-block w-6 h-6 text-blue-400 mb-1"></i> Inyección Masiva</h3><input type="file" id="input-excel" accept=".xlsx,.xls" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white mb-6" onchange="procesarExcel()"><div id="preview-area" class="hidden text-left bg-black/30 p-4 rounded-xl border border-white/5"><div class="flex justify-between items-center mb-2"><span class="text-sm font-bold text-white">Detectados: <span id="count-preview" class="text-blue-400">0</span></span><button onclick="confirmarCargaMasiva()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded-lg font-bold text-xs"><i data-lucide="check" class="w-3 h-3"></i> EJECUTAR</button></div><div class="max-h-40 overflow-y-auto"><table class="w-full text-xs font-mono"><tbody id="tabla-preview"></tbody></table></div></div></div></div>
-            
-            <!-- DISEÑO CREDENCIAL -->
-            <div id="view-diseno" class="tab-content space-y-6"><div class="grid grid-cols-1 xl:grid-cols-12 gap-6"><div class="glass-card p-6 xl:col-span-4 h-[750px] overflow-y-auto flex flex-col"><h3 class="text-white font-bold mb-4 flex items-center gap-2 border-b border-white/10 pb-2"><i data-lucide="layout" class="text-blue-500"></i> Calibración Visual</h3><div class="flex bg-black/30 rounded-lg p-1 mb-5"><button class="flex-1 py-2 text-xs font-bold uppercase rounded-md text-white bg-blue-600 shadow" id="btn-tab-frente" onclick="switchEditorTab('frente')">Frente</button><button class="flex-1 py-2 text-xs font-bold uppercase rounded-md text-slate-400 hover:text-white" id="btn-tab-dorso" onclick="switchEditorTab('dorso')">Dorso</button></div><div class="mb-5 space-y-3 p-4 bg-black/20 rounded-xl border border-white/5"><div><label class="text-xs text-slate-400">Fondo Frente (JPG/PNG)</label><input type="file" id="dis-bg-frente" accept="image/*" class="w-full text-[10px]" onchange="subirFondoCredencial(this, 'frente')"></div><div><label class="text-xs text-slate-400">Fondo Dorso (JPG/PNG)</label><input type="file" id="dis-bg-dorso" accept="image/*" class="w-full text-[10px]" onchange="subirFondoCredencial(this, 'dorso')"></div><div><label class="text-xs text-slate-400">Roseta / Marco Frontal (PNG Transparente)</label><input type="file" id="dis-roseta" accept="image/png" class="w-full text-[10px]" onchange="subirRoseta(this)"></div></div><div id="editor-controles" class="space-y-4 flex-1 overflow-y-auto pr-2"></div><button onclick="guardarDiseno()" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl flex items-center justify-center gap-2"><i data-lucide="save" class="w-5 h-5"></i> GUARDAR DISEÑO</button></div><div class="glass-card p-6 xl:col-span-8 flex items-center justify-center bg-black/40 overflow-hidden relative" style="min-height: 500px;"><div class="absolute top-4 right-4 bg-black/50 px-3 py-1 rounded text-xs font-mono text-slate-400" id="preview-indicator">VISTA: FRENTE</div><div id="preview-wrapper" style="transform: scale(0.65); transform-origin: center;"><div id="card-preview-frente" style="position: relative; width: 1000px; height: 630px; background-size: 1000px 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.5);"><div id="pre-foto" style="position:absolute; overflow:hidden;"><img src="https://ui-avatars.com/api/?name=F+P&background=0a1128&color=fff" style="width:100%;height:100%;object-fit:cover;"></div><div id="pre-roseta" style="position:absolute; display:none;"><img src="" style="width:100%;height:100%;object-fit:contain;pointer-events:none;"></div><div id="pre-profesion" style="position:absolute; font-family:'Montserrat', sans-serif; font-weight:900; text-transform:uppercase; white-space: nowrap; overflow:hidden;">LICENCIADO EN CRIMINALÍSTICA</div><div id="pre-categoria" style="position:absolute; font-family:'Montserrat', sans-serif; font-weight:900;">A.1</div><div id="pre-nombre" style="position:absolute; font-family:'Inter', sans-serif; font-weight:900; text-transform:uppercase;">GUSTAVO INCHAUSPE</div><div id="pre-dni" style="position:absolute; font-family:'Inter', sans-serif; font-weight:900;">16.906.070</div><div id="pre-ano_nac" style="position:absolute; font-family:'Inter', sans-serif; font-weight:900;">1964</div><div id="pre-matricula" style="position:absolute; font-family:'Inter', sans-serif; font-weight:900;">1000-26</div><div id="pre-vence" style="position:absolute; font-family:'Inter', sans-serif; font-weight:900;">26/07/2027</div></div><div id="card-preview-dorso" style="position: relative; width: 1000px; height: 630px; background-size: 1000px 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.5); display: none;"><div id="pre-dorso_cat" style="position:absolute; font-family:'Inter', sans-serif; font-weight:600; color:#333;">A.1 Profesionales con título de Grado en carrera afines...</div><div id="pre-qr" style="position:absolute; background: url('https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg') center/cover; border: 2px solid #ccc; border-radius: 10px;"></div></div></div></div></div></div>
-            
-            <!-- CONFIGURACIÓN -->
-            <div id="view-configuracion" class="tab-content space-y-6"><div class="glass-card p-8 border-yellow-500/30"><h3 class="text-white font-bold mb-6 flex items-center gap-2 border-b border-white/10 pb-2"><i data-lucide="settings" class="text-yellow-500"></i> Parámetros del Sistema</h3><form id="form-config" class="space-y-6" onsubmit="guardarConfiguracion(event)"><div class="grid grid-cols-1 md:grid-cols-3 gap-6"><div><label>Arancel A1 (ARS)</label><input type="number" id="conf-arancel-a1" required></div><div><label>Arancel A2 (ARS)</label><input type="number" id="conf-arancel-a2" required></div><div><label>Arancel A3 (ARS)</label><input type="number" id="conf-arancel-a3" required></div></div><div><label>Enlace de Pago (Mercado Pago)</label><input type="url" id="conf-mp-link" placeholder="https://mpago.la/..."></div><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label>WhatsApp</label><input type="text" id="conf-whatsapp"></div><div><label>Email de Contacto</label><input type="email" id="conf-email"></div></div><div><label>Imagen de Fondo del Hero</label><div class="upload-zone" onclick="document.getElementById('input-hero-image').click()"><i data-lucide="image" class="w-8 h-8 mx-auto text-slate-400 mb-2"></i><span class="text-xs text-slate-400">Clic para subir imagen</span><input type="file" id="input-hero-image" accept="image/*" onchange="previewYGuardarImagen(this, 'preview-hero', 'hero_image')" style="display:none;"></div><img id="preview-hero" class="preview-img" src="" alt="Preview" style="display:none;"><input type="hidden" id="conf-hero-image-url"></div><div><label>Logo del Registro</label><div class="upload-zone" onclick="document.getElementById('input-logo').click()"><i data-lucide="image" class="w-8 h-8 mx-auto text-slate-400 mb-2"></i><span class="text-xs text-slate-400">Clic para subir logo</span><input type="file" id="input-logo" accept="image/*" onchange="previewYGuardarImagen(this, 'preview-logo', 'logo')" style="display:none;"></div><img id="preview-logo" class="preview-img" src="" alt="Preview" style="display:none;"><input type="hidden" id="conf-logo-url"></div><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label>Facebook URL</label><input type="url" id="conf-facebook"></div><div><label>Instagram URL</label><input type="url" id="conf-instagram"></div><div><label>Twitter URL</label><input type="url" id="conf-twitter"></div><div><label>LinkedIn URL</label><input type="url" id="conf-linkedin"></div></div><div class="flex justify-end pt-4"><button type="submit" class="bg-yellow-600 hover:bg-yellow-500 text-black font-black px-6 py-3 rounded-xl">ACTUALIZAR CONFIGURACIÓN</button></div></form></div></div>
-            
-            <!-- CONTENIDO -->
-            <div id="view-contenido" class="tab-content space-y-6"><div class="glass-card p-8 border-blue-500/30"><h3 class="text-white font-bold mb-6 flex items-center gap-2 border-b border-white/10 pb-2"><i data-lucide="palette" class="text-blue-500"></i> Editar Contenido</h3><form id="form-contenido" class="space-y-6" onsubmit="guardarContenido(event)"><div><label>Badge del Hero</label><input type="text" id="cont-hero-badge-text"></div><div><label>Título del Hero</label><input type="text" id="cont-hero-title"></div><div><label>Subtítulo del Hero</label><textarea id="cont-hero-subtitle" rows="3"></textarea></div><div class="grid grid-cols-2 gap-4"><div><label>Texto Botón Principal</label><input type="text" id="cont-hero-cta-primary"></div><div><label>Texto Botón Secundario</label><input type="text" id="cont-hero-cta-secondary"></div></div><div><label>Título Sección Urgencia</label><input type="text" id="cont-urgencia-titulo"></div><div><label>Texto Sección Urgencia</label><textarea id="cont-urgencia-texto" rows="3"></textarea></div><div><label>Descripción Categoría A1</label><textarea id="cont-cat-a1-desc" rows="3"></textarea></div><div><label>Descripción Categoría A2</label><textarea id="cont-cat-a2-desc" rows="3"></textarea></div><div><label>Descripción Categoría A3</label><textarea id="cont-cat-a3-desc" rows="3"></textarea></div><div><label>Texto Footer</label><textarea id="cont-footer-texto" rows="2"></textarea></div><div class="flex justify-end pt-4"><button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-6 py-3 rounded-xl">ACTUALIZAR CONTENIDO</button></div></form></div></div>
-
-            <!-- USUARIOS -->
-            <div id="view-usuarios" class="tab-content space-y-6">
-                <div class="glass-card p-8 border-emerald-500/30">
-                    <h3 class="text-white font-bold mb-6 flex items-center gap-2"><i data-lucide="users" class="text-emerald-500"></i> Accesos y Permisos (Roles a Medida)</h3>
-                    <form class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8" onsubmit="crearUsuario(event)">
-                        <div><label>Email Corporativo</label><input type="email" id="usr-email" required placeholder="auditor@renmcycf.ar"></div>
-                        <div><label>Descripción del Cargo / Rol</label><input type="text" id="usr-rol-desc" required placeholder="Ej: Secretario Contable"></div>
-                        <div><label>Nombres</label><input type="text" id="usr-nombres" placeholder="Juan"></div>
-                        <div><label>Apellidos</label><input type="text" id="usr-apellidos" placeholder="Pérez"></div>
-                        
-                        <div class="md:col-span-2 border-t border-white/10 pt-4 mt-2 bg-black/20 p-4 rounded-xl">
-                            <label class="text-emerald-400 mb-3"><i data-lucide="shield" class="inline w-3 h-3"></i> Autorizaciones (Pestañas Visibles)</label>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2" id="usr-permisos">
-                                <label class="flex items-center gap-2 text-xs text-white cursor-pointer"><input type="checkbox" value="dashboard" checked class="permiso-chk accent-emerald-500 w-4 h-4"> Dashboard Gerencial</label>
-                                <label class="flex items-center gap-2 text-xs text-white cursor-pointer"><input type="checkbox" value="solicitudes" checked class="permiso-chk accent-emerald-500 w-4 h-4"> Trámites (CRM)</label>
-                                <label class="flex items-center gap-2 text-xs text-white cursor-pointer"><input type="checkbox" value="padron" checked class="permiso-chk accent-emerald-500 w-4 h-4"> Padrón Oficial</label>
-                                <label class="flex items-center gap-2 text-xs text-white cursor-pointer"><input type="checkbox" value="campus" class="permiso-chk accent-emerald-500 w-4 h-4"> Campus Virtual</label>
-                                <label class="flex items-center gap-2 text-xs text-white cursor-pointer"><input type="checkbox" value="biblioteca" class="permiso-chk accent-emerald-500 w-4 h-4"> Biblioteca</label>
-                                <label class="flex items-center gap-2 text-xs text-white cursor-pointer"><input type="checkbox" value="tesis" class="permiso-chk accent-emerald-500 w-4 h-4"> Auditoría Tesis</label>
-                                <label class="flex items-center gap-2 text-xs text-white cursor-pointer"><input type="checkbox" value="masiva" class="permiso-chk accent-emerald-500 w-4 h-4"> Carga Masiva</label>
-                                <label class="flex items-center gap-2 text-xs text-white cursor-pointer"><input type="checkbox" value="admin" class="permiso-chk accent-emerald-500 w-4 h-4"> Configuración Total</label>
-                            </div>
-                        </div>
-
-                        <div class="md:col-span-2 pt-2"><label>Contraseña Asignada</label><input type="text" id="usr-pass" required placeholder="Mínimo 8 caracteres" minlength="8"></div>
-                        <div class="md:col-span-2 flex justify-end"><button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition-transform active:scale-95"><i data-lucide="user-plus" class="inline w-4 h-4 mr-1"></i> CREAR PERFIL DE ACCESO</button></div>
-                    </form>
-                    <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Email y Usuario</th><th class="p-3">Cargo Asignado</th><th class="p-3">Estado</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="usuarios-body"></tbody></table></div>
-                </div>
-            </div>
+            <!-- ========================================== -->
+            <!-- SECTOR: VISTA - CARGA MASIVA -->
+            <!-- ========================================== -->
+            <div id="view-masiva" class="tab-content space-y-6"><div class="glass-card p-8 max-w-2xl mx-auto text-center border-blue-500/30"><h3 class="text-xl font-black text-white mb-2"><i data-lucide="upload-cloud" class="inline-block w-6 h-6 text-blue-400 mb-1"></i> Inyección Masiva</h3></div></div>
 
         </div>
     </main>
 
     <script>
         lucide.createIcons();
-        const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
-        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
-        const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
-
-        let bgFrenteUrl = ''; let bgDorsoUrl = ''; let rosetaUrl = ''; let currentEditorTab = 'frente';
-        let datosExcel = []; let padronLocalMemoria = []; 
-        let chartEvolucionInstance = null; let chartCategoriasInstance = null;
-        let currentExpedienteUser = null; // INYECCIÓN: Almacena el usuario del expediente actual
-
-        // ==========================================
-        // 0. SESIÓN Y PERMISOS DINÁMICOS
-        // ==========================================
-        async function verificarSesion() {
-            const { data: { session }, error } = await db.auth.getSession();
-            if (error || !session) { window.location.href = 'login.renmcycf.html'; return; }
-            
-            const { data: rolData } = await db.from('renmcycf_roles').select('rol, activo, nombres').eq('user_id', session.user.id).single();
-            if (!rolData || !rolData.activo) { await cerrarSesion(false); window.location.href = 'login.renmcycf.html'; return; }
-            
-            document.getElementById('header-user-role').textContent = `${rolData.nombres || 'User'} (${rolData.rol})`;
-            
-            if (rolData.rol !== 'superadmin') document.getElementById('menu-admin-section').style.display = 'none';
-            if (rolData.rol === 'asesor') { document.getElementById('nav-dashboard').style.display = 'none'; showTab('solicitudes'); } 
-            else { actualizarDashboard(); showTab('dashboard'); }
-        }
-
-        async function cerrarSesion(redirect = true) { await db.auth.signOut(); localStorage.removeItem('renmcycf_user'); if (redirect) window.location.href = 'login.renmcycf.html'; }
-
-        function showTab(id) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById('view-' + id).classList.add('active');
-            document.getElementById('nav-' + id)?.classList.add('active');
-            
-            const titles = { 'dashboard': 'Dashboard Gerencial', 'solicitudes': 'Bandeja de CRM', 'padron': 'Padrón Nacional', 'campus': 'Gestión de Campus Virtual', 'biblioteca': 'Biblioteca Forense', 'tesis': 'Auditoría de Tesis', 'masiva': 'Inyección Masiva de Datos', 'diseno': 'Calibrador de Credenciales', 'configuracion': 'Configuración Precios', 'contenido': 'Textos del Sitio', 'usuarios': 'Accesos y Roles' };
-            document.getElementById('page-title').textContent = titles[id] || id;
-            
-            if(id === 'dashboard') actualizarDashboard();
-            if(id === 'solicitudes') cargarSolicitudes();
-            if(id === 'padron') cargarPadron();
-            if(id === 'campus') cargarCursosPanel();
-            if(id === 'biblioteca') cargarBibliotecaPanel();
-            if(id === 'tesis') cargarTesisPanel();
-            if(id === 'diseno') cargarDisenoCredencial();
-            if(id === 'configuracion') cargarConfiguracionForm();
-            if(id === 'contenido') cargarContenidoForm();
-            if(id === 'usuarios') cargarUsuarios();
-        }
-
-        // ==========================================
-        // 0.5 DOSSIER / EXPEDIENTE DIGITAL
-        // ==========================================
-        async function abrirExpediente(id, origen) {
-            try {
-                // INYECCIÓN: Traer assets gráficos dinámicos para mostrar en el modal HTML
-                db.from('renmcycf_config').select('logo_url, hero_image_url').eq('id', 1).maybeSingle().then(({data}) => {
-                    if(data) {
-                        if(data.logo_url) {
-                            document.getElementById('modal-dyn-logo').src = data.logo_url;
-                            document.getElementById('modal-dyn-logo').classList.remove('hidden');
-                            document.getElementById('modal-default-logo').classList.add('hidden');
-                        }
-                        if(data.hero_image_url) {
-                            document.getElementById('modal-dyn-bg').src = data.hero_image_url;
-                            document.getElementById('modal-dyn-bg').classList.remove('hidden');
-                            document.getElementById('modal-dyn-overlay').classList.remove('hidden');
-                        }
-                    }
-                });
-
-                const tabla = origen === 'padron' ? 'renmcycf_padron' : 'renmcycf_solicitudes';
-                const { data: p, error } = await db.from(tabla).select('*').eq('id', id).single();
-                if (error) throw error;
-                
-                currentExpedienteUser = p; // Guardamos el usuario para la función de descarga
-                
-                document.getElementById('dos-matricula').innerText = p.matricula_oficial || 'TRÁMITE / PENDIENTE';
-                const fecha = p.fecha_alta ? p.fecha_alta : p.created_at;
-                document.getElementById('dos-fecha').innerText = new Date(fecha).toLocaleDateString('es-AR');
-                document.getElementById('dos-nombre').innerText = `${p.apellidos}, ${p.nombres}`;
-                document.getElementById('dos-dni').innerText = p.dni;
-                document.getElementById('dos-profesion').innerText = p.profesion || 'N/D';
-                document.getElementById('dos-cat').innerText = p.categoria || 'A3';
-                document.getElementById('dos-contacto').innerText = `${p.email || ''} | Tel: ${p.telefono || 'N/D'} | Dom: ${p.domicilio || 'N/D'}`;
-                
-                let htmlDocs = '';
-                if(p.foto_perfil_url) htmlDocs += `<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-500 font-bold mb-2 uppercase text-center"><i data-lucide="user" class="inline w-3 h-3"></i> Foto Perfil</p><img src="${p.foto_perfil_url}" class="w-full h-auto object-contain rounded"></div>`;
-                if(p.dni_frente_url) htmlDocs += `<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-500 font-bold mb-2 uppercase text-center"><i data-lucide="credit-card" class="inline w-3 h-3"></i> DNI Frente</p><img src="${p.dni_frente_url}" class="w-full h-auto object-contain rounded"></div>`;
-                if(p.dni_dorso_url) htmlDocs += `<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-500 font-bold mb-2 uppercase text-center"><i data-lucide="credit-card" class="inline w-3 h-3"></i> DNI Dorso</p><img src="${p.dni_dorso_url}" class="w-full h-auto object-contain rounded"></div>`;
-                
-                let diplomas = [];
-                if(p.diplomas_urls && p.diplomas_urls.length > 0) { diplomas = typeof p.diplomas_urls === 'string' ? JSON.parse(p.diplomas_urls) : p.diplomas_urls; }
-                else if(p.diploma_url) { diplomas = [p.diploma_url]; }
-                
-                diplomas.forEach((d, i) => {
-                    htmlDocs += `<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm"><p class="text-[10px] text-slate-500 font-bold mb-2 uppercase text-center"><i data-lucide="award" class="inline w-3 h-3"></i> Certificación ${i+1}</p><img src="${d}" class="w-full h-auto object-contain rounded"></div>`;
-                });
-                
-                document.getElementById('dos-imagenes').innerHTML = htmlDocs || '<p class="text-slate-400 text-sm col-span-full text-center">No se encontraron documentos adjuntos.</p>';
-                document.getElementById('modal-expediente').classList.remove('hidden');
-                lucide.createIcons();
-            } catch(e) { alert('Error al cargar expediente: ' + e.message); }
-        }
-
-        function cerrarExpediente() { document.getElementById('modal-expediente').classList.add('hidden'); }
-
-        // INYECCIÓN: Motor Exportación Oficial (Idéntico a Wallet con Precarga Estricta)
-        async function descargarExpedienteOficial() {
-            if (!currentExpedienteUser) return;
-            const btn = document.getElementById('btn-imprimir-expediente');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> GENERANDO...`;
-            btn.disabled = true;
-            lucide.createIcons();
-
-            try {
-                const { data: config } = await db.from('renmcycf_config').select('logo_url, hero_image_url').eq('id', 1).maybeSingle();
-                const dynLogo = config?.logo_url || '';
-                const dynBg = config?.hero_image_url || '';
-
-                const { data: cont } = await db.from('renmcycf_contenido').select('clave, valor').in('clave', ['credencial_style', 'credencial_bg', 'credencial_bg_dorso', 'credencial_roseta']);
-                let cStyle = JSON.parse(JSON.stringify(defaultStyle));
-                let cBgFrente = ''; let cBgDorso = ''; let cRoseta = '';
-                if (cont) {
-                    const styleObj = cont.find(c => c.clave === 'credencial_style');
-                    if (styleObj && styleObj.valor) cStyle = { ...cStyle, ...JSON.parse(styleObj.valor) };
-                    cBgFrente = cont.find(c => c.clave === 'credencial_bg')?.valor || '';
-                    cBgDorso = cont.find(c => c.clave === 'credencial_bg_dorso')?.valor || '';
-                    cRoseta = cont.find(c => c.clave === 'credencial_roseta')?.valor || '';
-                }
-
-                const u = currentExpedienteUser;
-                const fotoUrl = u.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
-                const vence = u.fecha_vencimiento ? new Date(u.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D';
-                const urlValidador = `${window.location.origin}/RENMCYCF/validador.renmcycf.html?mat=${encodeURIComponent(u.matricula_oficial)}`;
-                const nombreCompleto = `${u.nombres} ${u.apellidos}`;
-
-                // INYECCIÓN: PRECARGA OBLIGATORIA DE IMÁGENES PARA HTML2CANVAS
-                const preloadImg = (src) => new Promise(r => { 
-                    if(!src) return r(); 
-                    const img = new Image(); 
-                    img.crossOrigin = "anonymous"; 
-                    img.onload = r; 
-                    img.onerror = r; 
-                    img.src = src; 
-                });
-
-                await Promise.all([
-                    preloadImg(dynLogo),
-                    preloadImg(dynBg),
-                    preloadImg(cBgFrente),
-                    preloadImg(cBgDorso),
-                    preloadImg(cRoseta),
-                    preloadImg(fotoUrl)
-                ]);
-
-                const { jsPDF } = window.jspdf;
-                const exportContainer = document.createElement('div');
-                exportContainer.style.position = 'fixed';
-                exportContainer.style.left = '-9999px'; 
-                exportContainer.style.top = '0';
-                exportContainer.style.width = '2100px';
-                exportContainer.style.height = '2970px';
-                exportContainer.style.backgroundColor = '#ffffff';
-                exportContainer.style.zIndex = '9999';
-                document.body.appendChild(exportContainer);
-
-                const getExportStyle = (key) => {
-                    const props = cStyle[key];
-                    if (!props) return 'display: none;';
-                    let style = `position: absolute; width: ${props.width}px; height: ${props.height}px; font-family: 'Inter', sans-serif; `;
-                    if (key === 'profesion' || key === 'categoria') style += `font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-weight: 900; `;
-                    else style += `font-weight: 900; `;
-                    if (props.size !== undefined) style += `font-size: ${props.size}px; `;
-                    if (props.color !== undefined) style += `color: ${props.color}; `;
-                    
-                    let finalLeft = props.left; let finalTop = props.top;
-                    if (key === 'foto' || key === 'qr' || key === 'roseta') {
-                        finalLeft = props.left - (props.width / 2); finalTop = props.top - (props.height / 2);
-                        style += `display: flex; align-items: center; justify-content: center; `;
-                    } else {
-                        if (props.align === 'right') { finalLeft = props.left - props.width; style += `text-align: right; justify-content: flex-end; `; } 
-                        else if (props.align === 'center') { style += `text-align: center; justify-content: center; `; } 
-                        else { style += `text-align: left; justify-content: flex-start; `; }
-                        style += `display: flex; align-items: center; line-height: 1; overflow: visible; white-space: normal; word-break: break-word; `;
-                    }
-                    style += `left: ${finalLeft}px; top: ${finalTop}px; `;
-                    return style;
-                };
-
-                const formatoSeguro = (texto) => texto || '';
-                const obtenerTextoLegalCategoria = (cat) => {
-                    if(cat === 'A1') return 'A.1 Profesionales con título de Grado en carrera afines otorgado por Universidad pública o privada.';
-                    if(cat === 'A2') return 'A.2 Técnicos Superiores y Terciarios en disciplinas afines.';
-                    if(cat === 'A3') return 'A.3 Auxiliares y Diplomados en disciplinas afines.';
-                    return 'Profesional Matriculado Oficialmente';
-                };
-
-                const frontHtml = `
-                <div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);">
-                    <img src="${cBgFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous">
-                    <div style="${getExportStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;">
-                        <img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous">
-                    </div>
-                    ${cRoseta ? `<img src="${cRoseta}" style="${getExportStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}
-                    <div style="${getExportStyle('profesion')} z-index: 10;">${formatoSeguro(u.profesion)}</div>
-                    <div style="${getExportStyle('categoria')} z-index: 10;">${formatoSeguro(u.categoria)}</div>
-                    <div style="${getExportStyle('nombre')} z-index: 10;">${formatoSeguro(nombreCompleto)}</div>
-                    <div style="${getExportStyle('dni')} z-index: 10;">${formatoSeguro(new Intl.NumberFormat('es-AR').format(u.dni))}</div>
-                    <div style="${getExportStyle('ano_nac')} z-index: 10;">${formatoSeguro(u.ano_nacimiento)}</div>
-                    <div style="${getExportStyle('matricula')} z-index: 10;">${formatoSeguro(u.matricula_oficial)}</div>
-                    <div style="${getExportStyle('vence')} z-index: 10;">${formatoSeguro(vence)}</div>
-                </div>`;
-
-                const backHtml = cBgDorso ? `
-                <div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);">
-                    <img src="${cBgDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous">
-                    <div style="${getExportStyle('dorso_cat')} z-index: 10;">${formatoSeguro(obtenerTextoLegalCategoria(u.categoria))}</div>
-                    <div id="export-qr" style="${getExportStyle('qr')} z-index: 10; background: white;"></div>
-                </div>` : '';
-
-                exportContainer.innerHTML = `
-                <div style="width: 2100px; height: 2970px; background: #fff; position: relative; font-family: 'Inter', sans-serif;">
-                    <div style="position: relative; height: 450px; background-color: #0a1128; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                        ${dynBg ? `<img src="${dynBg}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.2; filter: grayscale(100%);" crossorigin="anonymous">` : ''}
-                        <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 180px; height: 180px; background: white; border-radius: 50%; border: 8px solid #d4af37; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 25px;">
-                                ${dynLogo ? `<img src="${dynLogo}" style="width: 100%; height: 100%; object-fit: contain; padding: 15px;" crossorigin="anonymous">` : ''}
-                            </div>
-                            <h1 style="color: #d4af37; font-size: 55px; font-weight: 900; margin: 0; text-transform: uppercase; font-family: 'Montserrat', sans-serif; letter-spacing: 5px;">Expediente de Matrícula</h1>
-                            <p style="color: #ffffff; font-size: 28px; font-weight: 700; margin: 10px 0 0 0; text-transform: uppercase; letter-spacing: 3px;">Registro Nacional RENMCYCF</p>
-                        </div>
-                    </div>
-                    <div style="padding: 100px 120px;">
-                        <div style="display: flex; justify-content: space-between; border-bottom: 5px solid #e2e8f0; padding-bottom: 40px; margin-bottom: 60px;">
-                            <div>
-                                <p style="font-size: 24px; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 0 0 15px 0;">Matrícula Oficial</p>
-                                <p style="font-size: 70px; color: #0a1128; font-weight: 900; font-family: monospace; margin: 0;">${u.matricula_oficial || 'PENDIENTE'}</p>
-                            </div>
-                            <div style="text-align: right;">
-                                <p style="font-size: 24px; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 0 0 15px 0;">Fecha de Emisión</p>
-                                <p style="font-size: 50px; color: #334155; font-weight: 800; margin: 0;">${new Date().toLocaleDateString('es-AR')}</p>
-                            </div>
-                        </div>
-                        <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 30px; padding: 50px; margin-bottom: 80px;">
-                            <h3 style="font-size: 36px; color: #0a1128; font-weight: 900; text-transform: uppercase; border-left: 10px solid #d4af37; padding-left: 25px; margin: 0 0 40px 0;">Identificación del Profesional</h3>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
-                                <div><p style="font-size: 20px; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 0 0 10px 0;">Titular</p><p style="font-size: 32px; color: #0a1128; font-weight: 900; margin: 0;">${nombreCompleto}</p></div>
-                                <div><p style="font-size: 20px; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 0 0 10px 0;">Documento</p><p style="font-size: 32px; color: #0a1128; font-weight: 900; margin: 0;">${new Intl.NumberFormat('es-AR').format(u.dni)}</p></div>
-                                <div><p style="font-size: 20px; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 0 0 10px 0;">Título / Profesión</p><p style="font-size: 32px; color: #0a1128; font-weight: 900; margin: 0;">${u.profesion || 'N/D'}</p></div>
-                                <div><p style="font-size: 20px; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 0 0 10px 0;">Categoría</p><p style="font-size: 32px; color: #d4af37; background: #0a1128; display: inline-block; padding: 5px 20px; border-radius: 10px; font-weight: 900; margin: 0;">${u.categoria || 'N/D'}</p></div>
-                            </div>
-                        </div>
-                        <h3 style="font-size: 36px; color: #0a1128; font-weight: 900; text-transform: uppercase; border-left: 10px solid #d4af37; padding-left: 25px; margin: 0 0 60px 0;">Credencial Oficial (Impresión 8,5 x 5,4 cm)</h3>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 80px;">
-                            <div style="width: 850px; height: 535px; position: relative; border-radius: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.2);">
-                                <div style="transform: scale(0.85); transform-origin: top left; position: absolute; top: 0; left: 0;">
-                                    ${frontHtml}
-                                </div>
-                            </div>
-                            <div style="width: 850px; height: 535px; position: relative; border-radius: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); ${!cBgDorso ? 'display:none;' : ''}">
-                                <div style="transform: scale(0.85); transform-origin: top left; position: absolute; top: 0; left: 0;">
-                                    ${backHtml}
-                                </div>
-                            </div>
-                        </div>
-                        <div style="position: absolute; bottom: 80px; left: 120px; right: 120px; border-top: 3px solid #e2e8f0; padding-top: 30px; display: flex; justify-content: space-between;">
-                            <p style="font-size: 18px; color: #94a3b8; font-weight: 700; margin: 0;">Documento generado por Sistema RENMCYCF</p>
-                            <p style="font-size: 18px; color: #94a3b8; font-weight: 700; margin: 0;">Verificación y Auditoría Interna</p>
-                        </div>
-                    </div>
-                </div>`;
-
-                await new Promise(r => setTimeout(r, 600));
-
-                const qrContainer = exportContainer.querySelector('#export-qr');
-                if (qrContainer) {
-                    const qrSize = cStyle['qr'] ? cStyle['qr'].width : 200;
-                    new QRCode(qrContainer, { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff" });
-                    await new Promise(r => setTimeout(r, 800));
-                }
-
-                await document.fonts.ready;
-                await new Promise(r => setTimeout(r, 500));
-
-                const canvas = await html2canvas(exportContainer, { 
-                    useCORS: true, 
-                    allowTaint: true, 
-                    scale: 1, 
-                    backgroundColor: '#ffffff',
-                    logging: false
-                });
-
-                const imgData = canvas.toDataURL('image/jpeg', 0.9);
-                const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-                doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
-                doc.save(`Expediente_RENMCYCF_${u.matricula_oficial || 'Pendiente'}.pdf`);
-
-            } catch (error) {
-                console.error('Error en descarga:', error);
-                alert("Hubo un error al generar el documento. Intente nuevamente.");
-            } finally {
-                const container = document.querySelector('div[style*="-9999px"]');
-                if (container) document.body.removeChild(container);
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                lucide.createIcons();
-            }
-        }
-
-        // ==========================================
-        // 1. DASHBOARD GERENCIAL
-        // ==========================================
-        async function actualizarDashboard() {
-            try {
-                const { data: padron } = await db.from('renmcycf_padron').select('*');
-                const { data: config } = await db.from('renmcycf_config').select('arancel_a1, arancel_a2, arancel_a3').eq('id', 1).single();
-                const { data: solicitudes } = await db.from('renmcycf_solicitudes').select('id').eq('estado', 'PENDIENTE');
-                const { data: tesisObj } = await db.from('renmcycf_publicaciones').select('estado');
-                const { data: cursos } = await db.from('renmcycf_cursos').select('id');
-                const { data: biblio } = await db.from('renmcycf_biblioteca').select('id');
-
-                padronLocalMemoria = padron || [];
-                const activos = padron.filter(p => p.estado_legal === 'ACTIVO');
-                const a1 = activos.filter(p => p.categoria === 'A1').length;
-                const a2 = activos.filter(p => p.categoria === 'A2').length;
-                const a3 = activos.filter(p => p.categoria === 'A3').length;
-
-                const cajaReal = (a1 * (config?.arancel_a1||0)) + (a2 * (config?.arancel_a2||0)) + (a3 * (config?.arancel_a3||0));
-                const tesisAprobadas = tesisObj ? tesisObj.filter(t => t.estado === 'APROBADO').length : 0;
-                const tesisPendientes = tesisObj ? tesisObj.filter(t => t.estado === 'PENDIENTE').length : 0;
-
-                document.getElementById('stat-activos').innerText = activos.length;
-                document.getElementById('stat-pendientes').innerText = solicitudes?.length || 0;
-                document.getElementById('stat-caja').innerText = `$${new Intl.NumberFormat('es-AR').format(cajaReal)}`;
-                document.getElementById('stat-tesis').innerText = tesisAprobadas;
-                document.getElementById('stat-cursos').innerText = cursos?.length || 0;
-                document.getElementById('stat-biblio').innerText = biblio?.length || 0;
-
-                const alertsDiv = document.getElementById('dashboard-alerts');
-                alertsDiv.innerHTML = '';
-                if (solicitudes?.length > 0) alertsDiv.innerHTML += `<div class="bg-yellow-500/20 border border-yellow-500/50 text-yellow-500 p-4 rounded-xl flex items-center justify-between"><span><i data-lucide="alert-circle" class="inline w-5 h-5 mr-2"></i> Tienes <b>${solicitudes.length}</b> solicitudes esperando revisión.</span><button onclick="showTab('solicitudes')" class="bg-yellow-500 text-black text-xs font-black px-4 py-2 rounded-lg hover:bg-yellow-400">Revisar</button></div>`;
-                if (tesisPendientes > 0) alertsDiv.innerHTML += `<div class="bg-blue-500/20 border border-blue-500/50 text-blue-400 p-4 rounded-xl flex items-center justify-between"><span><i data-lucide="microscope" class="inline w-5 h-5 mr-2"></i> Tienes <b>${tesisPendientes}</b> investigaciones esperando auditoría.</span><button onclick="showTab('tesis')" class="bg-blue-500 text-white text-xs font-black px-4 py-2 rounded-lg hover:bg-blue-400">Auditar</button></div>`;
-
-                const recent = activos.sort((a, b) => new Date(b.fecha_alta) - new Date(a.fecha_alta)).slice(0, 6);
-                if(recent.length > 0) document.getElementById('recent-activity').innerHTML = recent.map(r => `<div class="flex items-center gap-3 border-b border-white/5 pb-3"><div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0"><i data-lucide="user-check" class="w-4 h-4"></i></div><div><p class="text-xs text-white"><b>${r.nombres} ${r.apellidos}</b> se unió al padrón.</p><p class="text-[9px] text-slate-400 uppercase tracking-widest mt-0.5">${new Date(r.fecha_alta).toLocaleDateString('es-AR')} • Cat: ${r.categoria}</p></div></div>`).join('');
-                else document.getElementById('recent-activity').innerHTML = '<p class="text-slate-500 text-xs">No hay actividad reciente.</p>';
-
-                renderizarGraficos(a1, a2, a3, activos);
-                lucide.createIcons();
-            } catch (err) { console.error("Error Dashboard:", err); }
-        }
-
-        function renderizarGraficos(a1, a2, a3, activos) {
-            if (chartCategoriasInstance) chartCategoriasInstance.destroy();
-            if (chartEvolucionInstance) chartEvolucionInstance.destroy();
-            Chart.defaults.color = '#94a3b8'; Chart.defaults.font.family = "'Inter', sans-serif";
-
-            chartCategoriasInstance = new Chart(document.getElementById('chartCategorias').getContext('2d'), { type: 'doughnut', data: { labels: ['A1 (Grado)', 'A2 (Técnicos)', 'A3 (Auxiliares)'], datasets: [{ data: [a1, a2, a3], backgroundColor: ['#d4af37', '#3b82f6', '#10b981'], borderWidth: 0, hoverOffset: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } } } });
-
-            const meses = []; const conteos = []; const hoy = new Date();
-            for (let i = 5; i >= 0; i--) {
-                const d = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
-                meses.push(d.toLocaleString('es-ES', { month: 'short' }).toUpperCase());
-                conteos.push(activos.filter(p => { const f = new Date(p.fecha_alta); return f.getMonth() === d.getMonth() && f.getFullYear() === d.getFullYear(); }).length);
-            }
-
-            chartEvolucionInstance = new Chart(document.getElementById('chartEvolucion').getContext('2d'), { type: 'line', data: { labels: meses, datasets: [{ label: 'Nuevas Matrículas', data: conteos, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', borderWidth: 3, tension: 0.4, fill: true, pointBackgroundColor: '#d4af37', pointBorderColor: '#fff', pointRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } } });
-        }
-
-        async function generarReporteExcel() {
-            if (!padronLocalMemoria || padronLocalMemoria.length === 0) return alert("No hay datos para exportar.");
-            const periodo = document.getElementById('reporte-periodo').value; const ahora = new Date();
-            let df = padronLocalMemoria.filter(p => {
-                if (p.estado_legal !== 'ACTIVO') return false; if (periodo === 'todo') return true;
-                const fa = new Date(p.fecha_alta); const days = Math.ceil(Math.abs(ahora - fa) / (1000 * 60 * 60 * 24));
-                if (periodo === 'semana') return days <= 7; if (periodo === 'quincena') return days <= 15;
-                if (periodo === 'mes') return fa.getMonth() === ahora.getMonth() && fa.getFullYear() === ahora.getFullYear();
-                if (periodo === 'anio') return fa.getFullYear() === ahora.getFullYear(); return true;
-            });
-            if (df.length === 0) return alert("No hay altas registradas en el período.");
-            try {
-                const { data: config } = await db.from('renmcycf_config').select('arancel_a1, arancel_a2, arancel_a3').eq('id', 1).single();
-                const precios = { 'A1': config.arancel_a1, 'A2': config.arancel_a2, 'A3': config.arancel_a3 }; let total = 0;
-                const filas = df.map(p => { const m = precios[p.categoria] || 0; total += m; return { "Matrícula": p.matricula_oficial || 'N/D', "Fecha de Alta": new Date(p.fecha_alta).toLocaleDateString('es-AR'), "Apellidos": p.apellidos, "Nombres": p.nombres, "DNI": p.dni, "Profesión": p.profesion, "Categoría": p.categoria, "Arancel (ARS)": m }; });
-                const wb = XLSX.utils.book_new(); const wsDetalle = XLSX.utils.json_to_sheet(filas);
-                wsDetalle['!cols'] = [ {wch: 15}, {wch: 15}, {wch: 20}, {wch: 25}, {wch: 12}, {wch: 30}, {wch: 10}, {wch: 20} ];
-                XLSX.utils.book_append_sheet(wb, wsDetalle, "Detalle_Altas");
-                const res = [ { "Concepto": "Período", "Valor": periodo.toUpperCase() }, { "Concepto": "Altas Totales", "Valor": df.length }, { "Concepto": "Altas A1", "Valor": df.filter(p=>p.categoria==='A1').length }, { "Concepto": "Altas A2", "Valor": df.filter(p=>p.categoria==='A2').length }, { "Concepto": "Altas A3", "Valor": df.filter(p=>p.categoria==='A3').length }, { "Concepto": "RECAUDACIÓN", "Valor": `$ ${new Intl.NumberFormat('es-AR').format(total)}` } ];
-                const wsRes = XLSX.utils.json_to_sheet(res); wsRes['!cols'] = [ {wch: 30}, {wch: 25} ]; XLSX.utils.book_append_sheet(wb, wsRes, "Cierre_Financiero");
-                XLSX.writeFile(wb, `RENMCYCF_Cierre_${periodo}_${new Date().getTime()}.xlsx`);
-            } catch(e) { alert("Error al generar Excel: " + e.message); }
-        }
-
-        // ==========================================
-        // PADRON, CRM Y EDICIÓN
-        // ==========================================
-        async function cargarPadron(filtro = '') {
-            const tbody = document.getElementById('padron-body'); tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center">Cargando...</td></tr>';
-            try {
-                let query = db.from('renmcycf_padron').select('*').order('fecha_alta', { ascending: false }).limit(100);
-                if (filtro) query = query.or(`dni.ilike.%${filtro}%,nombres.ilike.%${filtro}%,apellidos.ilike.%${filtro}%,matricula_oficial.ilike.%${filtro}%`);
-                const { data, error } = await query; if (error) throw error;
-                if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-400">Sin registros.</td></tr>'; return; }
-                tbody.innerHTML = data.map(p => {
-                    const ec = p.estado_legal === 'ACTIVO' ? 'text-emerald-400 bg-emerald-400/10' : (p.estado_legal === 'SUSPENDIDO' ? 'text-yellow-400 bg-yellow-400/10' : 'text-red-400 bg-red-400/10');
-                    return `<tr class="hover:bg-white/5 transition-colors"><td class="p-4 font-mono text-xs text-slate-300">${p.matricula_oficial || 'N/D'}</td><td class="p-4"><div class="font-bold text-white">${p.nombres} ${p.apellidos}</div><div class="text-[10px] text-slate-400">DNI: ${p.dni} | ${p.profesion}</div></td><td class="p-4"><span class="px-2 py-1 rounded text-[10px] font-bold ${ec}">${p.estado_legal} (${p.categoria})</span></td><td class="p-4 text-right flex gap-2 justify-end">
-                        <button onclick="abrirExpediente('${p.id}', 'padron')" class="bg-indigo-600/20 text-indigo-400 p-1.5 rounded hover:bg-indigo-600/40" title="Ver Expediente de Auditoría"><i data-lucide="folder-open" class="w-4 h-4"></i></button>
-                        <button onclick="abrirModalEdicion('${p.id}')" class="bg-blue-600/20 text-blue-400 p-1.5 rounded hover:bg-blue-600/40" title="Editar"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                    </td></tr>`;
-                }).join('');
-                lucide.createIcons();
-            } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-400">Error: ${err.message}</td></tr>`; }
-        }
-
-        function buscarPadron() { cargarPadron(document.getElementById('search-padron').value.trim()); }
-
-        async function abrirModalEdicion(id) {
-            try {
-                const { data: p } = await db.from('renmcycf_padron').select('*').eq('id', id).single(); if (!p) return alert("No se encontró.");
-                document.getElementById('edit-padron-id').value = p.id; document.getElementById('edit-nombres').value = p.nombres || ''; document.getElementById('edit-apellidos').value = p.apellidos || ''; document.getElementById('edit-profesion').value = p.profesion || ''; document.getElementById('edit-categoria').value = p.categoria || 'A1'; document.getElementById('edit-estado').value = p.estado_legal || 'ACTIVO'; document.getElementById('edit-vencimiento').value = p.fecha_vencimiento ? p.fecha_vencimiento.split('T')[0] : ''; document.getElementById('edit-foto-preview').src = p.foto_perfil_url || 'https://ui-avatars.com/api/?name=E+D&background=0a1128&color=fff'; document.getElementById('modal-editar-padron').classList.remove('hidden'); lucide.createIcons();
-            } catch(e) { alert("Error: " + e.message); }
-        }
-
-        function cerrarModalEdicion() { document.getElementById('modal-editar-padron').classList.add('hidden'); }
-        function previewFotoEdicion(input) { if (input.files?.[0]) document.getElementById('edit-foto-preview').src = URL.createObjectURL(input.files[0]); }
-        
-        async function guardarEdicionMatriculado(e) {
-            e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); const orig = btn.innerHTML; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> GUARDANDO...'; btn.disabled = true;
-            try {
-                const id = document.getElementById('edit-padron-id').value; const file = document.getElementById('edit-foto-file').files[0]; let fotoUrl = null;
-                if (file) { const fileName = `foto_edit_${Date.now()}.${file.name.split('.').pop()}`; await db.storage.from('renmcycf-media').upload(fileName, file, { cacheControl:'3600', upsert:true }); fotoUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`; }
-                const payload = { nombres: document.getElementById('edit-nombres').value, apellidos: document.getElementById('edit-apellidos').value, profesion: document.getElementById('edit-profesion').value, categoria: document.getElementById('edit-categoria').value, estado_legal: document.getElementById('edit-estado').value, fecha_vencimiento: document.getElementById('edit-vencimiento').value || null };
-                if (fotoUrl) payload.foto_perfil_url = fotoUrl;
-                await db.from('renmcycf_padron').update(payload).eq('id', id); alert("✅ Datos actualizados."); cerrarModalEdicion(); cargarPadron();
-            } catch(err) { alert("Error al guardar: " + err.message); } finally { btn.innerHTML = orig; btn.disabled = false; lucide.createIcons(); }
-        }
-
-        async function cargarSolicitudes() {
-            const tbody = document.getElementById('crm-body'); tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center">Cargando...</td></tr>';
-            try {
-                const { data, error } = await db.from('renmcycf_solicitudes').select('*').eq('estado', 'PENDIENTE').order('created_at', { ascending: false });
-                if (error) throw error;
-                if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-slate-400">No hay trámites pendientes.</td></tr>'; return; }
-                tbody.innerHTML = data.map(p => `
-                <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                    <td class="p-3"><div class="font-bold text-white">${p.nombres} ${p.apellidos}</div><div class="text-[10px] text-slate-400">DNI: ${p.dni} | <a href="mailto:${p.email}" class="hover:text-blue-400">${p.email}</a></div></td>
-                    <td class="p-3"><span class="px-2 py-1 bg-slate-800 rounded text-[10px] font-bold text-yellow-400">${p.categoria}</span><div class="text-[9px] text-slate-500 mt-1 uppercase truncate max-w-[150px]">${p.profesion}</div></td>
-                    <td class="p-3 text-right flex gap-2 justify-end">
-                        <button onclick="abrirExpediente('${p.id}', 'solicitudes')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded text-[10px] font-bold inline-flex items-center gap-1 transition-transform active:scale-95"><i data-lucide="folder-open" class="w-3 h-3"></i> EXPEDIENTE</button>
-                        <button class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded text-[10px] font-bold inline-flex items-center gap-1 transition-transform active:scale-95" onclick="aprobarSolicitud('${p.id}')"><i data-lucide="check" class="w-3 h-3"></i> APROBAR</button>
-                    </td>
-                </tr>`).join('');
-                lucide.createIcons();
-            } catch (err) { tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
-        }
-
-        async function aprobarSolicitud(id) { 
-            if(!confirm("¿Transferir al profesional al Padrón Oficial?")) return; 
-            try {
-                const { data: sol, error: fetchErr } = await db.from('renmcycf_solicitudes').select('*').eq('id', id).single(); if (fetchErr) throw fetchErr;
-                const nuevoPadron = { solicitud_id: sol.id, nombres: sol.nombres, apellidos: sol.apellidos, dni: sol.dni, ano_nacimiento: sol.ano_nacimiento, profesion: sol.profesion, categoria: sol.categoria, estado_legal: 'ACTIVO', fecha_alta: new Date().toISOString(), dni_frente_url: sol.dni_frente_url, dni_dorso_url: sol.dni_dorso_url, diploma_url: sol.diploma_url, diplomas_urls: sol.diplomas_urls, terminos_aceptados: false };
-                const { error: insErr } = await db.from('renmcycf_padron').insert([nuevoPadron]);
-                if (insErr) { if(insErr.code === '23505') throw new Error("DNI ya activo en el Padrón."); throw insErr; }
-                await db.from('renmcycf_solicitudes').update({ estado: 'APROBADO' }).eq('id', id);
-                alert("✅ Profesional ingresado con éxito."); cargarSolicitudes(); actualizarDashboard();
-            } catch (err) { alert("Error: " + err.message); }
-        }
-
-        // ==========================================
-        // CAMPUS VIRTUAL (COMPLETO)
-        // ==========================================
-        async function cargarCursosPanel() {
-            const tbody = document.getElementById('campus-body');
-            tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center">Cargando...</td></tr>';
-            try {
-                const { data, error } = await db.from('renmcycf_cursos').select('*').order('created_at', { ascending: false });
-                if (error) throw error;
-                if (!data || data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-slate-400">No hay cursos creados.</td></tr>'; return; }
-                tbody.innerHTML = data.map(c => `
-                    <tr class="border-b border-white/5 hover:bg-white/5">
-                        <td class="p-3">
-                            <div class="flex items-center gap-3">
-                                <img src="${c.portada_url || 'https://via.placeholder.com/150x80/0f172a/3b82f6?text=CURSO'}" class="w-16 h-10 rounded object-cover border border-white/10">
-                                <div><span class="text-white font-bold block">${c.titulo}</span><span class="text-[10px] text-slate-400 truncate block max-w-[200px]">${c.descripcion || 'Sin descripción'}</span></div>
-                            </div>
-                        </td>
-                        <td class="p-3"><span class="bg-blue-900/30 text-blue-400 px-2 py-1 rounded text-[10px] font-bold uppercase">${c.categoria_requerida}</span></td>
-                        <td class="p-3 text-right">
-                            <div class="flex justify-end gap-1 items-center">
-                                <button class="bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded hover:bg-emerald-500/40 text-[10px] font-bold uppercase tracking-wider transition-colors" onclick="abrirModalClases('${c.id}', '${c.titulo.replace(/'/g, "\\'")}')"><i data-lucide="folder-open" class="w-3 h-3 inline mr-1"></i> Contenido</button>
-                                <button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40 transition-colors" onclick="eliminarCurso('${c.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                            </div>
-                        </td>
-                    </tr>`).join('');
-                lucide.createIcons();
-            } catch (err) { tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
-        }
-
-        async function crearCurso(e) {
-            e.preventDefault(); const btn = document.getElementById('btn-crear-curso'); const originalHtml = btn.innerHTML; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> CREANDO...'; btn.disabled = true;
-            try {
-                const imgFile = document.getElementById('camp-portada').files[0]; let imgUrl = null;
-                if (imgFile) { const fileName = `portada_curso_${Date.now()}.${imgFile.name.split('.').pop()}`; await db.storage.from('renmcycf-campus').upload(fileName, imgFile, { cacheControl: '3600', upsert: false }); imgUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-campus/${fileName}`; }
-                await db.from('renmcycf_cursos').insert([{ titulo: document.getElementById('camp-titulo').value, descripcion: document.getElementById('camp-desc').value, categoria_requerida: document.getElementById('camp-cat').value, portada_url: imgUrl }]);
-                alert('✅ Curso creado correctamente.'); document.getElementById('form-curso').reset(); cargarCursosPanel();
-            } catch(err) { alert('Error: ' + err.message); } finally { btn.innerHTML = originalHtml; btn.disabled = false; lucide.createIcons(); }
-        }
-
-        async function eliminarCurso(id) { if (!confirm("⚠️ ¿Eliminar curso? Se borrarán sus clases.")) return; try { await db.from('renmcycf_cursos').delete().eq('id', id); cargarCursosPanel(); } catch(e) { alert("Error: " + e.message); } }
-
-        function toggleClaseInput() {
-            const tipo = document.getElementById('clase-tipo').value;
-            if (tipo === 'PDF') { document.getElementById('clase-input-url').classList.add('hidden'); document.getElementById('clase-url').removeAttribute('required'); document.getElementById('clase-input-file').classList.remove('hidden'); document.getElementById('clase-file').setAttribute('required', 'true'); } 
-            else { document.getElementById('clase-input-file').classList.add('hidden'); document.getElementById('clase-file').removeAttribute('required'); document.getElementById('clase-input-url').classList.remove('hidden'); document.getElementById('clase-url').setAttribute('required', 'true'); }
-        }
-
-        function abrirModalClases(cursoId, cursoTitulo) { document.getElementById('clase-curso-id').value = cursoId; document.getElementById('modal-curso-titulo').innerText = cursoTitulo; document.getElementById('modal-clases').classList.remove('hidden'); cargarClasesList(cursoId); }
-        function cerrarModalClases() { document.getElementById('modal-clases').classList.add('hidden'); document.getElementById('form-clase').reset(); toggleClaseInput(); }
-
-        async function cargarClasesList(cursoId) {
-            const tbody = document.getElementById('clases-body'); tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center">Cargando módulos...</td></tr>';
-            try {
-                const { data, error } = await db.from('renmcycf_clases').select('*').eq('curso_id', cursoId).order('created_at', { ascending: true });
-                if (error) throw error;
-                if (!data || data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-slate-500 text-xs">No hay contenido.</td></tr>'; return; }
-                tbody.innerHTML = data.map(c => {
-                    let icon = 'file-text'; let color = 'text-red-400';
-                    if (c.tipo_recurso === 'VIDEO') { icon = 'play-circle'; color = 'text-blue-400'; }
-                    if (c.tipo_recurso === 'ZOOM') { icon = 'video'; color = 'text-emerald-400'; }
-                    return `<tr class="border-b border-white/5"><td class="p-2"><i data-lucide="${icon}" class="w-4 h-4 ${color}"></i></td><td class="p-2"><span class="text-white text-xs font-bold block">${c.titulo}</span><a href="${c.url_recurso}" target="_blank" class="text-[9px] text-blue-400 hover:underline truncate inline-block max-w-[150px]">Ver enlace</a></td><td class="p-2 text-right"><button class="bg-red-500/20 text-red-400 p-1 rounded hover:bg-red-500/40" onclick="eliminarClase('${c.id}', '${cursoId}')"><i data-lucide="trash" class="w-3 h-3"></i></button></td></tr>`;
-                }).join('');
-                lucide.createIcons();
-            } catch (err) { tbody.innerHTML = `<tr><td colspan="3" class="text-red-400 text-xs p-2">Error: ${err.message}</td></tr>`; }
-        }
-
-        async function subirClase(e) {
-            e.preventDefault(); const btn = document.getElementById('btn-subir-clase'); const orig = btn.innerHTML; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> GUARDANDO...'; btn.disabled = true;
-            try {
-                const cursoId = document.getElementById('clase-curso-id').value; const tipo = document.getElementById('clase-tipo').value; let finalUrl = '';
-                if (tipo === 'PDF') {
-                    const file = document.getElementById('clase-file').files[0]; if (!file) throw new Error("Debe seleccionar un PDF.");
-                    const fileName = `clase_pdf_${Date.now()}.${file.name.split('.').pop()}`;
-                    await db.storage.from('renmcycf-campus').upload(fileName, file);
-                    finalUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-campus/${fileName}`;
-                } else { finalUrl = document.getElementById('clase-url').value; }
-                await db.from('renmcycf_clases').insert([{ curso_id: cursoId, titulo: document.getElementById('clase-titulo').value, tipo_recurso: tipo, url_recurso: finalUrl }]);
-                document.getElementById('form-clase').reset(); toggleClaseInput(); cargarClasesList(cursoId);
-            } catch(err) { alert('Error: ' + err.message); } finally { btn.innerHTML = orig; btn.disabled = false; lucide.createIcons(); }
-        }
-
-        async function eliminarClase(id, cursoId) { if (!confirm("¿Eliminar este módulo?")) return; await db.from('renmcycf_clases').delete().eq('id', id); cargarClasesList(cursoId); }
-
-        // ==========================================
-        // BIBLIOTECA (COMPLETO)
-        // ==========================================
-        async function cargarBibliotecaPanel() {
-            const tbody = document.getElementById('biblioteca-body'); tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center">Cargando...</td></tr>';
-            try {
-                const { data, error } = await db.from('renmcycf_biblioteca').select('*').order('created_at', { ascending: false });
-                if (error) throw error;
-                if (!data || data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-slate-400">Biblioteca vacía.</td></tr>'; return; }
-                tbody.innerHTML = data.map(b => `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3"><div class="flex items-center gap-3"><img src="${b.portada_url || 'https://via.placeholder.com/50x70/0f172a/3b82f6?text=PDF'}" class="w-10 h-14 object-cover rounded border border-white/10"><div><span class="font-bold text-white block text-xs">${b.titulo}</span><span class="text-[10px] text-slate-400">${b.autor || 'Sin autor'}</span></div></div></td><td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${b.tipo_acceso==='PREMIUM'?'bg-yellow-500/20 text-yellow-500':'bg-blue-500/20 text-blue-400'}">${b.tipo_acceso}</span></td><td class="p-3 text-right"><button onclick="eliminarLibro('${b.id}')" class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td></tr>`).join('');
-                lucide.createIcons();
-            } catch (err) { tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-red-400 text-center">Error: ${err.message}</td></tr>`; }
-        }
-
-        async function subirLibro(e) {
-            e.preventDefault(); const btn = document.getElementById('btn-subir-libro'); const orig = btn.innerHTML; btn.innerHTML = 'SUBIENDO...'; btn.disabled = true;
-            try {
-                const pdfFile = document.getElementById('bib-pdf').files[0]; const pdfName = `libro_${Date.now()}.${pdfFile.name.split('.').pop()}`;
-                await db.storage.from('renmcycf-pdfs').upload(pdfName, pdfFile); const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${pdfName}`;
-                let portadaUrl = null; const portadaFile = document.getElementById('bib-portada').files[0];
-                if (portadaFile) { const imgName = `cover_${Date.now()}.${portadaFile.name.split('.').pop()}`; await db.storage.from('renmcycf-media').upload(imgName, portadaFile); portadaUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${imgName}`; }
-                await db.from('renmcycf_biblioteca').insert([{ titulo: document.getElementById('bib-titulo').value, autor: document.getElementById('bib-autor').value, tipo_acceso: document.getElementById('bib-acceso').value, pdf_url: pdfUrl, portada_url: portadaUrl, activo: true }]);
-                alert("✅ Material publicado."); document.getElementById('form-biblioteca').reset(); cargarBibliotecaPanel();
-            } catch (err) { alert("Error: " + err.message); } finally { btn.innerHTML = orig; btn.disabled = false; }
-        }
-
-        async function eliminarLibro(id) { if(!confirm("¿Eliminar archivo?")) return; await db.from('renmcycf_biblioteca').delete().eq('id', id); cargarBibliotecaPanel(); }
-
-        // ==========================================
-        // TESIS (COMPLETO)
-        // ==========================================
-        async function cargarTesisPanel() {
-            const tbody = document.getElementById('tesis-body'); tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center">Cargando...</td></tr>';
-            try {
-                const { data, error } = await db.from('renmcycf_publicaciones').select('*').order('created_at', { ascending: false });
-                if (error) throw error;
-                if (!data || data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">No hay tesis.</td></tr>'; return; }
-                tbody.innerHTML = data.map(t => {
-                    const ec = t.estado==='PENDIENTE'?'text-yellow-400 bg-yellow-400/10':(t.estado==='APROBADO'?'text-emerald-400 bg-emerald-400/10':'text-red-400 bg-red-400/10');
-                    return `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3 text-xs font-bold text-white">${t.autor_nombre}</td><td class="p-3 text-xs"><a href="${t.pdf_url}" target="_blank" class="text-blue-400 hover:underline"><i data-lucide="file-text" class="w-3 h-3 inline mr-1"></i>${t.titulo}</a></td><td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${ec}">${t.estado}</span></td><td class="p-3 text-right"><button onclick="auditarTesis('${t.id}','APROBADO')" class="bg-emerald-500/20 text-emerald-400 p-1.5 rounded hover:bg-emerald-500/40 mx-1"><i data-lucide="check" class="w-4 h-4"></i></button><button onclick="auditarTesis('${t.id}','RECHAZADO')" class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40"><i data-lucide="x" class="w-4 h-4"></i></button></td></tr>`;
-                }).join('');
-                lucide.createIcons();
-            } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-red-400 text-center">Error: ${err.message}</td></tr>`; }
-        }
-
-        async function auditarTesis(id, estado) { if(!confirm(`¿Marcar como ${estado}?`)) return; await db.from('renmcycf_publicaciones').update({ estado }).eq('id', id); cargarTesisPanel(); }
-
-        // ==========================================
-        // CARGA MASIVA (COMPLETO)
-        // ==========================================
-        function procesarExcel() {
-            const file = document.getElementById('input-excel').files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const wb = XLSX.read(new Uint8Array(e.target.result), {type:'array'});
-                datosExcel = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-                document.getElementById('count-preview').innerText = datosExcel.length; document.getElementById('preview-area').classList.remove('hidden');
-                document.getElementById('tabla-preview').innerHTML = datosExcel.slice(0,10).map((r,i) => `<tr class="border-b border-white/5"><td class="p-1">${i+1}</td><td class="p-1">${r.dni||r.DNI||'S/D'}</td><td class="p-1">${r.nombres||r.NOMBRES||''} ${r.apellidos||r.APELLIDOS||''}</td></tr>`).join('');
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        async function confirmarCargaMasiva() {
-            if (!datosExcel.length) return; if (!confirm(`¿Inyectar ${datosExcel.length} registros?`)) return;
-            try {
-                const payload = datosExcel.map(r => ({ dni: (r.dni||r.DNI||'').toString().replace(/\D/g,''), nombres: r.nombres||r.NOMBRES||'', apellidos: r.apellidos||r.APELLIDOS||'', profesion: r.profesion||r.PROFESION||'', categoria: r.categoria||r.CATEGORIA||'A3', matricula_oficial: r.matricula||r.MATRICULA||'', estado_legal: 'ACTIVO' })).filter(r => r.dni && r.nombres);
-                await db.from('renmcycf_padron').insert(payload);
-                alert(`✅ ${payload.length} profesionales inyectados.`); document.getElementById('input-excel').value = ''; document.getElementById('preview-area').classList.add('hidden'); datosExcel = [];
-            } catch (err) { alert("Error: " + err.message); }
-        }
-
-        // ==========================================
-        // DISEÑO Y CONFIG (COMPLETO)
-        // ==========================================
-        const defaultStyle = { foto: { top: 325, left: 185, width: 230, height: 230, align: 'center', lado: 'frente' }, roseta: { top: 325, left: 185, width: 230, height: 230, align: 'center', lado: 'frente' }, profesion: { top: 130, left: 390, width: 570, height: 40, size: 30, color: '#d4af37', align: 'center', lado: 'frente' }, nombre: { top: 290, left: 390, width: 350, height: 30, size: 22, color: '#ffffff', align: 'left', lado: 'frente' }, dni: { top: 370, left: 390, width: 200, height: 30, size: 22, color: '#ffffff', align: 'left', lado: 'frente' }, ano_nac: { top: 450, left: 390, width: 200, height: 30, size: 22, color: '#ffffff', align: 'left', lado: 'frente' }, vence: { top: 530, left: 390, width: 200, height: 30, size: 22, color: '#ffffff', align: 'left', lado: 'frente' }, matricula: { top: 260, left: 960, width: 250, height: 30, size: 20, color: '#cbd5e1', align: 'right', lado: 'frente' }, categoria: { top: 290, left: 960, width: 250, height: 30, size: 20, color: '#cbd5e1', align: 'right', lado: 'frente' }, dorso_cat: { top: 90, left: 50, width: 900, height: 40, size: 22, color: '#333333', align: 'left', lado: 'dorso' }, qr: { top: 200, left: 60, width: 220, height: 220, align: 'center', lado: 'dorso' } };
-        let currentCredStyle = JSON.parse(JSON.stringify(defaultStyle));
-
-        function switchEditorTab(tab) {
-            currentEditorTab = tab;
-            document.getElementById('btn-tab-frente').className = tab === 'frente' ? "flex-1 py-2 text-xs font-bold uppercase rounded-md text-white bg-blue-600 shadow" : "flex-1 py-2 text-xs font-bold uppercase rounded-md text-slate-400 hover:text-white";
-            document.getElementById('btn-tab-dorso').className = tab === 'dorso' ? "flex-1 py-2 text-xs font-bold uppercase rounded-md text-white bg-blue-600 shadow" : "flex-1 py-2 text-xs font-bold uppercase rounded-md text-slate-400 hover:text-white";
-            document.getElementById('card-preview-frente').style.display = tab === 'frente' ? 'block' : 'none';
-            document.getElementById('card-preview-dorso').style.display = tab === 'dorso' ? 'block' : 'none';
-            document.getElementById('preview-indicator').innerText = `VISTA: ${tab.toUpperCase()}`;
-            if (document.getElementById('card-preview-frente') && bgFrenteUrl) document.getElementById('card-preview-frente').style.backgroundSize = '1000px 630px';
-            if (document.getElementById('card-preview-dorso') && bgDorsoUrl) document.getElementById('card-preview-dorso').style.backgroundSize = '1000px 630px';
-            const rosetaEl = document.getElementById('pre-roseta');
-            if (rosetaEl && rosetaUrl) { rosetaEl.style.display = 'block'; rosetaEl.querySelector('img').src = rosetaUrl; }
-            initEditor(); actualizarPreviewCred();
-        }
-
-        function initEditor() {
-            const container = document.getElementById('editor-controles'); let html = '';
-            for (const [key, props] of Object.entries(currentCredStyle)) {
-                if (props.lado !== currentEditorTab) continue;
-                html += `<div class="editor-group"><div class="editor-group-title">${key.replace('_', ' ')}</div><div class="grid grid-cols-2 gap-2">`;
-                html += `<div><label>Y (Arriba)</label><input type="number" id="es-${key}-top" value="${props.top}" oninput="updCred('${key}','top')"></div>`;
-                html += `<div><label>X (Izquierda/Der)</label><input type="number" id="es-${key}-left" value="${props.left}" oninput="updCred('${key}','left')"></div>`;
-                html += `<div><label>Ancho</label><input type="number" id="es-${key}-width" value="${props.width}" oninput="updCred('${key}','width')"></div>`;
-                html += `<div><label>Alto</label><input type="number" id="es-${key}-height" value="${props.height}" oninput="updCred('${key}','height')"></div>`;
-                if ('size' in props) html += `<div><label>Letra px</label><input type="number" id="es-${key}-size" value="${props.size}" oninput="updCred('${key}','size')"></div>`;
-                if ('color' in props) html += `<div><label>Color</label><input type="color" id="es-${key}-color" value="${props.color}" style="height:38px;padding:2px;" oninput="updCred('${key}','color')"></div>`;
-                if ('align' in props) html += `<div class="col-span-2"><label>Alineación</label><select id="es-${key}-align" onchange="updCred('${key}','align')"><option value="left" ${props.align==='left'?'selected':''}>Izquierda</option><option value="center" ${props.align==='center'?'selected':''}>Centro</option><option value="right" ${props.align==='right'?'selected':''}>Derecha</option></select></div>`;
-                html += `</div></div>`;
-            }
-            container.innerHTML = html;
-        }
-
-        function updCred(key, prop) {
-            const input = document.getElementById(`es-${key}-${prop}`); let val = input.value;
-            if (prop !== 'color' && prop !== 'align') val = parseInt(val) || 0;
-            if (!currentCredStyle[key]) currentCredStyle[key] = {};
-            currentCredStyle[key][prop] = val; actualizarPreviewCred();
-        }
-
-        function actualizarPreviewCred() {
-            if (bgFrenteUrl) { document.getElementById('card-preview-frente').style.backgroundImage = `url('${bgFrenteUrl}')`; }
-            if (bgDorsoUrl) { document.getElementById('card-preview-dorso').style.backgroundImage = `url('${bgDorsoUrl}')`; }
-            for (const [key, props] of Object.entries(currentCredStyle)) {
-                const el = document.getElementById(`pre-${key}`); if (!el) continue;
-                if (props.top !== undefined) el.style.top = props.top + 'px';
-                if (props.width !== undefined) el.style.width = props.width + 'px';
-                if (props.height !== undefined) el.style.height = props.height + 'px';
-                if (props.size !== undefined) el.style.fontSize = props.size + 'px';
-                if (props.color !== undefined) el.style.color = props.color;
-                if (key === 'foto' || key === 'qr' || key === 'roseta') { el.style.left = props.left + 'px'; el.style.right = 'auto'; el.style.transform = 'translate(-50%, -50%)'; el.style.display = 'flex'; el.style.alignItems = 'center'; el.style.justifyContent = 'center'; } 
-                else { el.style.display = 'flex'; el.style.alignItems = 'center'; el.style.transform = 'none'; if (props.align === 'right') { el.style.left = 'auto'; el.style.right = (1000 - props.left) + 'px'; el.style.justifyContent = 'flex-end'; el.style.textAlign = 'right'; } else if (props.align === 'center') { el.style.left = props.left + 'px'; el.style.right = 'auto'; el.style.justifyContent = 'center'; el.style.textAlign = 'center'; } else { el.style.left = props.left + 'px'; el.style.right = 'auto'; el.style.justifyContent = 'flex-start'; el.style.textAlign = 'left'; } el.style.whiteSpace = 'nowrap'; el.style.overflow = 'hidden'; }
-            }
-            const rosetaEl = document.getElementById('pre-roseta');
-            if (rosetaEl) { if (rosetaUrl) { rosetaEl.style.display = 'block'; rosetaEl.querySelector('img').src = rosetaUrl; } else { rosetaEl.style.display = 'none'; } }
-        }
-
-        async function cargarDisenoCredencial() {
-            const { data: bgF } = await db.from('renmcycf_contenido').select('valor').eq('clave', 'credencial_bg').maybeSingle();
-            const { data: bgD } = await db.from('renmcycf_contenido').select('valor').eq('clave', 'credencial_bg_dorso').maybeSingle();
-            if (bgF && bgF.valor) bgFrenteUrl = bgF.valor; if (bgD && bgD.valor) bgDorsoUrl = bgD.valor;
-            const { data: ros } = await db.from('renmcycf_contenido').select('valor').eq('clave', 'credencial_roseta').maybeSingle();
-            if (ros && ros.valor) rosetaUrl = ros.valor;
-            const { data: style } = await db.from('renmcycf_contenido').select('valor').eq('clave', 'credencial_style').maybeSingle();
-            if (style && style.valor) { try { const savedStyle = JSON.parse(style.valor); currentCredStyle = { ...defaultStyle, ...savedStyle }; } catch(e) {} }
-            switchEditorTab('frente');
-        }
-
-        async function subirFondoCredencial(input, lado) {
-            const file = input.files[0]; if (!file) return;
-            try { const fileName = `bg_${lado}_${Date.now()}.${file.name.split('.').pop()}`; await db.storage.from('renmcycf-media').upload(fileName, file, { cacheControl:'3600', upsert:true }); const url = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`; if (lado === 'frente') bgFrenteUrl = url; else bgDorsoUrl = url; actualizarPreviewCred(); } catch (err) { alert('Error subiendo fondo: ' + err.message); }
-        }
-
-        async function subirRoseta(input) {
-            const file = input.files[0]; if (!file) return;
-            try { const fileName = `roseta_${Date.now()}.${file.name.split('.').pop()}`; await db.storage.from('renmcycf-media').upload(fileName, file, { cacheControl:'3600', upsert:true }); rosetaUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`; actualizarPreviewCred(); } catch (err) { alert('Error subiendo roseta: ' + err.message); }
-        }
-
-        async function guardarDiseno() {
-            try { await db.from('renmcycf_contenido').upsert({ clave: 'credencial_style', valor: JSON.stringify(currentCredStyle), tipo: 'json' }); if (bgFrenteUrl) await db.from('renmcycf_contenido').upsert({ clave: 'credencial_bg', valor: bgFrenteUrl, tipo: 'texto' }); if (bgDorsoUrl) await db.from('renmcycf_contenido').upsert({ clave: 'credencial_bg_dorso', valor: bgDorsoUrl, tipo: 'texto' }); if (rosetaUrl) await db.from('renmcycf_contenido').upsert({ clave: 'credencial_roseta', valor: rosetaUrl, tipo: 'texto' }); alert("✅ Diseño guardado exitosamente."); } catch(e) { alert("Error: " + e.message); }
-        }
-
-        async function cargarConfiguracionForm() {
-            const { data } = await db.from('renmcycf_config').select('*').eq('id', 1).maybeSingle();
-            if (data) { document.getElementById('conf-arancel-a1').value = data.arancel_a1 || ''; document.getElementById('conf-arancel-a2').value = data.arancel_a2 || ''; document.getElementById('conf-arancel-a3').value = data.arancel_a3 || ''; document.getElementById('conf-mp-link').value = data.mp_link || ''; document.getElementById('conf-whatsapp').value = data.whatsapp || ''; document.getElementById('conf-email').value = data.email || ''; }
-        }
-
-        async function guardarConfiguracion(e) {
-            e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.innerHTML = 'GUARDANDO...';
-            try { await db.from('renmcycf_config').update({ arancel_a1: document.getElementById('conf-arancel-a1').value, arancel_a2: document.getElementById('conf-arancel-a2').value, arancel_a3: document.getElementById('conf-arancel-a3').value, mp_link: document.getElementById('conf-mp-link').value, whatsapp: document.getElementById('conf-whatsapp').value, email: document.getElementById('conf-email').value }).eq('id', 1); alert("✅ Configuración actualizada."); } catch (err) { alert("Error: " + err.message); } btn.innerHTML = 'ACTUALIZAR CONFIGURACIÓN';
-        }
-
-        async function cargarContenidoForm() {
-            try { const { data } = await db.from('renmcycf_contenido').select('clave, valor'); if (!data) return; const map = { 'hero_badge_text':'cont-hero-badge-text','hero_title':'cont-hero-title','hero_subtitle':'cont-hero-subtitle','hero_cta_primary':'cont-hero-cta-primary','hero_cta_secondary':'cont-hero-cta-secondary','urgencia_titulo':'cont-urgencia-titulo','urgencia_texto':'cont-urgencia-texto','cat_a1_desc':'cont-cat-a1-desc','cat_a2_desc':'cont-cat-a2-desc','cat_a3_desc':'cont-cat-a3-desc','footer_texto':'cont-footer-texto' }; data.forEach(item => { const id = map[item.clave]; if (id && document.getElementById(id)) document.getElementById(id).value = item.valor || ''; }); } catch (err) { console.error("Error:", err); }
-        }
-
-        async function guardarContenido(e) {
-            e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); const orig = btn.innerHTML; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> GUARDANDO...'; const map = { 'hero_badge_text':'cont-hero-badge-text','hero_title':'cont-hero-title','hero_subtitle':'cont-hero-subtitle','hero_cta_primary':'cont-hero-cta-primary','hero_cta_secondary':'cont-hero-cta-secondary','urgencia_titulo':'cont-urgencia-titulo','urgencia_texto':'cont-urgencia-texto','cat_a1_desc':'cont-cat-a1-desc','cat_a2_desc':'cont-cat-a2-desc','cat_a3_desc':'cont-cat-a3-desc','footer_texto':'cont-footer-texto' }; const payload = Object.keys(map).map(k => ({ clave: k, valor: document.getElementById(map[k]).value, tipo: 'texto' })); try { await db.from('renmcycf_contenido').upsert(payload, { onConflict: 'clave' }); alert("✅ Contenido actualizado."); } catch (err) { alert("Error: " + err.message); } btn.innerHTML = orig; lucide.createIcons();
-        }
-
-        async function previewYGuardarImagen(input, previewId, key) {
-            const file = input.files[0]; if (!file) return;
-            try { const fileName = `${key}_${Date.now()}.${file.name.split('.').pop()}`; await db.storage.from('renmcycf-media').upload(fileName, file, { upsert: true }); const url = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`; document.getElementById(previewId).src = url; document.getElementById(previewId).style.display = 'block'; const payload = {}; payload[`${key}_url`] = url; await db.from('renmcycf_config').update(payload).eq('id', 1); alert(`✅ Imagen actualizada.`); } catch (err) { alert("Error: " + err.message); }
-        }
-
-        // ==========================================
-        // GESTIÓN DE USUARIOS A MEDIDA
-        // ==========================================
-        async function cargarUsuarios() {
-            const tbody = document.getElementById('usuarios-body');
-            tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center">Cargando...</td></tr>';
-            try {
-                const { data } = await db.from('renmcycf_roles').select('*');
-                tbody.innerHTML = data.map(u => `
-                <tr class="border-b border-white/5 hover:bg-white/5">
-                    <td class="p-3 text-xs text-slate-300">${u.email||'N/D'}<br><span class="text-[10px] text-slate-500">${u.nombres||''} ${u.apellidos||''}</span></td>
-                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase bg-blue-900/30 text-blue-400">${u.rol}</span></td>
-                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${u.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">${u.activo?'ACTIVO':'INACTIVO'}</span></td>
-                    <td class="p-3 text-right"><button onclick="toggleEstadoUsuario('${u.id}',${!u.activo})" class="text-[10px] font-bold border border-white/10 px-2 py-1 rounded hover:bg-white/5">${u.activo?'SUSPENDER':'ACTIVAR'}</button></td>
-                </tr>`).join('');
-            } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="text-red-400 p-3">Error: ${err.message}</td></tr>`; }
-        }
-
-        async function toggleEstadoUsuario(id, estado) { await db.from('renmcycf_roles').update({ activo: estado }).eq('id', id); cargarUsuarios(); }
-        
-        async function crearUsuario(e) { 
-            e.preventDefault(); 
-            const email = document.getElementById('usr-email').value;
-            const rolDesc = document.getElementById('usr-rol-desc').value;
-            const checkboxes = document.querySelectorAll('.permiso-chk:checked');
-            const permisos = Array.from(checkboxes).map(c => c.value);
-            
-            alert(`✅ Perfil configurado exitosamente para:\n\n📧 ${email}\n💼 Cargo: ${rolDesc}\n🔒 Accesos: ${permisos.join(', ')}\n\n⚠️ RECUERDA: Por seguridad, la invitación real con contraseña la debes enviar desde la pestaña "Authentication" de tu panel maestro en Supabase, utilizando este mismo correo.`); 
-            e.target.reset();
-        }
-
-        // INIT
-        window.addEventListener('DOMContentLoaded', async () => {
-            await verificarSesion();
-            lucide.createIcons();
-        });
     </script>
 </body>
 </html>
