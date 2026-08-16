@@ -2,886 +2,158 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0a1128" id="meta-theme-color">
-    <title>Wallet · RENMCYCF</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Digital · RENMCYCF</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- INYECCIÓN 1: jsPDF para exportar en formato publish/impresión -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --forense-navy: #0a1128; --forense-gold: #d4af37; --bg-app: #f8fafc; }
-        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-app); color: #333; height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
-
-        .header-top { background-color: var(--forense-navy); color: white; text-align: center; padding: 10px 15px; font-size: 9px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; z-index: 50; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        
-        .screen { display: none; flex: 1; flex-direction: column; padding: 20px; animation: fadeIn 0.3s ease; padding-bottom: 80px; z-index: 2; position: relative; }
-        .screen.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .login-bg { position: fixed; inset: 0; z-index: 0; object-fit: cover; width: 100%; height: 100%; opacity: 0.15; filter: grayscale(50%); display: none; }
-        .login-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; z-index: 10; position: relative; }
-        .input-dni { width: 100%; max-width: 320px; padding: 15px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 700; letter-spacing: 2px; transition: 0.3s; margin-bottom: 20px; background: rgba(255,255,255,0.9); }
-        .input-dni:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2); }
-        .btn-main { width: 100%; max-width: 320px; padding: 16px; background: var(--forense-navy); color: var(--forense-gold); border: none; border-radius: 12px; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; box-shadow: 0 4px 15px rgba(10, 17, 40, 0.3); transition: transform 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .btn-main:disabled { opacity: 0.7; cursor: not-allowed; }
-
-        .tc-box { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; max-height: 300px; overflow-y: auto; text-align: left; font-size: 12px; line-height: 1.6; color: #475569; margin-bottom: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); }
-        .tc-box h3 { color: var(--forense-navy); font-weight: 900; font-size: 14px; margin-bottom: 10px; }
-
-        .card-viewport { width: 100%; overflow: hidden; position: relative; margin-bottom: 20px; height: 230px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); display: flex; justify-content: center; background: #fff; }
-        #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
-
-        .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
-        .btn-toggle { background: white; border: 1px solid #cbd5e1; padding: 10px 20px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
-        .btn-toggle.active { background: var(--forense-navy); color: var(--forense-gold); border-color: var(--forense-navy); box-shadow: 0 4px 10px rgba(10, 17, 40, 0.2); }
-
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; padding: 10px 5px; padding-bottom: env(safe-area-inset-bottom, 10px); z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #94a3b8; font-size: 10px; font-weight: 700; cursor: pointer; transition: color 0.3s; }
-        .nav-item.active { color: var(--forense-navy); }
-        .nav-item.active i { color: var(--forense-gold); }
-
-        .book-card { background: white; border: 1px solid #cbd5e1; border-radius: 12px; overflow: hidden; display: flex; align-items: center; gap: 15px; padding: 10px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .book-cover { width: 60px; height: 80px; object-fit: cover; border-radius: 6px; background: #f1f5f9; }
-        .form-input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-bottom: 15px; background: white; color: #1e293b; }
-        .form-input:focus { border-color: var(--forense-navy); box-shadow: 0 0 0 3px rgba(10, 17, 40, 0.1); }
+        :root { --neon-blue: #3b82f6; --neon-gold: #fbbf24; --glass-bg: rgba(15, 23, 42, 0.6); --glass-border: rgba(255, 255, 255, 0.08); }
+        body { font-family: 'Outfit', sans-serif; background-color: #030712; color: #e2e8f0; background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.10) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(217, 119, 6, 0.05) 0%, transparent 50%); background-attachment: fixed; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-panel { background: var(--glass-bg); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 16px; }
+        .glass-card { background: rgba(30, 41, 59, 0.4); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid var(--glass-border); border-radius: 12px; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #020617; } ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <div class="header-top">
-        Registro Nacional de Matriculados en Criminalística y Ciencias Forenses
-    </div>
-
-    <!-- PANTALLA 1: LOGIN -->
-    <img id="dynamic-bg" src="" class="login-bg">
-    <div id="screen-login" class="screen active">
-        <div class="login-container">
-            <div class="w-24 h-24 bg-white rounded-full shadow-lg flex items-center justify-center mx-auto mb-6 border-4 border-[#d4af37] overflow-hidden" id="logo-container">
-                <i data-lucide="fingerprint" class="w-12 h-12 text-[#0a1128]" id="default-logo"></i>
-                <img id="dynamic-logo" src="" class="w-full h-full object-contain hidden p-2">
-            </div>
-            <h1 class="text-2xl font-black text-[#0a1128] mb-2 font-title uppercase tracking-tight">Wallet Profesional</h1>
-            <p class="text-sm text-slate-600 mb-8 font-semibold bg-white/80 px-4 py-2 rounded-lg">Identidad y Certificación Digital</p>
+    <!-- ========================================== -->
+    <!-- SECTOR: MODAL DE ACEPTACIÓN T&C (WALLET)   -->
+    <!-- ========================================== -->
+    <div id="modal-terminos-wallet" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-[#0a1128] border-2 border-[#d4af37] w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col overflow-hidden text-slate-200 relative">
             
-            <input type="tel" id="input-dni" class="input-dni shadow-lg" placeholder="DNI SIN PUNTOS" autocomplete="off">
-            <div id="login-error" class="text-red-600 text-sm font-bold mb-4 hidden bg-red-50 p-2 rounded-lg border border-red-200 w-full max-w-[320px]"></div>
-            
-            <button class="btn-main" id="btn-ingresar" onclick="ingresar()">
-                <i data-lucide="scan-face" class="w-5 h-5"></i> VALIDAR IDENTIDAD
-            </button>
-        </div>
-    </div>
-
-    <!-- PANTALLA 2: TÉRMINOS Y CONDICIONES -->
-    <div id="screen-tc" class="screen">
-        <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4">
-            <div class="text-center mb-6">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="scale" class="w-6 h-6"></i></div>
-                <h2 class="text-xl font-black text-forenseNavy uppercase">Acuerdo de Adhesión</h2>
-                <p class="text-xs text-slate-500 font-bold mt-1">Requerido para activar su credencial</p>
-            </div>
-            
-            <div class="tc-box flex-1 mb-6">
-                <h3>1. VERACIDAD DE DATOS E IMAGEN</h3>
-                <p>El Profesional declara bajo juramento que los datos aportados, así como la fotografía facial y títulos, son auténticos. Cualquier adulteración constituye delito penal.</p>
-                <br>
-                <h3>2. USO DE PLATAFORMA Y EXHIBICIÓN</h3>
-                <p>La Credencial es intransferible. El Profesional autoriza al Registro a exhibir su habilitación en el Validador Público mediante código QR.</p>
-                <br>
-                <h3>3. TRATAMIENTO DE DATOS PERSONALES</h3>
-                <p>En cumplimiento de la Ley 25.326, la información será almacenada en bases auditadas.</p>
+            <!-- Cabecera institucional -->
+            <div class="p-6 border-b border-white/10 bg-black/40 text-center relative">
+                <!-- Botón de Volver en el Modal -->
+                <a href="../index.renmcycf.html" class="absolute top-4 left-4 text-[10px] text-slate-400 font-bold uppercase hover:text-[#d4af37] transition-colors flex items-center gap-1">
+                    ← Volver
+                </a>
+                
+                <span class="text-[10px] font-bold uppercase tracking-widest text-[#d4af37]">ASARI S.A.S. • RENMCYCF</span>
+                <h2 class="text-2xl font-black uppercase tracking-wider text-white mt-1">Contrato de Adhesión Digital</h2>
+                <p class="text-xs text-slate-400 mt-1">Términos y Condiciones Generales de Uso y Registro</p>
             </div>
 
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6">
-                <label class="flex items-start gap-3 cursor-pointer">
-                    <input type="checkbox" id="check-tc" class="mt-1 w-5 h-5 accent-forenseNavy">
-                    <span class="text-xs font-bold text-slate-700 leading-tight">He leído, comprendo y acepto los Términos y Condiciones, y declaro bajo juramento la veracidad de mi identidad.</span>
+            <!-- Cuerpo con texto legal deslizable -->
+            <div class="p-6 overflow-y-auto max-h-[50vh] space-y-4 text-xs leading-relaxed text-slate-300 bg-black/20 border-y border-white/5 font-sans">
+                <div>
+                    <strong class="text-[#d4af37] uppercase">1. Aceptación y Naturaleza:</strong> Al solicitar su inscripción, el usuario declara haber leído y aceptado los términos. El RENMCYCF es un sistema privado de gestión y acreditación, sin carácter de autoridad pública o colegiación obligatoria.
+                </div>
+                <div>
+                    <strong class="text-[#d4af37] uppercase">2. Declaración Jurada:</strong> Toda la información y antecedentes ingresados tienen carácter de Declaración Jurada. La falsedad o adulteración facultará al Comité a rechazar la solicitud, cancelar credenciales y radicar denuncias penales.
+                </div>
+                <div>
+                    <strong class="text-[#d4af37] uppercase">3. Aranceles No Reembolsables:</strong> Los pagos constituyen una tasa retributiva por servicios administrativos y tecnológicos, siendo estrictamente no reembolsables sin importar el dictamen del Comité.
+                </div>
+                <div>
+                    <strong class="text-[#d4af37] uppercase">4. Deslinde de Responsabilidad:</strong> La credencial no exime del cumplimiento de requisitos procesales. Toda intervención forense es bajo exclusiva responsabilidad del profesional, liberando a ASARI S.A.S. de reclamos por impericia o nulidades.
+                </div>
+                <div>
+                    <strong class="text-[#d4af37] uppercase">5. Datos Sensibles y Biometría:</strong> Consentimiento expreso bajo la Ley N.º 25.326 para almacenamiento de datos académicos y captura biométrica para validación de identidad.
+                </div>
+                <div>
+                    <strong class="text-[#d4af37] uppercase">6. Prohibición de Uso de Marca:</strong> Queda prohibido utilizar el logotipo de ASARI S.A.S. o RENMCYCF en informes periciales, hojas membretadas, indumentaria táctica o vehículos simulando dependencia institucional.
+                </div>
+                <div>
+                    <strong class="text-[#d4af37] uppercase">7. Jurisdicción:</strong> Sometimiento voluntario a la jurisdicción de los Tribunales Ordinarios del asiento legal de ASARI S.A.S., renunciando a cualquier otro fuero.
+                </div>
+            </div>
+
+            <!-- Pie de aceptación interactivo -->
+            <div class="p-6 bg-black/40 space-y-4">
+                <label class="flex items-start gap-3 cursor-pointer select-none">
+                    <input type="checkbox" id="check-acepto-terminos" class="mt-1 w-4 h-4 rounded border-slate-700 bg-slate-900 text-[#d4af37] focus:ring-[#d4af37]" onchange="toggleBotonAceptar()">
+                    <span class="text-xs text-slate-300 font-medium">
+                        Confirmo que he leído, comprendido y acepto en todos sus términos el Contrato de Adhesión Digital y las políticas de uso del RENMCYCF.
+                    </span>
                 </label>
-            </div>
 
-            <button class="btn-main w-full max-w-none" id="btn-aceptar-tc" onclick="aceptarTerminos()">
-                <i data-lucide="file-signature" class="w-5 h-5"></i> FIRMAR ACUERDO
-            </button>
-        </div>
-    </div>
-
-    <!-- PANTALLA 2.5: FOTO OFICIAL -->
-    <div id="screen-foto" class="screen">
-        <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4 text-center">
-            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="camera" class="w-6 h-6"></i></div>
-            <h2 class="text-xl font-black text-forenseNavy uppercase">Fotografía Oficial</h2>
-            <p class="text-xs text-slate-500 font-bold mt-1 mb-6">Último paso para generar su credencial</p>
-
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-6 text-left text-xs text-slate-600">
-                <p class="font-bold text-forenseNavy mb-3 border-b pb-2"><i data-lucide="alert-circle" class="inline w-4 h-4 text-forenseGold"></i> Requisitos Estrictos:</p>
-                <ul class="list-disc pl-4 space-y-2">
-                    <li>Fotografía actual en primer plano.</li>
-                    <li>Rostro descubierto, sin anteojos oscuros.</li>
-                    <li>Buena iluminación, formato carnet.</li>
-                </ul>
-            </div>
-
-            <label class="block mb-6 cursor-pointer border-2 border-dashed border-slate-300 p-8 rounded-xl bg-slate-50 hover:bg-slate-100 transition shadow-inner">
-                <i data-lucide="image-plus" class="w-10 h-10 mx-auto text-slate-400 mb-3"></i>
-                <span class="block text-sm font-black text-slate-700 uppercase tracking-widest">Seleccionar Foto</span>
-                <span class="block text-[10px] text-slate-500 mt-2 font-bold" id="file-name-foto">JPG o PNG (Max 5MB)</span>
-                <input type="file" id="input-foto-oficial" accept="image/*" class="hidden" onchange="actualizarNombreArchivo(this, 'file-name-foto')">
-            </label>
-
-            <button class="btn-main w-full max-w-none mt-auto" id="btn-subir-foto" onclick="subirFotoOficial()">
-                <i data-lucide="upload-cloud" class="w-5 h-5"></i> SUBIR FOTO Y CONTINUAR
-            </button>
-        </div>
-    </div>
-
-    <!-- PANTALLA 3: WALLET CREDENCIAL -->
-    <div id="screen-wallet" class="screen">
-        <div class="wallet-welcome mb-4 flex justify-between items-center">
-            <div>
-                <div class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Matrícula Activa</div>
-                <div class="text-xl font-black text-[#0a1128] font-title uppercase" id="user-name">---</div>
-            </div>
-            <div class="w-10 h-10 rounded-full bg-[#d4af37] text-white flex items-center justify-center shadow-md">
-                <i data-lucide="shield-check" class="w-5 h-5"></i>
-            </div>
-        </div>
-        
-        <div class="card-viewport" id="card-viewport">
-            <div id="carnet-render"></div>
-        </div>
-        
-        <div class="view-toggles">
-            <button class="btn-toggle active" id="btn-toggle-front" onclick="cambiarVista('front')"><i data-lucide="id-card" class="w-4 h-4"></i> FRENTE</button>
-            <button class="btn-toggle" id="btn-toggle-back" onclick="cambiarVista('back')"><i data-lucide="qr-code" class="w-4 h-4"></i> DORSO Y QR</button>
-        </div>
-
-        <!-- INYECCIÓN 2: Botón de Descarga de App Oficial (PWA / Estilo Mi Argentina) -->
-        <button id="btn-install-app" style="background: linear-gradient(135deg, var(--forense-navy), #1e3a8a); color: white; width: 100%; border-radius: 16px; padding: 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 8px 20px rgba(10, 17, 40, 0.2); transition: transform 0.2s; border: 2px solid var(--forense-gold); margin-bottom: 20px;" onclick="instalarApp()">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--forense-gold);">
-                    <i data-lucide="fingerprint" style="width: 24px; height: 24px; color: var(--forense-navy);"></i>
-                </div>
-                <div style="text-align: left;">
-                    <p style="font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: white; margin: 0;">Instalar App Oficial</p>
-                    <p style="font-size: 10px; color: var(--forense-gold); font-weight: 700; margin: 0;">Lleva tu credencial en el celular</p>
-                </div>
-            </div>
-            <i data-lucide="download-cloud" style="width: 24px; height: 24px; color: var(--forense-gold);"></i>
-        </button>
-
-        <div class="grid grid-cols-3 gap-3">
-            <button id="btn-descargar-carnet" class="bg-white border border-slate-200 text-[#0a1128] font-bold py-3 rounded-xl shadow-sm hover:bg-slate-50 flex flex-col items-center justify-center gap-1 transition-transform active:scale-95" onclick="descargarCarnetOficial()">
-                <i data-lucide="image" class="w-5 h-5 text-[#d4af37]"></i>
-                <span class="text-[9px] uppercase tracking-wider text-center">Bajar<br>Carnet</span>
-            </button>
-            <button class="bg-white border border-slate-200 text-[#0a1128] font-bold py-3 rounded-xl shadow-sm hover:bg-slate-50 flex flex-col items-center justify-center gap-1 transition-transform active:scale-95" onclick="descargarDiploma()">
-                <i data-lucide="download" class="w-5 h-5 text-[#d4af37]"></i>
-                <span class="text-[9px] uppercase tracking-wider text-center">Bajar<br>Diploma</span>
-            </button>
-            <button class="bg-white border border-slate-200 text-[#0a1128] font-bold py-3 rounded-xl shadow-sm hover:bg-slate-50 flex flex-col items-center justify-center gap-1 transition-transform active:scale-95" onclick="cerrarSesion()">
-                <i data-lucide="log-out" class="w-5 h-5 text-red-500"></i>
-                <span class="text-[9px] uppercase tracking-wider text-center">Cerrar<br>Sesión</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- PANTALLA 4: BIBLIOTECA -->
-    <div id="screen-biblioteca" class="screen">
-        <div class="mb-6">
-            <h2 class="text-2xl font-black text-forenseNavy font-title">Biblioteca</h2>
-            <p class="text-xs text-slate-500 font-bold mt-1 uppercase tracking-wider">Acceso total para matriculados</p>
-        </div>
-        <div id="wallet-biblioteca-container" class="space-y-3 pb-4">
-            <div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>
-        </div>
-    </div>
-
-    <!-- PANTALLA 5: TESIS -->
-    <div id="screen-publicaciones" class="screen">
-        <div class="mb-6">
-            <h2 class="text-2xl font-black text-forenseNavy font-title">Mis Publicaciones</h2>
-            <p class="text-xs text-slate-500 font-bold mt-1 uppercase tracking-wider">Investigaciones y Tesis</p>
-        </div>
-
-        <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm">
-            <h3 class="font-bold text-sm text-forenseNavy mb-3 flex items-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4 text-forenseGold"></i> Subir Nueva Investigación</h3>
-            <form id="form-subir-tesis" onsubmit="subirPublicacion(event)">
-                <input type="text" id="tesis-titulo" class="form-input" placeholder="Título de la publicación" required>
-                <textarea id="tesis-resumen" class="form-input" placeholder="Breve resumen del contenido (máx 300 caracteres)..." rows="3" maxlength="300" required></textarea>
-                
-                <div class="mb-4">
-                    <label class="block text-xs font-bold text-slate-500 mb-1">Archivo PDF (Max. 10MB)</label>
-                    <input type="file" id="tesis-pdf" accept=".pdf" required class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-forenseNavy file:text-white">
-                </div>
-                
-                <label class="flex items-start gap-2 mb-4 cursor-pointer">
-                    <input type="checkbox" required class="mt-1 w-4 h-4">
-                    <span class="text-[10px] text-slate-500 leading-tight">Declaro que soy el autor original de este documento y autorizo su publicación en RENMCYCF.</span>
-                </label>
-                
-                <button type="submit" id="btn-subir-tesis" class="w-full bg-forenseGold text-forenseNavy font-black uppercase text-xs tracking-wider py-3 rounded-xl flex justify-center items-center gap-2 transition-transform active:scale-95">
-                    <i data-lucide="send" class="w-4 h-4"></i> Enviar a Comité Evaluador
+                <button type="button" id="btn-confirmar-terminos" onclick="aceptarTerminosWallet()" disabled class="w-full bg-slate-700 text-slate-400 font-black py-3 rounded-xl uppercase tracking-wider text-xs transition-all cursor-not-allowed shadow-lg">
+                    Continuar a mi Wallet
                 </button>
-            </form>
-        </div>
+            </div>
 
-        <h3 class="font-bold text-xs text-slate-400 uppercase tracking-widest mb-3">Estado de mis envíos</h3>
-        <div id="lista-mis-tesis" class="space-y-3 pb-4"></div>
-    </div>
-
-    <!-- BARRA NAVEGACIÓN (HUB) -->
-    <div class="bottom-nav hidden" id="bottom-nav">
-        <div class="nav-item active" id="tab-wallet" onclick="switchNavTab('wallet')">
-            <i data-lucide="wallet" class="w-6 h-6 mb-1"></i><span>Credencial</span>
-        </div>
-        <!-- INYECCIÓN 3: Conexión con Campus Virtual -->
-        <div class="nav-item" id="tab-campus" onclick="irAlCampus()">
-            <i data-lucide="monitor-play" class="w-6 h-6 mb-1 relative">
-                <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                </span>
-            </i>
-            <span>Campus</span>
-        </div>
-        <div class="nav-item" id="tab-biblioteca" onclick="switchNavTab('biblioteca')">
-            <i data-lucide="library" class="w-6 h-6 mb-1"></i><span>Biblioteca</span>
-        </div>
-        <div class="nav-item" id="tab-publicaciones" onclick="switchNavTab('publicaciones')">
-            <i data-lucide="newspaper" class="w-6 h-6 mb-1"></i><span>Tesis</span>
         </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- SECTOR: CONTENEDOR PRINCIPAL DE LA WALLET  -->
+    <!-- ========================================== -->
+    <main class="w-full max-w-md glass-panel p-6 text-center space-y-6">
+        <div class="flex items-center justify-center gap-2 text-[#d4af37] font-black tracking-widest text-xl">
+            <i data-lucide="shield-check" class="w-6 h-6"></i> WALLET RENMCYCF
+        </div>
+        
+        <div class="glass-card p-6 space-y-4">
+            <div class="w-24 h-24 bg-slate-800 rounded-full mx-auto flex items-center justify-center border-2 border-[#d4af37] overflow-hidden">
+                <i data-lucide="user" class="w-12 h-12 text-slate-400"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-black text-white" id="wallet-nombre">Matriculado Oficial</h3>
+                <p class="text-xs font-mono text-[#d4af37]" id="wallet-matricula">MAT-00000</p>
+            </div>
+            <div class="pt-4 border-t border-white/5 flex justify-between text-xs text-slate-400">
+                <span>Estado: <strong class="text-emerald-400">ACTIVO</strong></span>
+                <span>Categoría: <strong class="text-white">A.1</strong></span>
+            </div>
+        </div>
+
+        <p class="text-[10px] text-slate-500 uppercase tracking-widest">ASARI S.A.S. • Gestión Profesional Digital</p>
+        
+        <!-- Botón de Volver Principal debajo de la Wallet -->
+        <div>
+            <a href="../index.renmcycf.html" class="inline-block text-[10px] text-slate-400 font-bold uppercase hover:text-[#d4af37] transition-colors">
+                ← Volver al sitio principal
+            </a>
+        </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SECTOR: SCRIPTS Y CONTROL DE T&C           -->
+    <!-- ========================================== -->
     <script>
         lucide.createIcons();
-        const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
-        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
-        const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
 
-        let currentView = 'front';
-        let alumnoActual = null;
-        let configDiseno = {};
-        let bgCredencialFrente = '';
-        let bgCredencialDorso = ''; 
-        let rosetaUrl = '';
-
-        // INYECCIÓN LÓGICAS PWA Y CAMPUS
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-        });
-
-        function instalarApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    deferredPrompt = null;
-                });
+        function toggleBotonAceptar() {
+            const checkbox = document.getElementById('check-acepto-terminos');
+            const boton = document.getElementById('btn-confirmar-terminos');
+            
+            if (checkbox.checked) {
+                boton.disabled = false;
+                boton.classList.remove('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
+                boton.classList.add('bg-[#d4af37]', 'hover:bg-amber-400', 'text-slate-950', 'cursor-pointer', 'active:scale-95');
             } else {
-                alert("Para instalar la App Oficial:\n\n📱 Android (Chrome): Toca los 3 puntitos arriba a la derecha y selecciona 'Agregar a la pantalla principal'.\n\n🍎 iPhone (Safari): Toca el botón de Compartir (el cuadro con la flecha) y selecciona 'Agregar a Inicio'.");
+                boton.disabled = true;
+                boton.classList.add('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
+                boton.classList.remove('bg-[#d4af37]', 'hover:bg-amber-400', 'text-slate-950', 'cursor-pointer', 'active:scale-95');
             }
         }
 
-        function irAlCampus() {
-            window.location.href = 'campus.renmcycf.html';
-        }
-
-        // ==========================================
-        // 1. INICIALIZACIÓN
-        // ==========================================
-        async function cargarConfiguracionInicial() {
-            try {
-                const { data: config } = await db.from('renmcycf_config').select('logo_url, hero_image_url').eq('id', 1).maybeSingle();
-                if (config) {
-                    if (config.logo_url) { document.getElementById('dynamic-logo').src = config.logo_url; document.getElementById('dynamic-logo').classList.remove('hidden'); document.getElementById('default-logo').classList.add('hidden'); }
-                    if (config.hero_image_url) { document.getElementById('dynamic-bg').src = config.hero_image_url; document.getElementById('dynamic-bg').style.display = 'block'; }
-                }
-
-                const { data: cont } = await db.from('renmcycf_contenido').select('clave, valor').in('clave', ['credencial_style', 'credencial_bg', 'credencial_bg_dorso', 'credencial_roseta']);
-                if (cont) {
-                    const styleObj = cont.find(c => c.clave === 'credencial_style');
-                    const bgFrente = cont.find(c => c.clave === 'credencial_bg');
-                    const bgDorso = cont.find(c => c.clave === 'credencial_bg_dorso');
-                    const ros = cont.find(c => c.clave === 'credencial_roseta');
-                    
-                    if (styleObj && styleObj.valor) configDiseno = JSON.parse(styleObj.valor);
-                    if (bgFrente && bgFrente.valor) bgCredencialFrente = bgFrente.valor;
-                    if (bgDorso && bgDorso.valor) bgCredencialDorso = bgDorso.valor;
-                    if (ros && ros.valor) rosetaUrl = ros.valor;
-                }
-            } catch (err) { console.warn("Modo Offline activado"); }
-        }
-
-        // ==========================================
-        // 2. LÓGICA DE LOGIN Y FOTO
-        // ==========================================
-        async function ingresar() {
-            const btn = document.getElementById('btn-ingresar');
-            const errorDiv = document.getElementById('login-error');
-            const dni = document.getElementById('input-dni').value.replace(/\D/g, '');
-            errorDiv.classList.add('hidden');
+        function aceptarTerminosWallet() {
+            const modal = document.getElementById('modal-terminos-wallet');
+            modal.classList.add('hidden');
             
-            if (dni.length < 7) { errorDiv.textContent = 'Ingrese un DNI válido.'; errorDiv.classList.remove('hidden'); return; }
+            // Guarda en el navegador para que no vuelva a pedirlo en la misma sesión/dispositivo
+            localStorage.setItem('renmcycf_terminos_aceptados', 'true');
+        }
 
-            btn.disabled = true;
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> BUSCANDO...`;
+        // Verificación automática al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            const aceptado = localStorage.getItem('renmcycf_terminos_aceptados');
+            const modal = document.getElementById('modal-terminos-wallet');
             
-            try {
-                const { data: padron, error } = await db.from('renmcycf_padron').select('*').eq('dni', dni).maybeSingle();
-                if (error) throw new Error('Error de conexión.');
-                if (!padron) throw new Error('DNI no encontrado en el Padrón Oficial.');
-                if (padron.estado_legal !== 'ACTIVO') throw new Error(`Credencial ${padron.estado_legal}. Contacte administración.`);
-
-                alumnoActual = padron;
-
-                if (!padron.terminos_aceptados) {
-                    cambiarPantallaLogin('screen-tc');
-                } else if (!padron.foto_perfil_url) {
-                    cambiarPantallaLogin('screen-foto');
-                } else {
-                    iniciarWallet();
-                }
-            } catch (err) {
-                errorDiv.textContent = err.message;
-                errorDiv.classList.remove('hidden');
-                btn.disabled = false;
-                btn.innerHTML = `<i data-lucide="scan-face" class="w-5 h-5"></i> VALIDAR IDENTIDAD`;
-            }
-            lucide.createIcons();
-        }
-
-        async function aceptarTerminos() {
-            if (!document.getElementById('check-tc').checked) { alert("Debe tildar la casilla para continuar."); return; }
-            const btn = document.getElementById('btn-aceptar-tc');
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> FIRMANDO...`;
-            btn.disabled = true;
-
-            try {
-                const { error } = await db.from('renmcycf_padron').update({ terminos_aceptados: true, fecha_aceptacion_terminos: new Date().toISOString() }).eq('id', alumnoActual.id);
-                if (error) throw error;
-                if (!alumnoActual.foto_perfil_url) { cambiarPantallaLogin('screen-foto'); } else { iniciarWallet(); }
-            } catch (err) {
-                alert("Error: " + err.message);
-                btn.innerHTML = `<i data-lucide="file-signature" class="w-5 h-5"></i> FIRMAR ACUERDO`;
-                btn.disabled = false;
-            }
-        }
-
-        function actualizarNombreArchivo(input, labelId) {
-            const label = document.getElementById(labelId);
-            if (input.files?.[0]) { label.innerText = "✓ " + input.files[0].name; label.classList.add('text-emerald-600'); } 
-            else { label.innerText = 'JPG o PNG (Max 5MB)'; label.classList.remove('text-emerald-600'); }
-        }
-
-        async function subirFotoOficial() {
-            const btn = document.getElementById('btn-subir-foto');
-            const file = document.getElementById('input-foto-oficial').files[0];
-            if (!file) { alert("Por favor, selecciona una foto."); return; }
-            if (file.size > 5 * 1024 * 1024) { alert("La foto supera los 5MB permitidos."); return; }
-
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> PROCESANDO...`;
-            btn.disabled = true;
-
-            try {
-                const ext = file.name.split('.').pop();
-                const fileName = `${alumnoActual.dni}_foto_${Date.now()}.${ext}`;
-                const { error: upError } = await db.storage.from('renmcycf-media').upload(fileName, file, { cacheControl: '3600', upsert: true });
-                if (upError) throw upError;
-
-                const fotoUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
-                const { error: dbError } = await db.from('renmcycf_padron').update({ foto_perfil_url: fotoUrl }).eq('id', alumnoActual.id);
-                if (dbError) throw dbError;
-
-                alumnoActual.foto_perfil_url = fotoUrl;
-                iniciarWallet();
-            } catch (err) {
-                alert("Error al subir foto: " + err.message);
-                btn.innerHTML = `<i data-lucide="upload-cloud" class="w-5 h-5"></i> SUBIR FOTO Y CONTINUAR`;
-                btn.disabled = false;
-            }
-            lucide.createIcons();
-        }
-
-        function cambiarPantallaLogin(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            if(screenId !== 'screen-login') document.getElementById('dynamic-bg').style.display = 'none';
-        }
-
-        function iniciarWallet() {
-            switchNavTab('wallet');
-            document.getElementById('bottom-nav').classList.remove('hidden');
-            document.getElementById('dynamic-bg').style.display = 'none';
-            document.getElementById('user-name').innerText = `${alumnoActual.nombres} ${alumnoActual.apellidos}`;
-        }
-
-        function cerrarSesion() {
-            alumnoActual = null;
-            document.getElementById('input-dni').value = '';
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('bottom-nav').classList.add('hidden');
-            document.getElementById('screen-login').classList.add('active');
-            if(document.getElementById('dynamic-bg').src) document.getElementById('dynamic-bg').style.display = 'block';
-            const btn = document.getElementById('btn-ingresar');
-            btn.disabled = false;
-            btn.innerHTML = `<i data-lucide="scan-face" class="w-5 h-5"></i> VALIDAR IDENTIDAD`;
-            lucide.createIcons();
-        }
-
-        // ==========================================
-        // 3. MATEMÁTICA ABSOLUTA Y DESCARGA
-        // ==========================================
-        
-        function getSafeStyle(key) {
-            const props = configDiseno[key];
-            if (!props) return 'display: none;';
-            
-            let style = `position: absolute; width: ${props.width}px; height: ${props.height}px; font-family: 'Inter', sans-serif; `;
-            if (key === 'profesion' || key === 'categoria') style += `font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-weight: 900; `;
-            else style += `font-weight: 900; `;
-            
-            if (props.size !== undefined) style += `font-size: ${props.size}px; `;
-            if (props.color !== undefined) style += `color: ${props.color}; `;
-            
-            let finalLeft = props.left;
-            let finalTop = props.top;
-
-            if (key === 'foto' || key === 'qr' || key === 'roseta') {
-                finalLeft = props.left - (props.width / 2);
-                finalTop = props.top - (props.height / 2);
-                style += `display: flex; align-items: center; justify-content: center; `;
+            if (aceptado === 'true') {
+                modal.classList.add('hidden');
             } else {
-                if (props.align === 'right') {
-                    finalLeft = props.left - props.width;
-                    style += `text-align: right; justify-content: flex-end; `;
-                } else if (props.align === 'center') {
-                    style += `text-align: center; justify-content: center; `;
-                } else {
-                    style += `text-align: left; justify-content: flex-start; `;
-                }
-                style += `display: flex; align-items: center; white-space: nowrap; overflow: hidden; `;
+                modal.classList.remove('hidden');
             }
-            
-            style += `left: ${finalLeft}px; top: ${finalTop}px; `;
-            return style;
-        }
-
-        function autoAjustarTextos(contenedorPadre = document) {
-            const elements = contenedorPadre.querySelectorAll('div[style*="font-size"]');
-            elements.forEach(el => {
-                const maxWidth = parseInt(el.style.width);
-                if (!maxWidth || el.querySelector('img')) return;
-                
-                const span = document.createElement('span');
-                span.style.fontSize = el.style.fontSize;
-                span.style.fontFamily = window.getComputedStyle(el).fontFamily;
-                span.style.fontWeight = window.getComputedStyle(el).fontWeight;
-                span.style.visibility = 'hidden';
-                span.style.position = 'absolute';
-                span.style.whiteSpace = 'nowrap';
-                span.innerText = el.innerText;
-                document.body.appendChild(span);
-                
-                let textWidth = span.offsetWidth;
-                let currentSize = parseInt(el.style.fontSize);
-                
-                while (textWidth > maxWidth && currentSize > 10) {
-                    currentSize--;
-                    span.style.fontSize = currentSize + 'px';
-                    textWidth = span.offsetWidth;
-                }
-                
-                el.style.fontSize = currentSize + 'px';
-                document.body.removeChild(span);
-            });
-        }
-
-        function obtenerTextoLegalCategoria(cat) {
-            if(cat === 'A1') return 'A.1 Profesionales con título de Grado en carrera afines otorgado por Universidad pública o privada.';
-            if(cat === 'A2') return 'A.2 Técnicos Superiores y Terciarios en disciplinas afines.';
-            if(cat === 'A3') return 'A.3 Auxiliares y Diplomados en disciplinas afines.';
-            return 'Profesional Matriculado Oficialmente';
-        }
-
-        function renderizarCarnet(vista) {
-            const container = document.getElementById('carnet-render');
-            if (!alumnoActual) return;
-            
-            const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
-            const vence = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D';
-
-            if (vista === 'front') {
-                container.innerHTML = `
-                <div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);">
-                    <img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous">
-                    
-                    <div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;">
-                        <img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous">
-                    </div>
-                    
-                    ${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}
-                    
-                    <div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div>
-                    <div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div>
-                    <div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div>
-                    <div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div>
-                    <div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div>
-                    <div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div>
-                    <div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div>
-                </div>`;
-                
-                setTimeout(() => autoAjustarTextos(container), 50);
-
-            } else if (vista === 'back') {
-                const urlValidador = `${window.location.origin}/RENMCYCF/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
-                
-                container.innerHTML = `
-                <div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);">
-                    <img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous">
-                    <div style="${getSafeStyle('dorso_cat')} z-index: 10;">${obtenerTextoLegalCategoria(alumnoActual.categoria)}</div>
-                    <div id="qr-container" style="${getSafeStyle('qr')} z-index: 10; background: white;"></div>
-                </div>`;
-                
-                setTimeout(() => {
-                    const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200;
-                    new QRCode(document.getElementById('qr-container'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff" });
-                    autoAjustarTextos(container);
-                }, 100);
-            }
-        }
-
-        // INYECCIÓN 4: Nuevo Motor de Descarga Oficial PDF
-        async function descargarCarnetOficial() {
-            if (!alumnoActual) return;
-            const btn = document.getElementById('btn-descargar-carnet');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 text-[#d4af37] animate-spin"></i><span class="text-[9px] uppercase tracking-wider text-center">Generando...</span>`;
-            lucide.createIcons();
-
-            try {
-                // Configurar jsPDF
-                const { jsPDF } = window.jspdf;
-                
-                // Contenedor temporal gigante (Proporción A4 Alta Calidad)
-                const exportContainer = document.createElement('div');
-                exportContainer.style.position = 'fixed';
-                exportContainer.style.left = '-9999px'; 
-                exportContainer.style.top = '0';
-                exportContainer.style.width = '2100px';
-                exportContainer.style.height = '2970px';
-                exportContainer.style.backgroundColor = '#ffffff';
-                exportContainer.style.zIndex = '9999';
-                document.body.appendChild(exportContainer);
-
-                const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
-                const vence = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D';
-                const urlValidador = `${window.location.origin}/RENMCYCF/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
-                
-                // Función de estilo que permite bajar de línea para que las palabras NUNCA se corten
-                const formatoSeguro = (texto) => texto || '';
-                const exportStyle = (key) => getSafeStyle(key)
-                    .replace('overflow: hidden;', 'overflow: visible;')
-                    .replace('white-space: nowrap;', 'white-space: normal; line-height: 1.1; word-break: break-word;');
-
-                const nombreCompleto = `${alumnoActual.nombres} ${alumnoActual.apellidos}`;
-
-                // Obtener recursos dinámicos visuales del sistema
-                const dynLogo = document.getElementById('dynamic-logo').src;
-                const dynBg = document.getElementById('dynamic-bg').src;
-
-                // FRENTE EXPORT
-                const frontHtml = `
-                <div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);">
-                    <img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous">
-                    <div style="${exportStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;">
-                        <img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous">
-                    </div>
-                    ${rosetaUrl ? `<img src="${rosetaUrl}" style="${exportStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}
-                    <div style="${exportStyle('profesion')} z-index: 10;">${formatoSeguro(alumnoActual.profesion)}</div>
-                    <div style="${exportStyle('categoria')} z-index: 10;">${formatoSeguro(alumnoActual.categoria)}</div>
-                    <div style="${exportStyle('nombre')} z-index: 10;">${formatoSeguro(nombreCompleto)}</div>
-                    <div style="${exportStyle('dni')} z-index: 10;">${formatoSeguro(new Intl.NumberFormat('es-AR').format(alumnoActual.dni))}</div>
-                    <div style="${exportStyle('ano_nac')} z-index: 10;">${formatoSeguro(alumnoActual.ano_nacimiento)}</div>
-                    <div style="${exportStyle('matricula')} z-index: 10;">${formatoSeguro(alumnoActual.matricula_oficial)}</div>
-                    <div style="${exportStyle('vence')} z-index: 10;">${formatoSeguro(vence)}</div>
-                </div>`;
-
-                // DORSO EXPORT
-                const backHtml = bgCredencialDorso ? `
-                <div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);">
-                    <img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous">
-                    <div style="${exportStyle('dorso_cat')} z-index: 10;">${formatoSeguro(obtenerTextoLegalCategoria(alumnoActual.categoria))}</div>
-                    <div id="export-qr" style="${exportStyle('qr')} z-index: 10; background: white;"></div>
-                </div>` : '';
-
-                // EXPEDIENTE DIGITAL A4
-                exportContainer.innerHTML = `
-                <div style="width: 2100px; height: 2970px; background: #fff; position: relative; font-family: 'Inter', sans-serif;">
-                    <!-- Cabecera Oficial -->
-                    <div style="position: relative; height: 450px; background-color: #0a1128; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                        ${dynBg ? `<img src="${dynBg}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.2; filter: grayscale(100%);" crossorigin="anonymous">` : ''}
-                        <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 180px; height: 180px; background: white; border-radius: 50%; border: 8px solid #d4af37; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 25px;">
-                                ${dynLogo ? `<img src="${dynLogo}" style="width: 100%; height: 100%; object-fit: contain; padding: 15px;" crossorigin="anonymous">` : ''}
-                            </div>
-                            <h1 style="color: #d4af37; font-size: 55px; font-weight: 900; margin: 0; text-transform: uppercase; font-family: 'Montserrat', sans-serif; letter-spacing: 5px;">Expediente de Matrícula</h1>
-                            <p style="color: #ffffff; font-size: 28px; font-weight: 700; margin: 10px 0 0 0; text-transform: uppercase; letter-spacing: 3px;">Registro Nacional RENMCYCF</p>
-                        </div>
-                    </div>
-
-                    <!-- Cuerpo Documento -->
-                    <div style="padding: 100px 120px;">
-                        <div style="display: flex; justify-content: space-between; border-bottom: 5px solid #e2e8f0; padding-bottom: 40px; margin-bottom: 60px;">
-                            <div>
-                                <p style="font-size: 24px; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 0 0 15px 0;">Matrícula Oficial</p>
-                                <p style="font-size: 70px; color: #0a1128; font-weight: 900; font-family: monospace; margin: 0;">${alumnoActual.matricula_oficial || 'PENDIENTE'}</p>
-                            </div>
-                            <div style="text-align: right;">
-                                <p style="font-size: 24px; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 0 0 15px 0;">Fecha de Emisión</p>
-                                <p style="font-size: 50px; color: #334155; font-weight: 800; margin: 0;">${new Date().toLocaleDateString('es-AR')}</p>
-                            </div>
-                        </div>
-
-                        <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 30px; padding: 50px; margin-bottom: 80px;">
-                            <h3 style="font-size: 36px; color: #0a1128; font-weight: 900; text-transform: uppercase; border-left: 10px solid #d4af37; padding-left: 25px; margin: 0 0 40px 0;">Identificación del Profesional</h3>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
-                                <div><p style="font-size: 20px; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 0 0 10px 0;">Titular</p><p style="font-size: 32px; color: #0a1128; font-weight: 900; margin: 0;">${nombreCompleto}</p></div>
-                                <div><p style="font-size: 20px; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 0 0 10px 0;">Documento</p><p style="font-size: 32px; color: #0a1128; font-weight: 900; margin: 0;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</p></div>
-                                <div><p style="font-size: 20px; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 0 0 10px 0;">Título / Profesión</p><p style="font-size: 32px; color: #0a1128; font-weight: 900; margin: 0;">${alumnoActual.profesion || 'N/D'}</p></div>
-                                <div><p style="font-size: 20px; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 0 0 10px 0;">Categoría</p><p style="font-size: 32px; color: #d4af37; background: #0a1128; display: inline-block; padding: 5px 20px; border-radius: 10px; font-weight: 900; margin: 0;">${alumnoActual.categoria || 'N/D'}</p></div>
-                            </div>
-                        </div>
-
-                        <h3 style="font-size: 36px; color: #0a1128; font-weight: 900; text-transform: uppercase; border-left: 10px solid #d4af37; padding-left: 25px; margin: 0 0 60px 0;">Credencial Oficial (Impresión 8,5 x 5,4 cm)</h3>
-                        
-                        <!-- Contenedores con escala matemática exacta 0.85 para asegurar 85x54mm en A4 -->
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 80px;">
-                            <div style="width: 850px; height: 535px; position: relative; border-radius: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.2);">
-                                <div style="transform: scale(0.85); transform-origin: top left; position: absolute; top: 0; left: 0;">
-                                    ${frontHtml}
-                                </div>
-                            </div>
-                            <div style="width: 850px; height: 535px; position: relative; border-radius: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); ${!bgCredencialDorso ? 'display:none;' : ''}">
-                                <div style="transform: scale(0.85); transform-origin: top left; position: absolute; top: 0; left: 0;">
-                                    ${backHtml}
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Pie de firma -->
-                        <div style="position: absolute; bottom: 80px; left: 120px; right: 120px; border-top: 3px solid #e2e8f0; padding-top: 30px; display: flex; justify-content: space-between;">
-                            <p style="font-size: 18px; color: #94a3b8; font-weight: 700; margin: 0;">Documento generado por Sistema RENMCYCF</p>
-                            <p style="font-size: 18px; color: #94a3b8; font-weight: 700; margin: 0;">Verificación y Auditoría Interna</p>
-                        </div>
-                    </div>
-                </div>`;
-
-                await new Promise(r => setTimeout(r, 600));
-
-                const qrContainer = exportContainer.querySelector('#export-qr');
-                if (qrContainer) {
-                    const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200;
-                    new QRCode(qrContainer, { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff" });
-                    await new Promise(r => setTimeout(r, 800));
-                }
-
-                autoAjustarTextos(exportContainer);
-                
-                await document.fonts.ready;
-                await new Promise(r => setTimeout(r, 500));
-
-                // html2canvas con scale: 1 para procesar exactamente los 2100x2970 del contenedor
-                const canvas = await html2canvas(exportContainer, { 
-                    useCORS: true, 
-                    allowTaint: true, 
-                    scale: 1, 
-                    backgroundColor: '#ffffff',
-                    logging: false
-                });
-
-                const imgData = canvas.toDataURL('image/jpeg', 0.9);
-                
-                // Creación del PDF en formato A4 exacto (210x297 mm)
-                const doc = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-
-                doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
-                doc.save(`Expediente_RENMCYCF_${alumnoActual.matricula_oficial || 'Pendiente'}.pdf`);
-
-            } catch (error) {
-                console.error('Error en descarga:', error);
-                alert("Hubo un error al generar el documento. Intente nuevamente.");
-            } finally {
-                const container = document.querySelector('div[style*="-9999px"]');
-                if (container) document.body.removeChild(container);
-                btn.innerHTML = originalText;
-                lucide.createIcons();
-            }
-        }
-
-        function descargarDiploma() {
-            if (!alumnoActual) return;
-            const diplomaUrl = (alumnoActual.diplomas_urls && alumnoActual.diplomas_urls.length > 0) ? alumnoActual.diplomas_urls[0] : alumnoActual.diploma_url;
-            if (diplomaUrl) window.open(diplomaUrl, '_blank');
-            else alert("No tienes un diploma base cargado en el sistema.");
-        }
-
-        // ==========================================
-        // 4. MÓDULOS DE BIBLIOTECA Y TESIS
-        // ==========================================
-        async function cargarBibliotecaWallet() {
-            const container = document.getElementById('wallet-biblioteca-container');
-            container.innerHTML = '<div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>';
-            lucide.createIcons();
-            
-            try {
-                const { data, error } = await db.from('renmcycf_biblioteca').select('*').eq('activo', true).order('created_at', { ascending: false });
-                if (error) throw error;
-                if (!data || data.length === 0) { container.innerHTML = '<p class="text-center text-slate-400 text-sm py-4">Biblioteca vacía.</p>'; return; }
-
-                container.innerHTML = data.map(b => {
-                    const cover = b.portada_url || 'https://via.placeholder.com/150x200/0a1128/d4af37?text=PDF';
-                    const label = b.tipo_acceso === 'PREMIUM' ? '<span class="bg-forenseNavy text-forenseGold text-[8px] font-bold px-2 py-0.5 rounded border border-forenseGold uppercase">Premium</span>' : '<span class="bg-emerald-500 text-white text-[8px] font-bold px-2 py-0.5 rounded uppercase">Gratis</span>';
-                    
-                    return `
-                    <div class="book-card">
-                        <img src="${cover}" class="book-cover" alt="Portada">
-                        <div class="flex-1">
-                            ${label}
-                            <h4 class="font-bold text-sm text-forenseNavy leading-tight mt-1 line-clamp-2">${b.titulo}</h4>
-                            <p class="text-[10px] text-slate-500 mb-2">${b.autor || 'Autor Anónimo'}</p>
-                            <a href="${b.pdf_url}" target="_blank" class="inline-flex items-center gap-1 bg-forenseGold/20 hover:bg-forenseGold/30 text-forenseNavy text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg transition-colors"><i data-lucide="download" class="w-3 h-3"></i> Descargar PDF</a>
-                        </div>
-                    </div>`;
-                }).join('');
-                lucide.createIcons();
-            } catch(e) { container.innerHTML = '<p class="text-center text-red-500 text-sm">Error de conexión.</p>'; }
-        }
-
-        async function cargarMisPublicaciones() {
-            const container = document.getElementById('lista-mis-tesis');
-            container.innerHTML = '<p class="text-center text-slate-400 text-xs py-4"><i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto mb-2"></i>Cargando...</p>';
-            lucide.createIcons();
-
-            try {
-                const { data, error } = await db.from('renmcycf_publicaciones').select('*').eq('autor_id', alumnoActual.id).order('created_at', { ascending: false });
-                if (error) throw error;
-                if (!data || data.length === 0) { container.innerHTML = '<p class="text-center text-slate-400 text-xs border border-dashed border-slate-300 rounded-xl p-4">Aún no has subido investigaciones.</p>'; return; }
-
-                container.innerHTML = data.map(t => {
-                    let color = 'bg-slate-100 text-slate-500 border-slate-200';
-                    let icon = 'clock';
-                    if (t.estado === 'APROBADO') { color = 'bg-emerald-50 text-emerald-600 border-emerald-200'; icon = 'check-circle'; }
-                    if (t.estado === 'RECHAZADO') { color = 'bg-red-50 text-red-600 border-red-200'; icon = 'x-circle'; }
-
-                    return `
-                    <div class="border border-slate-200 rounded-xl p-3 bg-white flex justify-between items-center gap-3">
-                        <div class="flex-1 overflow-hidden">
-                            <h4 class="font-bold text-xs text-forenseNavy truncate">${t.titulo}</h4>
-                            <p class="text-[10px] text-slate-400 mt-0.5">${new Date(t.created_at).toLocaleDateString('es-AR')}</p>
-                        </div>
-                        <div class="shrink-0 flex flex-col items-end gap-1">
-                            <span class="${color} border text-[8px] font-bold uppercase px-2 py-1 rounded flex items-center gap-1"><i data-lucide="${icon}" class="w-3 h-3"></i> ${t.estado}</span>
-                        </div>
-                    </div>`;
-                }).join('');
-                lucide.createIcons();
-            } catch(e) { container.innerHTML = '<p class="text-center text-red-500 text-xs">Error de conexión.</p>'; }
-        }
-
-        async function subirPublicacion(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-subir-tesis');
-            const file = document.getElementById('tesis-pdf').files[0];
-            
-            if (file.size > 10 * 1024 * 1024) { alert('El archivo supera los 10MB permitidos.'); return; }
-            
-            const originalHtml = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> ENVIANDO...';
-            btn.disabled = true;
-
-            try {
-                const ext = file.name.split('.').pop();
-                const fileName = `${alumnoActual.dni}_tesis_${Date.now()}.${ext}`;
-                const { error: upError } = await db.storage.from('renmcycf-pdfs').upload(fileName, file, { cacheControl: '3600', upsert: false });
-                if (upError) throw upError;
-
-                const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${fileName}`;
-
-                const { error: insError } = await db.from('renmcycf_publicaciones').insert({
-                    autor_id: alumnoActual.id,
-                    autor_nombre: `${alumnoActual.nombres} ${alumnoActual.apellidos}`,
-                    titulo: document.getElementById('tesis-titulo').value.trim(),
-                    resumen: document.getElementById('tesis-resumen').value.trim(),
-                    pdf_url: pdfUrl
-                });
-                
-                if (insError) throw insError;
-
-                alert("Investigación enviada con éxito. El comité evaluador la revisará pronto.");
-                document.getElementById('form-subir-tesis').reset();
-                cargarMisPublicaciones();
-
-            } catch (err) {
-                alert("Error al subir: " + err.message);
-            } finally {
-                btn.innerHTML = originalHtml;
-                btn.disabled = false;
-                lucide.createIcons();
-            }
-        }
-
-        // ==========================================
-        // 5. NAVEGACIÓN Y ESCALA
-        // ==========================================
-        function cambiarVista(vista) {
-            currentView = vista;
-            document.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active'));
-            document.getElementById(`btn-toggle-${vista}`).classList.add('active');
-            renderizarCarnet(vista);
-        }
-
-        function switchNavTab(tabId) {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            const tabBtn = document.getElementById(`tab-${tabId}`);
-            if(tabBtn) tabBtn.classList.add('active');
-            
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(`screen-${tabId}`).classList.add('active');
-            
-            if(tabId === 'wallet') { renderizarCarnet('front'); ajustarEscala(); }
-            if(tabId === 'biblioteca') cargarBibliotecaWallet();
-            if(tabId === 'publicaciones') cargarMisPublicaciones();
-        }
-
-        function ajustarEscala() {
-            const viewport = document.getElementById('card-viewport');
-            const render = document.getElementById('carnet-render');
-            if(viewport && render && document.getElementById('screen-wallet').classList.contains('active')) {
-                const scale = viewport.offsetWidth / 1000;
-                render.style.transform = `scale(${scale})`;
-                viewport.style.height = `${630 * scale}px`;
-            }
-        }
-
-        window.addEventListener('resize', ajustarEscala);
-        window.addEventListener('DOMContentLoaded', async () => {
-            await cargarConfiguracionInicial();
-            lucide.createIcons();
         });
-
     </script>
 </body>
 </html>
