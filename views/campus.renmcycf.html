@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0a1128">
     <title>Campus Virtual · RENMCYCF</title>
     
@@ -79,9 +79,11 @@
             <div class="login-box">
                 <!-- CONTENEDOR DE LOGO CORREGIDO -->
                 <div class="w-28 h-28 bg-white rounded-full shadow-lg flex items-center justify-center mx-auto mb-6 border-4 border-[#d4af37] overflow-hidden relative" id="logo-container">
-                    <i data-lucide="monitor-play" class="w-12 h-12 text-[#0a1128]" id="default-logo"></i>
-                    <!-- Se quitó el p-2 excesivo para que ocupe bien el espacio circular -->
-                    <img id="dynamic-logo" src="" class="absolute inset-0 w-full h-full object-contain p-3 hidden">
+                    <!-- Ruta corregida con ../ saliendo de views y manejo de error por si no carga -->
+                    <img src="../logo.png" alt="Logo RENMCYCF" class="w-full h-full object-contain p-2" onerror="this.style.display='none'; document.getElementById('default-logo').style.display='block';">
+    
+                    <!-- Icono de respaldo oculto por defecto que se muestra si falla la imagen -->
+                    <i data-lucide="monitor-play" class="w-12 h-12 text-[#0a1128]" id="default-logo" style="display: none;"></i>
                 </div>
                 
                 <h1 class="text-2xl font-black text-[#0a1128] mb-1 font-title uppercase tracking-tight">Campus Virtual</h1>
@@ -93,7 +95,7 @@
                 <button class="btn-main" id="btn-ingresar" onclick="ingresar()">
                     <i data-lucide="log-in" class="w-5 h-5"></i> ACCEDER AL AULA
                 </button>
-                <a href="index.renmcycf.html" class="block mt-6 text-[10px] text-slate-400 font-bold uppercase hover:text-[#d4af37] transition-colors">← Volver al sitio principal</a>
+                <a href="../index.renmcycf.html" class="block mt-6 text-[10px] text-slate-400 font-bold uppercase hover:text-[#d4af37] transition-colors">← Volver al sitio principal</a>
             </div>
         </div>
     </div>
