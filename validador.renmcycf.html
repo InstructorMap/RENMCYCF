@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificador Oficial · RENMCYCF</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -256,6 +256,58 @@
             cargarIdentidadVisual();
             validarProfesional();
         });
+
+        // Inicializar iconos de Lucide
+lucide.createIcons();
+
+// Función de control global de pestañas (Tabs)
+function showTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
+    
+    const targetTab = document.getElementById('view-' + tabId);
+    const targetNav = document.getElementById('nav-' + tabId);
+    
+    if (targetTab) targetTab.classList.add('active');
+    if (targetNav) targetNav.classList.add('active');
+}
+
+// Funciones de cierre de modales
+function cerrarExpediente() {
+    const modal = document.getElementById('modal-expediente');
+    if (modal) modal.classList.add('hidden');
+}
+
+function cerrarModalClases() {
+    const modal = document.getElementById('modal-clases');
+    if (modal) modal.classList.add('hidden');
+}
+
+function cerrarModalEdicion() {
+    const modal = document.getElementById('modal-editar-padron');
+    if (modal) modal.classList.add('hidden');
+}
+
+// Validación y cierre de sesión
+function cerrarSesion() {
+    localStorage.clear();
+    window.location.reload();
+}
+
+// Validación de inputs dinámicos en el panel de clases
+function toggleClaseInput() {
+    const tipo = document.getElementById('clase-tipo').value;
+    const inputUrl = document.getElementById('clase-input-url');
+    const inputFile = document.getElementById('clase-input-file');
+
+    if (tipo === 'PDF') {
+        if (inputUrl) inputUrl.classList.add('hidden');
+        if (inputFile) inputFile.classList.remove('hidden');
+    } else {
+        if (inputUrl) inputUrl.classList.remove('hidden');
+        if (inputFile) inputFile.classList.add('hidden');
+    }
+}
     </script>
 </body>
 </html>
