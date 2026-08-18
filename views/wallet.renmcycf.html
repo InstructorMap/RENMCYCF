@@ -22,16 +22,12 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- ========================================== -->
-    <!-- SECTOR: MODAL DE ACEPTACIÓN T&C (WALLET)   -->
-    <!-- ========================================== -->
+    <!-- MODAL DE ACEPTACIÓN T&C (WALLET) -->
     <div id="modal-terminos-wallet" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-[#0a1128] border-2 border-[#d4af37] w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col overflow-hidden text-slate-200 relative">
             
-            <!-- Cabecera institucional -->
             <div class="p-6 border-b border-white/10 bg-black/40 text-center relative">
-                <!-- Botón de Volver en el Modal -->
-                <a href="../index.renmcycf.html" class="absolute top-4 left-4 text-[10px] text-slate-400 font-bold uppercase hover:text-[#d4af37] transition-colors flex items-center gap-1">
+                <a href="index.renmcycf.html" class="absolute top-4 left-4 text-[10px] text-slate-400 font-bold uppercase hover:text-[#d4af37] transition-colors flex items-center gap-1">
                     ← Volver
                 </a>
                 
@@ -40,32 +36,30 @@
                 <p class="text-xs text-slate-400 mt-1">Términos y Condiciones Generales de Uso y Registro</p>
             </div>
 
-            <!-- Cuerpo con texto legal deslizable -->
             <div class="p-6 overflow-y-auto max-h-[50vh] space-y-4 text-xs leading-relaxed text-slate-300 bg-black/20 border-y border-white/5 font-sans">
                 <div>
-                    <strong class="text-[#d4af37] uppercase">1. Aceptación y Naturaleza:</strong> Al solicitar su inscripción, el usuario declara haber leído y aceptado los términos. El RENMCYCF es un sistema privado de gestión y acreditación, sin carácter de autoridad pública o colegiación obligatoria.
+                    <strong class="text-[#d4af37] uppercase">1. Aceptación y Naturaleza:</strong> Al solicitar su inscripción, el usuario declara haber leído y aceptado los términos. El RENMCYCF es un sistema privado de gestión y acreditación.
                 </div>
                 <div>
-                    <strong class="text-[#d4af37] uppercase">2. Declaración Jurada:</strong> Toda la información y antecedentes ingresados tienen carácter de Declaración Jurada. La falsedad o adulteración facultará al Comité a rechazar la solicitud, cancelar credenciales y radicar denuncias penales.
+                    <strong class="text-[#d4af37] uppercase">2. Declaración Jurada:</strong> Toda la información ingresada tiene carácter de Declaración Jurada.
                 </div>
                 <div>
-                    <strong class="text-[#d4af37] uppercase">3. Aranceles No Reembolsables:</strong> Los pagos constituyen una tasa retributiva por servicios administrativos y tecnológicos, siendo estrictamente no reembolsables sin importar el dictamen del Comité.
+                    <strong class="text-[#d4af37] uppercase">3. Aranceles No Reembolsables:</strong> Los pagos constituyen una tasa retributiva por servicios administrativos y tecnológicos.
                 </div>
                 <div>
-                    <strong class="text-[#d4af37] uppercase">4. Deslinde de Responsabilidad:</strong> La credencial no exime del cumplimiento de requisitos procesales. Toda intervención forense es bajo exclusiva responsabilidad del profesional, liberando a ASARI S.A.S. de reclamos por impericia o nulidades.
+                    <strong class="text-[#d4af37] uppercase">4. Deslinde de Responsabilidad:</strong> Toda intervención forense es bajo exclusiva responsabilidad del profesional, liberando a ASARI S.A.S.
                 </div>
                 <div>
-                    <strong class="text-[#d4af37] uppercase">5. Datos Sensibles y Biometría:</strong> Consentimiento expreso bajo la Ley N.º 25.326 para almacenamiento de datos académicos y captura biométrica para validación de identidad.
+                    <strong class="text-[#d4af37] uppercase">5. Datos Sensibles y Biometría:</strong> Consentimiento expreso bajo la Ley N.º 25.326.
                 </div>
                 <div>
-                    <strong class="text-[#d4af37] uppercase">6. Prohibición de Uso de Marca:</strong> Queda prohibido utilizar el logotipo de ASARI S.A.S. o RENMCYCF en informes periciales, hojas membretadas, indumentaria táctica o vehículos simulando dependencia institucional.
+                    <strong class="text-[#d4af37] uppercase">6. Prohibición de Uso de Marca:</strong> Queda prohibido utilizar el logotipo en informes periciales o indumentaria táctica simulando dependencia oficial.
                 </div>
                 <div>
-                    <strong class="text-[#d4af37] uppercase">7. Jurisdicción:</strong> Sometimiento voluntario a la jurisdicción de los Tribunales Ordinarios del asiento legal de ASARI S.A.S., renunciando a cualquier otro fuero.
+                    <strong class="text-[#d4af37] uppercase">7. Jurisdicción:</strong> Tribunales Ordinarios del asiento legal de ASARI S.A.S.
                 </div>
             </div>
 
-            <!-- Pie de aceptación interactivo -->
             <div class="p-6 bg-black/40 space-y-4">
                 <label class="flex items-start gap-3 cursor-pointer select-none">
                     <input type="checkbox" id="check-acepto-terminos" class="mt-1 w-4 h-4 rounded border-slate-700 bg-slate-900 text-[#d4af37] focus:ring-[#d4af37]" onchange="toggleBotonAceptar()">
@@ -82,9 +76,7 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- SECTOR: CONTENEDOR PRINCIPAL DE LA WALLET  -->
-    <!-- ========================================== -->
+    <!-- CONTENEDOR PRINCIPAL DE LA WALLET -->
     <main class="w-full max-w-md glass-panel p-6 text-center space-y-6">
         <div class="flex items-center justify-center gap-2 text-[#d4af37] font-black tracking-widest text-xl">
             <i data-lucide="shield-check" class="w-6 h-6"></i> WALLET RENMCYCF
@@ -106,17 +98,13 @@
 
         <p class="text-[10px] text-slate-500 uppercase tracking-widest">ASARI S.A.S. • Gestión Profesional Digital</p>
         
-        <!-- Botón de Volver Principal debajo de la Wallet -->
         <div>
-            <a href="../index.renmcycf.html" class="inline-block text-[10px] text-slate-400 font-bold uppercase hover:text-[#d4af37] transition-colors">
+            <a href="index.renmcycf.html" class="inline-block text-[10px] text-slate-400 font-bold uppercase hover:text-[#d4af37] transition-colors">
                 ← Volver al sitio principal
             </a>
         </div>
     </main>
 
-    <!-- ========================================== -->
-    <!-- SECTOR: SCRIPTS Y CONTROL DE T&C           -->
-    <!-- ========================================== -->
     <script>
         lucide.createIcons();
 
@@ -138,12 +126,9 @@
         function aceptarTerminosWallet() {
             const modal = document.getElementById('modal-terminos-wallet');
             modal.classList.add('hidden');
-            
-            // Guarda en el navegador para que no vuelva a pedirlo en la misma sesión/dispositivo
             localStorage.setItem('renmcycf_terminos_aceptados', 'true');
         }
 
-        // Verificación automática al cargar la página
         window.addEventListener('DOMContentLoaded', () => {
             const aceptado = localStorage.getItem('renmcycf_terminos_aceptados');
             const modal = document.getElementById('modal-terminos-wallet');
