@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- Reemplaza la línea 5 por esta: -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0a1128">
     <meta name="google" content="notranslate">
@@ -310,7 +309,7 @@
         // ============================================================
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
         const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
-        const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
+        const db = window.supabase.createClient(PROJECT_URL, PUBLIC_KEY);
 
         // ============================================================
         // PARTÍCULAS DE FONDO
@@ -355,11 +354,9 @@
             const errorDiv = document.getElementById('error-message');
             const successDiv = document.getElementById('success-message');
             
-            // Ocultar mensajes anteriores
             errorDiv.classList.add('hidden');
             successDiv.classList.add('hidden');
             
-            // Validaciones básicas
             if (!email || !password) {
                 showError('Por favor completa todos los campos.');
                 return;
@@ -370,27 +367,21 @@
                 return;
             }
             
-            // Deshabilitar botón
             const originalHTML = btn.innerHTML;
             btn.innerHTML = '<div class="loader"></div> VERIFICANDO CREDENCIALES...';
             btn.disabled = true;
             
             try {
-                console.log('🔐 Intentando login:', email);
-                
-                // 1. Autenticar con Supabase
                 const { data: authData, error: authError } = await db.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
                 
                 if (authError) {
-                    console.error('❌ Error de autenticación:', authError);
-                    
                     if (authError.message.includes('Invalid login credentials')) {
                         throw new Error('Correo o contraseña incorrectos.');
                     } else if (authError.message.includes('Email not confirmed')) {
-                        throw new Error('El correo no ha sido confirmado. Revisa tu bandeja de entrada.');
+                        throw new Error('El correo no ha sido confirmado.');
                     } else {
                         throw new Error(authError.message);
                     }
@@ -400,9 +391,6 @@
                     throw new Error('No se pudo obtener la información del usuario.');
                 }
                 
-                console.log('✅ Usuario autenticado:', authData.user.email);
-                
-                // 2. Verificar rol en la tabla de roles
                 const { data: rolData, error: rolError } = await db
                     .from('renmcycf_roles')
                     .select('*')
@@ -410,26 +398,15 @@
                     .eq('activo', true)
                     .maybeSingle();
                 
-                if (rolError) {
-                    console.error('❌ Error al verificar rol:', rolError);
-                    throw new Error('Error al verificar permisos. Contacta al administrador.');
-                }
-                
-                if (!rolData) {
-                    console.warn('⚠️ Usuario sin rol asignado');
-                    // Cerrar sesión
+                if (rolError || !rolData) {
                     await db.auth.signOut();
-                    throw new Error('No tienes permisos para acceder al panel. Contacta al administrador.');
+                    throw new Error('No tienes permisos para acceder al panel.');
                 }
                 
-                console.log('✅ Rol verificado:', rolData.rol);
-                
-                // 3. Actualizar último acceso
                 await db.from('renmcycf_roles')
                     .update({ ultimo_acceso: new Date().toISOString() })
                     .eq('id', rolData.id);
                 
-                // 4. Mostrar éxito y redirigir
                 successDiv.classList.remove('hidden');
                 successDiv.innerHTML = `
                     <div class="success-box">
@@ -439,21 +416,18 @@
                 `;
                 lucide.createIcons();
                 
-                // Guardar sesión en localStorage
                 localStorage.setItem('renmcycf_user', JSON.stringify({
                     email: authData.user.email,
                     rol: rolData.rol,
                     nombre: rolData.nombres || authData.user.email,
-                    session_expires: Date.now() + (8 * 60 * 60 * 1000) // 8 horas
+                    session_expires: Date.now() + (8 * 60 * 60 * 1000)
                 }));
                 
-                // Redirigir al panel después de 1 segundo
                 setTimeout(() => {
                     window.location.href = 'panel-renmcycf.html';
                 }, 1000);
                 
             } catch (err) {
-                console.error('❌ Error en login:', err.message);
                 showError(err.message);
             } finally {
                 btn.innerHTML = originalHTML;
@@ -462,9 +436,6 @@
             }
         }
         
-        // ============================================================
-        // FUNCIONES AUXILIARES
-        // ============================================================
         function showError(message) {
             const errorDiv = document.getElementById('error-message');
             errorDiv.classList.remove('hidden');
@@ -478,63 +449,37 @@
         }
         
         function showResetInfo() {
-            alert('📧 Contacta al administrador del sistema:\n\n' +
-                  'Email: admin@renmcycf.ar\n\n' +
-                  'Solo el Superadmin puede restablecer contraseñas.');
+            alert('📧 Contacta al administrador del sistema:\n\nEmail: admin@renmcycf.ar');
         }
         
-        // ============================================================
-        // VERIFICAR SESIÓN EXISTENTE
-        // ============================================================
         async function checkExistingSession() {
             const { data: { session } } = await db.auth.getSession();
-            
             if (session) {
-                console.log('🔍 Sesión existente detectada');
-                
-                // Verificar si la sesión en localStorage aún es válida
                 const storedUser = localStorage.getItem('renmcycf_user');
                 if (storedUser) {
                     const userData = JSON.parse(storedUser);
                     if (userData.session_expires > Date.now()) {
-                        console.log('✅ Sesión válida, redirigiendo al panel...');
-                        document.getElementById('success-message').classList.remove('hidden');
-                        document.getElementById('success-message').innerHTML = `
-                            <div class="success-box">
-                                <i data-lucide="check-circle" class="w-4 h-4"></i>
-                                Sesión activa. Redirigiendo...
-                            </div>
-                        `;
-                        lucide.createIcons();
                         setTimeout(() => {
                             window.location.href = 'panel-renmcycf.html';
                         }, 800);
                         return;
                     }
                 }
-                
-                // Sesión expirada, limpiar
                 await db.auth.signOut();
                 localStorage.removeItem('renmcycf_user');
             }
         }
         
-        // ============================================================
-        // INICIALIZACIÓN
-        // ============================================================
         window.addEventListener('DOMContentLoaded', () => {
             createParticles();
             lucide.createIcons();
             checkExistingSession();
             
-            // Permitir Enter para enviar
             document.getElementById('password').addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     handleLogin(e);
                 }
             });
-            
-            console.log('🔐 Login RENMCYCF inicializado');
         });
     </script>
 </body>
