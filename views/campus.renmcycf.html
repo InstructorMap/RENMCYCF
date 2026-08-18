@@ -1,553 +1,112 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0a1128">
-    <title>Campus Virtual · RENMCYCF</title>
+    <title>Campus - RENMCYCF</title>
     
+    <!-- Librerías Externas -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+
+    <!-- Estilos locales (Ruta ajustada a la carpeta asset) -->
+    <link rel="stylesheet" href="../asset/css/styles.css">
 
     <style>
-        :root { --navy: #0a1128; --gold: #d4af37; --bg-app: #f8fafc; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-app); color: #334155; margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
-        
-        .screen { display: none; flex: 1; flex-direction: column; animation: fadeIn 0.4s ease; }
-        .screen.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Login UI Sobrio e Institucional */
-        .login-bg-container { position: fixed; inset: 0; z-index: 0; background-color: var(--navy); }
-        .login-bg-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.2; filter: grayscale(100%); mix-blend-mode: multiply; }
-        .login-overlay { position: absolute; inset: 0; background: rgba(10,17,40,0.85); }
-        
-        .login-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; position: relative; padding: 20px; }
-        .login-box { background: white; padding: 40px 30px; border-radius: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); width: 100%; max-width: 380px; text-align: center; border: 1px solid rgba(212, 175, 55, 0.3); }
-        .input-dni { width: 100%; padding: 15px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 700; letter-spacing: 2px; transition: 0.3s; margin-bottom: 20px; background: #f8fafc; }
-        .input-dni:focus { border-color: var(--gold); background: white; box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15); }
-        .btn-main { width: 100%; padding: 16px; background: var(--navy); color: var(--gold); border: none; border-radius: 12px; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(10,17,40,0.2); }
-        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(10,17,40,0.4); }
-
-        /* Campus UI */
-        .header-campus { background: var(--navy); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .curso-card { background: white; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; transition: all 0.3s; display: flex; flex-direction: column; }
-        .curso-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-color: #cbd5e1; }
-        .curso-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #0f172a; position: relative; border-bottom: 3px solid var(--gold); }
-        .curso-bloqueado { filter: grayscale(100%); opacity: 0.7; }
-        .badge-cat { position: absolute; top: 10px; right: 10px; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-        
-        /* Aula UI - Estricta y Ordenada */
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: black; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid #334155; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        
-        .modulo-item { padding: 14px 16px; border-radius: 10px; border: 1px solid #e2e8f0; background: white; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-        .modulo-item:hover { border-color: var(--gold); background: #fefce8; transform: translateX(4px); }
-        .modulo-item.active { border-color: var(--navy); background: #f1f5f9; box-shadow: inset 4px 0 0 var(--navy); }
-        .modulo-completado { box-shadow: inset 4px 0 0 #10b981; }
-        
-        /* Custom Scrollbar para el índice */
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
-        /* Gamificación Horizontal */
-        .progress-container { background: rgba(255,255,255,0.2); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 6px; }
-        .progress-bar { background: var(--gold); height: 100%; width: 0%; transition: width 0.5s ease-out; }
-        
-        .insignia-card { display: flex; align-items: center; gap: 12px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px 16px; border-radius: 12px; flex: 1; min-width: 180px; filter: grayscale(100%); opacity: 0.5; transition: all 0.5s; }
-        .insignia-card.unlocked { filter: grayscale(0%); opacity: 1; background: white; border-color: var(--gold); box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1); transform: translateY(-2px); }
-        .insignia-icon-box { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .screen { display: none; }
+        .screen.active { display: block; }
+        .modulo-item {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .modulo-item:hover { border-color: #d4af37; background: #f8fafc; }
+        .modulo-item.active { border-color: #0a1128; background: #f1f5f9; }
+        .modulo-completado { background-color: #f0fdf4 !important; border-color: #bbf7d0 !important; }
+        .badge-insignia { opacity: 0.3; filter: grayscale(100%); transition: all 0.3s ease; }
+        .badge-insignia.unlocked { opacity: 1; filter: grayscale(0%); }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- PANTALLA 1: LOGIN -->
-    <div class="login-bg-container">
-        <img id="dynamic-bg" src="" class="login-bg-img" style="display:none;">
-        <div class="login-overlay"></div>
-    </div>
-    
-    <div id="screen-login" class="screen active">
-        <div class="login-container">
-            <div class="login-box">
-                <!-- CONTENEDOR DE LOGO CORREGIDO -->
-                <div class="w-28 h-28 bg-white rounded-full shadow-lg flex items-center justify-center mx-auto mb-6 border-4 border-[#d4af37] overflow-hidden relative" id="logo-container">
-                    <!-- Ruta corregida con ../ saliendo de views y manejo de error por si no carga -->
-                    <img src="../logo.png" alt="Logo RENMCYCF" class="w-full h-full object-contain p-2" onerror="this.style.display='none'; document.getElementById('default-logo').style.display='block';">
-    
-                    <!-- Icono de respaldo oculto por defecto que se muestra si falla la imagen -->
-                    <i data-lucide="monitor-play" class="w-12 h-12 text-[#0a1128]" id="default-logo" style="display: none;"></i>
-                </div>
-                
-                <h1 class="text-2xl font-black text-[#0a1128] mb-1 font-title uppercase tracking-tight">Campus Virtual</h1>
-                <p class="text-xs text-slate-500 mb-8 font-semibold">Plataforma Exclusiva RENMCYCF</p>
-                
-                <input type="tel" id="input-dni" class="input-dni" placeholder="DNI SIN PUNTOS" autocomplete="off" onkeydown="if(event.key==='Enter') ingresar()">
-                <div id="login-error" class="text-red-600 text-sm font-bold mb-4 hidden bg-red-50 p-3 rounded-lg border border-red-200"></div>
-                
-                <button class="btn-main" id="btn-ingresar" onclick="ingresar()">
-                    <i data-lucide="log-in" class="w-5 h-5"></i> ACCEDER AL AULA
-                </button>
-                <a href="../index.renmcycf.html" class="block mt-6 text-[10px] text-slate-400 font-bold uppercase hover:text-[#d4af37] transition-colors">← Volver al sitio principal</a>
-            </div>
+    <!-- PANTALLA 1: DASHBOARD DE CURSOS -->
+    <div id="screen-dashboard" class="screen active flex-1 p-6 max-w-7xl mx-auto w-full">
+        <div class="mb-8">
+            <h1 class="text-2xl font-black text-[#0a1128]">Campus Virtual RENMCYCF</h1>
+            <p class="text-sm text-slate-500">Selecciona un curso matriculado para acceder al contenido académico.</p>
         </div>
+        <div id="cursos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
 
-    <!-- PANTALLA 2: DASHBOARD CURSOS -->
-    <div id="screen-dashboard" class="screen bg-slate-50">
-        <header class="header-campus">
-            <div class="flex items-center gap-3">
-                <i data-lucide="monitor-play" class="w-6 h-6 text-[#d4af37]"></i>
-                <div>
-                    <h2 class="font-title font-black text-sm md:text-base leading-tight uppercase tracking-wider">Mi Campus</h2>
-                    <p class="text-[9px] text-[#d4af37] font-bold tracking-widest uppercase" id="user-info">Cargando...</p>
-                </div>
-            </div>
-            <button onclick="cerrarSesion()" class="bg-white/10 hover:bg-white/20 p-2.5 rounded-lg transition-colors border border-white/20" title="Cerrar Sesión">
-                <i data-lucide="log-out" class="w-4 h-4 text-white"></i>
-            </button>
-        </header>
+    <!-- PANTALLA 2: AULA VIRTUAL -->
+    <div id="screen-aula" class="screen flex-1 max-w-7xl mx-auto w-full p-4 lg:p-6">
+        <button onclick="volverAlDashboard()" class="mb-4 inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#0a1128] bg-white border border-slate-200 px-3 py-2 rounded-lg shadow-sm">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Dashboard
+        </button>
 
-        <div class="max-w-6xl mx-auto w-full p-4 md:p-8">
-            <div class="mb-8 border-l-4 border-[#d4af37] pl-4">
-                <h3 class="text-2xl font-black text-[#0a1128] font-title uppercase tracking-tight">Cursos Disponibles</h3>
-                <p class="text-slate-500 text-sm mt-1">Contenido formativo habilitado para su categoría.</p>
-            </div>
-            
-            <div id="cursos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="col-span-full text-center py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin text-slate-400 mx-auto"></i></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PANTALLA 3: AULA DEL CURSO (NUEVO LAYOUT ESTRICTO) -->
-    <div id="screen-aula" class="screen bg-slate-50">
-        <!-- HEADER AULA -->
-        <header class="header-campus">
-            <button onclick="volverAlDashboard()" class="flex items-center gap-2 text-white hover:text-[#d4af37] transition-colors text-xs font-bold uppercase tracking-widest bg-white/10 px-4 py-2 rounded-lg border border-white/20">
-                <i data-lucide="arrow-left" class="w-4 h-4"></i> Panel
-            </button>
-            <div class="flex flex-col items-end flex-1 ml-4">
-                <h2 class="font-title font-black text-sm truncate max-w-[200px] md:max-w-md text-right text-white tracking-wide" id="aula-curso-titulo">Curso</h2>
-                <div class="w-40 flex flex-col items-end mt-1">
-                    <div class="flex justify-between w-full text-[9px] font-bold uppercase tracking-widest text-[#d4af37]">
-                        <span>Progreso General</span>
-                        <span id="progreso-text">0%</span>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-4">
+                <div class="bg-black rounded-2xl overflow-hidden aspect-video shadow-lg relative flex items-center justify-center">
+                    <div id="aula-welcome" class="text-center p-6 text-white">
+                        <i data-lucide="play-square" class="w-12 h-12 mx-auto mb-2 text-[#d4af37]"></i>
+                        <h3 id="aula-curso-titulo" class="font-bold text-lg">Cargando curso...</h3>
+                        <p class="text-xs text-slate-400">Elige un módulo del índice lateral para iniciar la clase.</p>
                     </div>
-                    <div class="progress-container w-full"><div class="progress-bar" id="progreso-bar"></div></div>
-                </div>
-            </div>
-        </header>
-
-        <!-- CUERPO DEL AULA -->
-        <div class="max-w-7xl mx-auto w-full p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            
-            <!-- COLUMNA IZQUIERDA: REPRODUCTOR + PANEL DE CONTROL + PREMIOS (lg:col-span-8) -->
-            <div class="lg:col-span-8 flex flex-col gap-6">
-                
-                <!-- Reproductor -->
-                <div id="aula-player-container" class="video-container hidden">
-                    <iframe id="aula-iframe" src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-                </div>
-                
-                <!-- Pantalla de Bienvenida -->
-                <div id="aula-welcome" class="bg-white rounded-2xl p-10 border border-slate-200 shadow-sm text-center flex flex-col items-center justify-center min-h-[400px]">
-                    <div class="w-24 h-24 bg-slate-50 text-[#0a1128] rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-slate-100"><i data-lucide="book-open" class="w-10 h-10"></i></div>
-                    <h3 class="text-2xl font-black text-[#0a1128] mb-3 font-title uppercase" id="aula-titulo-desc">Bienvenido al Curso</h3>
-                    <p class="text-sm text-slate-500 max-w-md mx-auto" id="aula-desc">Selecciona un módulo del índice lateral para comenzar a aprender. El sistema guardará tu progreso automáticamente.</p>
-                </div>
-                
-                <!-- Panel de Control (Modulo Actual + Botón Completar) -->
-                <div id="aula-control-panel" class="hidden bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <div class="text-center sm:text-left">
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1"><i data-lucide="play" class="inline w-3 h-3 text-[#d4af37]"></i> Reproduciendo Módulo</p>
-                        <h4 class="font-black text-[#0a1128] text-lg leading-tight" id="aula-modulo-nombre">---</h4>
+                    <div id="aula-player-container" class="hidden w-full h-full">
+                        <iframe id="aula-iframe" class="w-full h-full border-0" allowfullscreen></iframe>
                     </div>
-                    <button onclick="marcarCompletado()" id="btn-completar" class="shrink-0 bg-emerald-100 text-emerald-700 hover:bg-emerald-600 hover:text-white border border-emerald-200 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-colors flex items-center gap-2 shadow-sm">
-                        <i data-lucide="check-circle" class="w-5 h-5"></i> Marcar Completado
+                </div>
+
+                <div id="aula-control-panel" class="hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] font-black uppercase tracking-wider text-[#d4af37]">Módulo en curso</span>
+                        <h4 id="aula-modulo-nombre" class="font-black text-sm text-[#0a1128]">Nombre del módulo</h4>
+                    </div>
+                    <button onclick="marcarCompletado()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i> Marcar como Visto
                     </button>
                 </div>
 
-                <!-- SECCIÓN DE PREMIOS (REUBICADA HORIZONTALMENTE) -->
-                <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-                    <h4 class="font-black text-[#0a1128] text-xs uppercase tracking-widest mb-4 border-b border-slate-100 pb-3 flex items-center gap-2">
-                        <i data-lucide="award" class="w-4 h-4 text-[#d4af37]"></i> Insignias de Acreditación
-                    </h4>
-                    <div class="flex flex-wrap gap-4">
-                        <div class="insignia-card" id="insignia-1">
-                            <div class="insignia-icon-box bg-orange-50 border border-orange-200 text-orange-500"><i data-lucide="flame" class="w-5 h-5"></i></div>
-                            <div>
-                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Logro</p>
-                                <p class="text-xs font-black text-[#0a1128] uppercase">Primer Paso</p>
-                            </div>
-                        </div>
-                        <div class="insignia-card" id="insignia-2">
-                            <div class="insignia-icon-box bg-slate-100 border border-slate-300 text-slate-500"><i data-lucide="brain-circuit" class="w-5 h-5"></i></div>
-                            <div>
-                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Logro</p>
-                                <p class="text-xs font-black text-[#0a1128] uppercase">Mente Forense</p>
-                            </div>
-                        </div>
-                        <div class="insignia-card" id="insignia-3">
-                            <div class="insignia-icon-box bg-yellow-50 border border-[#d4af37] text-[#d4af37]"><i data-lucide="medal" class="w-5 h-5"></i></div>
-                            <div>
-                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Certificación</p>
-                                <p class="text-xs font-black text-[#0a1128] uppercase">Especialista</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- COLUMNA DERECHA: ÍNDICE DE CONTENIDOS (lg:col-span-4) -->
-            <div class="lg:col-span-4">
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sticky top-24">
-                    <h4 class="font-black text-[#0a1128] text-xs uppercase tracking-widest mb-4 border-b border-slate-100 pb-3 flex items-center gap-2">
-                        <i data-lucide="list-video" class="w-4 h-4 text-[#d4af37]"></i> Índice Temático
-                    </h4>
-                    <!-- Contenedor con scroll para evitar que rompa la pantalla -->
-                    <div id="aula-modulos" class="space-y-2 max-h-[calc(100vh-280px)] overflow-y-auto pr-2 custom-scroll">
-                        <div class="text-center text-slate-400 py-10 text-xs flex flex-col items-center gap-2">
-                            <i data-lucide="loader-2" class="w-6 h-6 animate-spin"></i> Cargando...
-                        </div>
-                    </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 id="aula-titulo-desc" class="font-bold text-sm text-[#0a1128] mb-1">Descripción de la clase</h3>
+                    <p id="aula-desc" class="text-xs text-slate-500 leading-relaxed">Selecciona un módulo para ver los detalles.</p>
                 </div>
             </div>
 
+            <div class="space-y-4">
+                <div class="bg-gradient-to-br from-[#0a1128] to-[#12234e] text-white p-5 rounded-2xl shadow-sm">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold text-slate-300">Progreso del Curso</span>
+                        <span id="progreso-text" class="text-sm font-black text-[#d4af37]">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-2 mb-4 overflow-hidden">
+                        <div id="progreso-bar" class="bg-[#d4af37] h-2 rounded-full transition-all duration-500 w-0"></div>
+                    </div>
+                    <div class="flex justify-between pt-3 border-t border-slate-700/60">
+                        <div id="insignia-1" class="badge-insignia text-center"><span class="text-xl">🥉</span><p class="text-[9px] mt-1 text-slate-300">Iniciado</p></div>
+                        <div id="insignia-2" class="badge-insignia text-center"><span class="text-xl">🥈</span><p class="text-[9px] mt-1 text-slate-300">Avanzado</p></div>
+                        <div id="insignia-3" class="badge-insignia text-center"><span class="text-xl">🥇</span><p class="text-[9px] mt-1 text-slate-300">Experto</p></div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm max-h-[500px] overflow-y-auto">
+                    <h3 class="text-xs font-black text-[#0a1128] uppercase tracking-wider mb-3">Contenidos del Módulo</h3>
+                    <div id="aula-modulos"></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        lucide.createIcons();
-        const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
-        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
-        const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
-
-        let alumnoActual = null;
-        let cursoActual = null;
-        let modulosActuales = [];
-        let moduloSeleccionado = null;
-        
-        let progresoCursos = JSON.parse(localStorage.getItem('renmcycf_progreso')) || {};
-
-        // ==========================================
-        // 0. CONFIGURACIÓN VISUAL DINÁMICA
-        // ==========================================
-        async function cargarConfiguracionInicial() {
-            try {
-                const { data: config } = await db.from('renmcycf_config').select('logo_url, hero_image_url').eq('id', 1).maybeSingle();
-                if (config) {
-                    if (config.logo_url) { 
-                        document.getElementById('dynamic-logo').src = config.logo_url; 
-                        document.getElementById('dynamic-logo').classList.remove('hidden'); 
-                        document.getElementById('default-logo').classList.add('hidden'); 
-                    }
-                    if (config.hero_image_url) { 
-                        document.getElementById('dynamic-bg').src = config.hero_image_url; 
-                        document.getElementById('dynamic-bg').style.display = 'block'; 
-                    }
-                }
-            } catch (err) {}
-        }
-
-        // ==========================================
-        // 1. LOGIN Y VALIDACIÓN DE ACCESO
-        // ==========================================
-        async function ingresar() {
-            const btn = document.getElementById('btn-ingresar');
-            const errorDiv = document.getElementById('login-error');
-            const dni = document.getElementById('input-dni').value.replace(/\D/g, '');
-            errorDiv.classList.add('hidden');
-            
-            if (dni.length < 7) { errorDiv.textContent = 'Ingrese un DNI válido.'; errorDiv.classList.remove('hidden'); return; }
-
-            btn.disabled = true;
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> VERIFICANDO...`;
-            
-            try {
-                const { data: padron, error } = await db.from('renmcycf_padron').select('*').eq('dni', dni).maybeSingle();
-                if (error) throw new Error('Error de conexión con el servidor.');
-                if (!padron) throw new Error('DNI no encontrado en el padrón oficial.');
-                if (padron.estado_legal !== 'ACTIVO') throw new Error(`Acceso denegado. Estado de Matrícula: ${padron.estado_legal}.`);
-
-                alumnoActual = padron;
-                document.getElementById('user-info').innerText = `${padron.nombres} ${padron.apellidos} | Cat: ${padron.categoria}`;
-                
-                cambiarPantalla('screen-dashboard');
-                cargarCursos();
-
-            } catch (err) {
-                errorDiv.textContent = err.message;
-                errorDiv.classList.remove('hidden');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<i data-lucide="log-in" class="w-5 h-5"></i> ACCEDER AL AULA`;
-                lucide.createIcons();
-            }
-        }
-
-        // ==========================================
-        // 2. DASHBOARD DE CURSOS
-        // ==========================================
-        async function cargarCursos() {
-            const grid = document.getElementById('cursos-grid');
-            try {
-                const { data: cursos, error } = await db.from('renmcycf_cursos').select('*').eq('activo', true).order('created_at', { ascending: false });
-                if (error) throw error;
-                if (!cursos || cursos.length === 0) { grid.innerHTML = '<div class="col-span-full text-center py-12 bg-white rounded-2xl border border-slate-200 text-slate-400 font-bold uppercase tracking-wider">No hay cursos habilitados en este momento.</div>'; return; }
-
-                grid.innerHTML = cursos.map(c => {
-                    const tieneAcceso = c.categoria_requerida === 'TODAS' || c.categoria_requerida === alumnoActual.categoria;
-                    const cover = c.portada_url || 'https://via.placeholder.com/600x340/0a1128/d4af37?text=CAMPUS+RENMCYCF';
-                    
-                    const pUser = progresoCursos[alumnoActual.dni] || {};
-                    const vistas = pUser[c.id] ? pUser[c.id].length : 0;
-                    
-                    if (!tieneAcceso) {
-                        return `
-                        <div class="curso-card curso-bloqueado relative" title="Requiere categoría ${c.categoria_requerida}">
-                            <div class="absolute inset-0 bg-[#0a1128]/80 z-10 flex flex-col items-center justify-center text-white backdrop-blur-sm">
-                                <i data-lucide="lock" class="w-12 h-12 text-[#d4af37] mb-3"></i>
-                                <span class="font-black text-sm uppercase tracking-widest text-center px-4">Bloqueado<br><span class="text-[10px] text-slate-300 font-normal">Requiere Nivel ${c.categoria_requerida}</span></span>
-                            </div>
-                            <img src="${cover}" class="curso-img" alt="Portada">
-                            <div class="p-6 flex-1 flex flex-col">
-                                <h4 class="font-black text-lg text-[#0a1128] leading-tight mb-2">${c.titulo}</h4>
-                                <p class="text-xs text-slate-500 line-clamp-2">${c.descripcion || ''}</p>
-                            </div>
-                        </div>`;
-                    }
-
-                    return `
-                    <div class="curso-card cursor-pointer group" onclick="abrirCurso('${c.id}', '${c.titulo.replace(/'/g, "\\'")}', '${(c.descripcion || '').replace(/'/g, "\\'")}')">
-                        <div class="relative overflow-hidden">
-                            <span class="badge-cat bg-emerald-500 text-white shadow-md border border-emerald-400 z-20">Acceso Habilitado</span>
-                            <div class="absolute inset-0 bg-[#0a1128]/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10"><i data-lucide="play-circle" class="w-16 h-16 text-white drop-shadow-lg"></i></div>
-                            <img src="${cover}" class="curso-img transition-transform duration-500 group-hover:scale-105" alt="Portada">
-                        </div>
-                        <div class="p-6 flex-1 flex flex-col">
-                            <h4 class="font-black text-lg text-[#0a1128] leading-tight mb-2 group-hover:text-[#d4af37] transition-colors">${c.titulo}</h4>
-                            <p class="text-xs text-slate-500 line-clamp-2 mb-6">${c.descripcion || ''}</p>
-                            <div class="mt-auto pt-4 border-t border-slate-100 flex justify-between items-center">
-                                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider"><i data-lucide="check-circle-2" class="inline w-4 h-4 text-emerald-500 mb-0.5"></i> ${vistas} Vistos</span>
-                                <span class="text-[10px] font-black text-white bg-[#0a1128] px-4 py-2 rounded-lg uppercase tracking-widest flex items-center gap-2 group-hover:bg-[#d4af37] group-hover:text-[#0a1128] transition-colors">Entrar <i data-lucide="arrow-right" class="w-3 h-3"></i></span>
-                            </div>
-                        </div>
-                    </div>`;
-                }).join('');
-                lucide.createIcons();
-            } catch (err) {
-                grid.innerHTML = `<div class="col-span-full text-center py-10 bg-red-50 text-red-500 rounded-xl border border-red-200"><b>Error de conexión:</b> ${err.message}</div>`;
-            }
-        }
-
-        // ==========================================
-        // 3. AULA VIRTUAL Y GAMIFICACIÓN
-        // ==========================================
-        async function abrirCurso(cursoId, titulo, descripcion) {
-            cursoActual = cursoId;
-            document.getElementById('aula-curso-titulo').innerText = titulo;
-            document.getElementById('aula-titulo-desc').innerText = titulo;
-            document.getElementById('aula-desc').innerText = descripcion || 'Selecciona un módulo del índice lateral para comenzar a aprender. Tu progreso se guardará automáticamente.';
-            
-            document.getElementById('aula-player-container').classList.add('hidden');
-            document.getElementById('aula-control-panel').classList.add('hidden');
-            document.getElementById('aula-iframe').src = '';
-            document.getElementById('aula-welcome').classList.remove('hidden');
-            
-            cambiarPantalla('screen-aula');
-            
-            const contenedorModulos = document.getElementById('aula-modulos');
-            contenedorModulos.innerHTML = '<div class="text-center text-slate-400 py-10 text-xs flex flex-col items-center gap-2"><i data-lucide="loader-2" class="w-6 h-6 animate-spin"></i> Cargando índice...</div>';
-            lucide.createIcons();
-
-            try {
-                const { data: clases, error } = await db.from('renmcycf_clases').select('*').eq('curso_id', cursoId).order('created_at', { ascending: true });
-                if (error) throw error;
-                if (!clases || clases.length === 0) { contenedorModulos.innerHTML = '<div class="text-center text-slate-400 py-8 text-xs font-bold uppercase tracking-wider">Aún no hay contenido en este curso.</div>'; return; }
-
-                modulosActuales = clases;
-                renderizarModulos();
-                actualizarProgreso();
-            } catch (err) {
-                contenedorModulos.innerHTML = `<div class="text-center text-red-500 py-4 text-xs font-bold">Error: ${err.message}</div>`;
-            }
-        }
-
-        function renderizarModulos() {
-            const pUser = progresoCursos[alumnoActual.dni] || {};
-            const vistas = pUser[cursoActual] || [];
-
-            document.getElementById('aula-modulos').innerHTML = modulosActuales.map((c, index) => {
-                let icon = 'file-text'; let bgIcon = 'bg-slate-100 text-slate-500';
-                if (c.tipo_recurso === 'VIDEO') { icon = 'play'; bgIcon = 'bg-red-50 text-red-500'; }
-                if (c.tipo_recurso === 'ZOOM') { icon = 'video'; bgIcon = 'bg-emerald-50 text-emerald-600'; }
-                if (c.tipo_recurso === 'PDF') { icon = 'download'; bgIcon = 'bg-blue-50 text-blue-600'; }
-
-                const safeUrl = c.url_recurso ? c.url_recurso.replace(/'/g, "\\'") : '';
-                const estaVisto = vistas.includes(c.id);
-                const claseExtra = estaVisto ? 'modulo-completado bg-slate-50' : '';
-                const checkIcon = estaVisto ? `<i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>` : `<i data-lucide="chevron-right" class="w-5 h-5 text-slate-300 group-hover:text-[#d4af37] shrink-0 transition-colors"></i>`;
-
-                return `
-                <div class="modulo-item group ${claseExtra}" id="mod-item-${c.id}" onclick="seleccionarModulo('${c.id}', '${c.tipo_recurso}', '${safeUrl}', '${c.titulo.replace(/'/g, "\\'")}')">
-                    <div class="flex items-center gap-4 overflow-hidden">
-                        <div class="w-10 h-10 rounded-full ${bgIcon} flex items-center justify-center shrink-0 transition-transform">
-                            <i data-lucide="${icon}" class="w-4 h-4"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Módulo ${index + 1} • ${c.tipo_recurso}</p>
-                            <p class="text-sm font-bold text-[#0a1128] leading-snug truncate">${c.titulo}</p>
-                        </div>
-                    </div>
-                    ${checkIcon}
-                </div>`;
-            }).join('');
-            lucide.createIcons();
-        }
-
-        function seleccionarModulo(id, tipo, url, titulo) {
-            moduloSeleccionado = id;
-            document.querySelectorAll('.modulo-item').forEach(el => el.classList.remove('active'));
-            document.getElementById(`mod-item-${id}`).classList.add('active');
-
-            const playerContainer = document.getElementById('aula-player-container');
-            const iframe = document.getElementById('aula-iframe');
-            const welcome = document.getElementById('aula-welcome');
-            const panelControl = document.getElementById('aula-control-panel');
-
-            document.getElementById('aula-modulo-nombre').innerText = titulo;
-            panelControl.classList.remove('hidden');
-
-            const pUser = progresoCursos[alumnoActual.dni] || {};
-            const vistas = pUser[cursoActual] || [];
-            const btnCompletar = document.getElementById('btn-completar');
-            
-            if (vistas.includes(id)) {
-                btnCompletar.innerHTML = `<i data-lucide="check-circle-2" class="w-5 h-5"></i> Completado`;
-                btnCompletar.className = "shrink-0 bg-slate-100 text-slate-400 border border-slate-200 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-wider cursor-default flex items-center gap-2 shadow-inner";
-                btnCompletar.disabled = true;
-            } else {
-                btnCompletar.innerHTML = `<i data-lucide="check-circle" class="w-5 h-5"></i> Marcar Completado`;
-                btnCompletar.className = "shrink-0 bg-emerald-100 text-emerald-700 hover:bg-emerald-600 hover:text-white border border-emerald-200 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-colors flex items-center gap-2 shadow-sm cursor-pointer";
-                btnCompletar.disabled = false;
-            }
-            lucide.createIcons();
-
-            if (tipo === 'VIDEO') {
-                let embedUrl = url;
-                try {
-                    // Limpiador robusto de URLs de YouTube
-                    const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
-                    const match = url.match(ytRegex);
-                    if (match && match[1]) { embedUrl = `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0`; }
-                } catch(e) { console.log(e); }
-                
-                welcome.classList.add('hidden');
-                playerContainer.classList.remove('hidden');
-                iframe.src = embedUrl;
-            } else {
-                const win = window.open(url, '_blank');
-                if (!win) alert("⚠️ El navegador bloqueó la pestaña. Habilita las ventanas emergentes para este sitio.");
-                
-                if(playerContainer.classList.contains('hidden')) {
-                    welcome.classList.remove('hidden');
-                    welcome.innerHTML = `<div class="w-24 h-24 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-blue-100"><i data-lucide="external-link" class="w-10 h-10"></i></div><h3 class="text-2xl font-black text-[#0a1128] mb-3 font-title uppercase">Recurso Externo Abierto</h3><p class="text-sm text-slate-500 max-w-md mx-auto">El contenido se ha abierto en una nueva pestaña segura. Regresa aquí cuando termines para marcar el módulo como completado.</p>`;
-                    lucide.createIcons();
-                }
-            }
-        }
-
-        function marcarCompletado() {
-            if (!moduloSeleccionado) return;
-
-            if (!progresoCursos[alumnoActual.dni]) progresoCursos[alumnoActual.dni] = {};
-            if (!progresoCursos[alumnoActual.dni][cursoActual]) progresoCursos[alumnoActual.dni][cursoActual] = [];
-            
-            const vistas = progresoCursos[alumnoActual.dni][cursoActual];
-            if (!vistas.includes(moduloSeleccionado)) {
-                vistas.push(moduloSeleccionado);
-                localStorage.setItem('renmcycf_progreso', JSON.stringify(progresoCursos));
-                
-                confetti({ particleCount: 60, spread: 70, origin: { y: 0.8 }, colors: ['#d4af37', '#3b82f6', '#10b981'] });
-                
-                renderizarModulos();
-                actualizarProgreso();
-                seleccionarModulo(moduloSeleccionado, 'REFRESH', '', document.getElementById('aula-modulo-nombre').innerText);
-            }
-        }
-
-        function actualizarProgreso() {
-            const total = modulosActuales.length;
-            if (total === 0) return;
-
-            const pUser = progresoCursos[alumnoActual.dni] || {};
-            const vistas = pUser[cursoActual] ? pUser[cursoActual].length : 0;
-            const porcentaje = Math.round((vistas / total) * 100);
-            
-            document.getElementById('progreso-text').innerText = `${porcentaje}%`;
-            document.getElementById('progreso-bar').style.width = `${porcentaje}%`;
-
-            const i1 = document.getElementById('insignia-1');
-            const i2 = document.getElementById('insignia-2');
-            const i3 = document.getElementById('insignia-3');
-
-            [i1, i2, i3].forEach(i => i.classList.remove('unlocked'));
-
-            if (vistas >= 1) i1.classList.add('unlocked');
-            if (porcentaje >= 50) i2.classList.add('unlocked');
-            
-            if (porcentaje === 100 && !i3.classList.contains('unlocked')) {
-                i3.classList.add('unlocked');
-                setTimeout(() => {
-                    confetti({ particleCount: 200, spread: 120, origin: { y: 0.5 }, zIndex: 9999 });
-                    alert("🏆 ¡IMPRESIONANTE! Has completado el curso al 100%. Las certificaciones serán procesadas por el registro.");
-                }, 600);
-            } else if (porcentaje === 100) {
-                i3.classList.add('unlocked');
-            }
-        }
-
-        // ==========================================
-        // 4. NAVEGACIÓN AUXILIAR
-        // ==========================================
-        function cambiarPantalla(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-        }
-
-        function volverAlDashboard() {
-            document.getElementById('aula-iframe').src = '';
-            moduloSeleccionado = null;
-            cursoActual = null;
-            cambiarPantalla('screen-dashboard');
-            cargarCursos();
-        }
-
-        function cerrarSesion() {
-            alumnoActual = null;
-            document.getElementById('input-dni').value = '';
-            document.getElementById('aula-iframe').src = '';
-            cambiarPantalla('screen-login');
-            
-            const btn = document.getElementById('btn-ingresar');
-            btn.disabled = false;
-            btn.innerHTML = `<i data-lucide="log-in" class="w-5 h-5"></i> ACCEDER AL AULA`;
-            lucide.createIcons();
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            cargarConfiguracionInicial();
-            lucide.createIcons();
-        });
-    </script>
+    <!-- Script principal (Ruta ajustada a la carpeta asset/js) -->
+    <script src="../asset/js/app.js"></script>
 </body>
 </html>
