@@ -26,7 +26,7 @@
         .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; transition: all 0.3s; color: #94a3b8; cursor: pointer; }
         .sidebar-link:hover { color: white; background: rgba(255,255,255,0.05); }
         .sidebar-link.active { color: var(--neon-gold); background: rgba(217, 119, 6, 0.1); border-left: 3px solid var(--neon-gold); }
-        input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="password"], input[type="date"], input[type="color"], select, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; padding: 10px 12px; color: white; outline: none; transition: all 0.3s; font-size: 0.85rem; }
+        input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="password"], input[type="date"], input[type="color"], input[type="tel"], select, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; padding: 10px 12px; color: white; outline: none; transition: all 0.3s; font-size: 0.85rem; }
         input:focus, select:focus, textarea:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
         label { display: block; font-size: 0.65rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
         th { background: rgba(0,0,0,0.4); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
@@ -100,18 +100,39 @@
                 <div class="grid grid-cols-2 gap-4 bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-inner">
                     <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">Titular</p><p class="font-black text-lg text-[#0a1128]" id="dos-nombre">---</p></div>
                     <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">DNI</p><p class="font-black text-lg font-mono text-[#0a1128]" id="dos-dni">---</p></div>
+                    <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">Año Nacimiento</p><p class="font-black text-lg text-[#0a1128]" id="dos-ano-nac">---</p></div>
+                    <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">Teléfono</p><p class="font-black text-lg text-[#0a1128]" id="dos-tel">---</p></div>
                     <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">Profesión</p><p class="font-black text-lg text-[#0a1128]" id="dos-profesion">---</p></div>
                     <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">Categoría</p><span class="bg-[#0a1128] text-[#d4af37] px-3 py-1 rounded font-black text-lg" id="dos-cat">---</span></div>
                     <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">Provincia/Ciudad Laboral</p><p class="font-black text-lg text-[#0a1128]" id="dos-provincia">---</p></div>
                     <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">Directorio Público</p><span class="badge-aceptado px-2 py-1 rounded font-black text-sm" id="dos-directorio">OFF</span></div>
                     <div class="col-span-2"><p class="text-xs text-slate-500 uppercase font-bold mb-1">Especialidades</p><div id="dos-especialidades" class="flex flex-wrap gap-2"></div></div>
                 </div>
+                
+                <!-- SELLO DDJJ -->
+                <div id="sello-ddjj" class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl flex items-center gap-3">
+                    <i data-lucide="check-circle" class="w-6 h-6 text-emerald-600 flex-shrink-0"></i>
+                    <div>
+                        <p class="text-emerald-800 font-bold text-sm">Declaración Jurada Aceptada</p>
+                        <p class="text-emerald-700 text-xs" id="txt-ddjj-fecha">El usuario aceptó los términos el ---</p>
+                    </div>
+                </div>
+
                 <div>
                     <h3 class="text-lg font-black uppercase tracking-wider text-[#0a1128] mb-4 flex items-center gap-2 border-b-2 border-[#d4af37] pb-2"><i data-lucide="file-check" class="text-[#d4af37]"></i> Auditoría Documental</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="dos-imagenes">
                         <!-- Las fotos se inyectan acá con altura fija -->
                     </div>
                 </div>
+
+                <!-- CORRECCIÓN (SI FUE OBSERVADO) -->
+                <div id="bloque-correccion" class="hidden">
+                    <h3 class="text-lg font-black uppercase tracking-wider text-red-800 mb-4 flex items-center gap-2 border-b-2 border-red-200 pb-2"><i data-lucide="alert-triangle" class="text-red-600"></i> Corrección Adjunta</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="dos-correccion-img">
+                        <!-- Foto corregida acá -->
+                    </div>
+                </div>
+
             </div>
             <div class="bg-slate-100 p-6 rounded-b-2xl flex justify-between items-center print:hidden border-t border-slate-300">
                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest"><i data-lucide="shield-check" class="inline w-3 h-3 mb-0.5"></i> Control Interno</p>
@@ -126,22 +147,22 @@
         </div>
     </div>
 
-    <!-- MODAL GESTION CLASES (CAMPUS) -->
+    <!-- MODAL GESTION PORTAL CIENTIFICO (Ex Campus) -->
     <div id="modal-clases" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-[#0f172a] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
             <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="layers" class="text-blue-400"></i> Módulos: <span id="modal-curso-titulo" class="text-yellow-500 font-normal"></span></h3>
+                <h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="layers" class="text-blue-400"></i> Materiales: <span id="modal-curso-titulo" class="text-yellow-500 font-normal"></span></h3>
                 <button onclick="cerrarModalClases()" class="text-slate-400 hover:text-red-400 transition-colors"><i data-lucide="x-circle" class="w-6 h-6"></i></button>
             </div>
             <div class="p-6 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="md:col-span-1 border-r border-white/5 pr-4">
                     <form onsubmit="subirClase(event)" id="form-clase" class="space-y-4">
                         <input type="hidden" id="clase-curso-id">
-                        <div><label>Título Clase</label><input type="text" id="clase-titulo" required></div>
-                        <div><label>Tipo</label><select id="clase-tipo" onchange="toggleClaseInput()"><option value="VIDEO">Video (YouTube)</option><option value="ZOOM">Zoom/Meet</option><option value="PDF">PDF</option></select></div>
-                        <div id="clase-input-url"><label>Link</label><input type="url" id="clase-url"></div>
+                        <div><label>Título Material</label><input type="text" id="clase-titulo" required></div>
+                        <div><label>Tipo</label><select id="clase-tipo" onchange="toggleClaseInput()"><option value="VIDEO">Video (YouTube)</option><option value="ZOOM">Web / Link Externo</option><option value="PDF">Documento PDF</option></select></div>
+                        <div id="clase-input-url"><label>Link URL</label><input type="url" id="clase-url"></div>
                         <div id="clase-input-file" class="hidden"><label>Subir PDF</label><input type="file" id="clase-file" accept=".pdf"></div>
-                        <button type="submit" id="btn-subir-clase" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl mt-4">GUARDAR CLASE</button>
+                        <button type="submit" id="btn-subir-clase" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl mt-4">GUARDAR MATERIAL</button>
                     </form>
                 </div>
                 <div class="md:col-span-2">
@@ -153,9 +174,9 @@
 
     <!-- MODAL EDICIÓN RÁPIDA DE MATRICULADO -->
     <div id="modal-editar-padron" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-[#0f172a] border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#0f172a] border border-white/10 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40 sticky top-0 z-10">
-                <h3 class="text-lg font-bold text-white"><i data-lucide="user-pen" class="text-yellow-400 inline mr-2"></i> Editar Matriculado</h3>
+                <h3 class="text-lg font-bold text-white"><i data-lucide="user-pen" class="text-yellow-400 inline mr-2"></i> Editar Perfil Completo</h3>
                 <button onclick="cerrarModalEdicion()" class="text-slate-400 hover:text-red-400"><i data-lucide="x-circle" class="w-6 h-6"></i></button>
             </div>
             <form onsubmit="guardarEdicionMatriculado(event)" class="p-6 space-y-4">
@@ -166,10 +187,28 @@
                         <input type="file" id="edit-foto-file" accept="image/*" class="hidden" onchange="previewFotoEdicion(this)">
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4"><div><label>Nombres</label><input type="text" id="edit-nombres" required></div><div><label>Apellidos</label><input type="text" id="edit-apellidos" required></div></div>
-                <div><label>Profesión</label><input type="text" id="edit-profesion"></div>
-                <div class="grid grid-cols-2 gap-4"><div><label>Categoría</label><select id="edit-categoria"><option value="A1">A.1</option><option value="A2">A.2</option><option value="A3">A.3</option><option value="A4">A.4</option></select></div><div><label>Estado</label><select id="edit-estado"><option value="ACTIVO">ACTIVO</option><option value="SUSPENDIDO">SUSPENDIDO</option><option value="REVOCADO">REVOCADO</option><option value="PENDIENTE">PENDIENTE</option></select></div></div>
-                <div><label>Fecha Vencimiento</label><input type="date" id="edit-vencimiento"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label>Nombres</label><input type="text" id="edit-nombres" required></div>
+                    <div><label>Apellidos</label><input type="text" id="edit-apellidos" required></div>
+                    <div><label>DNI</label><input type="text" id="edit-dni" required></div>
+                    <div><label>Año Nacimiento</label><input type="number" id="edit-ano"></div>
+                    <div><label>Teléfono</label><input type="tel" id="edit-tel"></div>
+                    <div><label>Email</label><input type="email" id="edit-email"></div>
+                    <div><label>Provincia Laboral</label><input type="text" id="edit-provincia"></div>
+                    <div><label>Especialidades (Separar con comas)</label><input type="text" id="edit-especialidades"></div>
+                </div>
+                <div><label>Profesión / Título</label><input type="text" id="edit-profesion"></div>
+                
+                <div class="bg-black/30 p-4 rounded-xl border border-white/10 flex items-center gap-3">
+                    <input type="checkbox" id="edit-directorio" class="w-5 h-5">
+                    <label for="edit-directorio" class="text-sm font-bold text-white mb-0 cursor-pointer">Visible en el Directorio Público Nacional (Mapa)</label>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label>Categoría Oficial</label><select id="edit-categoria"><option value="A1">A.1</option><option value="A2">A.2</option><option value="A3">A.3</option><option value="A4">A.4</option></select></div>
+                    <div><label>Estado Legal</label><select id="edit-estado"><option value="ACTIVO">ACTIVO</option><option value="SUSPENDIDO">SUSPENDIDO</option><option value="REVOCADO">REVOCADO</option><option value="PENDIENTE">PENDIENTE</option></select></div>
+                </div>
+                <div><label>Fecha Vencimiento Matrícula</label><input type="date" id="edit-vencimiento"></div>
                 <button type="submit" class="w-full bg-yellow-600 text-black font-bold py-3 rounded-xl mt-4">GUARDAR CAMBIOS</button>
             </form>
         </div>
@@ -190,12 +229,13 @@
             <button onclick="showTab('padron')" id="nav-padron" class="sidebar-link w-full"><i data-lucide="database" class="w-4 h-4"></i> Padrón Oficial</button>
             
             <div id="menu-admin-section">
-                <div class="px-2 py-2 text-[9px] font-bold text-blue-400 uppercase tracking-widest mt-6">EdTech & Publicaciones</div>
-                <button onclick="showTab('campus')" id="nav-campus" class="sidebar-link w-full"><i data-lucide="monitor-play" class="w-4 h-4"></i> Campus Virtual</button>
-                <button onclick="showTab('biblioteca')" id="nav-biblioteca" class="sidebar-link w-full"><i data-lucide="book-open" class="w-4 h-4"></i> Biblioteca</button>
+                <div class="px-2 py-2 text-[9px] font-bold text-blue-400 uppercase tracking-widest mt-6">Divulgación & Ciencia</div>
+                <button onclick="showTab('campus')" id="nav-campus" class="sidebar-link w-full"><i data-lucide="book-open" class="w-4 h-4"></i> Portal Científico</button>
+                <button onclick="showTab('biblioteca')" id="nav-biblioteca" class="sidebar-link w-full"><i data-lucide="library" class="w-4 h-4"></i> Biblioteca</button>
                 <button onclick="showTab('tesis')" id="nav-tesis" class="sidebar-link w-full"><i data-lucide="microscope" class="w-4 h-4"></i> Auditoría Tesis</button>
 
                 <div class="px-2 py-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-6">Sistema</div>
+                <button onclick="showTab('aliados')" id="nav-aliados" class="sidebar-link w-full"><i data-lucide="award" class="w-4 h-4"></i> Gestión Aliados</button>
                 <button onclick="showTab('masiva')" id="nav-masiva" class="sidebar-link w-full"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Carga Masiva</button>
                 <button onclick="showTab('diseno')" id="nav-diseno" class="sidebar-link w-full"><i data-lucide="layout-template" class="w-4 h-4"></i> Diseño Credencial</button>
                 <button onclick="showTab('configuracion')" id="nav-configuracion" class="sidebar-link w-full"><i data-lucide="settings" class="w-4 h-4"></i> Configuración Core</button>
@@ -273,6 +313,29 @@
                 </div>
             </div>
 
+            <!-- ALIADOS / INSTITUCIONES -->
+            <div id="view-aliados" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 xl:col-span-1">
+                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nuevo Aliado</h3>
+                        <form id="form-aliado" onsubmit="crearAliado(event)" class="space-y-4">
+                            <div><label>Nombre de la Institución</label><input type="text" id="aliado-nombre" required></div>
+                            <div><label>Logo (PNG Transparente ideal)</label><input type="file" id="aliado-logo" accept="image/*" required class="text-slate-400"></div>
+                            <div class="bg-black/30 p-4 rounded-xl border border-white/10 flex items-center gap-3">
+                                <input type="checkbox" id="aliado-activo" checked class="w-5 h-5">
+                                <label for="aliado-activo" class="text-sm font-bold text-white mb-0 cursor-pointer">Visible en el Index Público</label>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">GUARDAR ALIADO</button>
+                        </form>
+                    </div>
+                    <div class="glass-card p-6 xl:col-span-2">
+                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Instituciones Aliadas</h3><button onclick="cargarAliadosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
+                        <p class="text-xs text-slate-400 mb-4">Si no hay aliados activos, el carrusel se ocultará automáticamente de la página pública.</p>
+                        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Logo</th><th class="p-3">Institución</th><th class="p-3">Estado</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="aliados-body"></tbody></table></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- CARGA MASIVA -->
             <div id="view-masiva" class="tab-content space-y-6">
                 <div class="glass-card p-8 max-w-2xl mx-auto text-center border-blue-500/30">
@@ -285,22 +348,28 @@
                 </div>
             </div>
 
-            <!-- CAMPUS VIRTUAL -->
+            <!-- PORTAL CIENTIFICO (EX CAMPUS) -->
             <div id="view-campus" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
-                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nuevo Curso</h3>
+                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nueva Publicación</h3>
                         <form id="form-curso" onsubmit="crearCurso(event)" class="space-y-4">
-                            <div><label>Título</label><input type="text" id="camp-titulo" required></div>
-                            <div><label>Descripción</label><textarea id="camp-desc" rows="3"></textarea></div>
-                            <div><label>Categoría Habilitada</label><select id="camp-cat"><option value="TODAS">Acceso Libre</option><option value="A1">Solo A.1</option><option value="A2">Solo A.2</option><option value="A3">Solo A.3</option><option value="A4">Solo A.4</option></select></div>
-                            <div><label>Portada</label><input type="file" id="camp-portada" accept="image/*" class="text-slate-400"></div>
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">CREAR CURSO</button>
+                            <div><label>Título / Noticia</label><input type="text" id="camp-titulo" required></div>
+                            <div><label>Descripción / Bajada</label><textarea id="camp-desc" rows="3"></textarea></div>
+                            <div><label>Sección del Portal</label>
+                                <select id="camp-cat">
+                                    <option value="NOTICIAS">Divulgación de Noticias</option>
+                                    <option value="CIENCIA">Divulgación Científica (Papers)</option>
+                                    <option value="TECNOLOGIA">Material Tecnológico</option>
+                                </select>
+                            </div>
+                            <div><label>Imagen Portada</label><input type="file" id="camp-portada" accept="image/*" class="text-slate-400"></div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">PUBLICAR</button>
                         </form>
                     </div>
                     <div class="glass-card p-6 xl:col-span-2">
-                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Catálogo de Cursos</h3><button onclick="cargarCursosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
-                        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Curso</th><th class="p-3">Acceso</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="campus-body"></tbody></table></div>
+                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Material Publicado</h3><button onclick="cargarCursosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
+                        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Publicación</th><th class="p-3">Sección</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="campus-body"></tbody></table></div>
                     </div>
                 </div>
             </div>
@@ -313,7 +382,7 @@
                         <form id="form-biblioteca" onsubmit="subirLibro(event)" class="space-y-4">
                             <div><label>Título</label><input type="text" id="bib-titulo" required></div>
                             <div><label>Autor</label><input type="text" id="bib-autor"></div>
-                            <div><label>Tipo Acceso</label><select id="bib-acceso"><option value="GRATUITO">Público</option><option value="PREMIUM">Premium</option></select></div>
+                            <div><label>Tipo Acceso</label><select id="bib-acceso"><option value="GRATUITO">Público</option><option value="PREMIUM">Premium (Solo Matriculados)</option></select></div>
                             <div><label>Portada (Opcional)</label><input type="file" id="bib-portada" accept="image/*" class="text-slate-400"></div>
                             <div><label>Archivo PDF</label><input type="file" id="bib-pdf" accept=".pdf" required class="text-slate-400"></div>
                             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">PUBLICAR</button>
@@ -606,13 +675,14 @@
             document.getElementById('view-' + id).classList.add('active');
             document.getElementById('nav-' + id)?.classList.add('active');
             
-            const titles = { 'dashboard':'Dashboard Estadístico', 'solicitudes':'Bandeja de CRM', 'auditoria':'Auditoría Comité', 'padron':'Padrón Nacional', 'campus':'Campus Virtual', 'biblioteca':'Biblioteca', 'tesis':'Auditoría de Tesis', 'masiva':'Inyección Masiva', 'diseno':'Calibrador de Credenciales', 'configuracion':'Configuración', 'contenido':'Textos del Sitio', 'usuarios':'Usuarios y Roles' };
+            const titles = { 'dashboard':'Dashboard Estadístico', 'solicitudes':'Bandeja de CRM', 'auditoria':'Auditoría Comité', 'padron':'Padrón Nacional', 'aliados':'Gestión de Aliados', 'campus':'Portal Científico', 'biblioteca':'Biblioteca', 'tesis':'Auditoría de Tesis', 'masiva':'Inyección Masiva', 'diseno':'Calibrador de Credenciales', 'configuracion':'Configuración', 'contenido':'Textos del Sitio', 'usuarios':'Usuarios y Roles' };
             document.getElementById('page-title').textContent = titles[id] || id;
             
             if(id === 'dashboard') actualizarDashboard();
             if(id === 'solicitudes') cargarSolicitudes();
             if(id === 'auditoria') cargarAuditoria();
             if(id === 'padron') cargarPadron();
+            if(id === 'aliados') cargarAliadosPanel();
             if(id === 'campus') cargarCursosPanel();
             if(id === 'biblioteca') cargarBibliotecaPanel();
             if(id === 'tesis') cargarTesisPanel();
@@ -643,14 +713,12 @@
                 const { data: padron } = await db.from('renmcycf_padron').select('*').order('id', { ascending: false });
                 
                 if (padron && padron.length > 0) {
-                    // Distribución por categorías
                     const categorias = {};
                     padron.forEach(p => {
                         const cat = p.categoria || 'A3';
                         categorias[cat] = (categorias[cat] || 0) + 1;
                     });
                     
-                    // Evolución por año
                     const anos = {};
                     padron.forEach(p => {
                         const ano = p.fecha_alta ? new Date(p.fecha_alta).getFullYear() : new Date().getFullYear();
@@ -663,7 +731,6 @@
                     const anosLabels = Object.keys(anos).sort();
                     const anosData = anosLabels.map(ano => anos[ano]);
                     
-                    // Renderizar gráficos
                     if (chartCategorias) chartCategorias.destroy();
                     if (chartEvolucion) chartEvolucion.destroy();
                     
@@ -717,28 +784,17 @@
                     'Nombres': p.nombres || '',
                     'Apellidos': p.apellidos || '',
                     'DNI': p.dni || '',
+                    'Año Nac.': p.ano_nacimiento || '',
                     'Profesión': p.profesion || '',
                     'Categoría': p.categoria || 'A3',
                     'Arancel': aranceles[p.categoria] || 0,
+                    'Provincia': p.provincia_laboral || '',
                     'Estado': p.estado_legal || 'ACTIVO',
-                    'Fecha Alta': p.fecha_alta ? new Date(p.fecha_alta).toLocaleDateString('es-AR') : 'S/D',
-                    'Vencimiento': p.fecha_vencimiento ? new Date(p.fecha_vencimiento).toLocaleDateString('es-AR') : 'S/D'
+                    'Fecha Alta': p.fecha_alta ? new Date(p.fecha_alta).toLocaleDateString('es-AR') : 'S/D'
                 }));
                 
-                // Agregar total
                 const total = data.reduce((sum, row) => sum + row['Arancel'], 0);
-                data.push({
-                    'Matrícula': 'TOTAL',
-                    'Nombres': '',
-                    'Apellidos': '',
-                    'DNI': '',
-                    'Profesión': '',
-                    'Categoría': '',
-                    'Arancel': total,
-                    'Estado': '',
-                    'Fecha Alta': '',
-                    'Vencimiento': ''
-                });
+                data.push({ 'Matrícula': 'TOTAL', 'Arancel': total });
                 
                 const ws = XLSX.utils.json_to_sheet(data);
                 const wb = XLSX.utils.book_new();
@@ -754,19 +810,23 @@
             const tbody = document.getElementById('crm-body');
             tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center">Cargando...</td></tr>';
             try {
-                const { data, error } = await db.from('renmcycf_solicitudes').select('*').eq('estado', 'PENDIENTE').order('id', { ascending: false });
+                const { data, error } = await db.from('renmcycf_solicitudes').select('*').in('estado', ['PENDIENTE', 'OBSERVADO']).order('id', { ascending: false });
                 if (error) throw error;
                 if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">Bandeja vacía.</td></tr>'; return; }
                 
-                tbody.innerHTML = data.map(p => `
-                <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                    <td class="p-3"><div class="font-bold text-white">${p.nombres} ${p.apellidos}</div><div class="text-[10px] text-slate-400">DNI: ${p.dni}</div></td>
-                    <td class="p-3"><span class="px-2 py-1 bg-slate-800 rounded text-[10px] font-bold text-yellow-400">${p.categoria}</span></td>
-                    <td class="p-3 text-xs text-blue-400"><a href="${p.diploma_url}" target="_blank" class="hover:underline flex items-center gap-1"><i data-lucide="award" class="w-3 h-3"></i> Título</a></td>
-                    <td class="p-3 text-right">
-                        <button onclick='abrirExpediente(${JSON.stringify(p).replace(/'/g, "&#39;")})' class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors shadow-md flex items-center gap-1 ml-auto"><i data-lucide="folder-search" class="w-3 h-3"></i> Evaluar</button>
-                    </td>
-                </tr>`).join('');
+                tbody.innerHTML = data.map(p => {
+                    const bg = p.estado === 'OBSERVADO' ? 'bg-red-900/20 border-red-500/30' : 'hover:bg-white/5 border-white/5';
+                    const tag = p.estado === 'OBSERVADO' ? '<span class="text-[9px] text-red-400 bg-red-400/10 px-1 rounded ml-2">Esperando Corrección</span>' : '';
+                    return `
+                    <tr class="transition-colors border-b ${bg}">
+                        <td class="p-3"><div class="font-bold text-white">${p.nombres} ${p.apellidos} ${tag}</div><div class="text-[10px] text-slate-400">DNI: ${p.dni}</div></td>
+                        <td class="p-3"><span class="px-2 py-1 bg-slate-800 rounded text-[10px] font-bold text-yellow-400">${p.categoria}</span></td>
+                        <td class="p-3 text-xs text-blue-400"><a href="${p.diploma_url}" target="_blank" class="hover:underline flex items-center gap-1"><i data-lucide="award" class="w-3 h-3"></i> Título</a></td>
+                        <td class="p-3 text-right">
+                            <button onclick='abrirExpediente(${JSON.stringify(p).replace(/'/g, "&#39;")})' class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors shadow-md flex items-center gap-1 ml-auto"><i data-lucide="folder-search" class="w-3 h-3"></i> Evaluar</button>
+                        </td>
+                    </tr>`;
+                }).join('');
                 lucide.createIcons();
             } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">${err.message}</td></tr>`; }
         }
@@ -798,6 +858,8 @@
             document.getElementById('dos-fecha').innerText = (item.fecha_alta || item.created_at) ? new Date(item.fecha_alta || item.created_at).toLocaleDateString('es-AR') : 'S/D';
             document.getElementById('dos-nombre').innerText = `${item.nombres} ${item.apellidos}`;
             document.getElementById('dos-dni').innerText = item.dni;
+            document.getElementById('dos-ano-nac').innerText = item.ano_nacimiento || '---';
+            document.getElementById('dos-tel').innerText = item.telefono || '---';
             document.getElementById('dos-profesion').innerText = item.profesion || 'No declarada';
             document.getElementById('dos-cat').innerText = item.categoria;
             document.getElementById('dos-provincia').innerText = item.provincia_laboral || 'No declarada';
@@ -815,19 +877,30 @@
             // Especialidades
             const especialidadesEl = document.getElementById('dos-especialidades');
             especialidadesEl.innerHTML = '';
-            if (item.especialidades) {
-                const especialidades = typeof item.especialidades === 'string' ? JSON.parse(item.especialidades) : item.especialidades;
-                especialidades.forEach(esp => {
-                    especialidadesEl.innerHTML += `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">${esp}</span>`;
-                });
+            if (item.especialidades && item.especialidades !== "null") {
+                try {
+                    const especialidades = typeof item.especialidades === 'string' ? JSON.parse(item.especialidades) : item.especialidades;
+                    if(especialidades.length > 0){
+                        especialidades.forEach(esp => { especialidadesEl.innerHTML += `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold border border-blue-200">${esp}</span>`; });
+                    } else { especialidadesEl.innerHTML = '<span class="text-slate-400 text-xs">Sin especialidades</span>'; }
+                } catch(e) { especialidadesEl.innerHTML = '<span class="text-slate-400 text-xs">Error leyendo especialidades</span>'; }
             } else {
                 especialidadesEl.innerHTML = '<span class="text-slate-400 text-xs">Sin especialidades declaradas</span>';
             }
             
+            // Sello DDJJ
+            const selloDDJJ = document.getElementById('sello-ddjj');
+            if (item.terminos_aceptados) {
+                selloDDJJ.classList.remove('hidden');
+                document.getElementById('txt-ddjj-fecha').innerText = `Términos legales aceptados el ${new Date(item.fecha_aceptacion_terminos).toLocaleString('es-AR')}`;
+            } else {
+                selloDDJJ.classList.add('hidden');
+            }
+
+            // Fotos
             const containerFotos = document.getElementById('dos-imagenes');
             containerFotos.innerHTML = '';
             
-            // FOTOS CON ALTURA FIJA PARA VISUALIZAR Y EXPORTAR EN PDF
             const urls = [
                 { url: item.foto_perfil_url, campo: 'foto_perfil_url', titulo: 'Foto de Perfil' },
                 { url: item.dni_frente_url, campo: 'dni_frente_url', titulo: 'DNI Frente' },
@@ -835,29 +908,45 @@
                 { url: item.diploma_url, campo: 'diploma_url', titulo: 'Título / Diploma' }
             ];
             
-            urls.forEach((item, index) => {
-                if (item.url) {
+            urls.forEach((imgItem) => {
+                if (imgItem.url) {
                     containerFotos.innerHTML += `
                     <div class="border border-slate-200 rounded-lg p-3 bg-white shadow-sm text-center flex flex-col relative">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 border-b border-slate-100 pb-1">${item.titulo}</p>
-                        <a href="${item.url}" target="_blank" class="block w-full relative group">
-                            <img src="${item.url}" class="w-full h-40 object-contain rounded" crossorigin="anonymous" id="img-${item.campo}">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 border-b border-slate-100 pb-1">${imgItem.titulo}</p>
+                        <a href="${imgItem.url}" target="_blank" class="block w-full relative group">
+                            <img src="${imgItem.url}" class="w-full h-40 object-contain rounded" crossorigin="anonymous" id="img-${imgItem.campo}">
                             <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onclick="reemplazarDocumento('${item.campo}')" class="bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold">Reemplazar</button>
+                                <button onclick="event.preventDefault(); reemplazarDocumento('${imgItem.campo}')" class="bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold">Reemplazar</button>
                             </div>
                         </a>
                     </div>`;
                 }
             });
+
+            // Lógica de archivo corregido
+            const bloqueCorreccion = document.getElementById('bloque-correccion');
+            const containerCorreccion = document.getElementById('dos-correccion-img');
+            containerCorreccion.innerHTML = '';
+            if (item.correccion_url) {
+                bloqueCorreccion.classList.remove('hidden');
+                containerCorreccion.innerHTML = `
+                    <div class="border border-red-200 rounded-lg p-3 bg-red-50 shadow-sm text-center flex flex-col relative md:col-span-2">
+                        <p class="text-[10px] font-bold text-red-600 uppercase tracking-widest mb-2 border-b border-red-100 pb-1">Archivo de Subsanación Enviado por Postulante</p>
+                        <a href="${item.correccion_url}" target="_blank" class="block w-full">
+                            <img src="${item.correccion_url}" class="w-full h-40 object-contain rounded" crossorigin="anonymous">
+                        </a>
+                    </div>`;
+            } else {
+                bloqueCorreccion.classList.add('hidden');
+            }
+
             lucide.createIcons();
 
-            // Mostrar/ocultar botones según estado y rol
             const btnVistoBueno = document.getElementById('btn-visto-bueno');
             const btnObservar = document.getElementById('btn-observar');
             const btnRechazar = document.getElementById('btn-rechazar-comite');
             const btnAprobarMatricula = document.getElementById('btn-aprobar-matricula');
             
-            // Ocultar todos primero
             btnVistoBueno.classList.add('hidden');
             btnObservar.classList.add('hidden');
             btnRechazar.classList.add('hidden');
@@ -865,7 +954,7 @@
             
             const estadoActual = item.estado || item.estado_legal;
             
-            if (estadoActual === 'PENDIENTE' && (adminUser.rol === 'superadmin' || adminUser.rol === 'asesor' || adminUser.rol === 'director')) {
+            if ((estadoActual === 'PENDIENTE' || estadoActual === 'OBSERVADO') && (adminUser.rol === 'superadmin' || adminUser.rol === 'asesor' || adminUser.rol === 'director')) {
                 btnVistoBueno.classList.remove('hidden');
                 btnObservar.classList.remove('hidden');
             } else if (estadoActual === 'EN AUDITORIA' && (adminUser.rol === 'superadmin' || adminUser.rol === 'director' || adminUser.rol === 'titular')) {
@@ -883,27 +972,30 @@
             try {
                 await db.from('renmcycf_solicitudes').update({ estado: 'EN AUDITORIA' }).eq('id', itemDossierActual.id);
                 alert("✅ Solicitud elevada a Comité de Auditoría.");
-                cerrarExpediente();
-                cargarSolicitudes();
-                cargarAuditoria();
+                cerrarExpediente(); cargarSolicitudes(); cargarAuditoria();
             } catch (err) { alert("Error: " + err.message); }
         }
 
-        function observarSolicitud() {
+        async function observarSolicitud() {
             if (!itemDossierActual) return;
-            const numero = itemDossierActual.telefono || whatsappRegistro || '5490000000000';
-            const mensaje = encodeURIComponent(`Estimado/a ${itemDossierActual.nombres} ${itemDossierActual.apellidos}, le solicitamos que corrija la documentación presentada ante el RENMCYCF. Por favor, contáctese con nosotros.`);
-            window.open(`https://wa.me/${numero}?text=${mensaje}`, '_blank');
+            if(!confirm("Esto enviará el trámite a estado OBSERVADO. El usuario verá el mensaje en rojo en su panel de tracking. ¿Proceder?")) return;
+            
+            try {
+                await db.from('renmcycf_solicitudes').update({ estado: 'OBSERVADO' }).eq('id', itemDossierActual.id);
+                const numero = itemDossierActual.telefono || whatsappRegistro || '5490000000000';
+                const mensaje = encodeURIComponent(`Estimado/a ${itemDossierActual.nombres} ${itemDossierActual.apellidos}, le solicitamos que ingrese a la sección 'Seguimiento' de nuestra web para corregir la documentación presentada.`);
+                window.open(`https://wa.me/${numero}?text=${mensaje}`, '_blank');
+                cerrarExpediente(); cargarSolicitudes();
+            } catch (err) { alert("Error: " + err.message); }
         }
 
         async function rechazarSolicitud() {
             if (!itemDossierActual) return;
-            if (!confirm("¿Rechazar esta solicitud?")) return;
+            if (!confirm("¿Rechazar esta solicitud definitivamente?")) return;
             try {
                 await db.from('renmcycf_solicitudes').update({ estado: 'RECHAZADO' }).eq('id', itemDossierActual.id);
                 alert("✅ Solicitud rechazada.");
-                cerrarExpediente();
-                cargarAuditoria();
+                cerrarExpediente(); cargarAuditoria();
             } catch (err) { alert("Error: " + err.message); }
         }
 
@@ -937,7 +1029,6 @@
                     diploma_url: itemDossierActual.diploma_url,
                     diplomas_urls: itemDossierActual.diplomas_urls,
                     estado_legal: 'ACTIVO',
-                    // NUEVOS CAMPOS TRASLADADOS:
                     email: itemDossierActual.email,
                     telefono: itemDossierActual.telefono,
                     provincia_laboral: itemDossierActual.provincia_laboral,
@@ -949,45 +1040,29 @@
                 await db.from('renmcycf_solicitudes').update({ estado: 'APROBADO' }).eq('id', itemDossierActual.id);
                 
                 alert("✅ Matrícula aprobada y registrada en el Directorio exitosamente.");
-                cerrarExpediente();
-                cargarAuditoria();
-                cargarPadron();
-                actualizarDashboard();
+                cerrarExpediente(); cargarAuditoria(); cargarPadron(); actualizarDashboard();
             } catch (err) { alert("Error: " + err.message); }
             finally { btn.innerHTML = originalHTML; btn.disabled = false; lucide.createIcons(); }
         }
 
         async function reemplazarDocumento(campo) {
             if (!itemDossierActual) return;
-            
             const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
+            input.type = 'file'; input.accept = 'image/*,application/pdf';
             input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                
+                const file = e.target.files[0]; if (!file) return;
                 try {
                     const fileName = `${campo}_${Date.now()}.${file.name.split('.').pop()}`;
                     await db.storage.from('renmcycf-media').upload(fileName, file, { cacheControl: '3600', upsert: true });
                     const url = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
                     
-                    // Determinar si es solicitud o padrón
-                    if (itemDossierActual.estado === 'PENDIENTE' || itemDossierActual.estado === 'EN AUDITORIA' || itemDossierActual.estado === 'RECHAZADO') {
+                    if (itemDossierActual.estado === 'PENDIENTE' || itemDossierActual.estado === 'EN AUDITORIA' || itemDossierActual.estado === 'OBSERVADO') {
                         await db.from('renmcycf_solicitudes').update({ [campo]: url }).eq('id', itemDossierActual.id);
                     } else {
                         await db.from('renmcycf_padron').update({ [campo]: url }).eq('id', itemDossierActual.id);
                     }
-                    
-                    // Actualizar el item actual
                     itemDossierActual[campo] = url;
-                    
-                    // Actualizar la imagen en el modal
-                    const img = document.getElementById(`img-${campo}`);
-                    if (img) {
-                        img.src = url;
-                    }
-                    
+                    const img = document.getElementById(`img-${campo}`); if (img) img.src = url;
                     alert("✅ Documento reemplazado exitosamente.");
                 } catch (err) { alert("Error: " + err.message); }
             };
@@ -995,19 +1070,17 @@
         }
 
         // ==========================================
-        // 4. PADRÓN GLOBAL Y EDICIÓN
+        // 4. PADRÓN GLOBAL Y EDICIÓN COMPLETA
         // ==========================================
         async function cargarPadron(filtro = '') {
             const tbody = document.getElementById('padron-body');
             tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center">Cargando...</td></tr>';
             try {
                 let query = db.from('renmcycf_padron').select('*').order('id', { ascending: false }).limit(100);
-                
                 if (filtro) {
                     if (!isNaN(filtro)) { query = query.or(`dni.eq.${filtro},matricula_oficial.ilike.%${filtro}%`); } 
                     else { query = query.or(`nombres.ilike.%${filtro}%,apellidos.ilike.%${filtro}%,matricula_oficial.ilike.%${filtro}%`); }
                 }
-                
                 const { data, error } = await query;
                 if (error) throw error;
                 padronCompleto = data || [];
@@ -1044,6 +1117,20 @@
                 document.getElementById('edit-padron-id').value = p.id;
                 document.getElementById('edit-nombres').value = p.nombres || '';
                 document.getElementById('edit-apellidos').value = p.apellidos || '';
+                document.getElementById('edit-dni').value = p.dni || '';
+                document.getElementById('edit-ano').value = p.ano_nacimiento || '';
+                document.getElementById('edit-tel').value = p.telefono || '';
+                document.getElementById('edit-email').value = p.email || '';
+                document.getElementById('edit-provincia').value = p.provincia_laboral || '';
+                
+                let espFormateadas = '';
+                if(p.especialidades && p.especialidades !== 'null') {
+                    const arr = typeof p.especialidades === 'string' ? JSON.parse(p.especialidades) : p.especialidades;
+                    espFormateadas = arr.join(', ');
+                }
+                document.getElementById('edit-especialidades').value = espFormateadas;
+                
+                document.getElementById('edit-directorio').checked = p.figurar_directorio || false;
                 document.getElementById('edit-profesion').value = p.profesion || '';
                 document.getElementById('edit-categoria').value = p.categoria || 'A1';
                 document.getElementById('edit-estado').value = p.estado_legal || 'ACTIVO';
@@ -1070,10 +1157,24 @@
                     await db.storage.from('renmcycf-media').upload(fileName, file, { cacheControl:'3600', upsert:true });
                     fotoUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
                 }
+                
+                const espStr = document.getElementById('edit-especialidades').value;
+                const especialidades = espStr ? espStr.split(',').map(s => s.trim().toUpperCase()).filter(s => s) : [];
+
                 const payload = {
-                    nombres: document.getElementById('edit-nombres').value, apellidos: document.getElementById('edit-apellidos').value,
-                    profesion: document.getElementById('edit-profesion').value, categoria: document.getElementById('edit-categoria').value,
-                    estado_legal: document.getElementById('edit-estado').value, fecha_vencimiento: document.getElementById('edit-vencimiento').value || null,
+                    nombres: document.getElementById('edit-nombres').value,
+                    apellidos: document.getElementById('edit-apellidos').value,
+                    dni: document.getElementById('edit-dni').value,
+                    ano_nacimiento: document.getElementById('edit-ano').value,
+                    telefono: document.getElementById('edit-tel').value,
+                    email: document.getElementById('edit-email').value,
+                    provincia_laboral: document.getElementById('edit-provincia').value,
+                    especialidades: JSON.stringify(especialidades),
+                    figurar_directorio: document.getElementById('edit-directorio').checked,
+                    profesion: document.getElementById('edit-profesion').value,
+                    categoria: document.getElementById('edit-categoria').value,
+                    estado_legal: document.getElementById('edit-estado').value,
+                    fecha_vencimiento: document.getElementById('edit-vencimiento').value || null,
                 };
                 if (fotoUrl) payload.foto_perfil_url = fotoUrl;
                 await db.from('renmcycf_padron').update(payload).eq('id', id);
@@ -1084,29 +1185,72 @@
         }
 
         // ==========================================
-        // 5. CAMPUS VIRTUAL
+        // 5. ALIADOS (INSTITUCIONES) - NUEVO MÓDULO CMS
+        // ==========================================
+        async function cargarAliadosPanel() {
+            const tbody = document.getElementById('aliados-body'); tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center">Cargando...</td></tr>';
+            try {
+                const { data, error } = await db.from('renmcycf_aliados').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+                if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">No hay instituciones cargadas.</td></tr>'; return; }
+                
+                tbody.innerHTML = data.map(a => `
+                <tr class="border-b border-white/5 hover:bg-white/5">
+                    <td class="p-3"><img src="${a.logo_url}" class="w-12 h-12 object-contain bg-white rounded p-1"></td>
+                    <td class="p-3"><span class="text-white font-bold block">${a.nombre}</span></td>
+                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${a.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">${a.activo?'ACTIVO':'INACTIVO'}</span></td>
+                    <td class="p-3 text-right">
+                        <button class="border border-white/20 text-white px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-white/10" onclick="toggleAliado('${a.id}', ${!a.activo})">${a.activo?'Ocultar':'Mostrar'}</button>
+                        <button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40" onclick="eliminarAliado('${a.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>`).join('');
+                lucide.createIcons();
+            } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
+        }
+
+        async function crearAliado(e) {
+            e.preventDefault(); 
+            const btn = e.target.querySelector('button[type="submit"]'); const orig = btn.innerHTML; btn.innerHTML = 'GUARDANDO...'; btn.disabled = true;
+            try {
+                const imgFile = document.getElementById('aliado-logo').files[0];
+                if (!imgFile) throw new Error("Logo obligatorio.");
+                const fileName = `aliado_${Date.now()}.${imgFile.name.split('.').pop()}`;
+                await db.storage.from('renmcycf-media').upload(fileName, imgFile);
+                const imgUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
+                
+                await db.from('renmcycf_aliados').insert([{ 
+                    nombre: document.getElementById('aliado-nombre').value, 
+                    logo_url: imgUrl,
+                    activo: document.getElementById('aliado-activo').checked
+                }]);
+                document.getElementById('form-aliado').reset(); cargarAliadosPanel();
+            } catch(err) { alert('Error: ' + err.message); } finally { btn.innerHTML = orig; btn.disabled = false; }
+        }
+
+        async function toggleAliado(id, estado) { await db.from('renmcycf_aliados').update({ activo: estado }).eq('id', id); cargarAliadosPanel(); }
+        async function eliminarAliado(id) { if (!confirm("¿Eliminar aliado definitivamente?")) return; await db.from('renmcycf_aliados').delete().eq('id', id); cargarAliadosPanel(); }
+
+
+        // ==========================================
+        // 6. PORTAL CIENTÍFICO Y DIVULGACIÓN (EX CAMPUS)
         // ==========================================
         async function cargarCursosPanel() {
             const tbody = document.getElementById('campus-body'); tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center">Cargando...</td></tr>';
             try {
                 const { data, error } = await db.from('renmcycf_cursos').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
-                if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-slate-400">No hay cursos.</td></tr>'; return; }
-                tbody.innerHTML = data.map(c => `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3"><div class="flex items-center gap-3"><img src="${c.portada_url || 'https://via.placeholder.com/150x80/0f172a/3b82f6?text=CURSO'}" class="w-16 h-10 rounded object-cover border border-white/10"><div><span class="text-white font-bold block">${c.titulo}</span><span class="text-[10px] text-slate-400 truncate block max-w-[200px]">${c.descripcion || 'Sin descripción'}</span></div></div></td><td class="p-3"><span class="bg-blue-900/30 text-blue-400 px-2 py-1 rounded text-[10px] font-bold uppercase">${c.categoria_requerida}</span></td><td class="p-3 text-right"><div class="flex justify-end gap-1 items-center"><button class="bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded hover:bg-emerald-500/40 text-[10px] font-bold uppercase tracking-wider transition-colors" onclick="abrirModalClases('${c.id}', '${c.titulo.replace(/'/g, "\\'")}')"><i data-lucide="folder-open" class="w-3 h-3 inline mr-1"></i> Contenido</button><button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40 transition-colors" onclick="eliminarCurso('${c.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`).join('');
+                if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-slate-400">No hay publicaciones.</td></tr>'; return; }
+                tbody.innerHTML = data.map(c => `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3"><div class="flex items-center gap-3"><img src="${c.portada_url || 'https://via.placeholder.com/150x80/0f172a/3b82f6?text=POST'}" class="w-16 h-10 rounded object-cover border border-white/10"><div><span class="text-white font-bold block text-xs">${c.titulo}</span><span class="text-[9px] text-slate-400 truncate block max-w-[200px]">${c.descripcion || ''}</span></div></div></td><td class="p-3"><span class="bg-blue-900/30 text-blue-400 px-2 py-1 rounded text-[9px] font-bold uppercase">${c.categoria_requerida}</span></td><td class="p-3 text-right"><div class="flex justify-end gap-1 items-center"><button class="bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded hover:bg-emerald-500/40 text-[10px] font-bold uppercase tracking-wider transition-colors" onclick="abrirModalClases('${c.id}', '${c.titulo.replace(/'/g, "\\'")}')"><i data-lucide="folder-open" class="w-3 h-3 inline mr-1"></i> Adjuntos</button><button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40 transition-colors" onclick="eliminarCurso('${c.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`).join('');
                 lucide.createIcons();
             } catch (err) { tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
         }
 
         async function crearCurso(e) {
-            e.preventDefault(); 
-            const btn = e.target.querySelector('button[type="submit"]'); 
-            const orig = btn.innerHTML; 
-            btn.innerHTML = 'CREANDO...'; 
-            btn.disabled = true;
+            e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); const orig = btn.innerHTML; btn.innerHTML = 'PUBLICANDO...'; btn.disabled = true;
             try {
                 const imgFile = document.getElementById('camp-portada').files[0]; let imgUrl = null;
                 if (imgFile) {
-                    const fileName = `portada_curso_${Date.now()}.${imgFile.name.split('.').pop()}`;
+                    const fileName = `portada_pub_${Date.now()}.${imgFile.name.split('.').pop()}`;
                     await db.storage.from('renmcycf-campus').upload(fileName, imgFile);
                     imgUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-campus/${fileName}`;
                 }
@@ -1115,7 +1259,7 @@
             } catch(err) { alert('Error: ' + err.message); } finally { btn.innerHTML = orig; btn.disabled = false; }
         }
 
-        async function eliminarCurso(id) { if (!confirm("¿Eliminar curso?")) return; await db.from('renmcycf_cursos').delete().eq('id', id); cargarCursosPanel(); }
+        async function eliminarCurso(id) { if (!confirm("¿Eliminar publicación?")) return; await db.from('renmcycf_cursos').delete().eq('id', id); cargarCursosPanel(); }
 
         function toggleClaseInput() {
             const tipo = document.getElementById('clase-tipo').value;
@@ -1131,11 +1275,11 @@
             try {
                 const { data, error } = await db.from('renmcycf_clases').select('*').eq('curso_id', cursoId).order('created_at', { ascending: true });
                 if (error) throw error;
-                if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-slate-500 text-xs">No hay contenido.</td></tr>'; return; }
+                if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-slate-500 text-xs">No hay adjuntos.</td></tr>'; return; }
                 tbody.innerHTML = data.map(c => {
                     let icon = 'file-text'; let color = 'text-red-400';
                     if (c.tipo_recurso === 'VIDEO') { icon = 'play-circle'; color = 'text-blue-400'; }
-                    if (c.tipo_recurso === 'ZOOM') { icon = 'video'; color = 'text-emerald-400'; }
+                    if (c.tipo_recurso === 'ZOOM') { icon = 'link'; color = 'text-emerald-400'; }
                     return `<tr class="border-b border-white/5"><td class="p-2"><i data-lucide="${icon}" class="w-4 h-4 ${color}"></i></td><td class="p-2"><span class="text-white text-xs font-bold block">${c.titulo}</span></td><td class="p-2 text-right"><button class="bg-red-500/20 text-red-400 p-1 rounded hover:bg-red-500/40" onclick="eliminarClase('${c.id}', '${cursoId}')"><i data-lucide="trash" class="w-3 h-3"></i></button></td></tr>`;
                 }).join(''); lucide.createIcons();
             } catch (err) { tbody.innerHTML = `<tr><td colspan="3">Error: ${err.message}</td></tr>`; }
@@ -1147,7 +1291,7 @@
                 const cursoId = document.getElementById('clase-curso-id').value; const tipo = document.getElementById('clase-tipo').value; let finalUrl = '';
                 if (tipo === 'PDF') {
                     const file = document.getElementById('clase-file').files[0]; if (!file) throw new Error("Debe seleccionar un PDF.");
-                    const fileName = `clase_pdf_${Date.now()}.${file.name.split('.').pop()}`;
+                    const fileName = `material_pdf_${Date.now()}.${file.name.split('.').pop()}`;
                     await db.storage.from('renmcycf-campus').upload(fileName, file);
                     finalUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-campus/${fileName}`;
                 } else { finalUrl = document.getElementById('clase-url').value; }
@@ -1155,10 +1299,10 @@
                 document.getElementById('form-clase').reset(); toggleClaseInput(); cargarClasesList(cursoId);
             } catch(err) { alert('Error: ' + err.message); } finally { btn.innerHTML = orig; btn.disabled = false; }
         }
-        async function eliminarClase(id, cursoId) { if (!confirm("¿Eliminar módulo?")) return; await db.from('renmcycf_clases').delete().eq('id', id); cargarClasesList(cursoId); }
+        async function eliminarClase(id, cursoId) { if (!confirm("¿Eliminar adjunto?")) return; await db.from('renmcycf_clases').delete().eq('id', id); cargarClasesList(cursoId); }
 
         // ==========================================
-        // 6. GESTIÓN BIBLIOTECA
+        // 7. GESTIÓN BIBLIOTECA
         // ==========================================
         async function cargarBibliotecaPanel() {
             const tbody = document.getElementById('biblioteca-body'); tbody.innerHTML = '<tr><td colspan="3" class="text-center">Cargando...</td></tr>';
@@ -1171,36 +1315,21 @@
         }
 
         async function subirLibro(e) {
-            e.preventDefault(); 
-            const btn = e.target.querySelector('button[type="submit"]'); 
-            const orig = btn.innerHTML; 
-            btn.innerHTML = 'SUBIENDO...'; 
-            btn.disabled = true;
+            e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); const orig = btn.innerHTML; btn.innerHTML = 'SUBIENDO...'; btn.disabled = true;
             try {
-                const pdfFile = document.getElementById('bib-pdf').files[0]; 
-                if (!pdfFile) throw new Error("Debe seleccionar un PDF.");
-                const pdfName = `libro_${Date.now()}.${pdfFile.name.split('.').pop()}`;
-                await db.storage.from('renmcycf-pdfs').upload(pdfName, pdfFile); 
-                const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${pdfName}`;
-                
+                const pdfFile = document.getElementById('bib-pdf').files[0]; const pdfName = `libro_${Date.now()}.${pdfFile.name.split('.').pop()}`;
+                await db.storage.from('renmcycf-pdfs').upload(pdfName, pdfFile); const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${pdfName}`;
                 let portadaUrl = null;
                 const portadaFile = document.getElementById('bib-portada').files[0];
-                if (portadaFile) { 
-                    const imgName = `cover_${Date.now()}.${portadaFile.name.split('.').pop()}`; 
-                    await db.storage.from('renmcycf-media').upload(imgName, portadaFile); 
-                    portadaUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${imgName}`; 
-                }
-                
+                if (portadaFile) { const imgName = `cover_${Date.now()}.${portadaFile.name.split('.').pop()}`; await db.storage.from('renmcycf-media').upload(imgName, portadaFile); portadaUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${imgName}`; }
                 await db.from('renmcycf_biblioteca').insert([{ titulo: document.getElementById('bib-titulo').value, autor: document.getElementById('bib-autor').value, tipo_acceso: document.getElementById('bib-acceso').value, pdf_url: pdfUrl, portada_url: portadaUrl, activo: true }]);
-                alert("✅ Material publicado."); 
-                document.getElementById('form-biblioteca').reset(); 
-                cargarBibliotecaPanel();
+                alert("✅ Material publicado."); document.getElementById('form-biblioteca').reset(); cargarBibliotecaPanel();
             } catch (err) { alert("Error: " + err.message); } finally { btn.innerHTML = orig; btn.disabled = false; }
         }
         async function eliminarLibro(id) { if(!confirm("¿Eliminar archivo?")) return; await db.from('renmcycf_biblioteca').delete().eq('id', id); cargarBibliotecaPanel(); }
 
         // ==========================================
-        // 7. AUDITORÍA TESIS
+        // 8. AUDITORÍA TESIS
         // ==========================================
         async function cargarTesisPanel() {
             const tbody = document.getElementById('tesis-body'); tbody.innerHTML = '<tr><td colspan="4" class="text-center">Cargando...</td></tr>';
@@ -1214,7 +1343,7 @@
         async function auditarTesis(id, estado) { if(!confirm(`¿Marcar como ${estado}?`)) return; await db.from('renmcycf_publicaciones').update({ estado }).eq('id', id); cargarTesisPanel(); }
 
         // ==========================================
-        // 8. CARGA MASIVA 
+        // 9. CARGA MASIVA 
         // ==========================================
         function procesarExcel() {
             const file = document.getElementById('input-excel').files[0]; if (!file) return;
@@ -1237,7 +1366,7 @@
         }
 
         // ==========================================
-        // 9. CONFIGURACIÓN CORE Y REDES SOCIALES
+        // 10. CONFIGURACIÓN CORE Y TEXTOS
         // ==========================================
         async function cargarConfiguracionForm() {
             try {
@@ -1297,9 +1426,6 @@
             } catch (err) { alert("Error: " + err.message); }
         }
 
-        // ==========================================
-        // 10. CONTENIDOS DEL SITIO (TEXTOS)
-        // ==========================================
         async function cargarContenidoForm() {
             try {
                 const { data } = await db.from('renmcycf_contenido').select('clave, valor');
@@ -1355,18 +1481,11 @@
             } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="text-red-400 p-3">Error: ${err.message}</td></tr>`; }
         }
 
-        async function toggleEstadoUsuario(id, estado) { 
-            await db.from('renmcycf_roles').update({ activo: estado }).eq('id', id); 
-            cargarUsuarios(); 
-        }
-
-        async function crearUsuario(e) { 
-            e.preventDefault(); 
-            alert("Para crear usuarios con contraseña de forma segura, te recomendamos hacerlo desde el panel de Authentication en Supabase y luego asignarle el rol aquí. La función de creación directa está bloqueada por políticas de seguridad de la base de datos."); 
-        }
+        async function toggleEstadoUsuario(id, estado) { await db.from('renmcycf_roles').update({ activo: estado }).eq('id', id); cargarUsuarios(); }
+        async function crearUsuario(e) { e.preventDefault(); alert("Para crear usuarios con contraseña de forma segura, te recomendamos hacerlo desde el panel de Authentication en Supabase y luego asignarle el rol aquí."); }
 
         // ==========================================
-        // 12. DISEÑO CREDENCIAL (MÓDULO GRÁFICO)
+        // 12. DISEÑO CREDENCIAL
         // ==========================================
         const defaultStyle = {
             foto: { top: 325, left: 185, width: 230, height: 230, align: 'center', lado: 'frente' },
@@ -1440,12 +1559,7 @@
             if (ros && ros.valor) rosetaUrl = ros.valor;
 
             const { data: style } = await db.from('renmcycf_contenido').select('valor').eq('clave', 'credencial_style').maybeSingle();
-            if (style && style.valor) { 
-                try { 
-                    const savedStyle = JSON.parse(style.valor);
-                    currentCredStyle = { ...defaultStyle, ...savedStyle };
-                } catch(e) {} 
-            }
+            if (style && style.valor) { try { currentCredStyle = { ...defaultStyle, ...JSON.parse(style.valor) }; } catch(e) {} }
             switchEditorTab('frente');
         }
 
@@ -1457,19 +1571,11 @@
         }
 
         function actualizarPreviewCred() {
-            if (bgFrenteUrl) {
-                document.getElementById('card-preview-frente').style.backgroundImage = `url('${bgFrenteUrl}')`;
-                document.getElementById('card-preview-frente').style.backgroundSize = '1000px 630px';
-            }
-            if (bgDorsoUrl) {
-                document.getElementById('card-preview-dorso').style.backgroundImage = `url('${bgDorsoUrl}')`;
-                document.getElementById('card-preview-dorso').style.backgroundSize = '1000px 630px';
-            }
+            if (bgFrenteUrl) { document.getElementById('card-preview-frente').style.backgroundImage = `url('${bgFrenteUrl}')`; document.getElementById('card-preview-frente').style.backgroundSize = '1000px 630px'; }
+            if (bgDorsoUrl) { document.getElementById('card-preview-dorso').style.backgroundImage = `url('${bgDorsoUrl}')`; document.getElementById('card-preview-dorso').style.backgroundSize = '1000px 630px'; }
 
             for (const [key, props] of Object.entries(currentCredStyle)) {
-                const el = document.getElementById(`pre-${key}`);
-                if (!el) continue;
-                
+                const el = document.getElementById(`pre-${key}`); if (!el) continue;
                 if (props.top !== undefined) el.style.top = props.top + 'px';
                 if (props.width !== undefined) el.style.width = props.width + 'px';
                 if (props.height !== undefined) el.style.height = props.height + 'px';
@@ -1477,47 +1583,17 @@
                 if (props.color !== undefined) el.style.color = props.color;
                 
                 if (key === 'foto' || key === 'qr' || key === 'roseta') {
-                    el.style.left = props.left + 'px';
-                    el.style.right = 'auto';
-                    el.style.transform = 'translate(-50%, -50%)';
-                    el.style.display = 'flex';
-                    el.style.alignItems = 'center';
-                    el.style.justifyContent = 'center';
+                    el.style.left = props.left + 'px'; el.style.right = 'auto'; el.style.transform = 'translate(-50%, -50%)'; el.style.display = 'flex'; el.style.alignItems = 'center'; el.style.justifyContent = 'center';
                 } else {
-                    el.style.display = 'flex';
-                    el.style.alignItems = 'center';
-                    el.style.transform = 'none';
-                    
-                    if (props.align === 'right') {
-                        el.style.left = 'auto';
-                        el.style.right = (1000 - props.left) + 'px';
-                        el.style.justifyContent = 'flex-end';
-                        el.style.textAlign = 'right';
-                    } else if (props.align === 'center') {
-                        el.style.left = props.left + 'px';
-                        el.style.right = 'auto';
-                        el.style.justifyContent = 'center';
-                        el.style.textAlign = 'center';
-                    } else {
-                        el.style.left = props.left + 'px';
-                        el.style.right = 'auto';
-                        el.style.justifyContent = 'flex-start';
-                        el.style.textAlign = 'left';
-                    }
-                    el.style.whiteSpace = 'nowrap';
-                    el.style.overflow = 'hidden';
+                    el.style.display = 'flex'; el.style.alignItems = 'center'; el.style.transform = 'none';
+                    if (props.align === 'right') { el.style.left = 'auto'; el.style.right = (1000 - props.left) + 'px'; el.style.justifyContent = 'flex-end'; el.style.textAlign = 'right'; } 
+                    else if (props.align === 'center') { el.style.left = props.left + 'px'; el.style.right = 'auto'; el.style.justifyContent = 'center'; el.style.textAlign = 'center'; } 
+                    else { el.style.left = props.left + 'px'; el.style.right = 'auto'; el.style.justifyContent = 'flex-start'; el.style.textAlign = 'left'; }
+                    el.style.whiteSpace = 'nowrap'; el.style.overflow = 'hidden';
                 }
             }
-
             const rosetaEl = document.getElementById('pre-roseta');
-            if (rosetaEl) {
-                if (rosetaUrl) {
-                    rosetaEl.style.display = 'block';
-                    rosetaEl.querySelector('img').src = rosetaUrl;
-                } else {
-                    rosetaEl.style.display = 'none';
-                }
-            }
+            if (rosetaEl) { if (rosetaUrl) { rosetaEl.style.display = 'block'; rosetaEl.querySelector('img').src = rosetaUrl; } else { rosetaEl.style.display = 'none'; } }
         }
 
         async function guardarDiseno() {
