@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta http-equiv="Content-Security-Policy" content="style-src 'unsafe-inline' https://www.gstatic.com; img-src * data: blob:; script-src 'unsafe-inline' https:; connect-src *;">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Centro de Comando · RENMCYCF</title>
@@ -38,6 +38,7 @@
         
         .upload-zone { border: 2px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s; }
         .upload-zone:hover { border-color: var(--neon-blue); background: rgba(59,130,246,0.05); }
+        .preview-img { max-width: 200px; max-height: 150px; border-radius: 8px; margin-top: 10px; }
         .editor-group { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
         .editor-group-title { font-size: 0.75rem; font-weight: 800; color: var(--neon-gold); text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
 
@@ -76,9 +77,13 @@
     <div id="modal-expediente" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto print:block print:bg-white print:p-0">
         <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col my-auto print-container" id="dossier-print-area">
             <div class="bg-[#0a1128] text-white p-6 border-b-8 border-[#d4af37] text-center relative rounded-t-2xl print:rounded-none overflow-hidden">
+                <img id="modal-dyn-bg" src="" alt="Fondo dinámico institucional" class="absolute inset-0 w-full h-full object-cover opacity-20 filter grayscale hidden">
+                <div class="absolute inset-0 bg-[#0a1128]/80 hidden" id="modal-dyn-overlay"></div>
+                
                 <button onclick="cerrarExpediente()" class="absolute top-4 right-4 text-slate-400 hover:text-white print:hidden z-20"><i data-lucide="x-circle" class="w-8 h-8"></i></button>
                 <div class="w-20 h-20 bg-white border-2 border-[#d4af37] rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg relative z-20 overflow-hidden" id="modal-logo-container">
-                    <i data-lucide="fingerprint" class="w-10 h-10 text-[#0a1128]"></i>
+                    <i data-lucide="fingerprint" class="w-10 h-10 text-[#0a1128]" id="modal-default-logo"></i>
+                    <img id="modal-dyn-logo" src="" alt="Logo institucional dinámico" class="absolute inset-0 w-full h-full object-contain p-2 hidden">
                 </div>
                 <h2 class="text-3xl font-black font-title uppercase tracking-widest text-[#d4af37] relative z-20">Expediente de Inscripción</h2>
                 <p class="font-bold text-sm uppercase tracking-widest mt-1 text-slate-200 relative z-20">Registro Nacional RENMCYCF</p>
@@ -121,19 +126,17 @@
             </div>
             <div class="p-6 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="md:col-span-1 border-r border-white/5 pr-4">
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Añadir Recurso</h4>
                     <form onsubmit="subirClase(event)" id="form-clase" class="space-y-4">
                         <input type="hidden" id="clase-curso-id">
-                        <div><label>Título de la Clase/Archivo</label><input type="text" id="clase-titulo" placeholder="Ej: Clase 1 - Introducción" required></div>
-                        <div><label>Tipo de Recurso</label><select id="clase-tipo" onchange="toggleClaseInput()" required><option value="VIDEO">Video Grabado (YouTube/Vimeo)</option><option value="ZOOM">Clase en Vivo (Link Zoom/Meet)</option><option value="PDF">Archivo Adjunto (PDF)</option></select></div>
-                        <div id="clase-input-url"><label>URL (Link)</label><input type="url" id="clase-url" placeholder="https://..."></div>
-                        <div id="clase-input-file" class="hidden"><label>Subir Archivo PDF</label><input type="file" id="clase-file" accept=".pdf" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-700 file:text-white"></div>
-                        <button type="submit" id="btn-subir-clase" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl flex justify-center items-center gap-2 transition-transform active:scale-95 mt-4"><i data-lucide="upload" class="w-4 h-4"></i> GUARDAR CLASE</button>
+                        <div><label>Título Clase</label><input type="text" id="clase-titulo" required></div>
+                        <div><label>Tipo</label><select id="clase-tipo" onchange="toggleClaseInput()"><option value="VIDEO">Video (YouTube)</option><option value="ZOOM">Zoom/Meet</option><option value="PDF">PDF</option></select></div>
+                        <div id="clase-input-url"><label>Link</label><input type="url" id="clase-url"></div>
+                        <div id="clase-input-file" class="hidden"><label>Subir PDF</label><input type="file" id="clase-file" accept=".pdf"></div>
+                        <button type="submit" id="btn-subir-clase" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl mt-4">GUARDAR CLASE</button>
                     </form>
                 </div>
                 <div class="md:col-span-2">
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Contenido del Curso</h4>
-                    <div class="overflow-x-auto bg-black/20 rounded-xl border border-white/5"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Tipo</th><th class="p-3">Título del Recurso</th><th class="p-3 text-right">Acción</th></tr></thead><tbody id="clases-body"></tbody></table></div>
+                    <div class="overflow-x-auto bg-black/20 rounded-xl border border-white/5"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Tipo</th><th class="p-3">Título</th><th class="p-3 text-right">Acción</th></tr></thead><tbody id="clases-body"></tbody></table></div>
                 </div>
             </div>
         </div>
@@ -143,28 +146,27 @@
     <div id="modal-editar-padron" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-[#0f172a] border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40 sticky top-0 z-10">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="user-pen" class="text-yellow-400"></i> Editar Matriculado</h3>
-                <button onclick="cerrarModalEdicion()" class="text-slate-400 hover:text-red-400 transition-colors"><i data-lucide="x-circle" class="w-6 h-6"></i></button>
+                <h3 class="text-lg font-bold text-white"><i data-lucide="user-pen" class="text-yellow-400 inline mr-2"></i> Editar Matriculado</h3>
+                <button onclick="cerrarModalEdicion()" class="text-slate-400 hover:text-red-400"><i data-lucide="x-circle" class="w-6 h-6"></i></button>
             </div>
             <form onsubmit="guardarEdicionMatriculado(event)" class="p-6 space-y-4">
                 <input type="hidden" id="edit-padron-id">
                 <div class="flex justify-center mb-4">
                     <div class="w-24 h-24 rounded-full border-2 border-dashed border-white/20 overflow-hidden bg-black/30 flex items-center justify-center relative group cursor-pointer" onclick="document.getElementById('edit-foto-file').click()">
-                        <img id="edit-foto-preview" src="https://ui-avatars.com/api/?name=E+D&background=0a1128&color=fff" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="camera" class="w-6 h-6 text-white"></i></div>
+                        <img id="edit-foto-preview" src="" class="w-full h-full object-cover">
                         <input type="file" id="edit-foto-file" accept="image/*" class="hidden" onchange="previewFotoEdicion(this)">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4"><div><label>Nombres</label><input type="text" id="edit-nombres" required></div><div><label>Apellidos</label><input type="text" id="edit-apellidos" required></div></div>
                 <div><label>Profesión</label><input type="text" id="edit-profesion"></div>
-                <div class="grid grid-cols-2 gap-4"><div><label>Categoría</label><select id="edit-categoria"><option value="A1">A.1</option><option value="A2">A.2</option><option value="A3">A.3</option></select></div><div><label>Estado Legal</label><select id="edit-estado"><option value="ACTIVO">ACTIVO</option><option value="SUSPENDIDO">SUSPENDIDO</option><option value="REVOCADO">REVOCADO</option><option value="PENDIENTE">PENDIENTE</option></select></div></div>
-                <div><label>Fecha de Vencimiento</label><input type="date" id="edit-vencimiento"></div>
-                <button type="submit" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 mt-4"><i data-lucide="save" class="w-4 h-4"></i> GUARDAR CAMBIOS</button>
+                <div class="grid grid-cols-2 gap-4"><div><label>Categoría</label><select id="edit-categoria"><option value="A1">A.1</option><option value="A2">A.2</option><option value="A3">A.3</option></select></div><div><label>Estado</label><select id="edit-estado"><option value="ACTIVO">ACTIVO</option><option value="SUSPENDIDO">SUSPENDIDO</option><option value="REVOCADO">REVOCADO</option><option value="PENDIENTE">PENDIENTE</option></select></div></div>
+                <div><label>Fecha Vencimiento</label><input type="date" id="edit-vencimiento"></div>
+                <button type="submit" class="w-full bg-yellow-600 text-black font-bold py-3 rounded-xl mt-4">GUARDAR CAMBIOS</button>
             </form>
         </div>
     </div>
 
-    <!-- SIDEBAR DE NAVEGACIÓN -->
+    <!-- SIDEBAR -->
     <aside class="w-64 glass-panel m-4 mr-0 flex flex-col z-20 hidden md:flex border-r border-white/5">
         <div class="h-28 flex flex-col justify-center px-6 border-b border-white/5 relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-yellow-500"></div>
@@ -176,10 +178,11 @@
             <button onclick="showTab('dashboard')" id="nav-dashboard" class="sidebar-link active w-full"><i data-lucide="activity" class="w-4 h-4"></i> Dashboard</button>
             <button onclick="showTab('solicitudes')" id="nav-solicitudes" class="sidebar-link w-full"><i data-lucide="inbox" class="w-4 h-4"></i> Trámites (CRM)</button>
             <button onclick="showTab('padron')" id="nav-padron" class="sidebar-link w-full"><i data-lucide="database" class="w-4 h-4"></i> Padrón Oficial</button>
+            
             <div id="menu-admin-section">
                 <div class="px-2 py-2 text-[9px] font-bold text-blue-400 uppercase tracking-widest mt-6">EdTech & Publicaciones</div>
                 <button onclick="showTab('campus')" id="nav-campus" class="sidebar-link w-full"><i data-lucide="monitor-play" class="w-4 h-4"></i> Campus Virtual</button>
-                <button onclick="showTab('biblioteca')" id="nav-biblioteca" class="sidebar-link w-full"><i data-lucide="book-open" class="w-4 h-4"></i> Gestión Biblioteca</button>
+                <button onclick="showTab('biblioteca')" id="nav-biblioteca" class="sidebar-link w-full"><i data-lucide="book-open" class="w-4 h-4"></i> Biblioteca</button>
                 <button onclick="showTab('tesis')" id="nav-tesis" class="sidebar-link w-full"><i data-lucide="microscope" class="w-4 h-4"></i> Auditoría Tesis</button>
 
                 <div class="px-2 py-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-6">Sistema</div>
@@ -227,11 +230,11 @@
             <!-- PADRÓN OFICIAL -->
             <div id="view-padron" class="tab-content space-y-6">
                 <div class="flex justify-between items-center bg-black/20 p-4 rounded-xl border border-white/5">
-                    <div class="relative w-full max-w-md"><i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i><input type="text" id="search-padron" placeholder="Buscar por DNI, Nombre o Matrícula..." class="w-full pl-9 bg-black/50" onkeyup="if(event.key==='Enter')buscarPadron()"></div>
+                    <div class="relative w-full max-w-md"><i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i><input type="text" id="search-padron" placeholder="Buscar por DNI o Nombre..." class="w-full pl-9 bg-black/50" onkeyup="if(event.key==='Enter')buscarPadron()"></div>
                 </div>
                 <div class="glass-card overflow-hidden">
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm"><thead><tr><th class="p-4">Matrícula</th><th class="p-4">Profesional</th><th class="p-4">Categoría</th><th class="p-4 text-right">Acciones</th></tr></thead><tbody id="padron-body"></tbody></table>
+                        <table class="w-full text-left text-sm"><thead><tr><th class="p-4">Matrícula</th><th class="p-4">Profesional</th><th class="p-4">Categoría</th><th class="p-4">Documentos</th><th class="p-4 text-right">Acciones</th></tr></thead><tbody id="padron-body"></tbody></table>
                     </div>
                 </div>
             </div>
@@ -339,40 +342,102 @@
                 </div>
             </div>
 
-            <!-- CONFIGURACIÓN CORE -->
+            <!-- CONFIGURACIÓN CORE (RESTAURADA COMPLETA) -->
             <div id="view-configuracion" class="tab-content space-y-6">
                 <div class="glass-card p-8 border-yellow-500/30">
                     <h3 class="text-white font-bold mb-6 border-b border-white/10 pb-2">Parámetros del Sistema</h3>
                     <form id="form-config" class="space-y-6" onsubmit="guardarConfiguracion(event)">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div><label>Arancel A1</label><input type="number" id="conf-arancel-a1"></div>
-                            <div><label>Arancel A2</label><input type="number" id="conf-arancel-a2"></div>
-                            <div><label>Arancel A3</label><input type="number" id="conf-arancel-a3"></div>
+                            <div><label>Arancel A1 (ARS)</label><input type="number" id="conf-arancel-a1" required></div>
+                            <div><label>Arancel A2 (ARS)</label><input type="number" id="conf-arancel-a2" required></div>
+                            <div><label>Arancel A3 (ARS)</label><input type="number" id="conf-arancel-a3" required></div>
                         </div>
-                        <div><label>Link Mercado Pago</label><input type="url" id="conf-mp-link"></div>
-                        <div class="flex justify-end"><button type="submit" class="bg-yellow-600 hover:bg-yellow-500 text-black font-black px-6 py-3 rounded-xl">ACTUALIZAR</button></div>
+                        <div><label>Enlace de Pago (Mercado Pago)</label><input type="url" id="conf-mp-link" placeholder="https://mpago.la/..."></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label>WhatsApp</label><input type="text" id="conf-whatsapp"></div>
+                            <div><label>Email de Contacto</label><input type="email" id="conf-email"></div>
+                        </div>
+                        <div>
+                            <label>Imagen de Fondo del Hero</label>
+                            <div class="upload-zone" onclick="document.getElementById('input-hero-image').click()">
+                                <i data-lucide="image" class="w-8 h-8 mx-auto text-slate-400 mb-2"></i>
+                                <span class="text-xs text-slate-400">Clic para subir imagen</span>
+                                <input type="file" id="input-hero-image" accept="image/*" onchange="previewYGuardarImagen(this, 'preview-hero', 'hero_image')" style="display:none;">
+                            </div>
+                            <img id="preview-hero" class="preview-img" src="" alt="Preview" style="display:none;">
+                            <input type="hidden" id="conf-hero-image-url">
+                        </div>
+                        <div>
+                            <label>Logo del Registro</label>
+                            <div class="upload-zone" onclick="document.getElementById('input-logo').click()">
+                                <i data-lucide="image" class="w-8 h-8 mx-auto text-slate-400 mb-2"></i>
+                                <span class="text-xs text-slate-400">Clic para subir logo</span>
+                                <input type="file" id="input-logo" accept="image/*" onchange="previewYGuardarImagen(this, 'preview-logo', 'logo')" style="display:none;">
+                            </div>
+                            <img id="preview-logo" class="preview-img" src="" alt="Preview" style="display:none;">
+                            <input type="hidden" id="conf-logo-url">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label>Facebook URL</label><input type="url" id="conf-facebook"></div>
+                            <div><label>Instagram URL</label><input type="url" id="conf-instagram"></div>
+                            <div><label>Twitter URL</label><input type="url" id="conf-twitter"></div>
+                            <div><label>LinkedIn URL</label><input type="url" id="conf-linkedin"></div>
+                        </div>
+                        <div class="flex justify-end pt-4">
+                            <button type="submit" class="bg-yellow-600 hover:bg-yellow-500 text-black font-black px-6 py-3 rounded-xl">ACTUALIZAR CONFIGURACIÓN</button>
+                        </div>
                     </form>
                 </div>
             </div>
 
-            <!-- CONTENIDO DEL SITIO -->
+            <!-- CONTENIDO DEL SITIO (RESTAURADO COMPLETO) -->
             <div id="view-contenido" class="tab-content space-y-6">
                 <div class="glass-card p-8 border-blue-500/30">
                     <h3 class="text-white font-bold mb-6 border-b border-white/10 pb-2">Editar Contenido</h3>
                     <form id="form-contenido" class="space-y-6" onsubmit="guardarContenido(event)">
+                        <div><label>Badge del Hero</label><input type="text" id="cont-hero-badge-text"></div>
                         <div><label>Título del Hero</label><input type="text" id="cont-hero-title"></div>
                         <div><label>Subtítulo del Hero</label><textarea id="cont-hero-subtitle" rows="3"></textarea></div>
-                        <div class="flex justify-end"><button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-6 py-3 rounded-xl">ACTUALIZAR TEXTOS</button></div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label>Texto Botón Principal</label><input type="text" id="cont-hero-cta-primary"></div>
+                            <div><label>Texto Botón Secundario</label><input type="text" id="cont-hero-cta-secondary"></div>
+                        </div>
+                        <div><label>Título Sección Urgencia</label><input type="text" id="cont-urgencia-titulo"></div>
+                        <div><label>Texto Sección Urgencia</label><textarea id="cont-urgencia-texto" rows="3"></textarea></div>
+                        <div><label>Descripción Categoría A1</label><textarea id="cont-cat-a1-desc" rows="3"></textarea></div>
+                        <div><label>Descripción Categoría A2</label><textarea id="cont-cat-a2-desc" rows="3"></textarea></div>
+                        <div><label>Descripción Categoría A3</label><textarea id="cont-cat-a3-desc" rows="3"></textarea></div>
+                        <div><label>Texto Footer</label><textarea id="cont-footer-texto" rows="2"></textarea></div>
+                        <div class="flex justify-end pt-4">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-6 py-3 rounded-xl">ACTUALIZAR TEXTOS</button>
+                        </div>
                     </form>
                 </div>
             </div>
             
-            <!-- USUARIOS -->
+            <!-- USUARIOS Y ROLES (RESTAURADO COMPLETO) -->
             <div id="view-usuarios" class="tab-content space-y-6">
-                <div class="glass-card p-12 text-center border-emerald-500/30">
-                    <i data-lucide="users" class="w-16 h-16 text-emerald-500 mx-auto mb-4 opacity-50"></i>
-                    <h3 class="text-2xl font-black text-white mb-2 tracking-widest uppercase">Gestión de Usuarios</h3>
-                    <p class="text-sm text-slate-400">Los usuarios deben ser invitados desde el panel principal de Supabase (Authentication).</p>
+                <div class="glass-card p-8 border-emerald-500/30">
+                    <h3 class="text-white font-bold mb-6"><i data-lucide="users" class="text-emerald-500 inline mr-2"></i> Gestión de Usuarios</h3>
+                    <form class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8" onsubmit="crearUsuario(event)">
+                        <div><label>Email</label><input type="email" id="usr-email" required></div>
+                        <div><label>Rol</label><select id="usr-rol" required><option value="superadmin">Superadmin</option><option value="director">Director</option><option value="asesor">Asesor</option><option value="titular">Titular</option></select></div>
+                        <div><label>Nombres</label><input type="text" id="usr-nombres"></div>
+                        <div><label>Apellidos</label><input type="text" id="usr-apellidos"></div>
+                        <div class="md:col-span-2 border-t border-white/10 pt-4 mt-2">
+                            <label>Contraseña Asignada</label>
+                            <input type="text" id="usr-pass" required placeholder="Escriba la contraseña para el nuevo usuario" minlength="8">
+                        </div>
+                        <div class="md:col-span-2 flex justify-end">
+                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition-transform active:scale-95">CREAR USUARIO</button>
+                        </div>
+                    </form>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead><tr><th class="p-3">Email</th><th class="p-3">Rol</th><th class="p-3">Estado</th><th class="p-3 text-right">Acciones</th></tr></thead>
+                            <tbody id="usuarios-body"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -388,12 +453,10 @@
         const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
         const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
 
-        // Variables Globales
         let adminUser = null;
         let padronCompleto = [];
         let datosExcel = [];
         let itemDossierActual = null;
-        
         let bgFrenteUrl = ''; let bgDorsoUrl = ''; let rosetaUrl = ''; let currentEditorTab = 'frente';
 
         // ==========================================
@@ -432,7 +495,8 @@
             document.getElementById('header-user-role').textContent = `${rolData.nombres || 'User'} (${rolData.rol})`;
             document.getElementById('login-screen').style.display = 'none';
 
-            // Restricción de Vistas según Rol
+            cargarIdentidadDossier();
+
             if (rolData.rol !== 'superadmin') document.getElementById('menu-admin-section').style.display = 'none';
             if (rolData.rol === 'asesor') { 
                 document.getElementById('nav-dashboard').style.display = 'none'; 
@@ -453,6 +517,24 @@
                 document.getElementById('btn-login').disabled = false;
                 document.getElementById('login-screen').style.display = 'flex';
             }
+        }
+
+        async function cargarIdentidadDossier() {
+            try {
+                const { data } = await db.from('renmcycf_config').select('logo_url, hero_image_url').eq('id', 1).maybeSingle();
+                if (data) {
+                    if (data.logo_url) {
+                        document.getElementById('modal-dyn-logo').src = data.logo_url;
+                        document.getElementById('modal-dyn-logo').classList.remove('hidden');
+                        document.getElementById('modal-default-logo').classList.add('hidden');
+                    }
+                    if (data.hero_image_url) {
+                        document.getElementById('modal-dyn-bg').src = data.hero_image_url;
+                        document.getElementById('modal-dyn-bg').classList.remove('hidden');
+                        document.getElementById('modal-dyn-overlay').classList.remove('hidden');
+                    }
+                }
+            } catch (err) { console.error("Error cargando identidad:", err); }
         }
 
         // ==========================================
@@ -477,6 +559,7 @@
             if(id === 'diseno') cargarDisenoCredencial();
             if(id === 'configuracion') cargarConfiguracionForm();
             if(id === 'contenido') cargarContenidoForm();
+            if(id === 'usuarios') cargarUsuarios();
         }
 
         async function actualizarDashboard() {
@@ -494,7 +577,7 @@
         }
 
         // ==========================================
-        // 3. CRM TRÁMITES Y DOSSIER (Apuntando a renmcycf_solicitudes)
+        // 3. CRM TRÁMITES Y DOSSIER
         // ==========================================
         async function cargarSolicitudes() {
             const tbody = document.getElementById('crm-body');
@@ -529,7 +612,7 @@
             const containerFotos = document.getElementById('dos-imagenes');
             containerFotos.innerHTML = '';
             
-            // CORRECCIÓN FOTOS: Agregada Foto Perfil, arreglados los nombres y puesta altura fija (h-40) para PDF
+            // FOTOS CON ALTURA FIJA PARA VISUALIZAR Y EXPORTAR EN PDF
             const urls = [item.foto_perfil_url, item.dni_frente_url, item.dni_dorso_url, item.diploma_url];
             const titulos = ['Foto de Perfil', 'DNI Frente', 'DNI Dorso', 'Título / Diploma'];
             
@@ -598,10 +681,7 @@
                     if (error) throw error;
                 }
                 
-                cerrarExpediente(); 
-                cargarSolicitudes(); 
-                cargarPadron();
-                actualizarDashboard(); 
+                cerrarExpediente(); cargarSolicitudes(); cargarPadron(); actualizarDashboard(); 
                 alert("¡Expediente aprobado y matriculado exitosamente!");
             } catch (err) { alert("Error al aprobar: " + err.message); } 
             finally { btn.innerHTML = originalHTML; btn.disabled = false; lucide.createIcons(); }
@@ -617,11 +697,8 @@
                 let query = db.from('renmcycf_padron').select('*').order('id', { ascending: false }).limit(100);
                 
                 if (filtro) {
-                    if (!isNaN(filtro)) {
-                        query = query.or(`dni.eq.${filtro},matricula_oficial.ilike.%${filtro}%`);
-                    } else {
-                        query = query.or(`nombres.ilike.%${filtro}%,apellidos.ilike.%${filtro}%,matricula_oficial.ilike.%${filtro}%`);
-                    }
+                    if (!isNaN(filtro)) { query = query.or(`dni.eq.${filtro},matricula_oficial.ilike.%${filtro}%`); } 
+                    else { query = query.or(`nombres.ilike.%${filtro}%,apellidos.ilike.%${filtro}%,matricula_oficial.ilike.%${filtro}%`); }
                 }
                 
                 const { data, error } = await query;
@@ -702,19 +779,12 @@
         // 5. CAMPUS VIRTUAL
         // ==========================================
         async function cargarCursosPanel() {
-            const tbody = document.getElementById('campus-body');
-            tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center">Cargando...</td></tr>';
+            const tbody = document.getElementById('campus-body'); tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center">Cargando...</td></tr>';
             try {
                 const { data, error } = await db.from('renmcycf_cursos').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
                 if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-slate-400">No hay cursos.</td></tr>'; return; }
-                
-                tbody.innerHTML = data.map(c => `
-                <tr class="border-b border-white/5 hover:bg-white/5">
-                    <td class="p-3"><div class="flex items-center gap-3"><img src="${c.portada_url || 'https://via.placeholder.com/150x80/0f172a/3b82f6?text=CURSO'}" class="w-16 h-10 rounded object-cover border border-white/10"><div><span class="text-white font-bold block">${c.titulo}</span><span class="text-[10px] text-slate-400 truncate block max-w-[200px]">${c.descripcion || 'Sin descripción'}</span></div></div></td>
-                    <td class="p-3"><span class="bg-blue-900/30 text-blue-400 px-2 py-1 rounded text-[10px] font-bold uppercase">${c.categoria_requerida}</span></td>
-                    <td class="p-3 text-right"><div class="flex justify-end gap-1 items-center"><button class="bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded hover:bg-emerald-500/40 text-[10px] font-bold uppercase tracking-wider transition-colors" onclick="abrirModalClases('${c.id}', '${c.titulo.replace(/'/g, "\\'")}')"><i data-lucide="folder-open" class="w-3 h-3 inline mr-1"></i> Contenido</button><button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40 transition-colors" onclick="eliminarCurso('${c.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td>
-                </tr>`).join('');
+                tbody.innerHTML = data.map(c => `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3"><div class="flex items-center gap-3"><img src="${c.portada_url || 'https://via.placeholder.com/150x80/0f172a/3b82f6?text=CURSO'}" class="w-16 h-10 rounded object-cover border border-white/10"><div><span class="text-white font-bold block">${c.titulo}</span><span class="text-[10px] text-slate-400 truncate block max-w-[200px]">${c.descripcion || 'Sin descripción'}</span></div></div></td><td class="p-3"><span class="bg-blue-900/30 text-blue-400 px-2 py-1 rounded text-[10px] font-bold uppercase">${c.categoria_requerida}</span></td><td class="p-3 text-right"><div class="flex justify-end gap-1 items-center"><button class="bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded hover:bg-emerald-500/40 text-[10px] font-bold uppercase tracking-wider transition-colors" onclick="abrirModalClases('${c.id}', '${c.titulo.replace(/'/g, "\\'")}')"><i data-lucide="folder-open" class="w-3 h-3 inline mr-1"></i> Contenido</button><button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40 transition-colors" onclick="eliminarCurso('${c.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`).join('');
                 lucide.createIcons();
             } catch (err) { tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
         }
@@ -817,7 +887,7 @@
         async function auditarTesis(id, estado) { if(!confirm(`¿Marcar como ${estado}?`)) return; await db.from('renmcycf_publicaciones').update({ estado }).eq('id', id); cargarTesisPanel(); }
 
         // ==========================================
-        // 8. CARGA MASIVA Y CONFIG CORE
+        // 8. CARGA MASIVA 
         // ==========================================
         function procesarExcel() {
             const file = document.getElementById('input-excel').files[0]; if (!file) return;
@@ -839,19 +909,134 @@
             } catch (err) { alert("Error: " + err.message); }
         }
 
+        // ==========================================
+        // 9. CONFIGURACIÓN CORE Y REDES SOCIALES
+        // ==========================================
         async function cargarConfiguracionForm() {
-            const { data } = await db.from('renmcycf_config').select('*').eq('id', 1).maybeSingle();
-            if (data) { document.getElementById('conf-arancel-a1').value = data.arancel_a1 || ''; document.getElementById('conf-arancel-a2').value = data.arancel_a2 || ''; document.getElementById('conf-arancel-a3').value = data.arancel_a3 || ''; document.getElementById('conf-mp-link').value = data.mp_link || ''; }
+            try {
+                const { data } = await db.from('renmcycf_config').select('*').eq('id', 1).maybeSingle();
+                if (data) { 
+                    document.getElementById('conf-arancel-a1').value = data.arancel_a1 || ''; 
+                    document.getElementById('conf-arancel-a2').value = data.arancel_a2 || ''; 
+                    document.getElementById('conf-arancel-a3').value = data.arancel_a3 || ''; 
+                    document.getElementById('conf-mp-link').value = data.mp_link || ''; 
+                    document.getElementById('conf-whatsapp').value = data.whatsapp || ''; 
+                    document.getElementById('conf-email').value = data.email || ''; 
+                    document.getElementById('conf-facebook').value = data.facebook || ''; 
+                    document.getElementById('conf-instagram').value = data.instagram || ''; 
+                    document.getElementById('conf-twitter').value = data.twitter || ''; 
+                    document.getElementById('conf-linkedin').value = data.linkedin || ''; 
+                    
+                    if(data.hero_image_url) { document.getElementById('preview-hero').src = data.hero_image_url; document.getElementById('preview-hero').style.display = 'block'; }
+                    if(data.logo_url) { document.getElementById('preview-logo').src = data.logo_url; document.getElementById('preview-logo').style.display = 'block'; }
+                }
+            } catch (err) { console.error("Error cargando config:", err); }
         }
-        async function guardarConfiguracion(e) { e.preventDefault(); try { await db.from('renmcycf_config').update({ arancel_a1: document.getElementById('conf-arancel-a1').value, arancel_a2: document.getElementById('conf-arancel-a2').value, arancel_a3: document.getElementById('conf-arancel-a3').value, mp_link: document.getElementById('conf-mp-link').value }).eq('id', 1); alert("✅ Configuración actualizada."); } catch (err) { alert("Error: " + err.message); } }
-        async function cargarContenidoForm() {
-            const { data } = await db.from('renmcycf_contenido').select('clave, valor');
-            if (data) { const map = { 'hero_title':'cont-hero-title','hero_subtitle':'cont-hero-subtitle' }; data.forEach(item => { const id = map[item.clave]; if (id && document.getElementById(id)) document.getElementById(id).value = item.valor || ''; }); }
+
+        async function guardarConfiguracion(e) { 
+            e.preventDefault(); 
+            const btn = e.target.querySelector('button[type="submit"]'); const orig = btn.innerHTML; btn.innerHTML = 'GUARDANDO...'; btn.disabled = true;
+            try { 
+                await db.from('renmcycf_config').update({ 
+                    arancel_a1: document.getElementById('conf-arancel-a1').value, 
+                    arancel_a2: document.getElementById('conf-arancel-a2').value, 
+                    arancel_a3: document.getElementById('conf-arancel-a3').value, 
+                    mp_link: document.getElementById('conf-mp-link').value,
+                    whatsapp: document.getElementById('conf-whatsapp').value,
+                    email: document.getElementById('conf-email').value,
+                    facebook: document.getElementById('conf-facebook').value,
+                    instagram: document.getElementById('conf-instagram').value,
+                    twitter: document.getElementById('conf-twitter').value,
+                    linkedin: document.getElementById('conf-linkedin').value
+                }).eq('id', 1); 
+                alert("✅ Configuración actualizada."); 
+            } catch (err) { alert("Error: " + err.message); }
+            finally { btn.innerHTML = orig; btn.disabled = false; }
         }
-        async function guardarContenido(e) { e.preventDefault(); const payload = [{ clave: 'hero_title', valor: document.getElementById('cont-hero-title').value, tipo: 'texto' }, { clave: 'hero_subtitle', valor: document.getElementById('cont-hero-subtitle').value, tipo: 'texto' }]; try { await db.from('renmcycf_contenido').upsert(payload, { onConflict: 'clave' }); alert("✅ Contenido actualizado."); } catch (err) { alert("Error: " + err.message); } }
+
+        async function previewYGuardarImagen(input, previewId, key) {
+            const file = input.files[0]; if (!file) return;
+            try {
+                const fileName = `${key}_${Date.now()}.${file.name.split('.').pop()}`;
+                await db.storage.from('renmcycf-media').upload(fileName, file, { upsert: true });
+                const url = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
+                document.getElementById(previewId).src = url; document.getElementById(previewId).style.display = 'block';
+                const payload = {}; payload[`${key}_url`] = url;
+                await db.from('renmcycf_config').update(payload).eq('id', 1);
+                alert(`✅ Imagen actualizada.`);
+            } catch (err) { alert("Error: " + err.message); }
+        }
 
         // ==========================================
-        // DISEÑO CREDENCIAL (Las variables están arriba)
+        // 10. CONTENIDOS DEL SITIO (TEXTOS)
+        // ==========================================
+        async function cargarContenidoForm() {
+            try {
+                const { data } = await db.from('renmcycf_contenido').select('clave, valor');
+                if (!data) return;
+                const map = { 
+                    'hero_badge_text':'cont-hero-badge-text','hero_title':'cont-hero-title','hero_subtitle':'cont-hero-subtitle',
+                    'hero_cta_primary':'cont-hero-cta-primary','hero_cta_secondary':'cont-hero-cta-secondary',
+                    'urgencia_titulo':'cont-urgencia-titulo','urgencia_texto':'cont-urgencia-texto',
+                    'cat_a1_desc':'cont-cat-a1-desc','cat_a2_desc':'cont-cat-a2-desc','cat_a3_desc':'cont-cat-a3-desc',
+                    'footer_texto':'cont-footer-texto' 
+                };
+                data.forEach(item => { const id = map[item.clave]; if (id && document.getElementById(id)) document.getElementById(id).value = item.valor || ''; });
+            } catch (err) { console.error("Error:", err); }
+        }
+
+        async function guardarContenido(e) { 
+            e.preventDefault(); 
+            const btn = e.target.querySelector('button[type="submit"]'); const orig = btn.innerHTML; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline"></i> GUARDANDO...'; btn.disabled = true;
+            lucide.createIcons();
+            
+            const map = { 
+                'hero_badge_text':'cont-hero-badge-text','hero_title':'cont-hero-title','hero_subtitle':'cont-hero-subtitle',
+                'hero_cta_primary':'cont-hero-cta-primary','hero_cta_secondary':'cont-hero-cta-secondary',
+                'urgencia_titulo':'cont-urgencia-titulo','urgencia_texto':'cont-urgencia-texto',
+                'cat_a1_desc':'cont-cat-a1-desc','cat_a2_desc':'cont-cat-a2-desc','cat_a3_desc':'cont-cat-a3-desc',
+                'footer_texto':'cont-footer-texto' 
+            };
+            const payload = Object.keys(map).map(k => ({ clave: k, valor: document.getElementById(map[k]).value, tipo: 'texto' }));
+            
+            try { 
+                await db.from('renmcycf_contenido').upsert(payload, { onConflict: 'clave' }); 
+                alert("✅ Contenido actualizado."); 
+            } catch (err) { alert("Error: " + err.message); } 
+            finally { btn.innerHTML = orig; btn.disabled = false; lucide.createIcons(); }
+        }
+
+        // ==========================================
+        // 11. GESTIÓN DE USUARIOS
+        // ==========================================
+        async function cargarUsuarios() {
+            const tbody = document.getElementById('usuarios-body');
+            tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center">Cargando...</td></tr>';
+            try {
+                const { data } = await db.from('renmcycf_roles').select('*');
+                if(!data || data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-500">Sin usuarios.</td></tr>'; return; }
+                tbody.innerHTML = data.map(u => `
+                <tr class="border-b border-white/5 hover:bg-white/5">
+                    <td class="p-3 text-xs text-slate-300">${u.email||'N/D'}<br><span class="text-[10px] text-slate-500">${u.nombres||''} ${u.apellidos||''}</span></td>
+                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase bg-blue-900/30 text-blue-400">${u.rol}</span></td>
+                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${u.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">${u.activo?'ACTIVO':'INACTIVO'}</span></td>
+                    <td class="p-3 text-right"><button onclick="toggleEstadoUsuario('${u.id}',${!u.activo})" class="text-[10px] font-bold border border-white/10 px-2 py-1 rounded hover:bg-white/5 transition-colors">${u.activo?'SUSPENDER':'ACTIVAR'}</button></td>
+                </tr>`).join('');
+            } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="text-red-400 p-3">Error: ${err.message}</td></tr>`; }
+        }
+
+        async function toggleEstadoUsuario(id, estado) { 
+            await db.from('renmcycf_roles').update({ activo: estado }).eq('id', id); 
+            cargarUsuarios(); 
+        }
+
+        async function crearUsuario(e) { 
+            e.preventDefault(); 
+            alert("Para crear usuarios con contraseña de forma segura, te recomendamos hacerlo desde el panel de Authentication en Supabase y luego asignarle el rol aquí. La función de creación directa está bloqueada por políticas de seguridad de la base de datos."); 
+        }
+
+        // ==========================================
+        // 12. DISEÑO CREDENCIAL (MÓDULO GRÁFICO)
         // ==========================================
         const defaultStyle = {
             foto: { top: 325, left: 185, width: 230, height: 230, align: 'center', lado: 'frente' },
@@ -931,7 +1116,6 @@
                     currentCredStyle = { ...defaultStyle, ...savedStyle };
                 } catch(e) {} 
             }
-            
             switchEditorTab('frente');
         }
 
