@@ -189,12 +189,6 @@
                             <button onclick="switchSection('seccion-inscripcion')" class="bg-forenseGold text-forenseNavy font-black uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl shadow-lg hover:scale-105 transition-all text-center">Comenzar Inscripción</button>
                             <button onclick="switchSection('seccion-verificacion')" class="bg-white/15 backdrop-blur-sm text-white border border-white/25 font-bold uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl hover:bg-white/25 transition-all text-center">Verificar Profesional</button>
                         </div>
-                        <div class="w-full">
-                            <!-- REDIRECCIÓN AL PANEL -->
-                            <a href="panel-renmcycf.html" class="inline-flex bg-amber-600 text-white font-black uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl shadow-lg hover:bg-amber-700 transition-all items-center justify-center gap-2 w-full cursor-pointer">
-                                <i data-lucide="shield-alert" class="w-4 h-4"></i> Acceso Exclusivo / Admin
-                            </a>
-                        </div>
                     </div>
 
                     <div class="flex justify-center gap-6 mt-12 pt-8 border-t border-white/10">
@@ -206,21 +200,14 @@
                 </div>
             </header>
 
-            <!-- Carrusel Institucional Preparado (Aliados) -->
-            <section class="py-12 bg-slate-900 border-b border-slate-800 overflow-hidden">
+            <!-- Carrusel Institucional Dinámico (Oculto por defecto hasta que lleguen aliados de la BD) -->
+            <section id="carrusel-institucional" class="py-12 bg-slate-900 border-b border-slate-800 overflow-hidden hidden">
                 <div class="max-w-7xl mx-auto px-4 mb-6 text-center">
                     <h3 class="text-xs font-bold text-forenseGold uppercase tracking-[0.25em]">Instituciones y Universidades Aliadas</h3>
                 </div>
                 <div class="relative w-full overflow-hidden">
-                    <div class="animate-marquee flex gap-12 items-center text-slate-400 font-bold uppercase tracking-wider text-sm">
-                        <div class="flex items-center gap-2 bg-slate-800/80 px-6 py-3 rounded-xl border border-slate-700 shrink-0"><i data-lucide="award" class="w-5 h-5 text-forenseGold"></i><span>Facultad de Criminalística A-1</span></div>
-                        <div class="flex items-center gap-2 bg-slate-800/80 px-6 py-3 rounded-xl border border-slate-700 shrink-0"><i data-lucide="shield" class="w-5 h-5 text-forenseGold"></i><span>Colegio de Peritos Forenses</span></div>
-                        <div class="flex items-center gap-2 bg-slate-800/80 px-6 py-3 rounded-xl border border-slate-700 shrink-0"><i data-lucide="cpu" class="w-5 h-5 text-forenseGold"></i><span>Asociación de Ciencia Tecnológica</span></div>
-                        <div class="flex items-center gap-2 bg-slate-800/80 px-6 py-3 rounded-xl border border-slate-700 shrink-0"><i data-lucide="book" class="w-5 h-5 text-forenseGold"></i><span>Instituto Superior de Investigaciones</span></div>
-                        <div class="flex items-center gap-2 bg-slate-800/80 px-6 py-3 rounded-xl border border-slate-700 shrink-0"><i data-lucide="award" class="w-5 h-5 text-forenseGold"></i><span>Facultad de Criminalística A-1</span></div>
-                        <div class="flex items-center gap-2 bg-slate-800/80 px-6 py-3 rounded-xl border border-slate-700 shrink-0"><i data-lucide="shield" class="w-5 h-5 text-forenseGold"></i><span>Colegio de Peritos Forenses</span></div>
-                        <div class="flex items-center gap-2 bg-slate-800/80 px-6 py-3 rounded-xl border border-slate-700 shrink-0"><i data-lucide="cpu" class="w-5 h-5 text-forenseGold"></i><span>Asociación de Ciencia Tecnológica</span></div>
-                        <div class="flex items-center gap-2 bg-slate-800/80 px-6 py-3 rounded-xl border border-slate-700 shrink-0"><i data-lucide="book" class="w-5 h-5 text-forenseGold"></i><span>Instituto Superior de Investigaciones</span></div>
+                    <div id="aliados-marquee" class="animate-marquee flex gap-12 items-center text-slate-400 font-bold uppercase tracking-wider text-sm">
+                        <!-- Se inyecta desde Supabase -->
                     </div>
                 </div>
             </section>
@@ -403,7 +390,7 @@
             </div>
         </section>
 
-        <!-- 8. LEGAJO DIGITAL (Ex Wallet / Portafolio) -->
+        <!-- 8. LEGAJO DIGITAL -->
         <section id="seccion-portafolio" class="page-section py-16 md:py-24 bg-slate-100 min-h-[70vh]">
             <div class="max-w-4xl mx-auto px-4 text-center">
                 <i data-lucide="folder-check" class="w-20 h-20 text-forenseGold mx-auto mb-6"></i>
@@ -434,8 +421,6 @@
                     </div>
 
                     <form id="form-inscripcion" onsubmit="enviarInscripcion(event)">
-                        <!-- Semilla Multi-Tenant Oculta -->
-                        <input type="hidden" name="tenant_id" value="renmcycf">
                         
                         <!-- PASO 1: Datos Personales -->
                         <div id="step-1" class="form-step active space-y-6">
@@ -444,10 +429,9 @@
                                 <div><label class="form-label">Nombres Completos</label><input type="text" id="ins-nombres" required class="form-input"></div>
                                 <div><label class="form-label">Apellidos Completos</label><input type="text" id="ins-apellidos" required class="form-input"></div>
                                 <div><label class="form-label">DNI / Documento</label><input type="number" id="ins-dni" required class="form-input font-mono"></div>
-                                <!-- INYECCIÓN CORREGIDA: Año de Nacimiento -->
                                 <div><label class="form-label">Año de Nac. (Ej: 1985)</label><input type="number" id="ins-ano-nac" min="1930" max="2010" required class="form-input font-mono" placeholder="1985"></div>
                                 <div><label class="form-label">Correo Electrónico</label><input type="email" id="ins-email" required class="form-input"></div>
-                                <div><label class="form-label">Teléfono / WhatsApp</label><input type="number" id="ins-tel" required class="form-input font-mono" placeholder="Ej: 549351..."></div>
+                                <div><label class="form-label">Teléfono / WhatsApp</label><input type="tel" id="ins-tel" required class="form-input font-mono" placeholder="Ej: 549351..."></div>
                                 <div class="md:col-span-2"><label class="form-label">Provincia / Ciudad Laboral</label><input type="text" id="ins-prov" required class="form-input" placeholder="Ej: Córdoba Capital"></div>
                             </div>
                             <div class="text-right pt-4"><button type="button" onclick="siguientePaso(2)" class="bg-forenseNavy text-white px-8 py-3 rounded-xl font-bold uppercase text-sm shadow hover:bg-slate-800 transition">Siguiente Paso &rarr;</button></div>
@@ -472,14 +456,14 @@
                             </div>
                             <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
                                 <label class="form-label text-blue-900">Especialidades Adicionales (Opcional)</label>
-                                <p class="text-[10px] text-blue-700 mb-2">Escriba hasta 5 especialidades separadas por coma.</p>
-                                <input type="text" id="ins-especialidades" class="form-input" placeholder="Ej: Balística, Papiloscopía, Informática Forense">
+                                <p class="text-[10px] text-blue-700 mb-2">Escriba hasta 5 especialidades separadas por coma. Ej: Balística, Papiloscopía, Informática Forense</p>
+                                <input type="text" id="ins-especialidades" class="form-input" placeholder="Especialidad 1, Especialidad 2...">
                             </div>
                             <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 flex items-start gap-3">
                                 <input type="checkbox" id="ins-directorio" class="mt-1 w-5 h-5 rounded text-forenseGold focus:ring-forenseGold border-amber-300">
                                 <div>
                                     <label for="ins-directorio" class="font-bold text-sm text-amber-900 cursor-pointer">Deseo figurar en el Directorio Público (Mapa Nacional)</label>
-                                    <p class="text-xs text-amber-700 mt-1">Autorizo que mi nombre, categoría, provincia y especialidades sean públicas para ser contactado por abogados, empresas o particulares.</p>
+                                    <p class="text-xs text-amber-700 mt-1">Al marcar esta casilla, autorizo que mi nombre, categoría, provincia y especialidades sean públicas para ser contactado por abogados o empresas.</p>
                                 </div>
                             </div>
                             <div class="flex justify-between pt-4">
@@ -561,15 +545,15 @@
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co'; 
         const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE'; 
         const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
-        const TENANT_ID = 'renmcycf';
 
         let configGlobal = {};
         let mapInstance = null;
 
         window.addEventListener('DOMContentLoaded', async () => {
-            await cargarConfiguracionPublica();
-            cargarBibliotecaPublica();
-            initMap();
+            try { await cargarConfiguracionPublica(); } catch(e) { console.warn(e); }
+            try { await cargarAliadosPublicos(); } catch(e) { console.warn(e); }
+            try { cargarBibliotecaPublica(); } catch(e) { console.warn(e); }
+            try { initMap(); } catch(e) { console.warn(e); }
         });
 
         // ==========================================
@@ -595,6 +579,26 @@
                     if (conf.hero_image_url) document.getElementById('dyn-hero-bg').src = conf.hero_image_url;
                 }
             } catch (err) { console.error("Error al cargar config:", err); }
+        }
+
+        async function cargarAliadosPublicos() {
+            try {
+                const { data, error } = await db.from('renmcycf_aliados').select('*').eq('activo', true);
+                const seccion = document.getElementById('carrusel-institucional');
+                const marquesina = document.getElementById('aliados-marquee');
+                
+                if (data && data.length > 0) {
+                    let html = '';
+                    // Duplicar para efecto infinito fluido
+                    [...data, ...data].forEach(a => {
+                        html += `<div class="flex items-center gap-3 bg-slate-800/80 px-6 py-3 rounded-xl border border-slate-700 shrink-0"><img src="${a.logo_url}" class="w-8 h-8 object-contain bg-white rounded-full p-0.5"><span>${a.nombre}</span></div>`;
+                    });
+                    marquesina.innerHTML = html;
+                    seccion.classList.remove('hidden');
+                } else {
+                    seccion.classList.add('hidden');
+                }
+            } catch (err) { console.error("Error aliados:", err); }
         }
 
         // ==========================================
@@ -628,7 +632,7 @@
         }
 
         // ==========================================
-        // 4. VERIFICACIÓN PÚBLICA
+        // 4. VERIFICACIÓN PÚBLICA (LÓGICA PURA)
         // ==========================================
         async function buscarProfesional() {
             const query = document.getElementById('search-input').value.trim();
@@ -642,7 +646,7 @@
             resDiv.classList.add('hidden'); errDiv.classList.add('hidden');
 
             try {
-                let q = db.from('renmcycf_padron').select('*').eq('estado_legal', 'ACTIVO').eq('tenant_id', TENANT_ID);
+                let q = db.from('renmcycf_padron').select('*').eq('estado_legal', 'ACTIVO');
                 if (!isNaN(query)) { q = q.or(`dni.eq.${query},matricula_oficial.ilike.%${query}%`); } 
                 else { q = q.eq('matricula_oficial', query); }
                 
@@ -660,12 +664,14 @@
 
                     const espContainer = document.getElementById('res-especialidades');
                     espContainer.innerHTML = '';
-                    if (data.especialidades) {
-                        const arr = typeof data.especialidades === 'string' ? JSON.parse(data.especialidades) : data.especialidades;
-                        if(arr.length > 0) {
-                            arr.forEach(esp => { espContainer.innerHTML += `<span class="bg-white/10 text-forenseGold px-2 py-1 rounded text-[10px] uppercase font-bold border border-white/20">${esp}</span>`; });
-                            document.getElementById('res-especialidades-container').style.display = 'block';
-                        } else { document.getElementById('res-especialidades-container').style.display = 'none'; }
+                    if (data.especialidades && data.especialidades !== 'null') {
+                        try {
+                            const arr = typeof data.especialidades === 'string' ? JSON.parse(data.especialidades) : data.especialidades;
+                            if(arr.length > 0) {
+                                arr.forEach(esp => { espContainer.innerHTML += `<span class="bg-white/10 text-forenseGold px-2 py-1 rounded text-[10px] uppercase font-bold border border-white/20">${esp}</span>`; });
+                                document.getElementById('res-especialidades-container').style.display = 'block';
+                            } else { document.getElementById('res-especialidades-container').style.display = 'none'; }
+                        } catch(e) { document.getElementById('res-especialidades-container').style.display = 'none'; }
                     } else { document.getElementById('res-especialidades-container').style.display = 'none'; }
                     
                     resDiv.classList.remove('hidden');
@@ -675,7 +681,7 @@
         }
 
         // ==========================================
-        // 5. SEGUIMIENTO DE TRÁMITE (TRACKING)
+        // 5. SEGUIMIENTO DE TRÁMITE (TRACKING PURO)
         // ==========================================
         async function buscarTracking() {
             const dni = document.getElementById('track-dni').value.trim();
@@ -685,7 +691,7 @@
             if (!dni) return;
             
             try {
-                const { data: solicitud, error: errSol } = await db.from('renmcycf_solicitudes').select('*').eq('dni', dni).eq('tenant_id', TENANT_ID).order('created_at', { ascending: false }).limit(1).maybeSingle();
+                const { data: solicitud, error: errSol } = await db.from('renmcycf_solicitudes').select('*').eq('dni', dni).order('created_at', { ascending: false }).limit(1).maybeSingle();
                     
                 if (!errSol && solicitud) {
                     let html = '';
@@ -710,6 +716,13 @@
                                 <button onclick="subirCorreccion('${solicitud.id}')" class="w-full sm:w-auto whitespace-nowrap bg-red-600 text-white px-6 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider hover:bg-red-700 transition shadow">Subir Corrección</button>
                             </div>
                         </div>`;
+                    } else if (solicitud.estado === 'RECHAZADO') {
+                        html = `
+                        <div class="bg-red-50 border border-red-300 rounded-xl p-6 shadow-sm relative overflow-hidden">
+                            <div class="absolute right-0 top-0 bottom-0 w-2 bg-red-500"></div>
+                            <p class="text-red-800 font-black text-sm mb-4 uppercase tracking-widest flex items-center gap-2"><i data-lucide="x-circle" class="w-5 h-5"></i> TRÁMITE DENEGADO</p>
+                            <p class="text-xs text-red-700 mb-2 leading-relaxed">Su solicitud no cumple con los requisitos institucionales para la matriculación.</p>
+                        </div>`;
                     }
                     if(html) {
                         resultDiv.innerHTML = html;
@@ -719,8 +732,7 @@
                     }
                 }
                 
-                // Si no está en solicitudes, buscar en Padrón Activo
-                const { data: padron, error: errPad } = await db.from('renmcycf_padron').select('*').eq('dni', dni).eq('tenant_id', TENANT_ID).limit(1).maybeSingle();
+                const { data: padron, error: errPad } = await db.from('renmcycf_padron').select('*').eq('dni', dni).limit(1).maybeSingle();
                     
                 if (!errPad && padron) {
                     resultDiv.innerHTML = `
@@ -751,7 +763,8 @@
                 if (upErr) throw upErr;
                 const url = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${fileName}`;
                 
-                const { error: updErr } = await db.from('renmcycf_solicitudes').update({ estado: 'PENDIENTE', diploma_url: url }).eq('id', solicitudId); // Usamos diploma_url como receptáculo genérico de correcciones en esta PoC
+                // Usamos correccion_url que agregamos en el panel
+                const { error: updErr } = await db.from('renmcycf_solicitudes').update({ estado: 'PENDIENTE', correccion_url: url }).eq('id', solicitudId);
                 if (updErr) throw updErr;
                 
                 alert("✅ Corrección subida exitosamente. Su expediente ha vuelto a la Mesa de Entrada para ser reevaluado.");
@@ -760,7 +773,7 @@
         }
 
         // ==========================================
-        // 6. FORMULARIO WIZARD (3 PASOS) E INTELIGENCIA
+        // 6. FORMULARIO WIZARD E INTELIGENCIA
         // ==========================================
         function detectarCategoriaInteligente() {
             const prof = document.getElementById('ins-profesion').value.toLowerCase();
@@ -768,7 +781,7 @@
             
             if (prof.includes('licenciado') || prof.includes('grado') || prof.includes('médico') || prof.includes('doctor')) {
                 select.value = 'A1';
-            } else if (prof.includes('técnico') || prof.includes('superior')) {
+            } else if (prof.includes('técnico') || prof.includes('superior') || prof.includes('tecnico')) {
                 select.value = 'A2';
             } else if (prof.includes('auxiliar') || prof.includes('diplomado') || prof.includes('perito')) {
                 select.value = 'A3';
@@ -783,7 +796,7 @@
                 const nombres = document.getElementById('ins-nombres').value;
                 const dni = document.getElementById('ins-dni').value;
                 const ano = document.getElementById('ins-ano-nac').value;
-                if (!nombres || !dni || !ano) return alert("Por favor, complete todos los campos obligatorios (Nombres, DNI, Año de Nacimiento) del Paso 1 antes de continuar.");
+                if (!nombres || !dni || !ano) return alert("Por favor, complete todos los campos obligatorios del Paso 1 antes de continuar.");
             }
             if (paso === 3) {
                 if (!document.getElementById('ins-categoria').value || !document.getElementById('ins-profesion').value) {
@@ -834,7 +847,7 @@
         }
 
         // ==========================================
-        // 7. ENVÍO DE INSCRIPCIÓN (EFECTO BLOCKCHAIN)
+        // 7. ENVÍO DE INSCRIPCIÓN (PURO - SIN TENANT)
         // ==========================================
         async function enviarInscripcion(e) {
             e.preventDefault();
@@ -846,8 +859,7 @@
             const btn = document.getElementById('btn-submit-tramite');
             btn.disabled = true;
             
-            // Efecto Visual Blockchain (3 Segundos)
-            const mensajes = ['<i data-lucide="upload-cloud" class="w-5 h-5 animate-bounce inline mr-2"></i> Subiendo evidencia encriptada...', '<i data-lucide="cpu" class="w-5 h-5 animate-pulse text-forenseGold inline mr-2"></i> Generando hash de seguridad...', '<i data-lucide="shield-check" class="w-5 h-5 text-emerald-400 inline mr-2"></i> Expediente Sellado'];
+            const mensajes = ['<i data-lucide="upload-cloud" class="w-5 h-5 animate-bounce inline mr-2"></i> Subiendo evidencia...', '<i data-lucide="cpu" class="w-5 h-5 animate-pulse text-forenseGold inline mr-2"></i> Generando hash de seguridad...', '<i data-lucide="shield-check" class="w-5 h-5 text-emerald-400 inline mr-2"></i> Expediente Sellado'];
             for (const msg of mensajes) {
                 btn.innerHTML = msg;
                 lucide.createIcons();
@@ -869,9 +881,17 @@
                     return `${PROJECT_URL}/storage/v1/object/public/${bucket}/${fileName}`;
                 };
 
-                // Subida en paralelo
+                const uploadFotoPerfil = async () => {
+                    const file = document.getElementById('file-foto').files[0];
+                    if (!file) return null;
+                    const fileName = `${dni}_foto_${ts}.${file.name.split('.').pop()}`;
+                    const { error } = await db.storage.from('renmcycf-media').upload(fileName, file);
+                    if (error) throw error;
+                    return `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
+                };
+
                 const [urlFoto, urlFrente, urlDorso, urlDiploma, urlPago] = await Promise.all([
-                    uploadFile('file-foto', 'foto_perfil', 'renmcycf-media'),
+                    uploadFotoPerfil(),
                     uploadFile('file-dni-frente', 'dni_frente'),
                     uploadFile('file-dni-dorso', 'dni_dorso'),
                     uploadFile('file-diploma', 'diploma_1'),
@@ -882,11 +902,10 @@
                 const especialidades = espStr ? espStr.split(',').map(s => s.trim().toUpperCase()).filter(s => s) : [];
 
                 const payload = {
-                    tenant_id: TENANT_ID,
                     nombres: document.getElementById('ins-nombres').value.toUpperCase(),
                     apellidos: document.getElementById('ins-apellidos').value.toUpperCase(),
                     dni: dni,
-                    ano_nacimiento: document.getElementById('ins-ano-nac').value, // BUGS SOLUCIONADO
+                    ano_nacimiento: document.getElementById('ins-ano-nac').value,
                     email: document.getElementById('ins-email').value,
                     telefono: document.getElementById('ins-tel').value,
                     provincia_laboral: document.getElementById('ins-prov').value.toUpperCase(),
@@ -921,7 +940,7 @@
         }
 
         // ==========================================
-        // 8. MAPA (DIRECTORIO PÚBLICO NACIONAL)
+        // 8. MAPA (DIRECTORIO PÚBLICO)
         // ==========================================
         async function initMap() {
             if (mapInstance) return;
@@ -929,25 +948,23 @@
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(mapInstance);
             
             try {
-                // Buscamos peritos activos que aceptaron figurar en el mapa
                 const { data } = await db.from('renmcycf_padron')
                                        .select('nombres, apellidos, categoria, profesion, provincia_laboral, especialidades, telefono')
                                        .eq('estado_legal', 'ACTIVO')
-                                       .eq('tenant_id', TENANT_ID)
                                        .eq('figurar_directorio', true);
                 
                 if (data && data.length > 0) {
-                    // DEMOSTRACIÓN: Marcador Central (En prod usaríamos coordenadas por provincia)
                     const marker = L.marker([-34.6037, -58.3816]).addTo(mapInstance);
-                    
                     let popupHTML = `<div style="max-height:250px; overflow-y:auto; font-family:Inter,sans-serif; padding:6px; min-width: 220px;">`;
                     popupHTML += `<h4 style="color:#d4af37; font-weight:900; font-size:11px; margin-bottom:12px; border-bottom:1px solid #333; padding-bottom:6px; letter-spacing: 0.1em; text-align:center;">${data.length} PROFESIONALES DISPONIBLES</h4>`;
                     
                     data.forEach(p => {
                         let espBadges = '';
-                        if(p.especialidades) {
-                            const arr = typeof p.especialidades === 'string' ? JSON.parse(p.especialidades) : p.especialidades;
-                            arr.forEach(e => { espBadges += `<span style="background:#e2e8f0; color:#475569; padding:2px 4px; border-radius:3px; font-size:8px; display:inline-block; margin:2px 2px 0 0; font-weight:bold;">${e}</span>`; });
+                        if(p.especialidades && p.especialidades !== 'null') {
+                            try {
+                                const arr = typeof p.especialidades === 'string' ? JSON.parse(p.especialidades) : p.especialidades;
+                                arr.forEach(e => { espBadges += `<span style="background:#e2e8f0; color:#475569; padding:2px 4px; border-radius:3px; font-size:8px; display:inline-block; margin:2px 2px 0 0; font-weight:bold;">${e}</span>`; });
+                            } catch(e) {}
                         }
                         
                         popupHTML += `
@@ -970,14 +987,14 @@
         }
 
         // ==========================================
-        // 9. BIBLIOTECA / PORTAL CIENTÍFICO
+        // 9. PORTAL CIENTÍFICO (EX BIBLIOTECA VIRTUAL)
         // ==========================================
         async function cargarBibliotecaPublica() {
             const container = document.getElementById('contenedor-biblioteca-ordenada');
             if (!container) return;
 
             try {
-                const { data } = await db.from('renmcycf_biblioteca').select('*').eq('activo', true).eq('tenant_id', TENANT_ID);
+                const { data } = await db.from('renmcycf_biblioteca').select('*').eq('activo', true);
                 if (!data || data.length === 0) { container.innerHTML = '<p class="text-sm">Repositorio en actualización.</p>'; return; }
 
                 let html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">';
