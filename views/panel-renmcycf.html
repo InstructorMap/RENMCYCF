@@ -52,6 +52,9 @@
             .print\:hidden { display: none !important; }
             .print-container { width: 100%; padding: 0 !important; box-shadow: none !important; margin: 0 !important; }
         }
+        
+        .badge-aceptado { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-rechazado { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -99,6 +102,9 @@
                     <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">DNI</p><p class="font-black text-lg font-mono text-[#0a1128]" id="dos-dni">---</p></div>
                     <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">Profesión</p><p class="font-black text-lg text-[#0a1128]" id="dos-profesion">---</p></div>
                     <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">Categoría</p><span class="bg-[#0a1128] text-[#d4af37] px-3 py-1 rounded font-black text-lg" id="dos-cat">---</span></div>
+                    <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">Provincia/Ciudad Laboral</p><p class="font-black text-lg text-[#0a1128]" id="dos-provincia">---</p></div>
+                    <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">Directorio Público</p><span class="badge-aceptado px-2 py-1 rounded font-black text-sm" id="dos-directorio">OFF</span></div>
+                    <div class="col-span-2"><p class="text-xs text-slate-500 uppercase font-bold mb-1">Especialidades</p><div id="dos-especialidades" class="flex flex-wrap gap-2"></div></div>
                 </div>
                 <div>
                     <h3 class="text-lg font-black uppercase tracking-wider text-[#0a1128] mb-4 flex items-center gap-2 border-b-2 border-[#d4af37] pb-2"><i data-lucide="file-check" class="text-[#d4af37]"></i> Auditoría Documental</h3>
@@ -110,7 +116,10 @@
             <div class="bg-slate-100 p-6 rounded-b-2xl flex justify-between items-center print:hidden border-t border-slate-300">
                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest"><i data-lucide="shield-check" class="inline w-3 h-3 mb-0.5"></i> Control Interno</p>
                 <div class="flex gap-2">
-                    <button type="button" id="btn-aprobar-dossier" onclick="aprobarDesdeDossier()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-black text-sm uppercase flex items-center gap-2 transition-transform active:scale-95"><i data-lucide="check-circle" class="w-5 h-5"></i> APROBAR SOLICITUD</button>
+                    <button type="button" id="btn-visto-bueno" onclick="elevarAComite()" class="hidden bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-black text-sm uppercase flex items-center gap-2 transition-transform active:scale-95"><i data-lucide="arrow-up-circle" class="w-5 h-5"></i> VISTO BUENO (ELEVAR A COMITÉ)</button>
+                    <button type="button" id="btn-observar" onclick="observarSolicitud()" class="hidden bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-xl font-black text-sm uppercase flex items-center gap-2 transition-transform active:scale-95"><i data-lucide="message-square-warning" class="w-5 h-5"></i> OBSERVAR</button>
+                    <button type="button" id="btn-rechazar-comite" onclick="rechazarSolicitud()" class="hidden bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-black text-sm uppercase flex items-center gap-2 transition-transform active:scale-95"><i data-lucide="x-circle" class="w-5 h-5"></i> RECHAZAR</button>
+                    <button type="button" id="btn-aprobar-matricula" onclick="aprobarMatricula()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-black text-sm uppercase flex items-center gap-2 transition-transform active:scale-95"><i data-lucide="check-circle" class="w-5 h-5"></i> APROBAR MATRÍCULA</button>
                     <button type="button" onclick="window.print()" class="bg-[#0a1128] hover:bg-slate-800 text-[#d4af37] px-6 py-3 rounded-xl font-black text-sm uppercase flex items-center gap-2 transition-transform active:scale-95"><i data-lucide="printer" class="w-5 h-5"></i> Imprimir Expediente</button>
                 </div>
             </div>
@@ -159,7 +168,7 @@
                 </div>
                 <div class="grid grid-cols-2 gap-4"><div><label>Nombres</label><input type="text" id="edit-nombres" required></div><div><label>Apellidos</label><input type="text" id="edit-apellidos" required></div></div>
                 <div><label>Profesión</label><input type="text" id="edit-profesion"></div>
-                <div class="grid grid-cols-2 gap-4"><div><label>Categoría</label><select id="edit-categoria"><option value="A1">A.1</option><option value="A2">A.2</option><option value="A3">A.3</option></select></div><div><label>Estado</label><select id="edit-estado"><option value="ACTIVO">ACTIVO</option><option value="SUSPENDIDO">SUSPENDIDO</option><option value="REVOCADO">REVOCADO</option><option value="PENDIENTE">PENDIENTE</option></select></div></div>
+                <div class="grid grid-cols-2 gap-4"><div><label>Categoría</label><select id="edit-categoria"><option value="A1">A.1</option><option value="A2">A.2</option><option value="A3">A.3</option><option value="A4">A.4</option></select></div><div><label>Estado</label><select id="edit-estado"><option value="ACTIVO">ACTIVO</option><option value="SUSPENDIDO">SUSPENDIDO</option><option value="REVOCADO">REVOCADO</option><option value="PENDIENTE">PENDIENTE</option></select></div></div>
                 <div><label>Fecha Vencimiento</label><input type="date" id="edit-vencimiento"></div>
                 <button type="submit" class="w-full bg-yellow-600 text-black font-bold py-3 rounded-xl mt-4">GUARDAR CAMBIOS</button>
             </form>
@@ -177,6 +186,7 @@
             <div class="px-2 py-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-2">Gestión</div>
             <button onclick="showTab('dashboard')" id="nav-dashboard" class="sidebar-link active w-full"><i data-lucide="activity" class="w-4 h-4"></i> Dashboard</button>
             <button onclick="showTab('solicitudes')" id="nav-solicitudes" class="sidebar-link w-full"><i data-lucide="inbox" class="w-4 h-4"></i> Trámites (CRM)</button>
+            <button onclick="showTab('auditoria')" id="nav-auditoria" class="sidebar-link w-full"><i data-lucide="clipboard-check" class="w-4 h-4"></i> Auditoría Comité</button>
             <button onclick="showTab('padron')" id="nav-padron" class="sidebar-link w-full"><i data-lucide="database" class="w-4 h-4"></i> Padrón Oficial</button>
             
             <div id="menu-admin-section">
@@ -217,6 +227,21 @@
                     <div class="glass-card p-6"><p class="text-slate-400 text-xs font-bold uppercase">Arancel A1</p><h3 class="text-3xl font-black text-emerald-400 mt-2 font-mono" id="stat-arancel">$0</h3></div>
                     <div class="glass-card p-6 border-yellow-500/30"><p class="text-yellow-500/80 text-xs font-bold uppercase">Ingresos Proyectados</p><h3 class="text-3xl font-black text-yellow-400 mt-2 font-mono" id="stat-caja">$0</h3></div>
                 </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-card p-6">
+                        <h3 class="font-bold text-lg text-white mb-4">Evolución de Altas</h3>
+                        <canvas id="chart-evolucion"></canvas>
+                    </div>
+                    <div class="glass-card p-6">
+                        <h3 class="font-bold text-lg text-white mb-4">Distribución por Categorías</h3>
+                        <canvas id="chart-categorias"></canvas>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end">
+                    <button onclick="descargarReporteExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2"><i data-lucide="download" class="w-5 h-5"></i> DESCARGAR REPORTE EXCEL</button>
+                </div>
             </div>
 
             <!-- CRM SOLICITUDES -->
@@ -227,10 +252,19 @@
                 </div>
             </div>
 
+            <!-- AUDITORÍA COMITÉ -->
+            <div id="view-auditoria" class="tab-content space-y-6">
+                <div class="glass-card p-6">
+                    <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Auditoría Comité</h3><button onclick="cargarAuditoria()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
+                    <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Solicitante</th><th class="p-3">Categoría</th><th class="p-3">Documentos</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="auditoria-body"></tbody></table></div>
+                </div>
+            </div>
+
             <!-- PADRÓN OFICIAL -->
             <div id="view-padron" class="tab-content space-y-6">
                 <div class="flex justify-between items-center bg-black/20 p-4 rounded-xl border border-white/5">
                     <div class="relative w-full max-w-md"><i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i><input type="text" id="search-padron" placeholder="Buscar por DNI o Nombre..." class="w-full pl-9 bg-black/50" onkeyup="if(event.key==='Enter')buscarPadron()"></div>
+                    <button onclick="descargarReporteExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg flex items-center gap-2 ml-4"><i data-lucide="download" class="w-4 h-4"></i> EXCEL</button>
                 </div>
                 <div class="glass-card overflow-hidden">
                     <div class="overflow-x-auto">
@@ -259,7 +293,7 @@
                         <form id="form-curso" onsubmit="crearCurso(event)" class="space-y-4">
                             <div><label>Título</label><input type="text" id="camp-titulo" required></div>
                             <div><label>Descripción</label><textarea id="camp-desc" rows="3"></textarea></div>
-                            <div><label>Categoría Habilitada</label><select id="camp-cat"><option value="TODAS">Acceso Libre</option><option value="A1">Solo A.1</option><option value="A2">Solo A.2</option><option value="A3">Solo A.3</option></select></div>
+                            <div><label>Categoría Habilitada</label><select id="camp-cat"><option value="TODAS">Acceso Libre</option><option value="A1">Solo A.1</option><option value="A2">Solo A.2</option><option value="A3">Solo A.3</option><option value="A4">Solo A.4</option></select></div>
                             <div><label>Portada</label><input type="file" id="camp-portada" accept="image/*" class="text-slate-400"></div>
                             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">CREAR CURSO</button>
                         </form>
@@ -280,6 +314,7 @@
                             <div><label>Título</label><input type="text" id="bib-titulo" required></div>
                             <div><label>Autor</label><input type="text" id="bib-autor"></div>
                             <div><label>Tipo Acceso</label><select id="bib-acceso"><option value="GRATUITO">Público</option><option value="PREMIUM">Premium</option></select></div>
+                            <div><label>Portada (Opcional)</label><input type="file" id="bib-portada" accept="image/*" class="text-slate-400"></div>
                             <div><label>Archivo PDF</label><input type="file" id="bib-pdf" accept=".pdf" required class="text-slate-400"></div>
                             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">PUBLICAR</button>
                         </form>
@@ -342,19 +377,20 @@
                 </div>
             </div>
 
-            <!-- CONFIGURACIÓN CORE (RESTAURADA COMPLETA) -->
+            <!-- CONFIGURACIÓN CORE -->
             <div id="view-configuracion" class="tab-content space-y-6">
                 <div class="glass-card p-8 border-yellow-500/30">
                     <h3 class="text-white font-bold mb-6 border-b border-white/10 pb-2">Parámetros del Sistema</h3>
                     <form id="form-config" class="space-y-6" onsubmit="guardarConfiguracion(event)">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                             <div><label>Arancel A1 (ARS)</label><input type="number" id="conf-arancel-a1" required></div>
                             <div><label>Arancel A2 (ARS)</label><input type="number" id="conf-arancel-a2" required></div>
                             <div><label>Arancel A3 (ARS)</label><input type="number" id="conf-arancel-a3" required></div>
+                            <div><label>Arancel A4 (ARS)</label><input type="number" id="conf-arancel-a4" required></div>
                         </div>
                         <div><label>Enlace de Pago (Mercado Pago)</label><input type="url" id="conf-mp-link" placeholder="https://mpago.la/..."></div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div><label>WhatsApp</label><input type="text" id="conf-whatsapp"></div>
+                            <div><label>WhatsApp del Registro</label><input type="text" id="conf-whatsapp" placeholder="549XXXXXXXXXX"></div>
                             <div><label>Email de Contacto</label><input type="email" id="conf-email"></div>
                         </div>
                         <div>
@@ -390,7 +426,7 @@
                 </div>
             </div>
 
-            <!-- CONTENIDO DEL SITIO (RESTAURADO COMPLETO) -->
+            <!-- CONTENIDO DEL SITIO -->
             <div id="view-contenido" class="tab-content space-y-6">
                 <div class="glass-card p-8 border-blue-500/30">
                     <h3 class="text-white font-bold mb-6 border-b border-white/10 pb-2">Editar Contenido</h3>
@@ -407,6 +443,7 @@
                         <div><label>Descripción Categoría A1</label><textarea id="cont-cat-a1-desc" rows="3"></textarea></div>
                         <div><label>Descripción Categoría A2</label><textarea id="cont-cat-a2-desc" rows="3"></textarea></div>
                         <div><label>Descripción Categoría A3</label><textarea id="cont-cat-a3-desc" rows="3"></textarea></div>
+                        <div><label>Descripción Categoría A4</label><textarea id="cont-cat-a4-desc" rows="3"></textarea></div>
                         <div><label>Texto Footer</label><textarea id="cont-footer-texto" rows="2"></textarea></div>
                         <div class="flex justify-end pt-4">
                             <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-6 py-3 rounded-xl">ACTUALIZAR TEXTOS</button>
@@ -415,7 +452,7 @@
                 </div>
             </div>
             
-            <!-- USUARIOS Y ROLES (RESTAURADO COMPLETO) -->
+            <!-- USUARIOS Y ROLES -->
             <div id="view-usuarios" class="tab-content space-y-6">
                 <div class="glass-card p-8 border-emerald-500/30">
                     <h3 class="text-white font-bold mb-6"><i data-lucide="users" class="text-emerald-500 inline mr-2"></i> Gestión de Usuarios</h3>
@@ -458,6 +495,9 @@
         let datosExcel = [];
         let itemDossierActual = null;
         let bgFrenteUrl = ''; let bgDorsoUrl = ''; let rosetaUrl = ''; let currentEditorTab = 'frente';
+        let chartEvolucion = null;
+        let chartCategorias = null;
+        let whatsappRegistro = '';
 
         // ==========================================
         // 1. AUTENTICACIÓN Y ROLES
@@ -496,11 +536,21 @@
             document.getElementById('login-screen').style.display = 'none';
 
             cargarIdentidadDossier();
+            cargarWhatsappRegistro();
 
             if (rolData.rol !== 'superadmin') document.getElementById('menu-admin-section').style.display = 'none';
+            
+            // Mostrar auditoría solo para directores y superadmin
+            if (rolData.rol !== 'superadmin' && rolData.rol !== 'director' && rolData.rol !== 'titular') {
+                document.getElementById('nav-auditoria').style.display = 'none';
+            }
+            
             if (rolData.rol === 'asesor') { 
                 document.getElementById('nav-dashboard').style.display = 'none'; 
+                document.getElementById('nav-auditoria').style.display = 'none';
                 showTab('solicitudes'); 
+            } else if (rolData.rol === 'director' || rolData.rol === 'titular') {
+                showTab('auditoria');
             } else { 
                 actualizarDashboard(); 
                 showTab('dashboard'); 
@@ -537,6 +587,15 @@
             } catch (err) { console.error("Error cargando identidad:", err); }
         }
 
+        async function cargarWhatsappRegistro() {
+            try {
+                const { data } = await db.from('renmcycf_config').select('whatsapp').eq('id', 1).maybeSingle();
+                if (data && data.whatsapp) {
+                    whatsappRegistro = data.whatsapp;
+                }
+            } catch (err) { console.error("Error cargando WhatsApp:", err); }
+        }
+
         // ==========================================
         // 2. NAVEGACIÓN Y DASHBOARD
         // ==========================================
@@ -547,11 +606,12 @@
             document.getElementById('view-' + id).classList.add('active');
             document.getElementById('nav-' + id)?.classList.add('active');
             
-            const titles = { 'dashboard':'Dashboard Estadístico', 'solicitudes':'Bandeja de CRM', 'padron':'Padrón Nacional', 'campus':'Campus Virtual', 'biblioteca':'Biblioteca', 'tesis':'Auditoría de Tesis', 'masiva':'Inyección Masiva', 'diseno':'Calibrador de Credenciales', 'configuracion':'Configuración', 'contenido':'Textos del Sitio', 'usuarios':'Usuarios y Roles' };
+            const titles = { 'dashboard':'Dashboard Estadístico', 'solicitudes':'Bandeja de CRM', 'auditoria':'Auditoría Comité', 'padron':'Padrón Nacional', 'campus':'Campus Virtual', 'biblioteca':'Biblioteca', 'tesis':'Auditoría de Tesis', 'masiva':'Inyección Masiva', 'diseno':'Calibrador de Credenciales', 'configuracion':'Configuración', 'contenido':'Textos del Sitio', 'usuarios':'Usuarios y Roles' };
             document.getElementById('page-title').textContent = titles[id] || id;
             
             if(id === 'dashboard') actualizarDashboard();
             if(id === 'solicitudes') cargarSolicitudes();
+            if(id === 'auditoria') cargarAuditoria();
             if(id === 'padron') cargarPadron();
             if(id === 'campus') cargarCursosPanel();
             if(id === 'biblioteca') cargarBibliotecaPanel();
@@ -573,7 +633,118 @@
                 document.getElementById('stat-pendientes').innerText = pendientes || 0;
                 document.getElementById('stat-arancel').innerText = `$${new Intl.NumberFormat('es-AR').format(arancel)}`;
                 document.getElementById('stat-caja').innerText = `$${new Intl.NumberFormat('es-AR').format((activos || 0) * arancel)}`;
+                
+                actualizarGraficos();
             } catch (err) { console.error("Error Dashboard:", err); }
+        }
+
+        async function actualizarGraficos() {
+            try {
+                const { data: padron } = await db.from('renmcycf_padron').select('*').order('id', { ascending: false });
+                
+                if (padron && padron.length > 0) {
+                    // Distribución por categorías
+                    const categorias = {};
+                    padron.forEach(p => {
+                        const cat = p.categoria || 'A3';
+                        categorias[cat] = (categorias[cat] || 0) + 1;
+                    });
+                    
+                    // Evolución por año
+                    const anos = {};
+                    padron.forEach(p => {
+                        const ano = p.fecha_alta ? new Date(p.fecha_alta).getFullYear() : new Date().getFullYear();
+                        anos[ano] = (anos[ano] || 0) + 1;
+                    });
+                    
+                    const catLabels = Object.keys(categorias).sort();
+                    const catData = catLabels.map(label => categorias[label]);
+                    
+                    const anosLabels = Object.keys(anos).sort();
+                    const anosData = anosLabels.map(ano => anos[ano]);
+                    
+                    // Renderizar gráficos
+                    if (chartCategorias) chartCategorias.destroy();
+                    if (chartEvolucion) chartEvolucion.destroy();
+                    
+                    const ctxCat = document.getElementById('chart-categorias').getContext('2d');
+                    chartCategorias = new Chart(ctxCat, {
+                        type: 'doughnut',
+                        data: {
+                            labels: catLabels,
+                            datasets: [{
+                                data: catData,
+                                backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
+                            }]
+                        },
+                        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+                    });
+                    
+                    const ctxEvo = document.getElementById('chart-evolucion').getContext('2d');
+                    chartEvolucion = new Chart(ctxEvo, {
+                        type: 'line',
+                        data: {
+                            labels: anosLabels,
+                            datasets: [{
+                                label: 'Altas',
+                                data: anosData,
+                                borderColor: '#3b82f6',
+                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: { responsive: true, plugins: { legend: { display: false } } }
+                    });
+                }
+            } catch (err) { console.error("Error actualizando gráficos:", err); }
+        }
+
+        async function descargarReporteExcel() {
+            try {
+                const { data: padron } = await db.from('renmcycf_padron').select('*').eq('estado_legal', 'ACTIVO');
+                const { data: config } = await db.from('renmcycf_config').select('arancel_a1, arancel_a2, arancel_a3, arancel_a4').eq('id', 1).maybeSingle();
+                
+                const aranceles = {
+                    'A1': config?.arancel_a1 || 0,
+                    'A2': config?.arancel_a2 || 0,
+                    'A3': config?.arancel_a3 || 0,
+                    'A4': config?.arancel_a4 || 0
+                };
+                
+                const data = padron.map(p => ({
+                    'Matrícula': p.matricula_oficial || 'S/D',
+                    'Nombres': p.nombres || '',
+                    'Apellidos': p.apellidos || '',
+                    'DNI': p.dni || '',
+                    'Profesión': p.profesion || '',
+                    'Categoría': p.categoria || 'A3',
+                    'Arancel': aranceles[p.categoria] || 0,
+                    'Estado': p.estado_legal || 'ACTIVO',
+                    'Fecha Alta': p.fecha_alta ? new Date(p.fecha_alta).toLocaleDateString('es-AR') : 'S/D',
+                    'Vencimiento': p.fecha_vencimiento ? new Date(p.fecha_vencimiento).toLocaleDateString('es-AR') : 'S/D'
+                }));
+                
+                // Agregar total
+                const total = data.reduce((sum, row) => sum + row['Arancel'], 0);
+                data.push({
+                    'Matrícula': 'TOTAL',
+                    'Nombres': '',
+                    'Apellidos': '',
+                    'DNI': '',
+                    'Profesión': '',
+                    'Categoría': '',
+                    'Arancel': total,
+                    'Estado': '',
+                    'Fecha Alta': '',
+                    'Vencimiento': ''
+                });
+                
+                const ws = XLSX.utils.json_to_sheet(data);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Matriculados');
+                XLSX.writeFile(wb, 'reporte_matriculados.xlsx');
+            } catch (err) { console.error("Error exportando Excel:", err); }
         }
 
         // ==========================================
@@ -600,6 +771,27 @@
             } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">${err.message}</td></tr>`; }
         }
 
+        async function cargarAuditoria() {
+            const tbody = document.getElementById('auditoria-body');
+            tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center">Cargando...</td></tr>';
+            try {
+                const { data, error } = await db.from('renmcycf_solicitudes').select('*').eq('estado', 'EN AUDITORIA').order('id', { ascending: false });
+                if (error) throw error;
+                if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">Sin solicitudes en auditoría.</td></tr>'; return; }
+                
+                tbody.innerHTML = data.map(p => `
+                <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                    <td class="p-3"><div class="font-bold text-white">${p.nombres} ${p.apellidos}</div><div class="text-[10px] text-slate-400">DNI: ${p.dni}</div></td>
+                    <td class="p-3"><span class="px-2 py-1 bg-slate-800 rounded text-[10px] font-bold text-yellow-400">${p.categoria}</span></td>
+                    <td class="p-3 text-xs text-blue-400"><a href="${p.diploma_url}" target="_blank" class="hover:underline flex items-center gap-1"><i data-lucide="award" class="w-3 h-3"></i> Título</a></td>
+                    <td class="p-3 text-right">
+                        <button onclick='abrirExpediente(${JSON.stringify(p).replace(/'/g, "&#39;")})' class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors shadow-md flex items-center gap-1 ml-auto"><i data-lucide="folder-search" class="w-3 h-3"></i> Auditar</button>
+                    </td>
+                </tr>`).join('');
+                lucide.createIcons();
+            } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">${err.message}</td></tr>`; }
+        }
+
         function abrirExpediente(item) {
             itemDossierActual = item;
             document.getElementById('dos-matricula').innerText = item.matricula_oficial || 'EN TRÁMITE';
@@ -608,33 +800,77 @@
             document.getElementById('dos-dni').innerText = item.dni;
             document.getElementById('dos-profesion').innerText = item.profesion || 'No declarada';
             document.getElementById('dos-cat').innerText = item.categoria;
+            document.getElementById('dos-provincia').innerText = item.provincia_laboral || 'No declarada';
+            
+            // Directorio público
+            const directorioEl = document.getElementById('dos-directorio');
+            if (item.figurar_directorio) {
+                directorioEl.className = 'badge-aceptado px-2 py-1 rounded font-black text-sm';
+                directorioEl.innerText = 'ON';
+            } else {
+                directorioEl.className = 'badge-rechazado px-2 py-1 rounded font-black text-sm';
+                directorioEl.innerText = 'OFF';
+            }
+            
+            // Especialidades
+            const especialidadesEl = document.getElementById('dos-especialidades');
+            especialidadesEl.innerHTML = '';
+            if (item.especialidades) {
+                const especialidades = typeof item.especialidades === 'string' ? JSON.parse(item.especialidades) : item.especialidades;
+                especialidades.forEach(esp => {
+                    especialidadesEl.innerHTML += `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">${esp}</span>`;
+                });
+            } else {
+                especialidadesEl.innerHTML = '<span class="text-slate-400 text-xs">Sin especialidades declaradas</span>';
+            }
             
             const containerFotos = document.getElementById('dos-imagenes');
             containerFotos.innerHTML = '';
             
             // FOTOS CON ALTURA FIJA PARA VISUALIZAR Y EXPORTAR EN PDF
-            const urls = [item.foto_perfil_url, item.dni_frente_url, item.dni_dorso_url, item.diploma_url];
-            const titulos = ['Foto de Perfil', 'DNI Frente', 'DNI Dorso', 'Título / Diploma'];
+            const urls = [
+                { url: item.foto_perfil_url, campo: 'foto_perfil_url', titulo: 'Foto de Perfil' },
+                { url: item.dni_frente_url, campo: 'dni_frente_url', titulo: 'DNI Frente' },
+                { url: item.dni_dorso_url, campo: 'dni_dorso_url', titulo: 'DNI Dorso' },
+                { url: item.diploma_url, campo: 'diploma_url', titulo: 'Título / Diploma' }
+            ];
             
-            urls.forEach((u, index) => {
-                if (u) {
+            urls.forEach((item, index) => {
+                if (item.url) {
                     containerFotos.innerHTML += `
-                    <div class="border border-slate-200 rounded-lg p-3 bg-white shadow-sm text-center flex flex-col">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 border-b border-slate-100 pb-1">${titulos[index]}</p>
-                        <a href="${u}" target="_blank" class="block w-full">
-                            <img src="${u}" class="w-full h-40 object-contain rounded" crossorigin="anonymous">
+                    <div class="border border-slate-200 rounded-lg p-3 bg-white shadow-sm text-center flex flex-col relative">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 border-b border-slate-100 pb-1">${item.titulo}</p>
+                        <a href="${item.url}" target="_blank" class="block w-full relative group">
+                            <img src="${item.url}" class="w-full h-40 object-contain rounded" crossorigin="anonymous" id="img-${item.campo}">
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onclick="reemplazarDocumento('${item.campo}')" class="bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold">Reemplazar</button>
+                            </div>
                         </a>
                     </div>`;
                 }
             });
             lucide.createIcons();
 
-            const btnAprobar = document.getElementById('btn-aprobar-dossier');
+            // Mostrar/ocultar botones según estado y rol
+            const btnVistoBueno = document.getElementById('btn-visto-bueno');
+            const btnObservar = document.getElementById('btn-observar');
+            const btnRechazar = document.getElementById('btn-rechazar-comite');
+            const btnAprobarMatricula = document.getElementById('btn-aprobar-matricula');
+            
+            // Ocultar todos primero
+            btnVistoBueno.classList.add('hidden');
+            btnObservar.classList.add('hidden');
+            btnRechazar.classList.add('hidden');
+            btnAprobarMatricula.classList.add('hidden');
+            
             const estadoActual = item.estado || item.estado_legal;
-            if (estadoActual === 'PENDIENTE' && (adminUser.rol === 'superadmin' || adminUser.rol === 'director' || adminUser.rol === 'titular')) {
-                btnAprobar.classList.remove('hidden');
-            } else { 
-                btnAprobar.classList.add('hidden'); 
+            
+            if (estadoActual === 'PENDIENTE' && (adminUser.rol === 'superadmin' || adminUser.rol === 'asesor' || adminUser.rol === 'director')) {
+                btnVistoBueno.classList.remove('hidden');
+                btnObservar.classList.remove('hidden');
+            } else if (estadoActual === 'EN AUDITORIA' && (adminUser.rol === 'superadmin' || adminUser.rol === 'director' || adminUser.rol === 'titular')) {
+                btnRechazar.classList.remove('hidden');
+                btnAprobarMatricula.classList.remove('hidden');
             }
 
             document.getElementById('modal-expediente').classList.remove('hidden');
@@ -642,12 +878,41 @@
 
         function cerrarExpediente() { document.getElementById('modal-expediente').classList.add('hidden'); itemDossierActual = null; }
 
-        async function aprobarDesdeDossier() {
+        async function elevarAComite() {
+            if (!itemDossierActual) return;
+            try {
+                await db.from('renmcycf_solicitudes').update({ estado: 'EN AUDITORIA' }).eq('id', itemDossierActual.id);
+                alert("✅ Solicitud elevada a Comité de Auditoría.");
+                cerrarExpediente();
+                cargarSolicitudes();
+                cargarAuditoria();
+            } catch (err) { alert("Error: " + err.message); }
+        }
+
+        function observarSolicitud() {
+            if (!itemDossierActual) return;
+            const numero = itemDossierActual.telefono || whatsappRegistro || '5490000000000';
+            const mensaje = encodeURIComponent(`Estimado/a ${itemDossierActual.nombres} ${itemDossierActual.apellidos}, le solicitamos que corrija la documentación presentada ante el RENMCYCF. Por favor, contáctese con nosotros.`);
+            window.open(`https://wa.me/${numero}?text=${mensaje}`, '_blank');
+        }
+
+        async function rechazarSolicitud() {
+            if (!itemDossierActual) return;
+            if (!confirm("¿Rechazar esta solicitud?")) return;
+            try {
+                await db.from('renmcycf_solicitudes').update({ estado: 'RECHAZADO' }).eq('id', itemDossierActual.id);
+                alert("✅ Solicitud rechazada.");
+                cerrarExpediente();
+                cargarAuditoria();
+            } catch (err) { alert("Error: " + err.message); }
+        }
+
+        async function aprobarMatricula() {
             if (!itemDossierActual) return;
             const mat = prompt(`Ingrese el número de MATRÍCULA para ${itemDossierActual.nombres}:\n(Ej: 1000/26)`);
             if (!mat) return;
 
-            const btn = document.getElementById('btn-aprobar-dossier');
+            const btn = document.getElementById('btn-aprobar-matricula');
             const originalHTML = btn.innerHTML;
             btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin w-5 h-5 inline"></i> APROBANDO...'; btn.disabled = true;
             lucide.createIcons();
@@ -655,36 +920,78 @@
             try {
                 const vencimiento = new Date(); vencimiento.setFullYear(vencimiento.getFullYear() + 1);
                 
-                if (itemDossierActual.estado === 'PENDIENTE') {
-                    const { error: insErr } = await db.from('renmcycf_padron').insert([{
-                        solicitud_id: itemDossierActual.id,
-                        matricula_oficial: mat,
-                        fecha_alta: new Date().toISOString(),
-                        fecha_vencimiento: vencimiento.toISOString(),
-                        nombres: itemDossierActual.nombres,
-                        apellidos: itemDossierActual.apellidos,
-                        dni: itemDossierActual.dni,
-                        ano_nacimiento: itemDossierActual.ano_nacimiento,
-                        profesion: itemDossierActual.profesion,
-                        categoria: itemDossierActual.categoria,
-                        foto_perfil_url: itemDossierActual.foto_perfil_url,
-                        dni_frente_url: itemDossierActual.dni_frente_url,
-                        dni_dorso_url: itemDossierActual.dni_dorso_url,
-                        diploma_url: itemDossierActual.diploma_url,
-                        diplomas_urls: itemDossierActual.diplomas_urls,
-                        estado_legal: 'ACTIVO'
-                    }]);
-                    if (insErr) throw insErr;
-                    await db.from('renmcycf_solicitudes').update({ estado: 'APROBADO' }).eq('id', itemDossierActual.id);
-                } else {
-                    const { error } = await db.from('renmcycf_padron').update({ estado_legal: 'ACTIVO', matricula_oficial: mat, fecha_vencimiento: vencimiento.toISOString() }).eq('id', itemDossierActual.id);
-                    if (error) throw error;
-                }
+                const { error: insErr } = await db.from('renmcycf_padron').insert([{
+                    solicitud_id: itemDossierActual.id,
+                    matricula_oficial: mat,
+                    fecha_alta: new Date().toISOString(),
+                    fecha_vencimiento: vencimiento.toISOString(),
+                    nombres: itemDossierActual.nombres,
+                    apellidos: itemDossierActual.apellidos,
+                    dni: itemDossierActual.dni,
+                    ano_nacimiento: itemDossierActual.ano_nacimiento,
+                    profesion: itemDossierActual.profesion,
+                    categoria: itemDossierActual.categoria,
+                    foto_perfil_url: itemDossierActual.foto_perfil_url,
+                    dni_frente_url: itemDossierActual.dni_frente_url,
+                    dni_dorso_url: itemDossierActual.dni_dorso_url,
+                    diploma_url: itemDossierActual.diploma_url,
+                    diplomas_urls: itemDossierActual.diplomas_urls,
+                    estado_legal: 'ACTIVO',
+                    // NUEVOS CAMPOS TRASLADADOS:
+                    email: itemDossierActual.email,
+                    telefono: itemDossierActual.telefono,
+                    provincia_laboral: itemDossierActual.provincia_laboral,
+                    especialidades: itemDossierActual.especialidades,
+                    figurar_directorio: itemDossierActual.figurar_directorio
+                }]);
+                if (insErr) throw insErr;
                 
-                cerrarExpediente(); cargarSolicitudes(); cargarPadron(); actualizarDashboard(); 
-                alert("¡Expediente aprobado y matriculado exitosamente!");
-            } catch (err) { alert("Error al aprobar: " + err.message); } 
+                await db.from('renmcycf_solicitudes').update({ estado: 'APROBADO' }).eq('id', itemDossierActual.id);
+                
+                alert("✅ Matrícula aprobada y registrada en el Directorio exitosamente.");
+                cerrarExpediente();
+                cargarAuditoria();
+                cargarPadron();
+                actualizarDashboard();
+            } catch (err) { alert("Error: " + err.message); }
             finally { btn.innerHTML = originalHTML; btn.disabled = false; lucide.createIcons(); }
+        }
+
+        async function reemplazarDocumento(campo) {
+            if (!itemDossierActual) return;
+            
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                try {
+                    const fileName = `${campo}_${Date.now()}.${file.name.split('.').pop()}`;
+                    await db.storage.from('renmcycf-media').upload(fileName, file, { cacheControl: '3600', upsert: true });
+                    const url = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
+                    
+                    // Determinar si es solicitud o padrón
+                    if (itemDossierActual.estado === 'PENDIENTE' || itemDossierActual.estado === 'EN AUDITORIA' || itemDossierActual.estado === 'RECHAZADO') {
+                        await db.from('renmcycf_solicitudes').update({ [campo]: url }).eq('id', itemDossierActual.id);
+                    } else {
+                        await db.from('renmcycf_padron').update({ [campo]: url }).eq('id', itemDossierActual.id);
+                    }
+                    
+                    // Actualizar el item actual
+                    itemDossierActual[campo] = url;
+                    
+                    // Actualizar la imagen en el modal
+                    const img = document.getElementById(`img-${campo}`);
+                    if (img) {
+                        img.src = url;
+                    }
+                    
+                    alert("✅ Documento reemplazado exitosamente.");
+                } catch (err) { alert("Error: " + err.message); }
+            };
+            input.click();
         }
 
         // ==========================================
@@ -718,6 +1025,7 @@
                             ${p.diploma_url ? `<a href="${p.diploma_url}" target="_blank" class="flex items-center gap-1 text-slate-400 hover:text-emerald-400 transition-colors"><i data-lucide="award" class="w-3 h-3"></i> Título</a>` : ''}
                         </td>
                         <td class="p-4 text-right flex justify-end gap-2">
+                            <a href="https://wa.me/${p.telefono || whatsappRegistro || '5490000000000'}" target="_blank" class="bg-emerald-600/20 text-emerald-400 p-2 rounded hover:bg-emerald-600/40 transition-colors" title="Contactar por WhatsApp"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
                             <button onclick='abrirExpediente(${JSON.stringify(p).replace(/'/g, "&#39;")})' class="bg-slate-700 hover:bg-slate-600 text-white p-2 rounded transition-colors shadow" title="Ver Expediente"><i data-lucide="folder-search" class="w-4 h-4"></i></button>
                             ${(adminUser.rol === 'superadmin' || adminUser.rol === 'director') ? `<button class="bg-blue-600/20 text-blue-400 p-2 rounded hover:bg-blue-600/40 transition-colors" onclick="abrirModalEdicion('${p.id}')"><i data-lucide="edit" class="w-4 h-4"></i></button>` : ''}
                         </td>
@@ -790,7 +1098,11 @@
         }
 
         async function crearCurso(e) {
-            e.preventDefault(); const btn = document.getElementById('btn-crear-curso'); const orig = btn.innerHTML; btn.innerHTML = 'CREANDO...'; btn.disabled = true;
+            e.preventDefault(); 
+            const btn = e.target.querySelector('button[type="submit"]'); 
+            const orig = btn.innerHTML; 
+            btn.innerHTML = 'CREANDO...'; 
+            btn.disabled = true;
             try {
                 const imgFile = document.getElementById('camp-portada').files[0]; let imgUrl = null;
                 if (imgFile) {
@@ -859,15 +1171,30 @@
         }
 
         async function subirLibro(e) {
-            e.preventDefault(); const btn = document.getElementById('btn-subir-libro'); const orig = btn.innerHTML; btn.innerHTML = 'SUBIENDO...'; btn.disabled = true;
+            e.preventDefault(); 
+            const btn = e.target.querySelector('button[type="submit"]'); 
+            const orig = btn.innerHTML; 
+            btn.innerHTML = 'SUBIENDO...'; 
+            btn.disabled = true;
             try {
-                const pdfFile = document.getElementById('bib-pdf').files[0]; const pdfName = `libro_${Date.now()}.${pdfFile.name.split('.').pop()}`;
-                await db.storage.from('renmcycf-pdfs').upload(pdfName, pdfFile); const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${pdfName}`;
+                const pdfFile = document.getElementById('bib-pdf').files[0]; 
+                if (!pdfFile) throw new Error("Debe seleccionar un PDF.");
+                const pdfName = `libro_${Date.now()}.${pdfFile.name.split('.').pop()}`;
+                await db.storage.from('renmcycf-pdfs').upload(pdfName, pdfFile); 
+                const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${pdfName}`;
+                
                 let portadaUrl = null;
                 const portadaFile = document.getElementById('bib-portada').files[0];
-                if (portadaFile) { const imgName = `cover_${Date.now()}.${portadaFile.name.split('.').pop()}`; await db.storage.from('renmcycf-media').upload(imgName, portadaFile); portadaUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${imgName}`; }
+                if (portadaFile) { 
+                    const imgName = `cover_${Date.now()}.${portadaFile.name.split('.').pop()}`; 
+                    await db.storage.from('renmcycf-media').upload(imgName, portadaFile); 
+                    portadaUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${imgName}`; 
+                }
+                
                 await db.from('renmcycf_biblioteca').insert([{ titulo: document.getElementById('bib-titulo').value, autor: document.getElementById('bib-autor').value, tipo_acceso: document.getElementById('bib-acceso').value, pdf_url: pdfUrl, portada_url: portadaUrl, activo: true }]);
-                alert("✅ Material publicado."); document.getElementById('form-biblioteca').reset(); cargarBibliotecaPanel();
+                alert("✅ Material publicado."); 
+                document.getElementById('form-biblioteca').reset(); 
+                cargarBibliotecaPanel();
             } catch (err) { alert("Error: " + err.message); } finally { btn.innerHTML = orig; btn.disabled = false; }
         }
         async function eliminarLibro(id) { if(!confirm("¿Eliminar archivo?")) return; await db.from('renmcycf_biblioteca').delete().eq('id', id); cargarBibliotecaPanel(); }
@@ -919,6 +1246,7 @@
                     document.getElementById('conf-arancel-a1').value = data.arancel_a1 || ''; 
                     document.getElementById('conf-arancel-a2').value = data.arancel_a2 || ''; 
                     document.getElementById('conf-arancel-a3').value = data.arancel_a3 || ''; 
+                    document.getElementById('conf-arancel-a4').value = data.arancel_a4 || ''; 
                     document.getElementById('conf-mp-link').value = data.mp_link || ''; 
                     document.getElementById('conf-whatsapp').value = data.whatsapp || ''; 
                     document.getElementById('conf-email').value = data.email || ''; 
@@ -941,6 +1269,7 @@
                     arancel_a1: document.getElementById('conf-arancel-a1').value, 
                     arancel_a2: document.getElementById('conf-arancel-a2').value, 
                     arancel_a3: document.getElementById('conf-arancel-a3').value, 
+                    arancel_a4: document.getElementById('conf-arancel-a4').value, 
                     mp_link: document.getElementById('conf-mp-link').value,
                     whatsapp: document.getElementById('conf-whatsapp').value,
                     email: document.getElementById('conf-email').value,
@@ -950,6 +1279,7 @@
                     linkedin: document.getElementById('conf-linkedin').value
                 }).eq('id', 1); 
                 alert("✅ Configuración actualizada."); 
+                cargarWhatsappRegistro();
             } catch (err) { alert("Error: " + err.message); }
             finally { btn.innerHTML = orig; btn.disabled = false; }
         }
@@ -978,7 +1308,7 @@
                     'hero_badge_text':'cont-hero-badge-text','hero_title':'cont-hero-title','hero_subtitle':'cont-hero-subtitle',
                     'hero_cta_primary':'cont-hero-cta-primary','hero_cta_secondary':'cont-hero-cta-secondary',
                     'urgencia_titulo':'cont-urgencia-titulo','urgencia_texto':'cont-urgencia-texto',
-                    'cat_a1_desc':'cont-cat-a1-desc','cat_a2_desc':'cont-cat-a2-desc','cat_a3_desc':'cont-cat-a3-desc',
+                    'cat_a1_desc':'cont-cat-a1-desc','cat_a2_desc':'cont-cat-a2-desc','cat_a3_desc':'cont-cat-a3-desc','cat_a4_desc':'cont-cat-a4-desc',
                     'footer_texto':'cont-footer-texto' 
                 };
                 data.forEach(item => { const id = map[item.clave]; if (id && document.getElementById(id)) document.getElementById(id).value = item.valor || ''; });
@@ -994,7 +1324,7 @@
                 'hero_badge_text':'cont-hero-badge-text','hero_title':'cont-hero-title','hero_subtitle':'cont-hero-subtitle',
                 'hero_cta_primary':'cont-hero-cta-primary','hero_cta_secondary':'cont-hero-cta-secondary',
                 'urgencia_titulo':'cont-urgencia-titulo','urgencia_texto':'cont-urgencia-texto',
-                'cat_a1_desc':'cont-cat-a1-desc','cat_a2_desc':'cont-cat-a2-desc','cat_a3_desc':'cont-cat-a3-desc',
+                'cat_a1_desc':'cont-cat-a1-desc','cat_a2_desc':'cont-cat-a2-desc','cat_a3_desc':'cont-cat-a3-desc','cat_a4_desc':'cont-cat-a4-desc',
                 'footer_texto':'cont-footer-texto' 
             };
             const payload = Object.keys(map).map(k => ({ clave: k, valor: document.getElementById(map[k]).value, tipo: 'texto' }));
