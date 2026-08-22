@@ -12,13 +12,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- Agregada librería jsPDF para el formato A4 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
-    
     <link rel="manifest" href="manifest.json">
 
     <style>
@@ -36,8 +34,9 @@
         .input-auth { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 800; letter-spacing: 2px; transition: 0.3s; background: rgba(255,255,255,0.9); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .input-auth:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 4px rgba(0,0,0,0.05); }
 
-        .card-viewport { width: 100%; max-width: 500px; margin: 0 auto; overflow: hidden; position: relative; margin-bottom: 20px; height: 230px; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); display: flex; justify-content: center; background: #fff; }
-        #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
+        /* VIEWPORT BLINDADO (REPARACIÓN DEL CORTE VISUAL) */
+        .card-viewport { width: 100%; max-width: 500px; margin: 0 auto; overflow: hidden; position: relative; margin-bottom: 20px; height: 230px; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); display: flex; justify-content: flex-start; background: #fff; }
+        #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left !important; }
 
         .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 4px; border-radius: 24px; width: fit-content; margin-left: auto; margin-right: auto; }
         .btn-toggle { background: transparent; border: none; padding: 8px 20px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
@@ -152,7 +151,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA 3: CREDENCIAL (LEGAJO) -->
+    <!-- PANTALLA 3: CREDENCIAL PRINCIPAL -->
     <div id="screen-wallet" class="screen">
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-between items-center relative overflow-hidden">
             <div class="absolute right-0 top-0 bottom-0 w-2 bg-emerald-400"></div>
@@ -163,6 +162,7 @@
             </div>
         </div>
         
+        <!-- CARD VIEWPORT CON TAMAÑO BLINDADO -->
         <div class="card-viewport" id="card-viewport">
             <div id="carnet-render"><div class="flex items-center justify-center h-full w-full text-slate-400 bg-slate-100"><i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i></div></div>
         </div>
@@ -172,7 +172,6 @@
             <button class="btn-toggle" id="btn-toggle-back" onclick="cambiarVista('back')">DORSO Y QR</button>
         </div>
 
-        <!-- Métricas -->
         <div class="grid grid-cols-2 gap-3 mb-6">
             <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner">
                 <i data-lucide="eye" class="w-5 h-5 text-blue-400 mx-auto mb-1"></i>
@@ -202,13 +201,6 @@
             <h2 class="text-2xl font-black text-[#0a1128] font-title uppercase tracking-tight">Portal Científico</h2>
             <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Feed Oficial de Actualidad y Ciencia</p>
         </div>
-        
-        <div class="flex gap-2 overflow-x-auto pb-2 mb-4 no-scrollbar">
-            <button class="shrink-0 bg-[#0a1128] text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider">Últimas</button>
-            <button class="shrink-0 bg-white border border-slate-200 text-slate-600 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider">Noticias</button>
-            <button class="shrink-0 bg-white border border-slate-200 text-slate-600 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider">Papers</button>
-        </div>
-
         <div id="feed-portal-container" class="space-y-4 pb-4">
             <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm"><div class="skeleton h-32 w-full mb-3 rounded-lg"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-3 w-1/2"></div></div>
         </div>
@@ -271,7 +263,7 @@
         <div class="flex-1 overflow-y-auto space-y-4 pb-10" id="lista-diplomas-modal"></div>
     </div>
 
-    <!-- BARRA NAVEGACIÓN INFERIOR -->
+    <!-- BARRA NAVEGACIÓN INFERIOR PWA -->
     <div class="bottom-nav hidden" id="bottom-nav">
         <div class="nav-item active" id="tab-wallet" onclick="switchNavTab('wallet')">
             <i data-lucide="id-card" class="w-6 h-6 mb-1"></i><span>Credencial</span>
@@ -300,6 +292,8 @@
         let configDiseno = {};
         let bgCredencialFrente = ''; let bgCredencialDorso = ''; let rosetaUrl = '';
         let cropperInstance = null; let archivoSeleccionadoParaRecortar = null;
+
+        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(()=>{}); }); }
 
         window.addEventListener('DOMContentLoaded', async () => {
             try { await cargarConfiguracionInicial(); } catch(e){}
@@ -476,12 +470,11 @@
             if(tabId === 'publicaciones') cargarMisPublicaciones();
         }
 
-        // SOLUCIÓN A ERROR: cambiarVista is not defined
-        function cambiarVista(vista) {
-            currentView = vista;
-            document.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active'));
-            document.getElementById(`btn-toggle-${vista}`).classList.add('active');
-            renderizarCarnet(vista);
+        function cambiarVista(vista) { 
+            currentView = vista; 
+            document.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active')); 
+            document.getElementById(`btn-toggle-${vista}`).classList.add('active'); 
+            renderizarCarnet(vista); 
         }
 
         function getSafeStyle(key) {
@@ -515,7 +508,6 @@
                 const viewportWidth = viewport.clientWidth;
                 const scale = viewportWidth / 1000; 
                 render.style.transform = `scale(${scale})`; 
-                render.style.transformOrigin = 'top left';
                 viewport.style.height = `${630 * scale}px`; 
             } 
         }
@@ -531,134 +523,87 @@
                 container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;"><img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div></div>`;
                 setTimeout(() => { autoAjustarTextos(container); ajustarEscala(); }, 50);
             } else if (vista === 'back') {
-                const urlValidador = `${window.location.origin}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
+                const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF` : window.location.origin;
+                const urlValidador = `${baseUrl}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
+                
                 let textoCat = ''; if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; else textoCat = 'Consultor/Estudiante inscripto.';
                 container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index: 10;">${textoCat}</div><div id="qr-container" style="${getSafeStyle('qr')} z-index: 10; background: white;"></div></div>`;
                 setTimeout(() => { 
-                    try {
-                        const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; 
-                        new QRCode(container.querySelector('#qr-container'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); 
-                    } catch(e) {}
-                    autoAjustarTextos(container); 
-                    ajustarEscala(); 
+                    try { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(container.querySelector('#qr-container'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); } catch(e) {}
+                    autoAjustarTextos(container); ajustarEscala(); 
                 }, 50);
             }
         }
 
-        // SOLUCION PDF: FORMATO A4 + TAMAÑO EXACTO DNI + MOTOR LIMPIO 
         async function descargarCarnetOficial() {
             if (!alumnoActual) return;
             const btn = document.getElementById('btn-descargar-carnet'); const originalText = btn.innerHTML;
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 text-[#d4af37] animate-spin"></i><span class="text-[9px] uppercase font-black tracking-wider text-center mt-1">Generando...</span>`; 
-            lucide.createIcons();
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 text-[#d4af37] animate-spin"></i><span class="text-[9px] uppercase font-black tracking-wider text-center mt-1">Generando...</span>`; lucide.createIcons();
             
             try {
-                // Contenedor temporal: SIN ESCALA, 100% original. html2canvas odia la escala.
-                const exportContainer = document.createElement('div'); 
-                exportContainer.style.position = 'fixed'; 
-                exportContainer.style.left = '-9999px'; 
-                exportContainer.style.top = '0'; 
-                exportContainer.style.width = '1000px'; 
-                exportContainer.style.height = '630px'; 
-                exportContainer.style.zIndex = '9999'; 
-                document.body.appendChild(exportContainer);
+                const tempDiv = document.createElement('div'); 
+                tempDiv.style.position = 'absolute'; tempDiv.style.top = '0'; tempDiv.style.left = '0'; tempDiv.style.zIndex = '-9999'; tempDiv.style.opacity = '0'; 
+                document.body.appendChild(tempDiv);
                 
-                const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff'; 
-                const vence = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D'; 
-                const urlValidador = `${window.location.origin}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
+                const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff'; const vence = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D'; 
+                const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF` : window.location.origin;
+                const urlValidador = `${baseUrl}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
                 
-                // 1. CAPTURAR EL FRENTE
-                exportContainer.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; overflow: hidden; background-color: #fff;"><img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;"><img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div></div>`;
+                const frontHtml = `<div id="export-front" style="position: relative; width: 1000px; height: 630px; background-color: #fff; overflow: hidden;"><img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;"><img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div></div>`;
                 
-                autoAjustarTextos(exportContainer); 
-                await new Promise(r => setTimeout(r, 600)); // Espera imágenes
+                let textoCat = ''; if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; else textoCat = 'Consultor/Estudiante inscripto.';
+                const backHtml = bgCredencialDorso ? `<div id="export-back" style="position: relative; width: 1000px; height: 630px; background-color: #fff; overflow: hidden; margin-top: 50px;"><img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index: 10;">${textoCat}</div><div id="export-qr" style="${getSafeStyle('qr')} z-index: 10; background: white;"></div></div>` : '';
                 
-                const canvasFront = await html2canvas(exportContainer.firstElementChild, { useCORS: true, allowTaint: true, scale: 2, backgroundColor: '#ffffff' });
-                const imgDataFront = canvasFront.toDataURL('image/png', 1.0);
+                tempDiv.innerHTML = frontHtml + backHtml;
                 
-                // 2. CAPTURAR EL DORSO
-                let imgDataBack = null;
+                if (bgCredencialDorso) { 
+                    try { const qrContainer = tempDiv.querySelector('#export-qr'); const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(qrContainer, { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); } catch(e){}
+                }
+                
+                autoAjustarTextos(tempDiv); await new Promise(r => setTimeout(r, 1000));
+
+                const canvasFront = await html2canvas(tempDiv.querySelector('#export-front'), { useCORS: true, allowTaint: true, scale: 3, backgroundColor: '#ffffff' });
+                const imgFront = canvasFront.toDataURL('image/png');
+                
+                let imgBack = null;
                 if (bgCredencialDorso) {
-                    let textoCat = ''; if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; else textoCat = 'Consultor/Estudiante inscripto.';
-                    
-                    exportContainer.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; overflow: hidden; background-color: #fff;"><img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index: 10;">${textoCat}</div><div id="export-qr" style="${getSafeStyle('qr')} z-index: 10; background: white;"></div></div>`;
-                    
-                    await new Promise(r => setTimeout(r, 200)); 
-                    try {
-                        const qrContainer = exportContainer.querySelector('#export-qr'); 
-                        const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; 
-                        new QRCode(qrContainer, { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); 
-                    } catch(e){}
-                    
-                    autoAjustarTextos(exportContainer); 
-                    await new Promise(r => setTimeout(r, 600)); // Espera QR
-                    
-                    const canvasBack = await html2canvas(exportContainer.firstElementChild, { useCORS: true, allowTaint: true, scale: 2, backgroundColor: '#ffffff' });
-                    imgDataBack = canvasBack.toDataURL('image/png', 1.0);
+                    const canvasBack = await html2canvas(tempDiv.querySelector('#export-back'), { useCORS: true, allowTaint: true, scale: 3, backgroundColor: '#ffffff' });
+                    imgBack = canvasBack.toDataURL('image/png');
                 }
 
-                document.body.removeChild(exportContainer);
+                document.body.removeChild(tempDiv);
 
-                // 3. GENERAR EL PDF A4
+                // Construcción de PDF A4 con jsPDF
                 const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
                 
-                // Medidas Internacionales DNI/CR80: 85.6mm x 54.0mm
-                const cardW = 85.6; 
-                const cardH = 54.0; 
-                const marginX = (210 - cardW) / 2; // Centro de la hoja A4
-                let currentY = 20;
+                pdf.setFillColor(10, 17, 40); pdf.rect(0, 0, 210, 50, 'F');
+                pdf.setTextColor(212, 175, 55); pdf.setFont("helvetica", "bold"); pdf.setFontSize(16);
+                pdf.text("DOCUMENTO DE IDENTIDAD PROFESIONAL", 105, 25, null, null, "center");
+                pdf.setTextColor(255, 255, 255); pdf.setFontSize(10);
+                pdf.text("Registro Nacional de Matriculados en Criminalística y Ciencias Forenses", 105, 33, null, null, "center");
 
-                // Diseño Institucional A4
-                pdf.setFillColor(10, 17, 40); // #0a1128
-                pdf.rect(0, 0, 210, 40, 'F');
-                
-                pdf.setTextColor(212, 175, 55); // #d4af37
-                pdf.setFont("helvetica", "bold");
-                pdf.setFontSize(14);
-                pdf.text("DOCUMENTO DE IDENTIDAD PROFESIONAL", 105, 20, null, null, "center");
-                
-                pdf.setTextColor(255, 255, 255);
-                pdf.setFontSize(10);
-                pdf.text("Registro Nacional de Matriculados en Criminalística y Ciencias Forenses", 105, 28, null, null, "center");
+                const w = 85.6; const h = 54.0; const startX = (210 - w) / 2; let currentY = 70;
 
-                currentY = 60;
-                
-                // Marco de corte y Credencial Frente
-                pdf.setDrawColor(200, 200, 200);
-                pdf.setLineDash([2, 2], 0);
-                pdf.rect(marginX - 2, currentY - 2, cardW + 4, cardH + 4); // Linea de corte
-                pdf.addImage(imgDataFront, 'PNG', marginX, currentY, cardW, cardH);
-                currentY += cardH + 20;
-                
-                // Marco de corte y Credencial Dorso
-                if (imgDataBack) {
-                    pdf.rect(marginX - 2, currentY - 2, cardW + 4, cardH + 4);
-                    pdf.addImage(imgDataBack, 'PNG', marginX, currentY, cardW, cardH);
-                    currentY += cardH + 20;
+                pdf.setDrawColor(200, 200, 200); pdf.setLineDash([2, 2], 0);
+                pdf.rect(startX - 2, currentY - 2, w + 4, h + 4);
+                pdf.addImage(imgFront, 'PNG', startX, currentY, w, h);
+                currentY += h + 20;
+
+                if (imgBack) {
+                    pdf.rect(startX - 2, currentY - 2, w + 4, h + 4);
+                    pdf.addImage(imgBack, 'PNG', startX, currentY, w, h);
+                    currentY += h + 20;
                 }
-                
-                // Texto legal al pie
-                pdf.setTextColor(100, 100, 100);
-                pdf.setFont("helvetica", "normal");
-                pdf.setFontSize(9);
-                pdf.setLineDash([]); // Reset
-                pdf.text("Este documento es personal e intransferible.", 105, currentY, null, null, "center");
-                currentY += 5;
-                pdf.text("La validez debe comprobarse escaneando el código QR en el validador oficial.", 105, currentY, null, null, "center");
-                currentY += 10;
-                pdf.setFontSize(8);
-                pdf.text(`Generado el ${new Date().toLocaleDateString('es-AR')} a las ${new Date().toLocaleTimeString('es-AR')}`, 105, currentY, null, null, "center");
 
-                // Disparar descarga
+                pdf.setTextColor(100, 100, 100); pdf.setFont("helvetica", "normal"); pdf.setFontSize(9); pdf.setLineDash([]);
+                pdf.text("Este documento es personal e intransferible.", 105, currentY, null, null, "center"); currentY += 5;
+                pdf.text("La validez debe comprobarse escaneando el código QR en el validador oficial.", 105, currentY, null, null, "center"); currentY += 10;
+                pdf.setFontSize(8); pdf.text(`Generado el ${new Date().toLocaleDateString('es-AR')} a las ${new Date().toLocaleTimeString('es-AR')}`, 105, currentY, null, null, "center");
+
                 pdf.save(`Credencial_RENMCYCF_${alumnoActual.matricula_oficial || alumnoActual.dni}.pdf`);
 
-            } catch (error) { 
-                console.error('Error en descarga PDF:', error); 
-                alert("Hubo un error al generar el PDF. Asegúrese de tener buena conexión."); 
-            } finally { 
-                btn.innerHTML = originalText; 
-                lucide.createIcons(); 
-            }
+            } catch (error) { console.error('Error en PDF:', error); alert("Hubo un error al generar el PDF. Verifique su conexión."); } 
+            finally { btn.innerHTML = originalText; lucide.createIcons(); }
         }
 
         function abrirModalDiplomas() {
