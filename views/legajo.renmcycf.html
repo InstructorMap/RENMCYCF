@@ -20,72 +20,89 @@
     <link rel="manifest" href="manifest.json">
 
     <style>
-        :root { --forense-navy: #0a1128; --forense-gold: #d4af37; --bg-app: #f8fafc; }
-        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-app); color: #333; height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        :root { --forense-navy: #0a1128; --forense-gold: #d4af37; --bg-app: #f1f5f9; }
+        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-app); color: #333; height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; overscroll-behavior-y: none; }
 
-        .header-top { background-color: var(--forense-navy); color: white; text-align: center; padding: 10px 15px; font-size: 9px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; z-index: 50; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.05); }
+
+        .app-header { background-color: var(--forense-navy); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 50; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: sticky; top: 0; }
         
-        .screen { display: none; flex: 1; flex-direction: column; padding: 20px; animation: fadeIn 0.3s ease; padding-bottom: 80px; z-index: 2; position: relative; }
-        .screen.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .screen { display: none; flex: 1; flex-direction: column; padding: 20px; padding-bottom: 90px; z-index: 2; position: relative; overflow-y: auto; opacity: 0; transform: translateX(20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .screen.active { display: flex; opacity: 1; transform: translateX(0); }
 
-        .login-bg { position: fixed; inset: 0; z-index: 0; object-fit: cover; width: 100%; height: 100%; opacity: 0.15; filter: grayscale(50%); display: none; }
-        .login-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; z-index: 10; position: relative; }
-        .input-dni { width: 100%; max-width: 320px; padding: 15px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 700; letter-spacing: 2px; transition: 0.3s; margin-bottom: 20px; background: rgba(255,255,255,0.9); }
-        .input-dni:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2); }
-        .btn-main { width: 100%; max-width: 320px; padding: 16px; background: var(--forense-navy); color: var(--forense-gold); border: none; border-radius: 12px; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; box-shadow: 0 4px 15px rgba(10, 17, 40, 0.3); transition: transform 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .btn-main:disabled { opacity: 0.7; cursor: not-allowed; }
+        .login-bg { position: fixed; inset: 0; z-index: 0; object-fit: cover; width: 100%; height: 100%; opacity: 0.2; filter: grayscale(30%); display: none; }
+        .input-auth { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 800; letter-spacing: 2px; transition: 0.3s; background: rgba(255,255,255,0.9); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .input-auth:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 4px rgba(0,0,0,0.05); }
 
-        .tc-box { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; max-height: 300px; overflow-y: auto; text-align: left; font-size: 12px; line-height: 1.6; color: #475569; margin-bottom: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); }
-        .tc-box h3 { color: var(--forense-navy); font-weight: 900; font-size: 14px; margin-bottom: 10px; }
-
+        /* VIEWPORT ORIGINAL QUE GARANTIZA PROPORCIÓN EXACTA */
         .card-viewport { width: 100%; overflow: hidden; position: relative; margin-bottom: 20px; height: 230px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); display: flex; justify-content: center; background: #fff; }
         #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
 
-        .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
-        .btn-toggle { background: white; border: 1px solid #cbd5e1; padding: 10px 20px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
-        .btn-toggle.active { background: var(--forense-navy); color: var(--forense-gold); border-color: var(--forense-navy); box-shadow: 0 4px 10px rgba(10, 17, 40, 0.2); }
+        .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 4px; border-radius: 24px; width: fit-content; margin-left: auto; margin-right: auto; }
+        .btn-toggle { background: transparent; border: none; padding: 8px 20px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
+        .btn-toggle.active { background: white; color: var(--forense-navy); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; padding: 10px 5px; padding-bottom: env(safe-area-inset-bottom, 10px); z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #94a3b8; font-size: 10px; font-weight: 700; cursor: pointer; transition: color 0.3s; }
-        .nav-item.active { color: var(--forense-navy); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; padding: 12px 5px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 100; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #94a3b8; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: var(--forense-navy); transform: translateY(-2px); }
         .nav-item.active i { color: var(--forense-gold); }
 
         .cropper-view-box, .cropper-face { border-radius: 50%; } 
         .cropper-line, .cropper-point { background-color: var(--forense-gold); }
+
+        .skeleton { background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .animate-slide-in { animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; } 
+        @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
     </style>
 </head>
 <body>
 
-    <div class="header-top flex justify-between items-center px-4" id="app-header">
-        <span class="flex-1 text-center">Registro Nacional de Matriculados en Criminalística y Ciencias Forenses</span>
+    <!-- CABECERA GLOBAL -->
+    <div id="app-header" class="app-header hidden">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-[#d4af37]">
+                <img id="nav-mini-logo" src="https://ui-avatars.com/api/?name=R+N&background=fff&color=0a1128" class="w-5 h-5 object-contain">
+            </div>
+            <div>
+                <h1 class="text-[10px] font-black tracking-widest text-[#d4af37] uppercase leading-tight">RENMCYCF</h1>
+                <p class="text-[8px] font-bold text-slate-300 uppercase opacity-80">Legajo Digital</p>
+            </div>
+        </div>
         
-        <button onclick="abrirNotificaciones()" class="relative text-slate-300 hover:text-white transition-colors ml-2 hidden" id="btn-campana">
-            <i data-lucide="bell" class="w-5 h-5"></i>
-            <span id="badge-notificaciones" class="absolute -top-1 -right-1 flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-            </span>
-        </button>
+        <div class="flex items-center gap-4">
+            <button onclick="abrirNotificaciones()" class="relative text-slate-300 hover:text-white transition-colors ml-2 hidden" id="btn-campana">
+                <i data-lucide="bell" class="w-6 h-6"></i>
+                <span id="badge-notificaciones" class="absolute -top-1 -right-1 flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                </span>
+            </button>
+            <button onclick="cerrarSesion()" class="text-slate-400 hover:text-red-400 transition-colors">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+            </button>
+        </div>
     </div>
 
     <!-- PANTALLA 1: LOGIN -->
     <img id="dynamic-bg" src="" class="login-bg">
-    <div id="screen-login" class="screen active">
-        <div class="login-container">
-            <div class="w-24 h-24 bg-white rounded-full shadow-lg flex items-center justify-center mx-auto mb-6 border-4 border-[#d4af37] overflow-hidden" id="logo-container">
-                <i data-lucide="fingerprint" class="w-12 h-12 text-[#0a1128]" id="default-logo"></i>
-                <img id="dynamic-logo" src="" class="w-full h-full object-contain hidden p-2">
+    <div id="screen-login" class="screen active" style="justify-content: center; opacity: 1; transform: translateX(0);">
+        <div class="login-container glass-panel p-8 rounded-3xl mx-4">
+            <div class="w-24 h-24 bg-[#0a1128] rounded-full shadow-xl flex items-center justify-center mx-auto mb-6 border-4 border-[#d4af37] overflow-hidden" id="logo-container">
+                <i data-lucide="fingerprint" class="w-12 h-12 text-[#d4af37]" id="default-logo"></i>
+                <img id="dynamic-logo" src="" class="w-full h-full object-contain hidden p-2 bg-white">
             </div>
-            <h1 class="text-2xl font-black text-[#0a1128] mb-2 font-title uppercase tracking-tight">Legajo Digital</h1>
-            <p class="text-sm text-slate-600 mb-8 font-semibold bg-white/80 px-4 py-2 rounded-lg border border-slate-200">Identidad y Certificación Digital</p>
+            <h1 class="text-2xl font-black text-[#0a1128] mb-1 font-title uppercase tracking-tight">Legajo Digital</h1>
+            <p class="text-[10px] text-slate-500 mb-8 font-black uppercase tracking-widest border-b border-slate-200 pb-4 w-full">Identidad y Certificación Oficial</p>
             
-            <input type="tel" id="input-dni" class="input-dni shadow-lg" placeholder="DNI SIN PUNTOS" autocomplete="off" onkeyup="if(event.key==='Enter')ingresar()">
-            <div id="login-error" class="text-red-600 text-sm font-bold mb-4 hidden bg-red-50 p-2 rounded-lg border border-red-200 w-full max-w-[320px]"></div>
+            <input type="tel" id="input-dni" class="input-auth" placeholder="NÚMERO DE DNI" autocomplete="off" onkeyup="if(event.key==='Enter')ingresar()">
+            <div id="login-error" class="text-red-600 text-xs font-bold mt-2 mb-4 hidden bg-red-50 p-3 rounded-lg border border-red-200 w-full"></div>
             
-            <button class="btn-main" id="btn-ingresar" onclick="ingresar()">
-                <i data-lucide="scan-face" class="w-5 h-5"></i> VALIDAR IDENTIDAD
+            <button class="w-full bg-[#0a1128] text-[#d4af37] hover:bg-slate-800 font-black uppercase tracking-widest py-4 rounded-xl shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2 mt-4" id="btn-ingresar" onclick="ingresar()">
+                <i data-lucide="scan-face" class="w-5 h-5"></i> Validar Identidad
             </button>
+            
+            <a href="index.renmcycf.html" class="mt-6 text-[10px] font-bold text-slate-400 hover:text-[#0a1128] uppercase tracking-widest">← Volver al Sitio Público</a>
         </div>
     </div>
 
@@ -95,29 +112,23 @@
             <div class="text-center mb-6">
                 <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="scale" class="w-6 h-6"></i></div>
                 <h2 class="text-xl font-black text-[#0a1128] uppercase">Acuerdo de Adhesión</h2>
-                <p class="text-xs text-slate-500 font-bold mt-1">Requerido para activar su credencial</p>
             </div>
-            
-            <div class="tc-box flex-1 mb-6">
+            <div class="tc-box flex-1 mb-6 border border-slate-200">
                 <h3>1. VERACIDAD DE DATOS E IMAGEN</h3>
-                <p>El Profesional declara bajo juramento que los datos aportados, así como la fotografía facial y títulos, son auténticos. Cualquier adulteración constituye delito penal.</p>
-                <br>
-                <h3>2. USO DE PLATAFORMA Y EXHIBICIÓN</h3>
-                <p>La Credencial es intransferible. El Profesional autoriza al Registro a exhibir su habilitación en el Validador Público mediante código QR.</p>
-                <br>
-                <h3>3. TRATAMIENTO DE DATOS PERSONALES</h3>
+                <p>El Profesional declara bajo juramento que los datos aportados, así como la fotografía facial y títulos, son auténticos.</p><br>
+                <h3>2. USO DE PLATAFORMA</h3>
+                <p>La Credencial es intransferible. Autoriza al Registro a exhibir su habilitación en el Validador Público mediante código QR.</p><br>
+                <h3>3. TRATAMIENTO DE DATOS</h3>
                 <p>En cumplimiento de la Ley 25.326, la información será almacenada en bases auditadas.</p>
             </div>
-
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6">
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
                 <label class="flex items-start gap-3 cursor-pointer">
                     <input type="checkbox" id="check-tc" class="mt-1 w-5 h-5 accent-[#0a1128]" onchange="toggleBotonAceptar()">
-                    <span class="text-xs font-bold text-slate-700 leading-tight">He leído, comprendo y acepto los Términos y Condiciones, y declaro bajo juramento la veracidad de mi identidad.</span>
+                    <span class="text-xs font-bold text-slate-700 leading-tight">He leído, comprendo y acepto los Términos y declaro bajo juramento mi identidad.</span>
                 </label>
             </div>
-
-            <button class="btn-main w-full max-w-none" id="btn-aceptar-tc" onclick="aceptarTerminos()" disabled style="opacity: 0.5;">
-                <i data-lucide="file-signature" class="w-5 h-5"></i> FIRMAR ACUERDO
+            <button class="w-full bg-slate-300 text-slate-500 font-black uppercase py-4 rounded-xl transition-all" id="btn-aceptar-tc" onclick="aceptarTerminos()" disabled>
+                Firmar Acuerdo
             </button>
         </div>
     </div>
@@ -126,28 +137,22 @@
     <div id="screen-foto" class="screen bg-white absolute inset-0 z-50">
         <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4 text-center">
             <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="camera" class="w-6 h-6"></i></div>
-            <h2 class="text-xl font-black text-[#0a1128] uppercase">Fotografía Oficial</h2>
-            <p class="text-xs text-slate-500 font-bold mt-1 mb-6">Último paso para generar su credencial</p>
-
+            <h2 class="text-xl font-black text-[#0a1128] uppercase mb-4">Fotografía Oficial</h2>
+            
             <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 shadow-sm mb-6 text-left text-xs text-amber-900 leading-relaxed">
                 <p class="font-black uppercase mb-1"><i data-lucide="alert-triangle" class="inline w-4 h-4 text-amber-600"></i> Atención Auditores</p>
                 La fotografía será su identidad en el Padrón Nacional. Debe ser en <strong>primer plano, fondo claro, sin anteojos oscuros ni gorras.</strong> Si la foto es rechazada, su credencial será suspendida.
             </div>
 
             <div id="foto-selector-ui" class="flex-1 flex flex-col justify-center gap-4">
-                <button class="bg-[#0a1128] hover:bg-slate-800 text-[#d4af37] font-black py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full shadow-lg" onclick="abrirSelectorArchivo(true)">
-                    <i data-lucide="camera" class="w-6 h-6"></i> TOMAR FOTO CON CÁMARA
-                </button>
-                <p class="text-xs font-bold text-slate-400">Ó</p>
-                <button class="bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full" onclick="abrirSelectorArchivo(false)">
-                    <i data-lucide="image-plus" class="w-5 h-5"></i> SUBIR DE LA GALERÍA
-                </button>
+                <button class="bg-[#0a1128] text-white font-black py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full shadow-lg transition-transform active:scale-95" onclick="abrirSelectorArchivo(true)"><i data-lucide="camera" class="w-6 h-6 text-[#d4af37]"></i> TOMAR FOTO (CÁMARA)</button>
+                <button class="bg-white border-2 border-slate-200 text-slate-700 font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full transition-transform active:scale-95" onclick="abrirSelectorArchivo(false)"><i data-lucide="image-plus" class="w-5 h-5"></i> SUBIR FOTO (GALERÍA)</button>
                 <input type="file" id="input-foto-oficial" accept="image/*" class="hidden" onchange="iniciarRecorte(this)">
                 <input type="file" id="input-foto-camara" accept="image/*" capture="user" class="hidden" onchange="iniciarRecorte(this)">
             </div>
 
             <div id="foto-cropper-ui" class="hidden flex-1 flex-col h-full w-full">
-                <div class="relative flex-1 w-full bg-slate-900 rounded-xl overflow-hidden mb-4"><img id="image-to-crop" src="" style="display:block; max-width: 100%;"></div>
+                <div class="relative flex-1 w-full bg-slate-900 rounded-xl overflow-hidden mb-4 shadow-inner"><img id="image-to-crop" src="" style="display:block; max-width: 100%;"></div>
                 <div class="flex gap-3">
                     <button class="flex-1 bg-slate-200 text-slate-700 font-bold py-3 rounded-lg text-xs" onclick="cancelarRecorte()">VOLVER</button>
                     <button class="flex-[2] bg-[#d4af37] text-[#0a1128] font-black py-3 rounded-lg text-xs shadow-md" id="btn-guardar-recorte" onclick="procesarYSubirRecorte()">GUARDAR ENCUADRE</button>
@@ -156,13 +161,14 @@
         </div>
     </div>
 
-    <!-- PANTALLA 3: WALLET CREDENCIAL -->
+    <!-- PANTALLA 3: LEGAJO Y CREDENCIAL (WALLET) -->
     <div id="screen-wallet" class="screen">
-        <div class="wallet-welcome mb-4 flex justify-between items-center bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-between items-center relative overflow-hidden">
+            <div class="absolute right-0 top-0 bottom-0 w-2 bg-emerald-400"></div>
             <div>
-                <div class="text-[9px] text-emerald-600 font-bold uppercase tracking-widest">Matrícula Activa</div>
-                <div class="text-lg font-black text-[#0a1128] font-title uppercase line-clamp-1" id="user-name">---</div>
-                <div class="text-[10px] font-mono text-slate-500" id="user-profesion">---</div>
+                <div class="text-[9px] text-emerald-600 font-bold uppercase tracking-widest flex items-center gap-1 mb-1"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sistema Activo</div>
+                <div class="text-sm font-black text-[#0a1128] font-title uppercase tracking-tight line-clamp-1" id="user-name">---</div>
+                <div class="text-[10px] font-mono font-bold text-slate-500" id="user-profesion">---</div>
             </div>
             <div class="w-10 h-10 rounded-full bg-[#0a1128] text-[#d4af37] flex items-center justify-center shadow-md shrink-0 border border-[#d4af37]">
                 <i data-lucide="shield-check" class="w-5 h-5"></i>
@@ -170,44 +176,44 @@
         </div>
         
         <div class="card-viewport" id="card-viewport">
-            <div id="carnet-render"></div>
+            <div id="carnet-render"><div class="flex items-center justify-center h-full w-full text-slate-400 bg-slate-100"><i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i></div></div>
         </div>
         
         <div class="view-toggles">
-            <button class="btn-toggle active" id="btn-toggle-front" onclick="cambiarVista('front')"><i data-lucide="id-card" class="w-4 h-4"></i> FRENTE</button>
-            <button class="btn-toggle" id="btn-toggle-back" onclick="cambiarVista('back')"><i data-lucide="qr-code" class="w-4 h-4"></i> DORSO Y QR</button>
+            <button class="btn-toggle active" id="btn-toggle-front" onclick="cambiarVista('front')">FRENTE</button>
+            <button class="btn-toggle" id="btn-toggle-back" onclick="cambiarVista('back')">DORSO Y QR</button>
         </div>
 
-        <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner mb-6">
-            <div class="flex items-center justify-center gap-2 mb-1">
-                <i data-lucide="eye" class="w-4 h-4 text-[#d4af37]"></i>
-                <h4 class="text-white font-black text-lg font-mono" id="metric-vistas">0</h4>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner">
+                <i data-lucide="eye" class="w-5 h-5 text-blue-400 mx-auto mb-1"></i>
+                <h4 class="text-white font-black text-xl font-mono" id="metric-vistas">0</h4>
+                <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Búsquedas Mensuales</p>
             </div>
-            <p class="text-[9px] text-slate-400 uppercase font-bold tracking-widest">Apariciones en el Buscador este mes</p>
+            <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner">
+                <i data-lucide="check-square" class="w-5 h-5 text-emerald-400 mx-auto mb-1"></i>
+                <h4 class="text-white font-black text-xl font-mono">100%</h4>
+                <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Perfil Completo</p>
+            </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-2 mt-4">
-            <button id="btn-descargar-carnet" class="bg-white border border-slate-200 text-[#0a1128] font-bold py-3 rounded-xl shadow-sm hover:bg-slate-50 flex flex-col items-center justify-center gap-1 transition-transform active:scale-95" onclick="descargarCarnetOficial()">
-                <i data-lucide="download" class="w-5 h-5 text-[#d4af37]"></i>
-                <span class="text-[9px] uppercase tracking-wider text-center">Bajar<br>Credencial</span>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <button id="btn-descargar-carnet" class="bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="descargarCarnetOficial()">
+                <i data-lucide="download" class="w-5 h-5 text-[#d4af37]"></i> Bajar Documento (PDF)
             </button>
-            <button class="bg-white border border-slate-200 text-[#0a1128] font-bold py-3 rounded-xl shadow-sm hover:bg-slate-50 flex flex-col items-center justify-center gap-1 transition-transform active:scale-95" onclick="abrirModalDiplomas()">
-                <i data-lucide="award" class="w-5 h-5 text-blue-600"></i>
-                <span class="text-[9px] uppercase tracking-wider text-center">Ver Mis<br>Títulos</span>
-            </button>
-            <button class="bg-white border border-slate-200 text-[#0a1128] font-bold py-3 rounded-xl shadow-sm hover:bg-slate-50 flex flex-col items-center justify-center gap-1 transition-transform active:scale-95" onclick="cerrarSesion()">
-                <i data-lucide="log-out" class="w-5 h-5 text-red-500"></i>
-                <span class="text-[9px] uppercase tracking-wider text-center">Cerrar<br>Sesión</span>
+            <button class="bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="abrirModalDiplomas()">
+                <i data-lucide="award" class="w-5 h-5 text-blue-600"></i> Mis Títulos
             </button>
         </div>
     </div>
 
-    <!-- PANTALLA 4: PORTAL CIENTÍFICO (EX CAMPUS) -->
+    <!-- PANTALLA 4: PORTAL CIENTÍFICO -->
     <div id="screen-portal" class="screen">
         <div class="mb-4 bg-white p-4 rounded-xl border border-slate-200 text-center">
             <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Portal Científico</h2>
             <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Feed Oficial de Actualidad</p>
         </div>
+        
         <div id="feed-portal-container" class="space-y-4 pb-4">
             <div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>
         </div>
@@ -234,8 +240,8 @@
         <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm">
             <h3 class="font-bold text-sm text-[#0a1128] mb-3 flex items-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4 text-[#d4af37]"></i> Subir Documento</h3>
             <form id="form-subir-tesis" onsubmit="subirPublicacion(event)">
-                <input type="text" id="tesis-titulo" class="form-input" placeholder="Título de la publicación" required>
-                <textarea id="tesis-resumen" class="form-input" placeholder="Breve resumen del contenido (máx 300 caracteres)..." rows="3" maxlength="300" required></textarea>
+                <input type="text" id="tesis-titulo" class="form-input text-sm" placeholder="Título de la publicación" required>
+                <textarea id="tesis-resumen" class="form-input text-sm" placeholder="Breve resumen (máx 300 caracteres)..." rows="3" maxlength="300" required></textarea>
                 
                 <div class="mb-4">
                     <label class="block text-xs font-bold text-slate-500 mb-1">Archivo PDF (Max. 10MB)</label>
@@ -254,7 +260,7 @@
 
     <!-- MODAL NOTIFICACIONES -->
     <div id="modal-notificaciones" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex justify-end">
-        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col">
+        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col animate-slide-in">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-[#0a1128] text-white">
                 <h3 class="font-black uppercase tracking-widest text-sm flex items-center gap-2"><i data-lucide="bell" class="w-4 h-4 text-[#d4af37]"></i> Centro de Alertas</h3>
                 <button onclick="cerrarModalSeguro('modal-notificaciones')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -314,7 +320,7 @@
 
         if ('serviceWorker' in navigator) { 
             window.addEventListener('load', () => { 
-                navigator.serviceWorker.register('/sw.js').catch(()=>{ console.log("Modo Offline desactivado"); }); 
+                navigator.serviceWorker.register('/sw.js').catch(()=>{ console.log("SW Offline desactivado temporalmente."); }); 
             }); 
         }
 
@@ -325,7 +331,7 @@
 
         async function cargarConfiguracionInicial() {
             try {
-                const { data: config } = await db.from('renmcycf_config').select('*').eq('id', 1).maybeSingle();
+                const { data: config } = await db.from('renmcycf_config').select('logo_url, hero_image_url').eq('id', 1).maybeSingle();
                 if (config) {
                     configGlobal = config;
                     if (config.logo_url) { 
@@ -350,8 +356,7 @@
         }
 
         async function ingresar() {
-            const btn = el('btn-ingresar'); 
-            const errorDiv = el('login-error');
+            const btn = el('btn-ingresar'); const errorDiv = el('login-error');
             if(!btn || !errorDiv) return;
 
             const dni = el('input-dni').value.replace(/\D/g, '');
@@ -373,7 +378,6 @@
                 if (!padron.terminos_aceptados) cambiarPantallaLogin('screen-tc');
                 else if (!padron.foto_perfil_url) cambiarPantallaLogin('screen-foto');
                 else iniciarWallet();
-                
             } catch (err) {
                 errorDiv.textContent = err.message; safeClass('login-error', 'remove', 'hidden');
                 btn.disabled = false; btn.innerHTML = `<i data-lucide="scan-face" class="w-5 h-5"></i> Validar Identidad`;
@@ -447,6 +451,7 @@
             } catch (err) { alert("Error: " + err.message); btn.innerHTML = txt; btn.disabled = false; }
         }
 
+        // NAVEGACIÓN
         function cambiarPantallaLogin(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             safeClass(screenId, 'add', 'active');
@@ -525,21 +530,17 @@
             renderizarCarnet(vista);
         }
 
-        // FIX: MATEMÁTICA ANTI-SQUISH (line-height y letter-spacing inyectados)
+        // FIX: GETSAFESTYLE ORIGINAL REVERTIDO CON OVERFLOW: VISIBLE ANTI-CORTES
         function getSafeStyle(key) {
             const props = configDiseno[key]; if (!props) return 'display: none;';
-            let style = `position: absolute; width: ${props.width}px; height: ${props.height}px; line-height: 1.1; letter-spacing: 0px; `;
-            if (key === 'profesion' || key === 'categoria') style += `font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-weight: 900; `; else style += `font-family: 'Inter', sans-serif; font-weight: 900; `;
+            let style = `position: absolute; width: ${props.width}px; height: ${props.height}px; font-family: 'Inter', sans-serif; `;
+            if (key === 'profesion' || key === 'categoria') style += `font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-weight: 900; `; else style += `font-weight: 900; `;
             if (props.size !== undefined) style += `font-size: ${props.size}px; `; if (props.color !== undefined) style += `color: ${props.color}; `;
             let finalLeft = props.left; let finalTop = props.top;
-            if (key === 'foto' || key === 'qr' || key === 'roseta') { 
-                finalLeft = props.left - (props.width / 2); finalTop = props.top - (props.height / 2); 
-                style += `display: flex; align-items: center; justify-content: center; `; 
-            } else {
-                if (props.align === 'right') { finalLeft = props.left - props.width; style += `text-align: right; justify-content: flex-end; `; } 
-                else if (props.align === 'center') { style += `text-align: center; justify-content: center; `; } 
-                else { style += `text-align: left; justify-content: flex-start; `; }
-                style += `display: flex; align-items: center; white-space: nowrap; overflow: hidden; `;
+            if (key === 'foto' || key === 'qr' || key === 'roseta') { finalLeft = props.left - (props.width / 2); finalTop = props.top - (props.height / 2); style += `display: flex; align-items: center; justify-content: center; `; } else {
+                if (props.align === 'right') { finalLeft = props.left - props.width; style += `text-align: right; justify-content: flex-end; `; } else if (props.align === 'center') { style += `text-align: center; justify-content: center; `; } else { style += `text-align: left; justify-content: flex-start; `; }
+                // OVERFLOW VISIBLE: EVITA QUE SE CORTEN LAS LETRAS POR DEBAJO
+                style += `display: flex; align-items: center; white-space: nowrap; overflow: visible; `;
             }
             style += `left: ${finalLeft}px; top: ${finalTop}px; `; return style;
         }
@@ -549,21 +550,14 @@
             const elements = contenedorPadre.querySelectorAll('div[style*="font-size"]');
             elements.forEach(elm => {
                 const maxWidth = parseInt(elm.style.width); if (!maxWidth || elm.querySelector('img')) return;
-                const span = document.createElement('span'); 
-                span.style.fontSize = elm.style.fontSize; 
-                span.style.fontFamily = window.getComputedStyle(elm).fontFamily; 
-                span.style.fontWeight = window.getComputedStyle(elm).fontWeight; 
-                span.style.visibility = 'hidden'; 
-                span.style.position = 'absolute'; 
-                span.style.whiteSpace = 'nowrap'; 
-                span.innerText = elm.innerText; 
-                document.body.appendChild(span);
+                const span = document.createElement('span'); span.style.fontSize = elm.style.fontSize; span.style.fontFamily = window.getComputedStyle(elm).fontFamily; span.style.fontWeight = window.getComputedStyle(elm).fontWeight; span.style.visibility = 'hidden'; span.style.position = 'absolute'; span.style.whiteSpace = 'nowrap'; span.innerText = elm.innerText; document.body.appendChild(span);
                 let textWidth = span.offsetWidth; let currentSize = parseInt(elm.style.fontSize);
                 while (textWidth > maxWidth && currentSize > 10) { currentSize--; span.style.fontSize = currentSize + 'px'; textWidth = span.offsetWidth; }
                 elm.style.fontSize = currentSize + 'px'; document.body.removeChild(span);
             });
         }
 
+        // EL VIEWPORT ORIGINAL PERFECTO QUE NO CORTA LA PANTALLA
         function ajustarEscala() {
             const viewport = el('card-viewport');
             const render = el('carnet-render');
@@ -584,8 +578,9 @@
                 container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;"><img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div></div>`;
                 setTimeout(() => { autoAjustarTextos(container); ajustarEscala(); }, 50);
             } else if (vista === 'back') {
-                // RUTA DE VALIDADOR EN RAÍZ
-                const urlValidador = `${window.location.origin}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
+                // FIX: RUTA DEL VALIDADOR OFICIAL EN LA RAÍZ
+                const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF` : window.location.origin;
+                const urlValidador = `${baseUrl}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
                 let textoCat = ''; if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; else textoCat = 'Consultor/Estudiante inscripto.';
                 
                 container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index: 10;">${textoCat}</div><div id="qr-container" style="${getSafeStyle('qr')} z-index: 10; background: white;"></div></div>`;
@@ -597,17 +592,31 @@
             }
         }
 
-        // FUNCION PUENTE PARA DESCARGAR IMAGENES A BASE64 Y EVITAR BLOQUEO CORS EN jSPDF
-        function urlToBase64(url, isPng = true) {
+        // FUNCION PARA DESCARGAR IMAGENES A BASE64 Y RECORTAR EL LOGO COMO UN CÍRCULO PERFECTO
+        function urlToBase64(url, isPng = true, circular = false) {
             return new Promise((resolve) => {
                 if (!url) { resolve(null); return; }
                 const img = new Image();
                 img.crossOrigin = 'Anonymous';
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    canvas.width = img.width; canvas.height = img.height;
+                    const size = Math.min(img.width, img.height);
+                    canvas.width = circular ? size : img.width; 
+                    canvas.height = circular ? size : img.height;
                     const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
+                    
+                    if (circular) {
+                        // Recorte Circular Estricto
+                        ctx.beginPath();
+                        ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+                        ctx.closePath();
+                        ctx.clip();
+                        const offsetX = (img.width - size) / 2;
+                        const offsetY = (img.height - size) / 2;
+                        ctx.drawImage(img, offsetX, offsetY, size, size, 0, 0, size, size);
+                    } else {
+                        ctx.drawImage(img, 0, 0);
+                    }
                     resolve(canvas.toDataURL(isPng ? 'image/png' : 'image/jpeg'));
                 };
                 img.onerror = () => resolve(null);
@@ -615,7 +624,7 @@
             });
         }
 
-        // FIX: DESCARGA PDF EXACTA (MARCA DE AGUA, LOGO AL CENTRO Y ANTI-SQUISH)
+        // FIX: DESCARGA PDF EXACTA
         async function descargarCarnetOficial() {
             if (!alumnoActual) return;
             const btn = el('btn-descargar-carnet'); if(!btn) return;
@@ -625,80 +634,84 @@
             
             try {
                 const exportBox = document.createElement('div');
-                exportBox.style.position = 'fixed'; exportBox.style.left = '-9999px'; exportBox.style.top = '0'; exportBox.style.width = '1000px'; exportBox.style.backgroundColor = '#fff'; exportBox.style.zIndex = '9999';
+                exportBox.style.position = 'fixed'; exportBox.style.left = '-9999px'; exportBox.style.top = '0'; exportBox.style.width = '1040px'; exportBox.style.padding = '20px'; exportBox.style.backgroundColor = '#fff'; exportBox.style.display = 'flex'; exportBox.style.flexDirection = 'column'; exportBox.style.gap = '20px'; exportBox.style.zIndex = '9999';
                 document.body.appendChild(exportBox);
 
                 const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
                 const vence = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D';
-                const urlValidador = `${window.location.origin}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
+                const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF` : window.location.origin;
+                const urlValidador = `${baseUrl}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
 
-                exportBox.innerHTML = `<div id="export-front" style="position:relative;width:1000px;height:630px;overflow:hidden;background:#fff;border-radius:30px;"><img src="${bgCredencialFrente}" style="position:absolute;top:0;left:0;width:1000px;height:630px;z-index:1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index:2;border-radius:50%;overflow:hidden;"><img src="${fotoUrl}" style="width:100%;height:100%;object-fit:cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index:5;object-fit:fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index:10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index:10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index:10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index:10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index:10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index:10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index:10;">${vence}</div></div>`;
+                // RENDER FRENTE
+                const frontHtml = `<div id="export-front" style="position:relative;width:1000px;height:630px;overflow:hidden;background:#fff;border-radius:30px;"><img src="${bgCredencialFrente}" style="position:absolute;top:0;left:0;width:1000px;height:630px;z-index:1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index:2;border-radius:50%;overflow:hidden;"><img src="${fotoUrl}" style="width:100%;height:100%;object-fit:cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index:5;object-fit:fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index:10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index:10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index:10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index:10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index:10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index:10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index:10;">${vence}</div></div>`;
+                
+                let textoCat = ''; 
+                if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; 
+                else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; 
+                else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; 
+                else textoCat = 'Consultor/Estudiante inscripto.';
+                
+                // RENDER DORSO
+                const backHtml = bgCredencialDorso ? `<div id="export-back" style="position:relative;width:1000px;height:630px;overflow:hidden;background:#fff;border-radius:30px;"><img src="${bgCredencialDorso}" style="position:absolute;top:0;left:0;width:1000px;height:630px;z-index:1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index:10;">${textoCat}</div><div id="export-qr" style="${getSafeStyle('qr')} z-index:10;background:white;"></div></div>` : '';
+                
+                exportBox.innerHTML = frontHtml + backHtml;
+                
+                if (bgCredencialDorso) {
+                    await new Promise(r => setTimeout(r, 200));
+                    try { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(exportBox.querySelector('#export-qr'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); } catch(e) {}
+                }
                 
                 autoAjustarTextos(exportBox);
                 await new Promise(r => setTimeout(r, 800)); 
                 
-                const canvasFront = await html2canvas(exportBox.firstElementChild, { useCORS: true, allowTaint: true, scale: 2 });
-                const imgFront = canvasFront.toDataURL('image/png', 1.0);
+                const canvasFront = await html2canvas(exportBox.querySelector('#export-front'), { useCORS: true, allowTaint: true, scale: 2, backgroundColor: '#ffffff' });
+                const imgFront = canvasFront.toDataURL('image/jpeg', 1.0);
 
                 let imgBack = null;
                 if (bgCredencialDorso) {
-                    let textoCat = ''; 
-                    if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; 
-                    else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; 
-                    else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; 
-                    else textoCat = 'Consultor/Estudiante inscripto.';
-                    
-                    exportBox.innerHTML = `<div id="export-back" style="position:relative;width:1000px;height:630px;overflow:hidden;background:#fff;border-radius:30px;"><img src="${bgCredencialDorso}" style="position:absolute;top:0;left:0;width:1000px;height:630px;z-index:1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index:10;">${textoCat}</div><div id="export-qr" style="${getSafeStyle('qr')} z-index:10;background:white;"></div></div>`;
-                    
-                    await new Promise(r => setTimeout(r, 200));
-                    try { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(exportBox.querySelector('#export-qr'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); } catch(e) {}
-                    
-                    autoAjustarTextos(exportBox);
-                    await new Promise(r => setTimeout(r, 800)); 
-                    
-                    const canvasBack = await html2canvas(exportBox.firstElementChild, { useCORS: true, allowTaint: true, scale: 2 });
-                    imgBack = canvasBack.toDataURL('image/png', 1.0);
+                    const canvasBack = await html2canvas(exportBox.querySelector('#export-back'), { useCORS: true, allowTaint: true, scale: 2, backgroundColor: '#ffffff' });
+                    imgBack = canvasBack.toDataURL('image/jpeg', 1.0);
                 }
 
                 document.body.removeChild(exportBox);
 
                 // CREAR PDF A4 CON VECTORES (jsPDF)
                 const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-
-                // 1. MARCA DE AGUA (HERO IMAGE AL 15% DE OPACIDAD SOBRE TODA LA HOJA)
-                const heroBase64 = await urlToBase64(configGlobal.hero_image_url, false);
+                
+                // 1. MARCA DE AGUA (HERO IMAGE AL 15%)
+                const heroBase64 = await urlToBase64(configGlobal.hero_image_url, false, false);
                 if (heroBase64) {
                     pdf.setGState(new pdf.GState({opacity: 0.15}));
                     pdf.addImage(heroBase64, 'JPEG', 0, 45, 210, 252);
-                    pdf.setGState(new pdf.GState({opacity: 1})); // Restaurar opacidad
+                    pdf.setGState(new pdf.GState({opacity: 1}));
                 }
 
-                // 2. FRANJA AZUL SUPERIOR 
+                // 2. FRANJA AZUL SUPERIOR
                 pdf.setFillColor(10, 17, 40); // Azul Marino #0a1128
                 pdf.rect(0, 0, 210, 45, 'F');
                 
                 // 3. TEXTOS EN LA FRANJA
                 pdf.setTextColor(212, 175, 55); // Dorado #d4af37
                 pdf.setFont("helvetica", "bold");
-                pdf.setFontSize(16);
-                pdf.text("DOCUMENTO DE IDENTIDAD PROFESIONAL", 105, 20, null, null, "center");
+                pdf.setFontSize(14);
+                pdf.text("DOCUMENTO DE IDENTIDAD PROFESIONAL", 105, 20, { align: "center" });
                 
                 pdf.setTextColor(255, 255, 255); // Blanco
                 pdf.setFont("helvetica", "normal");
                 pdf.setFontSize(10);
-                pdf.text("Registro Nacional de Matriculados en Criminalística y Ciencias Forenses", 105, 28, null, null, "center");
+                pdf.text("Registro Nacional de Matriculados en Criminalística y Ciencias Forenses", 105, 28, { align: "center" });
 
-                // 4. LOGO (CENTRO, SUPERPUESTO EN EL BORDE DE LA FRANJA AZUL)
-                const logoBase64 = await urlToBase64(configGlobal.logo_url, true);
+                // 4. LOGO CIRCULAR PERFECTO
+                const logoBase64 = await urlToBase64(configGlobal.logo_url, true, true);
                 if (logoBase64) {
                     pdf.setFillColor(255, 255, 255);
                     pdf.setDrawColor(212, 175, 55); // Borde dorado
                     pdf.setLineWidth(1.5);
-                    pdf.circle(105, 45, 18, 'FD'); // Círculo relleno de blanco con borde dorado
-                    pdf.addImage(logoBase64, 'PNG', 90, 30, 30, 30);
+                    pdf.circle(105, 45, 16, 'FD'); // Círculo superpuesto en la franja
+                    pdf.addImage(logoBase64, 'PNG', 105 - 15, 45 - 15, 30, 30);
                 }
 
-                // 5. MEDIDAS EXACTAS TARJETA (8.5 x 5.4 cm)
+                // 5. MEDIDAS EXACTAS TARJETA (85.6 x 54.0 mm)
                 const cardW = 85.6; 
                 const cardH = 54.0; 
                 const marginX = (210 - cardW) / 2; 
@@ -707,26 +720,29 @@
                 pdf.setDrawColor(200, 200, 200);
                 pdf.setLineDash([2, 2], 0);
                 
+                // Pegar Frente
                 pdf.rect(marginX - 2, currentY - 2, cardW + 4, cardH + 4); 
-                pdf.addImage(imgFront, 'PNG', marginX, currentY, cardW, cardH);
-                currentY += cardH + 20;
+                pdf.addImage(imgFront, 'JPEG', marginX, currentY, cardW, cardH);
+                currentY += cardH + 15;
 
+                // Pegar Dorso
                 if (imgBack) {
                     pdf.rect(marginX - 2, currentY - 2, cardW + 4, cardH + 4); 
-                    pdf.addImage(imgBack, 'PNG', marginX, currentY, cardW, cardH);
-                    currentY += cardH + 20;
+                    pdf.addImage(imgBack, 'JPEG', marginX, currentY, cardW, cardH);
+                    currentY += cardH + 15;
                 }
 
+                // 6. TEXTO LEGAL
                 pdf.setTextColor(100, 100, 100);
                 pdf.setFont("helvetica", "normal");
-                pdf.setFontSize(9);
-                pdf.setLineDash([]); // Quitar linea punteada
-                pdf.text("Este documento es personal e intransferible.", 105, currentY, null, null, "center");
-                currentY += 5;
-                pdf.text("La validez debe comprobarse escaneando el código QR en el validador oficial.", 105, currentY, null, null, "center");
-                currentY += 10;
                 pdf.setFontSize(8);
-                pdf.text(`Generado el ${new Date().toLocaleDateString('es-AR')} a las ${new Date().toLocaleTimeString('es-AR')}`, 105, currentY, null, null, "center");
+                pdf.setLineDash([]); 
+                pdf.text("Este documento es personal e intransferible.", 105, currentY, { align: "center" });
+                currentY += 5;
+                pdf.text("La validez debe comprobarse escaneando el código QR en el validador oficial.", 105, currentY, { align: "center" });
+                currentY += 10;
+                pdf.setFontSize(7);
+                pdf.text(`Generado el ${new Date().toLocaleDateString('es-AR')} a las ${new Date().toLocaleTimeString('es-AR')}`, 105, currentY, { align: "center" });
 
                 pdf.save(`Credencial_RENMCYCF_${alumnoActual.matricula_oficial || alumnoActual.dni}.pdf`);
 
