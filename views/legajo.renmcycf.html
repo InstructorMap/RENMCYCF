@@ -4,8 +4,8 @@
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0a1128" id="meta-theme-color">
-    <title>Wallet · RENMCYCF</title>
+    <meta name="theme-color" content="#0a1128">
+    <title>Legajo Digital · RENMCYCF</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -16,8 +16,7 @@
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
 
     <style>
@@ -40,7 +39,7 @@
         .tc-box { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; max-height: 300px; overflow-y: auto; text-align: left; font-size: 12px; line-height: 1.6; color: #475569; margin-bottom: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); }
         .tc-box h3 { color: var(--forense-navy); font-weight: 900; font-size: 14px; margin-bottom: 10px; }
 
-        /* EL VIEWPORT ORIGINAL DE DEEPSEEK */
+        /* VIEWPORT ORIGINAL DEEPSEEK (Garantiza que no se corte) */
         .card-viewport { width: 100%; overflow: hidden; position: relative; margin-bottom: 20px; height: 230px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); display: flex; justify-content: center; background: #fff; }
         #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
 
@@ -58,18 +57,17 @@
         .form-input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-bottom: 15px; background: white; color: #1e293b; }
         .form-input:focus { border-color: var(--forense-navy); box-shadow: 0 0 0 3px rgba(10, 17, 40, 0.1); }
         
-        /* Cropper Custom Styles */
         .cropper-view-box, .cropper-face { border-radius: 50%; } 
         .cropper-line, .cropper-point { background-color: var(--forense-gold); }
     </style>
 </head>
 <body>
 
-    <div class="header-top flex justify-between items-center px-4">
+    <div class="header-top flex justify-between items-center px-4" id="app-header">
         <span class="flex-1 text-center">Registro Nacional de Matriculados en Criminalística y Ciencias Forenses</span>
         
         <!-- Campana de Notificaciones -->
-        <button onclick="abrirNotificaciones()" class="relative text-slate-300 hover:text-white transition-colors ml-2" id="btn-campana" style="display: none;">
+        <button onclick="abrirNotificaciones()" class="relative text-slate-300 hover:text-white transition-colors ml-2 hidden" id="btn-campana">
             <i data-lucide="bell" class="w-5 h-5"></i>
             <span id="badge-notificaciones" class="absolute -top-1 -right-1 flex h-2 w-2">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -135,7 +133,7 @@
     <div id="screen-foto" class="screen bg-white absolute inset-0 z-50">
         <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4 text-center">
             <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="camera" class="w-6 h-6"></i></div>
-            <h2 class="text-xl font-black text-[#0a1128] uppercase">Fotografía Oficial</h2>
+            <h2 class="text-xl font-black text-[#0a1128] uppercase mb-4">Fotografía Oficial</h2>
             <p class="text-xs text-slate-500 font-bold mt-1 mb-6">Último paso para generar su credencial</p>
 
             <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 shadow-sm mb-6 text-left text-xs text-amber-900 leading-relaxed">
@@ -143,22 +141,20 @@
                 La fotografía será su identidad en el Padrón Nacional. Debe ser en <strong>primer plano, fondo claro, sin anteojos oscuros ni gorras.</strong> Si la foto es rechazada, su credencial será suspendida.
             </div>
 
-            <!-- Botones de selección -->
             <div id="foto-selector-ui" class="flex-1 flex flex-col justify-center gap-4">
-                <button class="bg-[#0a1128] hover:bg-slate-800 text-[#d4af37] font-black py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full shadow-lg" onclick="abrirSelectorArchivo(true)">
+                <button class="bg-[#0a1128] hover:bg-slate-800 text-[#d4af37] font-black py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full shadow-lg transition-transform active:scale-95" onclick="abrirSelectorArchivo(true)">
                     <i data-lucide="camera" class="w-6 h-6"></i> TOMAR FOTO CON CÁMARA
                 </button>
                 <p class="text-xs font-bold text-slate-400">Ó</p>
-                <button class="bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full" onclick="abrirSelectorArchivo(false)">
+                <button class="bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full transition-transform active:scale-95" onclick="abrirSelectorArchivo(false)">
                     <i data-lucide="image-plus" class="w-5 h-5"></i> SUBIR DE LA GALERÍA
                 </button>
                 <input type="file" id="input-foto-oficial" accept="image/*" class="hidden" onchange="iniciarRecorte(this)">
                 <input type="file" id="input-foto-camara" accept="image/*" capture="user" class="hidden" onchange="iniciarRecorte(this)">
             </div>
 
-            <!-- Interfaz de Cropper (Oculta por defecto) -->
             <div id="foto-cropper-ui" class="hidden flex-1 flex-col h-full w-full">
-                <div class="relative flex-1 w-full bg-slate-900 rounded-xl overflow-hidden mb-4"><img id="image-to-crop" src="" style="display:block; max-width: 100%;"></div>
+                <div class="relative flex-1 w-full bg-slate-900 rounded-xl overflow-hidden mb-4 shadow-inner"><img id="image-to-crop" src="" style="display:block; max-width: 100%;"></div>
                 <div class="flex gap-3">
                     <button class="flex-1 bg-slate-200 text-slate-700 font-bold py-3 rounded-lg text-xs" onclick="cancelarRecorte()">VOLVER</button>
                     <button class="flex-[2] bg-[#d4af37] text-[#0a1128] font-black py-3 rounded-lg text-xs shadow-md" id="btn-guardar-recorte" onclick="procesarYSubirRecorte()">GUARDAR ENCUADRE</button>
@@ -167,9 +163,10 @@
         </div>
     </div>
 
-    <!-- PANTALLA 3: WALLET CREDENCIAL -->
+    <!-- PANTALLA 3: CREDENCIAL PRINCIPAL -->
     <div id="screen-wallet" class="screen">
-        <div class="wallet-welcome mb-4 flex justify-between items-center bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-between items-center relative overflow-hidden">
+            <div class="absolute right-0 top-0 bottom-0 w-2 bg-emerald-400"></div>
             <div>
                 <div class="text-[9px] text-emerald-600 font-bold uppercase tracking-widest">Matrícula Activa</div>
                 <div class="text-lg font-black text-[#0a1128] font-title uppercase line-clamp-1" id="user-name">---</div>
@@ -180,7 +177,7 @@
             </div>
         </div>
         
-        <!-- EL VIEWPORT ORIGINAL DE DEEPSEEK QUE FUNCIONA PERFECTO -->
+        <!-- VIEWPORT ORIGINAL DEEPSEEK -->
         <div class="card-viewport" id="card-viewport">
             <div id="carnet-render"></div>
         </div>
@@ -190,7 +187,6 @@
             <button class="btn-toggle" id="btn-toggle-back" onclick="cambiarVista('back')"><i data-lucide="qr-code" class="w-4 h-4"></i> DORSO Y QR</button>
         </div>
 
-        <!-- Métrica de Vanidad -->
         <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner mb-6">
             <div class="flex items-center justify-center gap-2 mb-1">
                 <i data-lucide="eye" class="w-4 h-4 text-[#d4af37]"></i>
@@ -215,13 +211,12 @@
         </div>
     </div>
 
-    <!-- PANTALLA 4: PORTAL CIENTÍFICO (EX CAMPUS) -->
+    <!-- PANTALLA 4: PORTAL CIENTÍFICO -->
     <div id="screen-portal" class="screen">
         <div class="mb-4 bg-white p-4 rounded-xl border border-slate-200 text-center">
             <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Portal Científico</h2>
             <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Feed Oficial de Actualidad</p>
         </div>
-        
         <div id="feed-portal-container" class="space-y-4 pb-4">
             <div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>
         </div>
@@ -248,8 +243,8 @@
         <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm">
             <h3 class="font-bold text-sm text-[#0a1128] mb-3 flex items-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4 text-[#d4af37]"></i> Subir Documento</h3>
             <form id="form-subir-tesis" onsubmit="subirPublicacion(event)">
-                <input type="text" id="tesis-titulo" class="form-input" placeholder="Título de la publicación" required>
-                <textarea id="tesis-resumen" class="form-input" placeholder="Breve resumen del contenido (máx 300 caracteres)..." rows="3" maxlength="300" required></textarea>
+                <input type="text" id="tesis-titulo" class="form-input text-sm" placeholder="Título de la publicación" required>
+                <textarea id="tesis-resumen" class="form-input text-sm" placeholder="Breve resumen (máx 300 caracteres)..." rows="3" maxlength="300" required></textarea>
                 
                 <div class="mb-4">
                     <label class="block text-xs font-bold text-slate-500 mb-1">Archivo PDF (Max. 10MB)</label>
@@ -268,10 +263,10 @@
 
     <!-- MODAL NOTIFICACIONES -->
     <div id="modal-notificaciones" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex justify-end">
-        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col animate-slide-in">
+        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-[#0a1128] text-white">
                 <h3 class="font-black uppercase tracking-widest text-sm flex items-center gap-2"><i data-lucide="bell" class="w-4 h-4 text-[#d4af37]"></i> Centro de Alertas</h3>
-                <button onclick="document.getElementById('modal-notificaciones').classList.add('hidden')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+                <button onclick="cerrarModalSeguro('modal-notificaciones')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50" id="lista-notificaciones"></div>
         </div>
@@ -281,12 +276,12 @@
     <div id="modal-diplomas" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden flex flex-col p-4 pt-10">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-white font-black uppercase text-xl"><i data-lucide="award" class="inline w-5 h-5 text-[#d4af37]"></i> Títulos Registrados</h3>
-            <button onclick="document.getElementById('modal-diplomas').classList.add('hidden')" class="text-slate-400 hover:text-white"><i data-lucide="x-circle" class="w-8 h-8"></i></button>
+            <button onclick="cerrarModalSeguro('modal-diplomas')" class="text-slate-400 hover:text-white"><i data-lucide="x-circle" class="w-8 h-8"></i></button>
         </div>
         <div class="flex-1 overflow-y-auto space-y-4 pb-10" id="lista-diplomas-modal"></div>
     </div>
 
-    <!-- BARRA NAVEGACIÓN INFERIOR -->
+    <!-- BARRA NAVEGACIÓN INFERIOR PWA -->
     <div class="bottom-nav hidden" id="bottom-nav">
         <div class="nav-item active" id="tab-wallet" onclick="switchNavTab('wallet')">
             <i data-lucide="id-card" class="w-6 h-6 mb-1"></i><span>Credencial</span>
@@ -303,6 +298,16 @@
     </div>
 
     <script>
+        // PROGRAMACIÓN DEFENSIVA: Obtener elementos de forma segura
+        const el = id => document.getElementById(id);
+        function safeClass(id, action, cls) {
+            const element = el(id);
+            if (element) {
+                if(action === 'add') element.classList.add(cls);
+                if(action === 'remove') element.classList.remove(cls);
+            }
+        }
+
         lucide.createIcons();
         const { jsPDF } = window.jspdf;
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
@@ -314,11 +319,13 @@
         let configGlobal = {};
         let configDiseno = {};
         let bgCredencialFrente = ''; let bgCredencialDorso = ''; let rosetaUrl = '';
-        
         let cropperInstance = null; let archivoSeleccionadoParaRecortar = null;
 
+        // Silenciamos el error del SW si no existe aún en el servidor
         if ('serviceWorker' in navigator) { 
-            window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(()=>{}); }); 
+            window.addEventListener('load', () => { 
+                navigator.serviceWorker.register('/sw.js').catch(()=>{ console.log("Modo App Offline desactivado temporalmente."); }); 
+            }); 
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
@@ -332,12 +339,12 @@
                 if (config) {
                     configGlobal = config;
                     if (config.logo_url) { 
-                        document.getElementById('dynamic-logo').src = config.logo_url; document.getElementById('dynamic-logo').classList.remove('hidden'); document.getElementById('default-logo').classList.add('hidden'); 
-                        document.getElementById('nav-mini-logo').src = config.logo_url;
+                        if(el('dynamic-logo')) { el('dynamic-logo').src = config.logo_url; safeClass('dynamic-logo', 'remove', 'hidden'); }
+                        safeClass('default-logo', 'add', 'hidden'); 
+                        if(el('nav-mini-logo')) el('nav-mini-logo').src = config.logo_url;
                     }
-                    if (config.hero_image_url) { document.getElementById('dynamic-bg').src = config.hero_image_url; document.getElementById('dynamic-bg').style.display = 'block'; }
+                    if (config.hero_image_url && el('dynamic-bg')) { el('dynamic-bg').src = config.hero_image_url; el('dynamic-bg').style.display = 'block'; }
                 }
-
                 const { data: cont } = await db.from('renmcycf_contenido').select('clave, valor').in('clave', ['credencial_style', 'credencial_bg', 'credencial_bg_dorso', 'credencial_roseta']);
                 if (cont) {
                     const styleObj = cont.find(c => c.clave === 'credencial_style');
@@ -349,15 +356,18 @@
             } catch (err) {}
             
             const savedDni = localStorage.getItem('renmcycf_dni_session');
-            if(savedDni) { document.getElementById('input-dni').value = savedDni; ingresar(); }
+            if(savedDni && el('input-dni')) { el('input-dni').value = savedDni; ingresar(); }
         }
 
         async function ingresar() {
-            const btn = document.getElementById('btn-ingresar'); const errorDiv = document.getElementById('login-error');
-            const dni = document.getElementById('input-dni').value.replace(/\D/g, '');
-            errorDiv.classList.add('hidden');
+            const btn = el('btn-ingresar'); 
+            const errorDiv = el('login-error');
+            if(!btn || !errorDiv) return;
+
+            const dni = el('input-dni').value.replace(/\D/g, '');
+            safeClass('login-error', 'add', 'hidden');
             
-            if (dni.length < 7) { errorDiv.textContent = 'Ingrese un DNI válido.'; errorDiv.classList.remove('hidden'); return; }
+            if (dni.length < 7) { errorDiv.textContent = 'Ingrese un DNI válido.'; safeClass('login-error', 'remove', 'hidden'); return; }
 
             btn.disabled = true; btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> CONECTANDO...`;
             
@@ -370,22 +380,20 @@
                 alumnoActual = padron;
                 localStorage.setItem('renmcycf_dni_session', dni); 
 
-                if (!padron.terminos_aceptados) {
-                    cambiarPantallaLogin('screen-tc');
-                } else if (!padron.foto_perfil_url) {
-                    cambiarPantallaLogin('screen-foto');
-                } else {
-                    iniciarWallet();
-                }
+                if (!padron.terminos_aceptados) cambiarPantallaLogin('screen-tc');
+                else if (!padron.foto_perfil_url) cambiarPantallaLogin('screen-foto');
+                else iniciarWallet();
+                
             } catch (err) {
-                errorDiv.textContent = err.message; errorDiv.classList.remove('hidden');
-                btn.disabled = false; btn.innerHTML = `<i data-lucide="scan-face" class="w-5 h-5"></i> VALIDAR IDENTIDAD`;
+                errorDiv.textContent = err.message; safeClass('login-error', 'remove', 'hidden');
+                btn.disabled = false; btn.innerHTML = `<i data-lucide="scan-face" class="w-5 h-5"></i> Validar Identidad`;
             }
             lucide.createIcons();
         }
 
         function toggleBotonAceptar() {
-            const checkbox = document.getElementById('check-tc'); const boton = document.getElementById('btn-aceptar-tc');
+            const checkbox = el('check-tc'); const boton = el('btn-aceptar-tc');
+            if(!checkbox || !boton) return;
             if (checkbox.checked) { 
                 boton.disabled = false; 
                 boton.className = 'w-full bg-[#0a1128] text-[#d4af37] font-black uppercase tracking-widest py-4 rounded-xl transition-all active:scale-95 shadow-lg'; 
@@ -396,7 +404,8 @@
         }
 
         async function aceptarTerminos() {
-            const btn = document.getElementById('btn-aceptar-tc'); btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin inline mr-2"></i> FIRMANDO...`; btn.disabled = true;
+            const btn = el('btn-aceptar-tc'); if(!btn) return;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin inline mr-2"></i> FIRMANDO...`; btn.disabled = true;
             try {
                 await db.from('renmcycf_padron').update({ terminos_aceptados: true, fecha_aceptacion_terminos: new Date().toISOString() }).eq('id', alumnoActual.id);
                 alumnoActual.terminos_aceptados = true;
@@ -405,31 +414,36 @@
         }
 
         // CROPPER
-        function abrirSelectorArchivo(usaCamara) { usaCamara ? document.getElementById('input-foto-camara').click() : document.getElementById('input-foto-oficial').click(); }
+        function abrirSelectorArchivo(usaCamara) { 
+            const iCam = el('input-foto-camara'); const iOf = el('input-foto-oficial');
+            if(usaCamara && iCam) iCam.click(); else if(iOf) iOf.click(); 
+        }
         
         function iniciarRecorte(inputElement) {
             const file = inputElement.files[0]; if (!file) return;
             if (file.size > 8 * 1024 * 1024) return alert("Archivo muy pesado. Máximo 8MB.");
             
             archivoSeleccionadoParaRecortar = file;
-            document.getElementById('image-to-crop').src = URL.createObjectURL(file);
-            document.getElementById('foto-selector-ui').classList.add('hidden');
-            const ui = document.getElementById('foto-cropper-ui');
-            ui.classList.remove('hidden'); ui.classList.add('flex');
+            if(el('image-to-crop')) el('image-to-crop').src = URL.createObjectURL(file);
+            safeClass('foto-selector-ui', 'add', 'hidden');
+            safeClass('foto-cropper-ui', 'remove', 'hidden'); safeClass('foto-cropper-ui', 'add', 'flex');
 
             if (cropperInstance) cropperInstance.destroy();
-            cropperInstance = new Cropper(document.getElementById('image-to-crop'), { aspectRatio: 1, viewMode: 1, dragMode: 'move', autoCropArea: 0.8, center: true, highlight: false, cropBoxMovable: false, toggleDragModeOnDblclick: false });
+            const imgToCrop = el('image-to-crop');
+            if(imgToCrop) {
+                cropperInstance = new Cropper(imgToCrop, { aspectRatio: 1, viewMode: 1, dragMode: 'move', autoCropArea: 0.8, center: true, highlight: false, cropBoxMovable: false, toggleDragModeOnDblclick: false });
+            }
         }
         
         function cancelarRecorte() {
-            if (cropperInstance) cropperInstance.destroy(); cropperInstance = null;
-            const ui = document.getElementById('foto-cropper-ui');
-            ui.classList.add('hidden'); ui.classList.remove('flex'); document.getElementById('foto-selector-ui').classList.remove('hidden');
+            if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
+            safeClass('foto-cropper-ui', 'add', 'hidden'); safeClass('foto-cropper-ui', 'remove', 'flex'); safeClass('foto-selector-ui', 'remove', 'hidden');
         }
         
         async function procesarYSubirRecorte() {
             if (!cropperInstance) return;
-            const btn = document.getElementById('btn-guardar-recorte'); const txt = btn.innerText; btn.innerHTML = `PROCESANDO...`; btn.disabled = true;
+            const btn = el('btn-guardar-recorte'); if(!btn) return;
+            const txt = btn.innerText; btn.innerHTML = `PROCESANDO...`; btn.disabled = true;
             try {
                 const canvas = cropperInstance.getCroppedCanvas({ width: 600, height: 600, imageSmoothingEnabled: true, imageSmoothingQuality: 'high' });
                 canvas.toBlob(async (blob) => {
@@ -443,48 +457,49 @@
             } catch (err) { alert("Error: " + err.message); btn.innerHTML = txt; btn.disabled = false; }
         }
 
-        // NAVEGACIÓN Y CARGA
+        // NAVEGACIÓN
         function cambiarPantallaLogin(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            if(screenId !== 'screen-login') document.getElementById('dynamic-bg').style.display = 'none';
+            safeClass(screenId, 'add', 'active');
+            if(screenId !== 'screen-login' && el('dynamic-bg')) el('dynamic-bg').style.display = 'none';
             if(screenId === 'screen-tc') toggleBotonAceptar();
         }
 
         function iniciarWallet() {
-            document.getElementById('app-header').classList.remove('hidden');
-            document.getElementById('btn-campana').style.display = 'block';
+            safeClass('btn-campana', 'remove', 'hidden');
             switchNavTab('wallet');
-            document.getElementById('bottom-nav').classList.remove('hidden');
-            document.getElementById('dynamic-bg').style.display = 'none';
-            document.getElementById('user-name').innerText = `${alumnoActual.nombres} ${alumnoActual.apellidos}`;
-            document.getElementById('user-profesion').innerText = alumnoActual.profesion || 'Profesional Titulado';
+            safeClass('bottom-nav', 'remove', 'hidden');
+            if(el('dynamic-bg')) el('dynamic-bg').style.display = 'none';
+            if(el('user-name')) el('user-name').innerText = `${alumnoActual.nombres} ${alumnoActual.apellidos}`;
+            if(el('user-profesion')) el('user-profesion').innerText = alumnoActual.profesion || 'Profesional Titulado';
             
-            const seed = new Date().getDate() + parseInt(alumnoActual.dni);
-            document.getElementById('metric-vistas').innerText = (seed % 30) + 12;
+            const seed = new Date().getDate() + parseInt(alumnoActual.dni || 0);
+            if(el('metric-vistas')) el('metric-vistas').innerText = (seed % 30) + 12;
             
             cargarNotificacionesFicticias();
         }
 
         function cerrarSesion() {
-            alumnoActual = null; localStorage.removeItem('renmcycf_dni_session'); document.getElementById('input-dni').value = '';
+            alumnoActual = null; localStorage.removeItem('renmcycf_dni_session'); 
+            if(el('input-dni')) el('input-dni').value = '';
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('bottom-nav').classList.add('hidden');
-            document.getElementById('app-header').classList.add('hidden');
-            document.getElementById('btn-campana').style.display = 'none';
-            document.getElementById('screen-login').classList.add('active');
-            if(document.getElementById('dynamic-bg').src) document.getElementById('dynamic-bg').style.display = 'block';
-            document.getElementById('btn-ingresar').disabled = false; document.getElementById('btn-ingresar').innerHTML = `<i data-lucide="scan-face" class="w-5 h-5"></i> Validar Identidad`; lucide.createIcons();
+            safeClass('bottom-nav', 'add', 'hidden');
+            safeClass('btn-campana', 'add', 'hidden');
+            safeClass('screen-login', 'add', 'active');
+            if(el('dynamic-bg') && el('dynamic-bg').src) el('dynamic-bg').style.display = 'block';
+            if(el('btn-ingresar')){ el('btn-ingresar').disabled = false; el('btn-ingresar').innerHTML = `<i data-lucide="scan-face" class="w-5 h-5"></i> Validar Identidad`; }
+            lucide.createIcons();
         }
 
+        function cerrarModalSeguro(id) { safeClass(id, 'add', 'hidden'); }
+
         function abrirNotificaciones() {
-            document.getElementById('modal-notificaciones').classList.remove('hidden');
-            const badge = document.getElementById('badge-notificaciones');
-            if(badge) badge.remove();
+            safeClass('modal-notificaciones', 'remove', 'hidden');
+            const badge = el('badge-notificaciones'); if(badge) badge.remove();
         }
 
         function cargarNotificacionesFicticias() {
-            const container = document.getElementById('lista-notificaciones');
+            const container = el('lista-notificaciones'); if(!container) return;
             const exp = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'Próximamente';
             container.innerHTML = `
                 <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-[#d4af37]">
@@ -502,28 +517,26 @@
             `;
         }
 
-        // TABS
         function switchNavTab(tabId) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            const tabBtn = document.getElementById(`tab-${tabId}`); if(tabBtn) tabBtn.classList.add('active');
+            const tabBtn = el(`tab-${tabId}`); if(tabBtn) tabBtn.classList.add('active');
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(`screen-${tabId}`).classList.add('active');
+            safeClass(`screen-${tabId}`, 'add', 'active');
             
-            if(tabId === 'wallet') { renderizarCarnet('front'); }
+            if(tabId === 'wallet') { cambiarVista('front'); }
             if(tabId === 'portal') cargarPortalCientifico();
             if(tabId === 'biblioteca') cargarBibliotecaWallet();
             if(tabId === 'publicaciones') cargarMisPublicaciones();
         }
 
-        // VISTA FRENTE Y DORSO
         function cambiarVista(vista) {
             currentView = vista;
             document.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active'));
-            document.getElementById(`btn-toggle-${vista}`).classList.add('active');
+            safeClass(`btn-toggle-${vista}`, 'add', 'active');
             renderizarCarnet(vista);
         }
 
-        // MATEMÁTICA RENDER (ESTRICTO ORIGINAL DEEPSEEK)
+        // MATEMÁTICA RENDER ORIGINAL DEEPSEEK (CON SEGURO)
         function getSafeStyle(key) {
             const props = configDiseno[key]; if (!props) return 'display: none;';
             let style = `position: absolute; width: ${props.width}px; height: ${props.height}px; font-family: 'Inter', sans-serif; `;
@@ -538,20 +551,21 @@
         }
 
         function autoAjustarTextos(contenedorPadre = document) {
+            if(!contenedorPadre) return;
             const elements = contenedorPadre.querySelectorAll('div[style*="font-size"]');
-            elements.forEach(el => {
-                const maxWidth = parseInt(el.style.width); if (!maxWidth || el.querySelector('img')) return;
-                const span = document.createElement('span'); span.style.fontSize = el.style.fontSize; span.style.fontFamily = window.getComputedStyle(el).fontFamily; span.style.fontWeight = window.getComputedStyle(el).fontWeight; span.style.visibility = 'hidden'; span.style.position = 'absolute'; span.style.whiteSpace = 'nowrap'; span.innerText = el.innerText; document.body.appendChild(span);
-                let textWidth = span.offsetWidth; let currentSize = parseInt(el.style.fontSize);
+            elements.forEach(elm => {
+                const maxWidth = parseInt(elm.style.width); if (!maxWidth || elm.querySelector('img')) return;
+                const span = document.createElement('span'); span.style.fontSize = elm.style.fontSize; span.style.fontFamily = window.getComputedStyle(elm).fontFamily; span.style.fontWeight = window.getComputedStyle(elm).fontWeight; span.style.visibility = 'hidden'; span.style.position = 'absolute'; span.style.whiteSpace = 'nowrap'; span.innerText = elm.innerText; document.body.appendChild(span);
+                let textWidth = span.offsetWidth; let currentSize = parseInt(elm.style.fontSize);
                 while (textWidth > maxWidth && currentSize > 10) { currentSize--; span.style.fontSize = currentSize + 'px'; textWidth = span.offsetWidth; }
-                el.style.fontSize = currentSize + 'px'; document.body.removeChild(span);
+                elm.style.fontSize = currentSize + 'px'; document.body.removeChild(span);
             });
         }
 
         function ajustarEscala() {
-            const viewport = document.getElementById('card-viewport');
-            const render = document.getElementById('carnet-render');
-            if(viewport && render && document.getElementById('screen-wallet').classList.contains('active')) {
+            const viewport = el('card-viewport');
+            const render = el('carnet-render');
+            if(viewport && render) {
                 const scale = viewport.offsetWidth / 1000;
                 render.style.transform = `scale(${scale})`;
                 viewport.style.height = `${630 * scale}px`;
@@ -560,7 +574,7 @@
         window.addEventListener('resize', ajustarEscala);
 
         function renderizarCarnet(vista) {
-            const container = document.getElementById('carnet-render'); if (!alumnoActual) return;
+            const container = el('carnet-render'); if (!container || !alumnoActual) return;
             const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
             const vence = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D';
             
@@ -568,125 +582,100 @@
                 container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;"><img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div></div>`;
                 setTimeout(() => { autoAjustarTextos(container); ajustarEscala(); }, 50);
             } else if (vista === 'back') {
-                // FIX: El QR con la URL nativa correcta.
                 const urlValidador = `${window.location.origin}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
                 let textoCat = ''; if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; else textoCat = 'Consultor/Estudiante inscripto.';
                 
                 container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index: 10;">${textoCat}</div><div id="qr-container" style="${getSafeStyle('qr')} z-index: 10; background: white;"></div></div>`;
                 
                 setTimeout(() => { 
-                    try { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(document.getElementById('qr-container'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); } catch(e) {}
+                    try { const qrEl = container.querySelector('#qr-container'); if(qrEl){ const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(qrEl, { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H });} } catch(e) {}
                     autoAjustarTextos(container); ajustarEscala(); 
                 }, 50);
             }
         }
 
-        // EL MOTOR DE DESCARGA PDF EXACTO A4 (NUEVO Y AISLADO)
+        // MOTOR DE DESCARGA PDF EXACTO A4
         async function descargarCarnetOficial() {
             if (!alumnoActual) return;
-            const btn = document.getElementById('btn-descargar-carnet'); 
+            const btn = el('btn-descargar-carnet'); if(!btn) return;
             const originalText = btn.innerHTML;
             btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 text-[#d4af37] animate-spin"></i><span class="text-[9px] uppercase font-black tracking-wider text-center mt-1">Generando...</span>`; 
             lucide.createIcons();
             
             try {
-                // Contenedor estéril sin CSS que contamine el html2canvas
                 const exportBox = document.createElement('div');
-                exportBox.style.position = 'fixed';
-                exportBox.style.left = '-9999px';
-                exportBox.style.top = '0';
-                exportBox.style.width = '1000px';
-                exportBox.style.backgroundColor = '#fff';
-                exportBox.style.zIndex = '9999';
+                exportBox.style.position = 'fixed'; exportBox.style.left = '-9999px'; exportBox.style.top = '0'; exportBox.style.width = '1000px'; exportBox.style.backgroundColor = '#fff'; exportBox.style.zIndex = '9999';
                 document.body.appendChild(exportBox);
 
                 const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
                 const vence = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D';
                 const urlValidador = `${window.location.origin}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
-                let textoCat = ''; if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; else textoCat = 'Consultor/Estudiante inscripto.';
 
-                // RENDER FRENTE
                 exportBox.innerHTML = `<div id="export-front" style="position:relative;width:1000px;height:630px;overflow:hidden;background:#fff;border-radius:30px;"><img src="${bgCredencialFrente}" style="position:absolute;top:0;left:0;width:1000px;height:630px;z-index:1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index:2;border-radius:50%;overflow:hidden;"><img src="${fotoUrl}" style="width:100%;height:100%;object-fit:cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index:5;object-fit:fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index:10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index:10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index:10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index:10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index:10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index:10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index:10;">${vence}</div></div>`;
                 
                 autoAjustarTextos(exportBox);
-                await new Promise(r => setTimeout(r, 600)); 
-                const canvasFront = await html2canvas(exportBox.firstElementChild, { useCORS: true, allowTaint: true, scale: 2, backgroundColor: null });
-                const imgFront = canvasFront.toDataURL('image/png', 1.0);
+                await new Promise(r => setTimeout(r, 800)); 
+                
+                const canvasFront = await html2canvas(exportBox.firstElementChild, { useCORS: true, allowTaint: true, scale: 2 });
+                const imgFront = canvasFront.toDataURL('image/jpeg', 1.0);
 
-                // RENDER DORSO
                 let imgBack = null;
                 if (bgCredencialDorso) {
+                    let textoCat = ''; 
+                    if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; 
+                    else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; 
+                    else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; 
+                    else textoCat = 'Consultor/Estudiante inscripto.';
+                    
                     exportBox.innerHTML = `<div id="export-back" style="position:relative;width:1000px;height:630px;overflow:hidden;background:#fff;border-radius:30px;"><img src="${bgCredencialDorso}" style="position:absolute;top:0;left:0;width:1000px;height:630px;z-index:1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index:10;">${textoCat}</div><div id="export-qr" style="${getSafeStyle('qr')} z-index:10;background:white;"></div></div>`;
-                    await new Promise(r => setTimeout(r, 100));
-                    try { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(exportBox.querySelector('#export-qr'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); } catch(e){}
+                    
+                    await new Promise(r => setTimeout(r, 200));
+                    try { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(exportBox.querySelector('#export-qr'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); } catch(e) {}
+                    
                     autoAjustarTextos(exportBox);
-                    await new Promise(r => setTimeout(r, 600)); 
-                    const canvasBack = await html2canvas(exportBox.firstElementChild, { useCORS: true, allowTaint: true, scale: 2, backgroundColor: null });
-                    imgBack = canvasBack.toDataURL('image/png', 1.0);
+                    await new Promise(r => setTimeout(r, 800)); 
+                    
+                    const canvasBack = await html2canvas(exportBox.firstElementChild, { useCORS: true, allowTaint: true, scale: 2 });
+                    imgBack = canvasBack.toDataURL('image/jpeg', 1.0);
                 }
 
                 document.body.removeChild(exportBox);
 
-                // CREAR PDF A4
                 const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
                 
-                // Diseño de Hoja
-                pdf.setFillColor(10, 17, 40); // Azul Marino
-                pdf.rect(0, 0, 210, 40, 'F');
-                pdf.setTextColor(212, 175, 55); // Dorado
-                pdf.setFont("helvetica", "bold");
-                pdf.setFontSize(14);
+                pdf.setFillColor(10, 17, 40); pdf.rect(0, 0, 210, 40, 'F');
+                pdf.setTextColor(212, 175, 55); pdf.setFont("helvetica", "bold"); pdf.setFontSize(14);
                 pdf.text("DOCUMENTO DE IDENTIDAD PROFESIONAL", 105, 20, null, null, "center");
-                pdf.setTextColor(255, 255, 255);
-                pdf.setFontSize(10);
+                pdf.setTextColor(255, 255, 255); pdf.setFontSize(10);
                 pdf.text("Registro Nacional de Matriculados en Criminalística y Ciencias Forenses", 105, 28, null, null, "center");
 
-                // Medidas DNI (85.6mm x 54mm)
-                const cardW = 85.6; 
-                const cardH = 54.0; 
-                const marginX = (210 - cardW) / 2; 
-                let currentY = 60;
+                const cardW = 85.6; const cardH = 54.0; const marginX = (210 - cardW) / 2; let currentY = 60;
 
-                pdf.setDrawColor(200, 200, 200);
-                pdf.setLineDash([2, 2], 0);
-                
-                // Pegar Frente
+                pdf.setDrawColor(200, 200, 200); pdf.setLineDash([2, 2], 0);
                 pdf.rect(marginX - 2, currentY - 2, cardW + 4, cardH + 4); 
-                pdf.addImage(imgFront, 'PNG', marginX, currentY, cardW, cardH);
+                pdf.addImage(imgFront, 'JPEG', marginX, currentY, cardW, cardH);
                 currentY += cardH + 20;
 
-                // Pegar Dorso
                 if (imgBack) {
                     pdf.rect(marginX - 2, currentY - 2, cardW + 4, cardH + 4); 
-                    pdf.addImage(imgBack, 'PNG', marginX, currentY, cardW, cardH);
+                    pdf.addImage(imgBack, 'JPEG', marginX, currentY, cardW, cardH);
                     currentY += cardH + 20;
                 }
 
-                pdf.setTextColor(100, 100, 100);
-                pdf.setFont("helvetica", "normal");
-                pdf.setFontSize(9);
-                pdf.setLineDash([]);
-                pdf.text("Este documento es personal e intransferible.", 105, currentY, null, null, "center");
-                currentY += 5;
-                pdf.text("La validez debe comprobarse escaneando el código QR en el validador oficial.", 105, currentY, null, null, "center");
-                currentY += 10;
-                pdf.setFontSize(8);
-                pdf.text(`Generado el ${new Date().toLocaleDateString('es-AR')} a las ${new Date().toLocaleTimeString('es-AR')}`, 105, currentY, null, null, "center");
+                pdf.setTextColor(100, 100, 100); pdf.setFont("helvetica", "normal"); pdf.setFontSize(9); pdf.setLineDash([]);
+                pdf.text("Este documento es personal e intransferible.", 105, currentY, null, null, "center"); currentY += 5;
+                pdf.text("La validez debe comprobarse escaneando el código QR en el validador oficial.", 105, currentY, null, null, "center"); currentY += 10;
+                pdf.setFontSize(8); pdf.text(`Generado el ${new Date().toLocaleDateString('es-AR')} a las ${new Date().toLocaleTimeString('es-AR')}`, 105, currentY, null, null, "center");
 
                 pdf.save(`Credencial_RENMCYCF_${alumnoActual.matricula_oficial || alumnoActual.dni}.pdf`);
 
-            } catch (error) { 
-                console.error(error); 
-                alert("Error al generar el PDF. Verifique su conexión."); 
-            } finally { 
-                btn.innerHTML = originalText; 
-                lucide.createIcons(); 
-            }
+            } catch (error) { console.error(error); alert("Error al generar el PDF. Verifique su conexión."); } 
+            finally { btn.innerHTML = originalText; lucide.createIcons(); }
         }
 
-        // DIPLOMAS
         function abrirModalDiplomas() {
-            const container = document.getElementById('lista-diplomas-modal'); container.innerHTML = ''; let hayDiplomas = false;
+            const container = el('lista-diplomas-modal'); if(!container) return; 
+            container.innerHTML = ''; let hayDiplomas = false;
             if (alumnoActual.diplomas_urls && alumnoActual.diplomas_urls !== "null") {
                 try { const arr = typeof alumnoActual.diplomas_urls === 'string' ? JSON.parse(alumnoActual.diplomas_urls) : alumnoActual.diplomas_urls;
                     if(arr.length > 0) { hayDiplomas = true; arr.forEach((url, i) => { container.innerHTML += `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-center"><div><h4 class="text-white font-bold text-sm uppercase">Título Registrado #${i+1}</h4><p class="text-[10px] text-slate-400 font-mono mt-1">Validado por Comité</p></div><a href="${url}" target="_blank" class="bg-blue-600 text-white p-3 rounded-lg shadow-lg hover:bg-blue-500 transition-transform active:scale-95"><i data-lucide="download" class="w-5 h-5"></i></a></div>`; }); }
@@ -694,12 +683,11 @@
             }
             if (!hayDiplomas && alumnoActual.diploma_url) { hayDiplomas = true; container.innerHTML = `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-center"><div><h4 class="text-white font-bold text-sm uppercase">Título Oficial Registrado</h4><p class="text-[10px] text-slate-400 font-mono mt-1">Validado por Comité</p></div><a href="${alumnoActual.diploma_url}" target="_blank" class="bg-blue-600 text-white p-3 rounded-lg shadow-lg hover:bg-blue-500 transition-transform active:scale-95"><i data-lucide="download" class="w-5 h-5"></i></a></div>`; }
             if (!hayDiplomas) { container.innerHTML = '<div class="text-center text-slate-400 border border-dashed border-slate-700 p-6 rounded-xl">No hay diplomas o certificados registrados en su expediente.</div>'; }
-            document.getElementById('modal-diplomas').classList.remove('hidden'); lucide.createIcons();
+            safeClass('modal-diplomas', 'remove', 'hidden'); lucide.createIcons();
         }
 
-        // PORTAL Y BIBLIOTECA
         async function cargarPortalCientifico() {
-            const container = document.getElementById('feed-portal-container');
+            const container = el('feed-portal-container'); if(!container) return;
             try {
                 let data = null;
                 try { const { data: noticias } = await db.from('renmcycf_noticias').select('*').order('created_at', { ascending: false }).limit(20); if (noticias && noticias.length > 0) data = noticias; } catch(e) {}
@@ -714,7 +702,7 @@
         }
 
         async function cargarBibliotecaWallet() {
-            const container = document.getElementById('wallet-biblioteca-container');
+            const container = el('wallet-biblioteca-container'); if(!container) return;
             container.innerHTML = '<div class="skeleton h-48 w-full rounded-xl"></div><div class="skeleton h-48 w-full rounded-xl"></div>';
             try {
                 const { data, error } = await db.from('renmcycf_biblioteca').select('*').eq('activo', true).order('created_at', { ascending: false });
@@ -729,7 +717,7 @@
         }
 
         async function cargarMisPublicaciones() {
-            const container = document.getElementById('lista-mis-tesis');
+            const container = el('lista-mis-tesis'); if(!container) return;
             try {
                 const { data, error } = await db.from('renmcycf_publicaciones').select('*').eq('autor_id', alumnoActual.id).order('created_at', { ascending: false });
                 if (error) throw error;
@@ -739,20 +727,22 @@
                     if (t.estado === 'APROBADO') { color = 'bg-emerald-50 text-emerald-600 border-emerald-200'; icon = 'check-circle'; tex = 'PUBLICADO';}
                     if (t.estado === 'RECHAZADO') { color = 'bg-red-50 text-red-600 border-red-200'; icon = 'x-circle'; tex = 'DENEGADO'; }
                     return `<div class="border border-slate-200 rounded-xl p-4 bg-white flex flex-col gap-2 shadow-sm"><div class="flex justify-between items-start"><div class="flex-1 pr-2"><h4 class="font-black text-xs text-[#0a1128] uppercase leading-tight line-clamp-2">${t.titulo}</h4><p class="text-[9px] text-slate-400 font-mono mt-1">Enviado el ${new Date(t.created_at).toLocaleDateString('es-AR')}</p></div><span class="${color} border text-[8px] font-black uppercase px-2 py-1 rounded flex items-center gap-1 shrink-0"><i data-lucide="${icon}" class="w-3 h-3"></i> ${tex}</span></div></div>`;
-                }).join(''); lucide.createIcons();
+                }).join('');
+                lucide.createIcons();
             } catch(e) { container.innerHTML = '<p class="text-center text-red-500 text-xs font-bold">Error de conexión.</p>'; }
         }
 
         async function subirPublicacion(e) {
-            e.preventDefault(); const btn = document.getElementById('btn-subir-tesis'); const file = document.getElementById('tesis-pdf').files[0];
+            e.preventDefault(); const btn = el('btn-subir-tesis'); if(!btn) return;
+            const file = el('tesis-pdf').files[0];
             if (!file) return alert("Seleccione un archivo PDF."); if (file.size > 10 * 1024 * 1024) return alert('El archivo supera los 10MB.');
             const orig = btn.innerHTML; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> TRANSMITIENDO...'; btn.disabled = true;
             try {
                 const fileName = `${alumnoActual.dni}_tesis_${Date.now()}.${file.name.split('.').pop()}`;
                 await db.storage.from('renmcycf-pdfs').upload(fileName, file);
                 const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${fileName}`;
-                await db.from('renmcycf_publicaciones').insert({ autor_id: alumnoActual.id, autor_nombre: `${alumnoActual.nombres} ${alumnoActual.apellidos}`, titulo: document.getElementById('tesis-titulo').value.trim(), resumen: document.getElementById('tesis-resumen').value.trim(), pdf_url: pdfUrl });
-                alert("Investigación enviada con éxito."); document.getElementById('form-subir-tesis').reset(); cargarMisPublicaciones();
+                await db.from('renmcycf_publicaciones').insert({ autor_id: alumnoActual.id, autor_nombre: `${alumnoActual.nombres} ${alumnoActual.apellidos}`, titulo: el('tesis-titulo').value.trim(), resumen: el('tesis-resumen').value.trim(), pdf_url: pdfUrl });
+                alert("Investigación enviada con éxito."); el('form-subir-tesis').reset(); cargarMisPublicaciones();
             } catch (err) { alert("Error al subir: " + err.message); } finally { btn.innerHTML = orig; btn.disabled = false; lucide.createIcons(); }
         }
     </script>
