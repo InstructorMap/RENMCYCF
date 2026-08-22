@@ -39,7 +39,6 @@
         .tc-box { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; max-height: 300px; overflow-y: auto; text-align: left; font-size: 12px; line-height: 1.6; color: #475569; margin-bottom: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); }
         .tc-box h3 { color: var(--forense-navy); font-weight: 900; font-size: 14px; margin-bottom: 10px; }
 
-        /* VIEWPORT ORIGINAL DEEPSEEK */
         .card-viewport { width: 100%; overflow: hidden; position: relative; margin-bottom: 20px; height: 230px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); display: flex; justify-content: center; background: #fff; }
         #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
 
@@ -65,6 +64,8 @@
 
     <div class="header-top flex justify-between items-center px-4" id="app-header">
         <span class="flex-1 text-center">Registro Nacional de Matriculados en Criminalística y Ciencias Forenses</span>
+        
+        <!-- Campana de Notificaciones -->
         <button onclick="abrirNotificaciones()" class="relative text-slate-300 hover:text-white transition-colors ml-2 hidden" id="btn-campana">
             <i data-lucide="bell" class="w-5 h-5"></i>
             <span id="badge-notificaciones" class="absolute -top-1 -right-1 flex h-2 w-2">
@@ -318,9 +319,10 @@
         let bgCredencialFrente = ''; let bgCredencialDorso = ''; let rosetaUrl = '';
         let cropperInstance = null; let archivoSeleccionadoParaRecortar = null;
 
+        // Silenciamos el error del SW si no existe aún en el servidor
         if ('serviceWorker' in navigator) { 
             window.addEventListener('load', () => { 
-                navigator.serviceWorker.register('/sw.js').catch(()=>{ console.log("SW no encontrado - PWA desactivada temporalmente."); }); 
+                navigator.serviceWorker.register('/sw.js').catch(()=>{ console.log("Modo App Offline desactivado temporalmente."); }); 
             }); 
         }
 
@@ -532,7 +534,7 @@
             renderizarCarnet(vista);
         }
 
-        // MATEMÁTICA RENDER ORIGINAL DEEPSEEK
+        // MATEMÁTICA RENDER ORIGINAL DEEPSEEK (CON SEGURO)
         function getSafeStyle(key) {
             const props = configDiseno[key]; if (!props) return 'display: none;';
             let style = `position: absolute; width: ${props.width}px; height: ${props.height}px; font-family: 'Inter', sans-serif; `;
@@ -578,8 +580,7 @@
                 container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;"><img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div></div>`;
                 setTimeout(() => { autoAjustarTextos(container); ajustarEscala(); }, 50);
             } else if (vista === 'back') {
-                // FIX: RUTA DEL VALIDADOR A LA CARPETA /views/
-                const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF/views` : `${window.location.origin}/views`;
+                const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF` : window.location.origin;
                 const urlValidador = `${baseUrl}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
                 
                 let textoCat = ''; if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; else textoCat = 'Consultor/Estudiante inscripto.';
@@ -593,25 +594,7 @@
             }
         }
 
-        // FUNCIÓN PUENTE PARA SOLUCIONAR PROBLEMAS DE CORS CON jsPDF EN EL LOGO Y HERO
-        function urlToBase64(url) {
-            return new Promise((resolve, reject) => {
-                if (!url) { resolve(null); return; }
-                const img = new Image();
-                img.crossOrigin = 'Anonymous';
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width; canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    resolve(canvas.toDataURL('image/png'));
-                };
-                img.onerror = () => resolve(null); // Si falla CORS, pasa de largo sin romper el PDF
-                img.src = url;
-            });
-        }
-
-        // MOTOR DE DESCARGA PDF EXACTO A4 (CON IMÁGENES INYECTADAS)
+        // MOTOR DE DESCARGA PDF EXACTO A4
         async function descargarCarnetOficial() {
             if (!alumnoActual) return;
             const btn = el('btn-descargar-carnet'); if(!btn) return;
@@ -626,17 +609,18 @@
 
                 const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
                 const vence = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D';
-                const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF/views` : `${window.location.origin}/views`;
+                const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF` : window.location.origin;
                 const urlValidador = `${baseUrl}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
 
+                // RENDER FRENTE
                 exportBox.innerHTML = `<div id="export-front" style="position:relative;width:1000px;height:630px;overflow:hidden;background:#fff;border-radius:30px;"><img src="${bgCredencialFrente}" style="position:absolute;top:0;left:0;width:1000px;height:630px;z-index:1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index:2;border-radius:50%;overflow:hidden;"><img src="${fotoUrl}" style="width:100%;height:100%;object-fit:cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index:5;object-fit:fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index:10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index:10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index:10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index:10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index:10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index:10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index:10;">${vence}</div></div>`;
                 
                 autoAjustarTextos(exportBox);
                 await new Promise(r => setTimeout(r, 800)); 
-                
                 const canvasFront = await html2canvas(exportBox.firstElementChild, { useCORS: true, allowTaint: true, scale: 2 });
                 const imgFront = canvasFront.toDataURL('image/jpeg', 1.0);
 
+                // RENDER DORSO
                 let imgBack = null;
                 if (bgCredencialDorso) {
                     let textoCat = ''; 
@@ -662,48 +646,44 @@
 
                 document.body.removeChild(exportBox);
 
-                // FIX: Descargar Hero y Logo a Base64 antes de inyectarlos al PDF para evitar bloqueos CORS
-                const base64Hero = await urlToBase64(configGlobal.hero_image_url);
-                const base64Logo = await urlToBase64(configGlobal.logo_url);
+                // DESCARGA DE IMÁGENES A BASE64 PARA PDF (Evita error CORS en jsPDF)
+                const logoBase64 = await urlToBase64(configGlobal.logo_url);
+                const heroBase64 = await urlToBase64(configGlobal.hero_image_url);
 
+                // CREAR PDF A4
                 const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
                 
-                // Dibujar Fondo Hero (Si se logró descargar)
-                if(base64Hero) {
-                    pdf.addImage(base64Hero, 'JPEG', 0, 0, 210, 45); // Hero ocupando el cabezal superior
+                // Fondo Hero
+                if (heroBase64) {
+                    pdf.addImage(heroBase64, 'JPEG', 0, 0, 210, 40);
                 } else {
-                    pdf.setFillColor(10, 17, 40); // Si falla, poner fondo azul sólido
-                    pdf.rect(0, 0, 210, 45, 'F');
+                    pdf.setFillColor(10, 17, 40); // Azul Marino
+                    pdf.rect(0, 0, 210, 40, 'F');
                 }
 
-                // Superponer una pequeña caja semitransparente (emulada con color sólido para jsPDF) para leer mejor el texto
-                pdf.setFillColor(255, 255, 255); 
-                pdf.rect(0, 45, 210, 25, 'F');
+                // Superposición para legibilidad
+                pdf.setFillColor(255, 255, 255);
+                pdf.rect(0, 40, 210, 20, 'F');
 
-                // Dibujar Logo centrado sobre la línea del hero
-                if(base64Logo) {
-                    // Logo de 30x30 mm, centrado (105 - 15)
-                    pdf.addImage(base64Logo, 'PNG', 90, 30, 30, 30);
+                // Logo
+                if (logoBase64) {
+                    pdf.addImage(logoBase64, 'PNG', 90, 25, 30, 30);
                 }
-
-                // Textos
-                let currentY = 70;
-                pdf.setTextColor(10, 17, 40); // #0a1128
+                
+                pdf.setTextColor(10, 17, 40);
                 pdf.setFont("helvetica", "bold");
                 pdf.setFontSize(14);
-                pdf.text("DOCUMENTO DE IDENTIDAD PROFESIONAL", 105, currentY, null, null, "center");
+                pdf.text("DOCUMENTO DE IDENTIDAD PROFESIONAL", 105, 65, null, null, "center");
                 
-                currentY += 8;
-                pdf.setTextColor(100, 100, 100); 
+                pdf.setTextColor(100, 100, 100);
                 pdf.setFontSize(10);
-                pdf.text("Registro Nacional de Matriculados en Criminalística y Ciencias Forenses", 105, currentY, null, null, "center");
-
-                currentY += 15;
+                pdf.text("Registro Nacional de Matriculados en Criminalística y Ciencias Forenses", 105, 73, null, null, "center");
 
                 // Medidas DNI (85.6mm x 54mm)
                 const cardW = 85.6; 
                 const cardH = 54.0; 
                 const marginX = (210 - cardW) / 2; 
+                let currentY = 85;
 
                 pdf.setDrawColor(200, 200, 200);
                 pdf.setLineDash([2, 2], 0);
@@ -740,6 +720,23 @@
                 btn.innerHTML = originalText; 
                 lucide.createIcons(); 
             }
+        }
+
+        function urlToBase64(url) {
+            return new Promise((resolve, reject) => {
+                if (!url) { resolve(null); return; }
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width; canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    resolve(canvas.toDataURL('image/png'));
+                };
+                img.onerror = () => resolve(null);
+                img.src = url;
+            });
         }
 
         function abrirModalDiplomas() {
