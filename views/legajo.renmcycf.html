@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0a1128">
+    <meta name="theme-color" content="#0a1128" id="meta-theme-color">
     <title>Legajo Digital · RENMCYCF</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,23 +12,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+
     <link rel="manifest" href="manifest.json">
 
     <style>
         :root { --forense-navy: #0a1128; --forense-gold: #d4af37; --bg-app: #f1f5f9; }
         body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-app); color: #333; height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; overscroll-behavior-y: none; }
 
-        /* Estética Glassmorphism Premium */
         .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.05); }
-        .glass-dark { background: rgba(10, 17, 40, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
 
-        .app-header { background-color: var(--forense-navy); color: white; padding: 15px 20px; display: flex; justify-content: space-between; items-center; z-index: 50; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: sticky; top: 0; }
+        .app-header { background-color: var(--forense-navy); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 50; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: sticky; top: 0; }
         
-        /* Transiciones Fluidas tipo App Nativa */
         .screen { display: none; flex: 1; flex-direction: column; padding: 20px; padding-bottom: 90px; z-index: 2; position: relative; overflow-y: auto; opacity: 0; transform: translateX(20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .screen.active { display: flex; opacity: 1; transform: translateX(0); }
 
@@ -36,14 +36,14 @@
         .input-auth { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 800; letter-spacing: 2px; transition: 0.3s; background: rgba(255,255,255,0.9); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .input-auth:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 4px rgba(0,0,0,0.05); }
 
-        .card-viewport { width: 100%; max-width: 500px; margin: 0 auto; overflow: hidden; position: relative; margin-bottom: 20px; height: 230px; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); display: flex; justify-content: center; background: #fff; }
+        /* Ajustes precisos para la credencial en móvil */
+        .card-viewport { width: 100%; max-width: 500px; margin: 0 auto; overflow: hidden; position: relative; margin-bottom: 20px; height: 230px; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); background: #fff; }
         #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
 
         .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 4px; border-radius: 24px; width: fit-content; margin-left: auto; margin-right: auto; }
         .btn-toggle { background: transparent; border: none; padding: 8px 20px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
         .btn-toggle.active { background: white; color: var(--forense-navy); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
-        /* Barra Inferior iOS Style */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; padding: 12px 5px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 100; }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #94a3b8; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; }
         .nav-item.active { color: var(--forense-navy); transform: translateY(-2px); }
@@ -52,13 +52,16 @@
         .cropper-view-box, .cropper-face { border-radius: 50%; } 
         .cropper-line, .cropper-point { background-color: var(--forense-gold); }
 
-        /* Shimmer Loading (Skeleton) */
         .skeleton { background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        
+        .animate-slide-in { animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; } 
+        @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
     </style>
 </head>
 <body>
 
+    <!-- CABECERA GLOBAL -->
     <div id="app-header" class="app-header hidden">
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-[#d4af37]">
@@ -73,7 +76,7 @@
         <div class="flex items-center gap-4">
             <button onclick="abrirNotificaciones()" class="relative text-slate-300 hover:text-white transition-colors">
                 <i data-lucide="bell" class="w-6 h-6"></i>
-                <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                <span id="badge-notificaciones" class="absolute -top-1 -right-1 flex h-3 w-3">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500 border-2 border-[#0a1128]"></span>
                 </span>
@@ -84,6 +87,7 @@
         </div>
     </div>
 
+    <!-- PANTALLA 1: LOGIN -->
     <img id="dynamic-bg" src="" class="login-bg">
     <div id="screen-login" class="screen active" style="justify-content: center; opacity: 1; transform: translateX(0);">
         <div class="login-container glass-panel p-8 rounded-3xl mx-4">
@@ -105,6 +109,7 @@
         </div>
     </div>
 
+    <!-- PANTALLA 2: TÉRMINOS Y CONDICIONES -->
     <div id="screen-tc" class="screen bg-white absolute inset-0 z-50">
         <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4">
             <div class="text-center mb-6">
@@ -131,6 +136,7 @@
         </div>
     </div>
 
+    <!-- PANTALLA 2.5: FOTO CROPPER -->
     <div id="screen-foto" class="screen bg-white absolute inset-0 z-50">
         <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4 text-center">
             <h2 class="text-xl font-black text-[#0a1128] uppercase mb-4">Fotografía Oficial</h2>
@@ -147,6 +153,7 @@
         </div>
     </div>
 
+    <!-- PANTALLA 3: CREDENCIAL PRINCIPAL -->
     <div id="screen-wallet" class="screen">
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-between items-center relative overflow-hidden">
             <div class="absolute right-0 top-0 bottom-0 w-2 bg-emerald-400"></div>
@@ -181,7 +188,7 @@
 
         <div class="grid grid-cols-2 gap-3 mb-4">
             <button id="btn-descargar-carnet" class="bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="descargarCarnetOficial()">
-                <i data-lucide="download" class="w-5 h-5 text-[#d4af37]"></i> Bajar Credencial
+                <i data-lucide="download" class="w-5 h-5 text-[#d4af37]"></i> Bajar Documento (PDF)
             </button>
             <button class="bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="abrirModalDiplomas()">
                 <i data-lucide="award" class="w-5 h-5 text-blue-600"></i> Mis Títulos
@@ -189,6 +196,7 @@
         </div>
     </div>
 
+    <!-- PANTALLA 4: PORTAL CIENTÍFICO -->
     <div id="screen-portal" class="screen">
         <div class="mb-4">
             <h2 class="text-2xl font-black text-[#0a1128] font-title uppercase tracking-tight">Portal Científico</h2>
@@ -202,30 +210,22 @@
         </div>
 
         <div id="feed-portal-container" class="space-y-4 pb-4">
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-                <div class="skeleton h-32 w-full mb-3 rounded-lg"></div>
-                <div class="skeleton h-4 w-3/4 mb-2"></div>
-                <div class="skeleton h-3 w-1/2"></div>
-            </div>
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-                <div class="skeleton h-32 w-full mb-3 rounded-lg"></div>
-                <div class="skeleton h-4 w-3/4 mb-2"></div>
-                <div class="skeleton h-3 w-1/2"></div>
-            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm"><div class="skeleton h-32 w-full mb-3 rounded-lg"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-3 w-1/2"></div></div>
         </div>
     </div>
 
+    <!-- PANTALLA 5: BIBLIOTECA PREMIUM -->
     <div id="screen-biblioteca" class="screen">
         <div class="mb-4">
             <h2 class="text-2xl font-black text-[#0a1128] font-title uppercase tracking-tight">Biblioteca</h2>
             <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Repositorio Premium liberado</p>
         </div>
         <div id="wallet-biblioteca-container" class="grid grid-cols-2 gap-4 pb-4">
-            <div class="skeleton h-48 w-full rounded-xl"></div>
-            <div class="skeleton h-48 w-full rounded-xl"></div>
+            <div class="skeleton h-48 w-full rounded-xl"></div><div class="skeleton h-48 w-full rounded-xl"></div>
         </div>
     </div>
 
+    <!-- PANTALLA 6: TESIS -->
     <div id="screen-publicaciones" class="screen">
         <div class="mb-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 text-center">
             <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="microscope" class="w-6 h-6"></i></div>
@@ -238,34 +238,31 @@
             <form id="form-subir-tesis" onsubmit="subirPublicacion(event)" class="space-y-4">
                 <input type="text" id="tesis-titulo" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-3 text-sm focus:border-[#d4af37] outline-none" placeholder="Título oficial de la tesis..." required>
                 <textarea id="tesis-resumen" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-3 text-sm focus:border-[#d4af37] outline-none" placeholder="Breve abstract (máx 300 caracteres)..." rows="3" maxlength="300" required></textarea>
-                
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-widest">Archivo PDF Final</label>
                     <input type="file" id="tesis-pdf" accept=".pdf" required class="block w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-slate-700 file:text-white bg-slate-900 border border-slate-600 rounded-lg p-1">
                 </div>
-                
                 <button type="submit" id="btn-subir-tesis" class="w-full bg-[#d4af37] text-[#0a1128] font-black uppercase text-xs tracking-wider py-4 rounded-xl flex justify-center items-center gap-2 transition-transform active:scale-95 shadow-md mt-2">
                     <i data-lucide="send" class="w-4 h-4"></i> Enviar a Comité Evaluador
                 </button>
             </form>
         </div>
-
         <h3 class="font-black text-[10px] text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-2">Historial de Envíos</h3>
         <div id="lista-mis-tesis" class="space-y-3 pb-4"></div>
     </div>
 
+    <!-- MODAL NOTIFICACIONES -->
     <div id="modal-notificaciones" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex justify-end">
         <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col animate-slide-in">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-[#0a1128] text-white">
                 <h3 class="font-black uppercase tracking-widest text-sm flex items-center gap-2"><i data-lucide="bell" class="w-4 h-4 text-[#d4af37]"></i> Centro de Alertas</h3>
                 <button onclick="document.getElementById('modal-notificaciones').classList.add('hidden')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
             </div>
-            <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50" id="lista-notificaciones">
-                </div>
+            <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50" id="lista-notificaciones"></div>
         </div>
     </div>
-    <style> .animate-slide-in { animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; } @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } } </style>
 
+    <!-- MODAL DIPLOMAS -->
     <div id="modal-diplomas" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden flex flex-col p-4 pt-10">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-white font-black uppercase text-xl"><i data-lucide="award" class="inline w-5 h-5 text-[#d4af37]"></i> Títulos Registrados</h3>
@@ -274,6 +271,7 @@
         <div class="flex-1 overflow-y-auto space-y-4 pb-10" id="lista-diplomas-modal"></div>
     </div>
 
+    <!-- BARRA NAVEGACIÓN INFERIOR PWA -->
     <div class="bottom-nav hidden" id="bottom-nav">
         <div class="nav-item active" id="tab-wallet" onclick="switchNavTab('wallet')">
             <i data-lucide="id-card" class="w-6 h-6 mb-1"></i><span>Credencial</span>
@@ -291,6 +289,7 @@
 
     <script>
         lucide.createIcons();
+        const { jsPDF } = window.jspdf;
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
         const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
         const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
@@ -301,7 +300,6 @@
         let bgCredencialFrente = ''; let bgCredencialDorso = ''; let rosetaUrl = '';
         let cropperInstance = null; let archivoSeleccionadoParaRecortar = null;
 
-        // Registro SW
         if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js'); }); }
 
         async function cargarConfiguracionInicial() {
@@ -371,12 +369,10 @@
             } catch (err) { alert("Error de red: " + err.message); btn.innerHTML = `Firmar Acuerdo`; btn.disabled = false; }
         }
 
-        // CROPPER FOTO
         function abrirSelectorArchivo(usaCamara) { usaCamara ? document.getElementById('input-foto-camara').click() : document.getElementById('input-foto-oficial').click(); }
         function iniciarRecorte(inputElement) {
             const file = inputElement.files[0]; if (!file) return;
             if (file.size > 8 * 1024 * 1024) return alert("Archivo muy pesado. Máximo 8MB.");
-            
             archivoSeleccionadoParaRecortar = file;
             document.getElementById('image-to-crop').src = URL.createObjectURL(file);
             document.getElementById('foto-selector-ui').classList.add('hidden');
@@ -405,7 +401,6 @@
             } catch (err) { alert("Error: " + err.message); btn.innerHTML = txt; btn.disabled = false; }
         }
 
-        // WALLET CORE
         function cambiarPantallaLogin(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
@@ -413,16 +408,15 @@
         }
 
         function iniciarWallet() {
-            document.getElementById('app-header').classList.remove('hidden'); // Muestra cabecera
+            document.getElementById('app-header').classList.remove('hidden');
             switchNavTab('wallet');
             document.getElementById('bottom-nav').classList.remove('hidden');
             document.getElementById('dynamic-bg').style.display = 'none';
             document.getElementById('user-name').innerText = `${alumnoActual.nombres} ${alumnoActual.apellidos}`;
             document.getElementById('user-profesion').innerText = alumnoActual.profesion || 'Profesional Titulado';
             
-            // Generar Métrica de Vanidad Aleatoria Fija por día (Psicología)
             const seed = new Date().getDate() + parseInt(alumnoActual.dni);
-            const vistas = (seed % 30) + 12; // Número entre 12 y 41
+            const vistas = (seed % 30) + 12;
             document.getElementById('metric-vistas').innerText = vistas;
             
             cargarNotificacionesFicticias();
@@ -438,16 +432,14 @@
             document.getElementById('btn-ingresar').disabled = false; document.getElementById('btn-ingresar').innerHTML = `<i data-lucide="scan-face" class="w-5 h-5"></i> Validar Identidad`; lucide.createIcons();
         }
 
-        // SEGURIDAD: Auto-Logout por Inactividad (15 mins)
         let inactividadTimer;
         function resetInactividad() { clearTimeout(inactividadTimer); if(alumnoActual) inactividadTimer = setTimeout(cerrarSesion, 15 * 60 * 1000); }
         window.onload = resetInactividad; window.onmousemove = resetInactividad; window.onmousedown = resetInactividad; window.ontouchstart = resetInactividad; window.onclick = resetInactividad; window.onkeypress = resetInactividad; window.addEventListener('scroll', resetInactividad, true);
 
-        // NOTIFICACIONES (Campana)
         function abrirNotificaciones() {
             document.getElementById('modal-notificaciones').classList.remove('hidden');
-            // Al abrir, quitamos el punto rojo simulando que las leyó
-            document.querySelector('.animate-ping')?.parentElement.remove();
+            const badge = document.getElementById('badge-notificaciones');
+            if(badge) badge.remove();
         }
 
         function cargarNotificacionesFicticias() {
@@ -469,7 +461,6 @@
             `;
         }
 
-        // RENDER CREDENCIAL (IDÉNTICO AL ANTERIOR)
         function getSafeStyle(key) {
             const props = configDiseno[key]; if (!props) return 'display: none;';
             let style = `position: absolute; width: ${props.width}px; height: ${props.height}px; font-family: 'Inter', sans-serif; `;
@@ -494,37 +485,99 @@
             });
         }
 
+        function ajustarEscala() {
+            const viewport = document.getElementById('card-viewport'); 
+            const render = document.getElementById('carnet-render'); 
+            if(viewport && render) { 
+                const viewportWidth = viewport.offsetWidth;
+                const scale = viewportWidth / 1000; 
+                render.style.transform = `scale(${scale})`; 
+                viewport.style.height = `${630 * scale}px`; 
+            } 
+        }
+
+        window.addEventListener('resize', ajustarEscala);
+
         function renderizarCarnet(vista) {
             const container = document.getElementById('carnet-render'); if (!alumnoActual) return;
             const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
             const vence = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D';
             if (vista === 'front') {
                 container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;"><img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div></div>`;
-                setTimeout(() => autoAjustarTextos(container), 50);
             } else if (vista === 'back') {
                 const urlValidador = `${window.location.origin}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
                 let textoCat = ''; if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; else textoCat = 'Consultor/Estudiante inscripto.';
                 container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index: 10;">${textoCat}</div><div id="qr-container" style="${getSafeStyle('qr')} z-index: 10; background: white;"></div></div>`;
-                setTimeout(() => { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(document.getElementById('qr-container'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); autoAjustarTextos(container); }, 100);
+                setTimeout(() => { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(document.getElementById('qr-container'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); }, 50);
             }
+            // Reparación del timing
+            setTimeout(() => { autoAjustarTextos(container); ajustarEscala(); }, 150);
         }
 
         async function descargarCarnetOficial() {
             if (!alumnoActual) return;
             const btn = document.getElementById('btn-descargar-carnet'); const originalText = btn.innerHTML;
             btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 text-[#d4af37] animate-spin"></i><span class="text-[9px] uppercase font-black tracking-wider text-center mt-1">Generando...</span>`; lucide.createIcons();
+            
             try {
-                const exportContainer = document.createElement('div'); exportContainer.style.position = 'fixed'; exportContainer.style.left = '-9999px'; exportContainer.style.top = '0'; exportContainer.style.width = '1040px'; exportContainer.style.padding = '20px'; exportContainer.style.backgroundColor = '#ffffff'; exportContainer.style.display = 'flex'; exportContainer.style.flexDirection = 'column'; exportContainer.style.gap = '20px'; exportContainer.style.zIndex = '9999'; document.body.appendChild(exportContainer);
+                const exportContainer = document.createElement('div'); 
+                exportContainer.style.position = 'fixed'; exportContainer.style.left = '-9999px'; exportContainer.style.top = '0'; exportContainer.style.width = '1000px'; exportContainer.style.backgroundColor = '#ffffff'; exportContainer.style.zIndex = '9999'; 
+                document.body.appendChild(exportContainer);
+                
                 const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff'; const vence = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D'; const urlValidador = `${window.location.origin}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
-                const frontHtml = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff;"><img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;"><img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div></div>`;
+                
+                const frontHtml = `<div id="export-front" style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff;"><img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;"><img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div></div>`;
+                
                 let textoCat = ''; if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; else textoCat = 'Consultor/Estudiante inscripto.';
-                const backHtml = bgCredencialDorso ? `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff;"><img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index: 10;">${textoCat}</div><div id="export-qr" style="${getSafeStyle('qr')} z-index: 10; background: white;"></div></div>` : '';
+                const backHtml = bgCredencialDorso ? `<div id="export-back" style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; margin-top: 20px;"><img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index: 10;">${textoCat}</div><div id="export-qr" style="${getSafeStyle('qr')} z-index: 10; background: white;"></div></div>` : '';
+                
                 exportContainer.innerHTML = frontHtml + backHtml; await new Promise(r => setTimeout(r, 600));
-                const qrContainer = exportContainer.querySelector('#export-qr'); if (qrContainer) { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(qrContainer, { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff" }); await new Promise(r => setTimeout(r, 500)); }
-                autoAjustarTextos(exportContainer); await new Promise(r => setTimeout(r, 300));
-                const canvas = await html2canvas(exportContainer, { useCORS: true, allowTaint: true, scale: 2, backgroundColor: '#ffffff', logging: false, windowWidth: 1040, windowHeight: exportContainer.offsetHeight });
-                const imgData = canvas.toDataURL('image/png', 1.0); const link = document.createElement('a'); link.download = `Credencial_RENMCYCF_${alumnoActual.matricula_oficial || alumnoActual.dni}.png`; link.href = imgData; document.body.appendChild(link); link.click(); document.body.removeChild(link); document.body.removeChild(exportContainer);
-            } catch (error) { alert("Hubo un error al generar la imagen. Intente nuevamente."); } finally { btn.innerHTML = originalText; lucide.createIcons(); }
+                
+                if (bgCredencialDorso) { const qrContainer = exportContainer.querySelector('#export-qr'); if (qrContainer) { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(qrContainer, { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); await new Promise(r => setTimeout(r, 500)); } }
+                
+                autoAjustarTextos(exportContainer); await new Promise(r => setTimeout(r, 500));
+
+                const canvasFront = await html2canvas(exportContainer.querySelector('#export-front'), { useCORS: true, allowTaint: true, scale: 2, backgroundColor: null });
+                const imgDataFront = canvasFront.toDataURL('image/png', 1.0);
+                
+                let imgDataBack = null;
+                if (bgCredencialDorso) {
+                    const canvasBack = await html2canvas(exportContainer.querySelector('#export-back'), { useCORS: true, allowTaint: true, scale: 2, backgroundColor: null });
+                    imgDataBack = canvasBack.toDataURL('image/png', 1.0);
+                }
+
+                // Generar PDF (A4)
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                const cardW = 85.6; const cardH = 54; const marginX = (210 - cardW) / 2; let currentY = 20;
+
+                pdf.setFont("helvetica", "bold"); pdf.setFontSize(16); pdf.setTextColor(10, 17, 40);
+                pdf.text("DOCUMENTO DE IDENTIDAD PROFESIONAL", 105, currentY, null, null, "center");
+                
+                pdf.setFont("helvetica", "normal"); pdf.setFontSize(10); pdf.setTextColor(100, 100, 100); currentY += 8;
+                pdf.text("Registro Nacional de Matriculados en Criminalística y Ciencias Forenses", 105, currentY, null, null, "center");
+
+                currentY += 20;
+                pdf.setDrawColor(200, 200, 200); pdf.setLineDash([2, 2], 0);
+                pdf.rect(marginX - 2, currentY - 2, cardW + 4, cardH + 4);
+                pdf.addImage(imgDataFront, 'PNG', marginX, currentY, cardW, cardH);
+                currentY += cardH + 20;
+                
+                if (imgDataBack) {
+                    pdf.rect(marginX - 2, currentY - 2, cardW + 4, cardH + 4);
+                    pdf.addImage(imgDataBack, 'PNG', marginX, currentY, cardW, cardH);
+                    currentY += cardH + 20;
+                }
+                
+                pdf.setFontSize(8); pdf.setTextColor(150, 150, 150);
+                pdf.text("Este documento es personal e intransferible. Puede ser validado escaneando el código QR.", 105, currentY, null, null, "center");
+                currentY += 5;
+                pdf.text(`Fecha de emisión del documento: ${new Date().toLocaleDateString('es-AR')}`, 105, currentY, null, null, "center");
+
+                pdf.save(`Credencial_RENMCYCF_${alumnoActual.matricula_oficial || alumnoActual.dni}.pdf`);
+                document.body.removeChild(exportContainer);
+
+            } catch (error) { console.error('Error en descarga PDF:', error); alert("Hubo un error al generar el PDF. Asegúrese de tener buena conexión."); } 
+            finally { btn.innerHTML = originalText; lucide.createIcons(); }
         }
 
         function abrirModalDiplomas() {
@@ -539,29 +592,20 @@
             document.getElementById('modal-diplomas').classList.remove('hidden'); lucide.createIcons();
         }
 
-        // ==========================================
-        // PORTAL CIENTÍFICO (EL FEED) Y BIBLIOTECA
-        // ==========================================
         function switchNavTab(tabId) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             const tabBtn = document.getElementById(`tab-${tabId}`); if(tabBtn) tabBtn.classList.add('active');
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(`screen-${tabId}`).classList.add('active');
             
-            if(tabId === 'wallet') { renderizarCarnet('front'); ajustarEscala(); }
+            if(tabId === 'wallet') { renderizarCarnet('front'); } // Escala se auto-ajusta en renderizarCarnet
             if(tabId === 'portal') cargarPortalCientifico();
             if(tabId === 'biblioteca') cargarBibliotecaWallet();
             if(tabId === 'publicaciones') cargarMisPublicaciones();
         }
 
-        function cambiarVista(vista) { currentView = vista; document.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active')); document.getElementById(`btn-toggle-${vista}`).classList.add('active'); renderizarCarnet(vista); }
-        function ajustarEscala() { const viewport = document.getElementById('card-viewport'); const render = document.getElementById('carnet-render'); if(viewport && render && document.getElementById('screen-wallet').classList.contains('active')) { const scale = viewport.offsetWidth / 1000; render.style.transform = `scale(${scale})`; viewport.style.height = `${630 * scale}px`; } }
-        window.addEventListener('resize', ajustarEscala);
-
-        // NUEVO: Cargar el Feed del Portal
         async function cargarPortalCientifico() {
             const container = document.getElementById('feed-portal-container');
-            // Mantiene el skeleton de carga activo
             try {
                 const { data, error } = await db.from('renmcycf_cursos').select('*').order('created_at', { ascending: false }).limit(20);
                 if (error) throw error;
@@ -593,28 +637,14 @@
         async function cargarBibliotecaWallet() {
             const container = document.getElementById('wallet-biblioteca-container');
             container.innerHTML = '<div class="skeleton h-48 w-full rounded-xl"></div><div class="skeleton h-48 w-full rounded-xl"></div>';
-            
             try {
                 const { data, error } = await db.from('renmcycf_biblioteca').select('*').eq('activo', true).order('created_at', { ascending: false });
                 if (error) throw error;
                 if (!data || data.length === 0) { container.innerHTML = '<p class="col-span-2 text-center text-slate-400 text-sm py-4">Biblioteca en actualización.</p>'; return; }
-
                 container.innerHTML = data.map(b => {
                     const cover = b.portada_url || 'https://via.placeholder.com/150x200/0a1128/d4af37?text=PDF';
                     const label = b.tipo_acceso === 'PREMIUM' ? '<span class="absolute top-2 right-2 bg-[#0a1128] text-[#d4af37] text-[8px] font-black px-2 py-1 rounded border border-[#d4af37] shadow">Premium</span>' : '';
-                    
-                    return `
-                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col relative group">
-                        ${label}
-                        <img src="${cover}" class="w-full h-32 object-cover bg-slate-100 border-b border-slate-100">
-                        <div class="p-3 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h4 class="font-black text-xs text-[#0a1128] leading-tight mb-1 line-clamp-2">${b.titulo}</h4>
-                                <p class="text-[9px] font-bold text-slate-400 mb-2 line-clamp-1">${b.autor || 'Institucional'}</p>
-                            </div>
-                            <a href="${b.pdf_url}" target="_blank" class="w-full text-center bg-[#f1f5f9] hover:bg-[#0a1128] hover:text-[#d4af37] text-slate-700 text-[9px] font-black uppercase tracking-wider py-2 rounded-lg transition-colors shadow-sm mt-auto">Descargar PDF</a>
-                        </div>
-                    </div>`;
+                    return `<div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col relative group">${label}<img src="${cover}" class="w-full h-32 object-cover bg-slate-100 border-b border-slate-100"><div class="p-3 flex-1 flex flex-col justify-between"><div><h4 class="font-black text-xs text-[#0a1128] leading-tight mb-1 line-clamp-2">${b.titulo}</h4><p class="text-[9px] font-bold text-slate-400 mb-2 line-clamp-1">${b.autor || 'Institucional'}</p></div><a href="${b.pdf_url}" target="_blank" class="w-full text-center bg-[#f1f5f9] hover:bg-[#0a1128] hover:text-[#d4af37] text-slate-700 text-[9px] font-black uppercase tracking-wider py-2 rounded-lg transition-colors shadow-sm mt-auto">Descargar PDF</a></div></div>`;
                 }).join('');
             } catch(e) { container.innerHTML = '<p class="col-span-2 text-center text-red-500 text-sm font-bold">Error de conexión.</p>'; }
         }
@@ -625,22 +655,11 @@
                 const { data, error } = await db.from('renmcycf_publicaciones').select('*').eq('autor_id', alumnoActual.id).order('created_at', { ascending: false });
                 if (error) throw error;
                 if (!data || data.length === 0) { container.innerHTML = '<p class="text-center text-slate-400 text-[10px] font-bold uppercase border border-dashed border-slate-300 rounded-xl p-4">Aún no ha enviado documentos.</p>'; return; }
-
                 container.innerHTML = data.map(t => {
                     let color = 'bg-slate-50 text-slate-500 border-slate-200'; let icon = 'clock'; let tex = 'EN REVISIÓN';
                     if (t.estado === 'APROBADO') { color = 'bg-emerald-50 text-emerald-600 border-emerald-200'; icon = 'check-circle'; tex = 'PUBLICADO';}
                     if (t.estado === 'RECHAZADO') { color = 'bg-red-50 text-red-600 border-red-200'; icon = 'x-circle'; tex = 'DENEGADO'; }
-
-                    return `
-                    <div class="border border-slate-200 rounded-xl p-4 bg-white flex flex-col gap-2 shadow-sm">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1 pr-2">
-                                <h4 class="font-black text-xs text-[#0a1128] uppercase leading-tight line-clamp-2">${t.titulo}</h4>
-                                <p class="text-[9px] text-slate-400 font-mono mt-1">Enviado el ${new Date(t.created_at).toLocaleDateString('es-AR')}</p>
-                            </div>
-                            <span class="${color} border text-[8px] font-black uppercase px-2 py-1 rounded flex items-center gap-1 shrink-0"><i data-lucide="${icon}" class="w-3 h-3"></i> ${tex}</span>
-                        </div>
-                    </div>`;
+                    return `<div class="border border-slate-200 rounded-xl p-4 bg-white flex flex-col gap-2 shadow-sm"><div class="flex justify-between items-start"><div class="flex-1 pr-2"><h4 class="font-black text-xs text-[#0a1128] uppercase leading-tight line-clamp-2">${t.titulo}</h4><p class="text-[9px] text-slate-400 font-mono mt-1">Enviado el ${new Date(t.created_at).toLocaleDateString('es-AR')}</p></div><span class="${color} border text-[8px] font-black uppercase px-2 py-1 rounded flex items-center gap-1 shrink-0"><i data-lucide="${icon}" class="w-3 h-3"></i> ${tex}</span></div></div>`;
                 }).join('');
                 lucide.createIcons();
             } catch(e) { container.innerHTML = '<p class="text-center text-red-500 text-xs font-bold">Error de conexión.</p>'; }
