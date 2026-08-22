@@ -34,8 +34,19 @@
         .input-auth { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 800; letter-spacing: 2px; transition: 0.3s; background: rgba(255,255,255,0.9); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .input-auth:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 4px rgba(0,0,0,0.05); }
 
-        /* VIEWPORT BLINDADO PARA PC Y CELULAR (Soluciona el corte a la mitad) */
-        .card-viewport { width: 100%; max-width: 400px; margin: 0 auto; overflow: hidden; position: relative; margin-bottom: 20px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); background: #fff; }
+        /* FIX: VIEWPORT CENTRADO Y SIN MAX-WIDTH QUE CORTE */
+        .card-viewport { 
+            width: 100%; 
+            margin: 0 auto; 
+            overflow: hidden; 
+            position: relative; 
+            margin-bottom: 20px; 
+            border-radius: 15px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            background: #fff; 
+            display: flex; 
+            justify-content: center; 
+        }
         #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
 
         .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 4px; border-radius: 24px; width: fit-content; margin-left: auto; margin-right: auto; }
@@ -54,6 +65,11 @@
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         .animate-slide-in { animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; } 
         @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        
+        .tc-box { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; max-height: 300px; overflow-y: auto; text-align: left; font-size: 12px; line-height: 1.6; color: #475569; margin-bottom: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); }
+        .tc-box h3 { color: var(--forense-navy); font-weight: 900; font-size: 14px; margin-bottom: 10px; }
+        .form-input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-bottom: 15px; background: white; color: #1e293b; }
+        .form-input:focus { border-color: var(--forense-navy); box-shadow: 0 0 0 3px rgba(10, 17, 40, 0.1); }
     </style>
 </head>
 <body>
@@ -107,7 +123,7 @@
     </div>
 
     <!-- PANTALLA 2: TÉRMINOS Y CONDICIONES -->
-    <div id="screen-tc" class="screen bg-white absolute inset-0 z-50">
+    <div id="screen-tc" class="screen bg-white" style="z-index:50;">
         <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4">
             <div class="text-center mb-6">
                 <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="scale" class="w-6 h-6"></i></div>
@@ -127,14 +143,14 @@
                     <span class="text-xs font-bold text-slate-700 leading-tight">He leído, comprendo y acepto los Términos y declaro bajo juramento mi identidad.</span>
                 </label>
             </div>
-            <button class="w-full bg-slate-300 text-slate-500 font-black uppercase py-4 rounded-xl transition-all" id="btn-aceptar-tc" onclick="aceptarTerminos()" disabled>
+            <button class="w-full bg-slate-300 text-slate-500 font-black uppercase py-4 rounded-xl transition-all cursor-not-allowed" id="btn-aceptar-tc" onclick="aceptarTerminos()" disabled>
                 Firmar Acuerdo
             </button>
         </div>
     </div>
 
     <!-- PANTALLA 2.5: FOTO CROPPER -->
-    <div id="screen-foto" class="screen bg-white absolute inset-0 z-50">
+    <div id="screen-foto" class="screen bg-white" style="z-index:50;">
         <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4 text-center">
             <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="camera" class="w-6 h-6"></i></div>
             <h2 class="text-xl font-black text-[#0a1128] uppercase mb-4">Fotografía Oficial</h2>
@@ -175,6 +191,7 @@
             </div>
         </div>
         
+        <!-- FIX: VIEWPORT CON DISPLAY FLEX Y CENTRADO -->
         <div class="card-viewport" id="card-viewport">
             <div id="carnet-render"><div class="flex items-center justify-center h-full w-full text-slate-400 bg-slate-100"><i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i></div></div>
         </div>
@@ -407,7 +424,6 @@
             } catch (err) { alert("Error de red: " + err.message); btn.innerHTML = `Firmar Acuerdo`; btn.disabled = false; }
         }
 
-        // CROPPER
         function abrirSelectorArchivo(usaCamara) { 
             const iCam = el('input-foto-camara'); const iOf = el('input-foto-oficial');
             if(usaCamara && iCam) iCam.click(); else if(iOf) iOf.click(); 
@@ -451,7 +467,6 @@
             } catch (err) { alert("Error: " + err.message); btn.innerHTML = txt; btn.disabled = false; }
         }
 
-        // NAVEGACIÓN
         function cambiarPantallaLogin(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             safeClass(screenId, 'add', 'active');
@@ -530,7 +545,6 @@
             renderizarCarnet(vista);
         }
 
-        // FIX: GETSAFESTYLE DEEPSEEK + ANTI-SQUISH
         function getSafeStyle(key) {
             const props = configDiseno[key]; if (!props) return 'display: none;';
             let style = `position: absolute; width: ${props.width}px; height: ${props.height}px; font-family: 'Inter', sans-serif; line-height: 1.1; letter-spacing: 0px; `;
@@ -569,12 +583,12 @@
             });
         }
 
-        // FIX: AJUSTAR ESCALA INFALIBLE BASADA EN OFFSETWIDTH (COMO DEEPSEEK)
+        // FIX: AJUSTAR ESCALA CON CLIENTWIDTH
         function ajustarEscala() {
             const viewport = el('card-viewport');
             const render = el('carnet-render');
             if(viewport && render) {
-                const scale = viewport.offsetWidth / 1000;
+                const scale = viewport.clientWidth / 1000;
                 render.style.transform = `scale(${scale})`;
                 viewport.style.height = `${630 * scale}px`;
             }
@@ -588,7 +602,7 @@
             
             if (vista === 'front') {
                 container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;"><img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div></div>`;
-                setTimeout(() => { autoAjustarTextos(container); ajustarEscala(); }, 100);
+                setTimeout(() => { autoAjustarTextos(container); ajustarEscala(); }, 300);
             } else if (vista === 'back') {
                 const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF` : window.location.origin;
                 const urlValidador = `${baseUrl}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
@@ -599,11 +613,10 @@
                 setTimeout(() => { 
                     try { const qrEl = container.querySelector('#qr-container'); if(qrEl){ const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(qrEl, { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H });} } catch(e) {}
                     autoAjustarTextos(container); ajustarEscala(); 
-                }, 100);
+                }, 300);
             }
         }
 
-        // FUNCION PARA DESCARGAR IMÁGENES Y RECORTAR EL LOGO COMO CÍRCULO PERFECTO
         function urlToBase64(url, isPng = true, circular = false) {
             return new Promise((resolve) => {
                 if (!url) { resolve(null); return; }
@@ -634,7 +647,6 @@
             });
         }
 
-        // FIX: DESCARGA PDF EXACTA (ESCUDO SEPARADO DEL TEXTO)
         async function descargarCarnetOficial() {
             if (!alumnoActual) return;
             const btn = el('btn-descargar-carnet'); if(!btn) return;
@@ -652,7 +664,6 @@
                 const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF` : window.location.origin;
                 const urlValidador = `${baseUrl}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
 
-                // RENDER FRENTE 
                 const frontHtml = `<div id="export-front" style="position:relative;width:1000px;height:630px;overflow:hidden;background:#fff;border-radius:30px;"><img src="${bgCredencialFrente}" style="position:absolute;top:0;left:0;width:1000px;height:630px;z-index:1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index:2;border-radius:50%;overflow:hidden;"><img src="${fotoUrl}" style="width:100%;height:100%;object-fit:cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index:5;object-fit:fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index:10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index:10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index:10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index:10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index:10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index:10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index:10;">${vence}</div></div>`;
                 
                 let textoCat = ''; 
@@ -661,7 +672,6 @@
                 else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; 
                 else textoCat = 'Consultor/Estudiante inscripto.';
                 
-                // RENDER DORSO
                 const backHtml = bgCredencialDorso ? `<div id="export-back" style="position:relative;width:1000px;height:630px;overflow:hidden;background:#fff;border-radius:30px;"><img src="${bgCredencialDorso}" style="position:absolute;top:0;left:0;width:1000px;height:630px;z-index:1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index:10;">${textoCat}</div><div id="export-qr" style="${getSafeStyle('qr')} z-index:10;background:white;"></div></div>` : '';
                 
                 exportBox.innerHTML = frontHtml + backHtml;
@@ -685,10 +695,8 @@
 
                 document.body.removeChild(exportBox);
 
-                // ENSAMBLE PDF A4
                 const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
                 
-                // 1. MARCA DE AGUA
                 const heroBase64 = await urlToBase64(configGlobal.hero_image_url, false, false);
                 if (heroBase64) {
                     pdf.setGState(new pdf.GState({opacity: 0.15}));
@@ -696,11 +704,9 @@
                     pdf.setGState(new pdf.GState({opacity: 1}));
                 }
 
-                // 2. FRANJA AZUL
                 pdf.setFillColor(10, 17, 40); 
                 pdf.rect(0, 0, 210, 45, 'F');
                 
-                // 3. TEXTOS
                 pdf.setTextColor(212, 175, 55); 
                 pdf.setFont("helvetica", "bold");
                 pdf.setFontSize(14);
@@ -711,7 +717,6 @@
                 pdf.setFontSize(10);
                 pdf.text("Registro Nacional de Matriculados en Criminalística y Ciencias Forenses", 105, 26, { align: "center" });
 
-                // 4. LOGO CIRCULAR (Bajado al milímetro 52 para que no toque la letra)
                 const logoBase64 = await urlToBase64(configGlobal.logo_url, true, true);
                 if (logoBase64) {
                     pdf.setFillColor(255, 255, 255);
@@ -721,7 +726,6 @@
                     pdf.addImage(logoBase64, 'PNG', 105 - 14, 52 - 14, 28, 28); 
                 }
 
-                // 5. MEDIDAS EXACTAS TARJETA CR80 (Bajada al milímetro 75)
                 const cardW = 85.6; 
                 const cardH = 54.0; 
                 const marginX = (210 - cardW) / 2; 
@@ -730,19 +734,16 @@
                 pdf.setDrawColor(200, 200, 200);
                 pdf.setLineDash([2, 2], 0);
                 
-                // Pegar Frente
                 pdf.rect(marginX - 2, currentY - 2, cardW + 4, cardH + 4); 
                 pdf.addImage(imgFront, 'JPEG', marginX, currentY, cardW, cardH);
                 currentY += cardH + 15;
 
-                // Pegar Dorso
                 if (imgBack) {
                     pdf.rect(marginX - 2, currentY - 2, cardW + 4, cardH + 4); 
                     pdf.addImage(imgBack, 'JPEG', marginX, currentY, cardW, cardH);
                     currentY += cardH + 15;
                 }
 
-                // 6. TEXTO LEGAL
                 pdf.setTextColor(100, 100, 100);
                 pdf.setFont("helvetica", "normal");
                 pdf.setFontSize(8);
