@@ -34,7 +34,6 @@
         .input-auth { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 800; letter-spacing: 2px; transition: 0.3s; background: rgba(255,255,255,0.9); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .input-auth:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 4px rgba(0,0,0,0.05); }
 
-        /* VIEWPORT BLINDADO (REPARACIÓN DEL CORTE VISUAL) */
         .card-viewport { width: 100%; max-width: 500px; margin: 0 auto; overflow: hidden; position: relative; margin-bottom: 20px; height: 230px; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); display: flex; justify-content: flex-start; background: #fff; }
         #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left !important; }
 
@@ -54,6 +53,9 @@
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         .animate-slide-in { animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; } 
         @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        
+        .tc-box { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; max-height: 300px; overflow-y: auto; text-align: left; font-size: 12px; line-height: 1.6; color: #475569; margin-bottom: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); }
+        .tc-box h3 { color: var(--forense-navy); font-weight: 900; font-size: 14px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -106,8 +108,8 @@
         </div>
     </div>
 
-    <!-- PANTALLA 2: TÉRMINOS Y CONDICIONES -->
-    <div id="screen-tc" class="screen bg-white absolute inset-0 z-50">
+    <!-- PANTALLA 2: TÉRMINOS Y CONDICIONES (FIX: sin absolute inset-0) -->
+    <div id="screen-tc" class="screen bg-white" style="z-index:50;">
         <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4">
             <div class="text-center mb-6">
                 <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="scale" class="w-6 h-6"></i></div>
@@ -133,8 +135,8 @@
         </div>
     </div>
 
-    <!-- PANTALLA 2.5: FOTO CROPPER -->
-    <div id="screen-foto" class="screen bg-white absolute inset-0 z-50">
+    <!-- PANTALLA 2.5: FOTO CROPPER (FIX: sin absolute inset-0) -->
+    <div id="screen-foto" class="screen bg-white" style="z-index:50;">
         <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4 text-center">
             <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="camera" class="w-6 h-6"></i></div>
             <h2 class="text-xl font-black text-[#0a1128] uppercase mb-4">Fotografía Oficial</h2>
@@ -144,7 +146,7 @@
                 <input type="file" id="input-foto-oficial" accept="image/*" class="hidden" onchange="iniciarRecorte(this)">
                 <input type="file" id="input-foto-camara" accept="image/*" capture="user" class="hidden" onchange="iniciarRecorte(this)">
             </div>
-            <div id="foto-cropper-ui" class="hidden flex-1 flex flex-col h-full w-full">
+            <div id="foto-cropper-ui" class="hidden flex-1 flex-col h-full w-full">
                 <div class="relative flex-1 w-full bg-slate-900 rounded-xl overflow-hidden mb-4 shadow-inner"><img id="image-to-crop" src="" style="display:block; max-width: 100%;"></div>
                 <div class="flex gap-3"><button class="flex-1 bg-slate-200 text-slate-700 font-bold py-3 rounded-lg text-xs" onclick="cancelarRecorte()">VOLVER</button><button class="flex-[2] bg-[#d4af37] text-[#0a1128] font-black py-3 rounded-lg text-xs shadow-md" id="btn-guardar-recorte" onclick="procesarYSubirRecorte()">GUARDAR ENCUADRE</button></div>
             </div>
@@ -162,7 +164,6 @@
             </div>
         </div>
         
-        <!-- CARD VIEWPORT CON TAMAÑO BLINDADO -->
         <div class="card-viewport" id="card-viewport">
             <div id="carnet-render"><div class="flex items-center justify-center h-full w-full text-slate-400 bg-slate-100"><i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i></div></div>
         </div>
@@ -375,14 +376,16 @@
             archivoSeleccionadoParaRecortar = file;
             document.getElementById('image-to-crop').src = URL.createObjectURL(file);
             document.getElementById('foto-selector-ui').classList.add('hidden');
-            document.getElementById('foto-cropper-ui').classList.remove('hidden'); document.getElementById('foto-cropper-ui').classList.add('flex');
+            const cropperUI = document.getElementById('foto-cropper-ui');
+            cropperUI.classList.remove('hidden'); cropperUI.classList.add('flex');
 
             if (cropperInstance) cropperInstance.destroy();
             cropperInstance = new Cropper(document.getElementById('image-to-crop'), { aspectRatio: 1, viewMode: 1, dragMode: 'move', autoCropArea: 0.8, center: true, highlight: false, cropBoxMovable: false, toggleDragModeOnDblclick: false });
         }
         function cancelarRecorte() {
             if (cropperInstance) cropperInstance.destroy(); cropperInstance = null;
-            document.getElementById('foto-cropper-ui').classList.add('hidden'); document.getElementById('foto-cropper-ui').classList.remove('flex'); document.getElementById('foto-selector-ui').classList.remove('hidden');
+            const cropperUI = document.getElementById('foto-cropper-ui');
+            cropperUI.classList.add('hidden'); cropperUI.classList.remove('flex'); document.getElementById('foto-selector-ui').classList.remove('hidden');
         }
         async function procesarYSubirRecorte() {
             if (!cropperInstance) return;
@@ -404,6 +407,7 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             if(screenId !== 'screen-login') document.getElementById('dynamic-bg').style.display = 'none';
+            if(screenId === 'screen-tc') toggleBotonAceptar(); // FIX: re-habilitar botón
         }
 
         function iniciarWallet() {
@@ -529,7 +533,7 @@
                 let textoCat = ''; if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; else textoCat = 'Consultor/Estudiante inscripto.';
                 container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index: 10;">${textoCat}</div><div id="qr-container" style="${getSafeStyle('qr')} z-index: 10; background: white;"></div></div>`;
                 setTimeout(() => { 
-                    try { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(container.querySelector('#qr-container'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); } catch(e) {}
+                    try { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(container.querySelector('#qr-container'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff" }); } catch(e) {}
                     autoAjustarTextos(container); ajustarEscala(); 
                 }, 50);
             }
@@ -557,7 +561,7 @@
                 tempDiv.innerHTML = frontHtml + backHtml;
                 
                 if (bgCredencialDorso) { 
-                    try { const qrContainer = tempDiv.querySelector('#export-qr'); const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(qrContainer, { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); } catch(e){}
+                    try { const qrContainer = tempDiv.querySelector('#export-qr'); const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(qrContainer, { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff" }); } catch(e){}
                 }
                 
                 autoAjustarTextos(tempDiv); await new Promise(r => setTimeout(r, 1000));
@@ -573,7 +577,6 @@
 
                 document.body.removeChild(tempDiv);
 
-                // Construcción de PDF A4 con jsPDF
                 const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
                 
                 pdf.setFillColor(10, 17, 40); pdf.rect(0, 0, 210, 50, 'F');
@@ -621,8 +624,18 @@
         async function cargarPortalCientifico() {
             const container = document.getElementById('feed-portal-container');
             try {
-                const { data, error } = await db.from('renmcycf_cursos').select('*').order('created_at', { ascending: false }).limit(20);
-                if (error) throw error;
+                // FIX: Intentar primero noticias, si no hay usar cursos como fallback
+                let data = null;
+                try {
+                    const { data: noticias } = await db.from('renmcycf_noticias').select('*').order('created_at', { ascending: false }).limit(20);
+                    if (noticias && noticias.length > 0) data = noticias;
+                } catch(e) {}
+                
+                if (!data) {
+                    const { data: cursos } = await db.from('renmcycf_cursos').select('*').order('created_at', { ascending: false }).limit(20);
+                    data = cursos;
+                }
+                
                 if (!data || data.length === 0) { container.innerHTML = '<p class="text-center text-slate-400 text-sm py-10 font-bold">No hay publicaciones recientes.</p>'; return; }
 
                 container.innerHTML = data.map(post => {
