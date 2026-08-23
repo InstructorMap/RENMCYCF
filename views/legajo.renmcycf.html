@@ -34,19 +34,26 @@
         .input-auth { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 800; letter-spacing: 2px; transition: 0.3s; background: rgba(255,255,255,0.9); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .input-auth:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 4px rgba(0,0,0,0.05); }
 
-        /* VIEWPORT REPARADO: 400px en PC para elegancia, sin aspect-ratio que rompa flexbox */
+        /* FIX DEFINITIVO: CAJA PROPORCIONAL INAMOVIBLE (Ratio 1000/630 = 63%) */
         .card-viewport { 
             width: 100%; 
-            max-width: 400px; 
-            margin: 0 auto; 
-            overflow: hidden; 
+            max-width: 420px; 
+            margin: 0 auto 20px auto; 
             position: relative; 
-            margin-bottom: 20px; 
+            overflow: hidden; 
             border-radius: 15px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
             background: #fff; 
         }
-        #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
+        #carnet-render { 
+            width: 1000px; 
+            height: 630px; 
+            background: white; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            transform-origin: top left; 
+        }
 
         .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 4px; border-radius: 24px; width: fit-content; margin-left: auto; margin-right: auto; }
         .btn-toggle { background: transparent; border: none; padding: 8px 20px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
@@ -189,7 +196,9 @@
             </div>
         </div>
         
+        <!-- CARD VIEWPORT CON ESPACIO PREVISTO (63% DEL ANCHO) -->
         <div class="card-viewport" id="card-viewport">
+            <div style="padding-top: 63%; display: block;"></div>
             <div id="carnet-render"><div class="flex items-center justify-center h-full w-full text-slate-400 bg-slate-100"><i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i></div></div>
         </div>
         
@@ -273,7 +282,7 @@
 
     <!-- MODAL NOTIFICACIONES -->
     <div id="modal-notificaciones" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex justify-end">
-        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col animate-slide-in">
+        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-[#0a1128] text-white">
                 <h3 class="font-black uppercase tracking-widest text-sm flex items-center gap-2"><i data-lucide="bell" class="w-4 h-4 text-[#d4af37]"></i> Centro de Alertas</h3>
                 <button onclick="cerrarModalSeguro('modal-notificaciones')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -332,7 +341,7 @@
 
         if ('serviceWorker' in navigator) { 
             window.addEventListener('load', () => { 
-                navigator.serviceWorker.register('/sw.js').catch(()=>{ console.log("Modo App Offline desactivado temporalmente."); }); 
+                navigator.serviceWorker.register('/sw.js').catch(()=>{ console.log("Modo Offline desactivado temporalmente."); }); 
             }); 
         }
 
@@ -421,6 +430,7 @@
             } catch (err) { alert("Error de red: " + err.message); btn.innerHTML = `Firmar Acuerdo`; btn.disabled = false; }
         }
 
+        // CROPPER
         function abrirSelectorArchivo(usaCamara) { 
             const iCam = el('input-foto-camara'); const iOf = el('input-foto-oficial');
             if(usaCamara && iCam) iCam.click(); else if(iOf) iOf.click(); 
@@ -580,16 +590,15 @@
             });
         }
 
-        // FIX DEL AUDITOR: ALTURA INYECTADA MATEMÁTICAMENTE PARA QUE NUNCA SE CORTE EN NINGÚN NAVEGADOR
+        // EL SECRETO: ESCALA PERFECTA BASADA EN EL ANCHO DEL CONTENEDOR 
         function ajustarEscala() {
             const viewport = el('card-viewport');
             const render = el('carnet-render');
             if(viewport && render) {
-                const viewportWidth = viewport.offsetWidth;
+                const viewportWidth = viewport.clientWidth;
                 if(viewportWidth > 0) {
                     const scale = viewportWidth / 1000;
                     render.style.transform = `scale(${scale})`;
-                    viewport.style.height = `${630 * scale}px`;
                 }
             }
         }
@@ -617,7 +626,7 @@
             }
         }
 
-        // MOTOR DE DESCARGA PDF EXACTO QUE DIJISTE QUE IMPRIMÍA PERFECTO (MANTENIDO INTACTO)
+        // MOTOR DE DESCARGA PDF EXACTO A4 (INTACTO COMO PEDISTE)
         function urlToBase64(url, isPng = true, circular = false) {
             return new Promise((resolve) => {
                 if (!url) { resolve(null); return; }
