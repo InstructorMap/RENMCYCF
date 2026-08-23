@@ -34,12 +34,10 @@
         .input-auth { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 800; letter-spacing: 2px; transition: 0.3s; background: rgba(255,255,255,0.9); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .input-auth:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 4px rgba(0,0,0,0.05); }
 
-        /* FIX DEFINITIVO: VIEWPORT MÁS GRANDE EN PC Y COMPLETO */
+        /* FIX FINAL: ASPECT-RATIO + CLIENTWIDTH + RESIZEOBSERVER */
         .card-viewport { 
             width: 100%; 
             max-width: 650px; 
-            min-height: 230px; 
-            height: auto; 
             margin: 0 auto; 
             overflow: hidden; 
             position: relative; 
@@ -47,10 +45,17 @@
             border-radius: 15px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
             background: #fff; 
-            display: flex; 
-            justify-content: center; 
+            aspect-ratio: 1000 / 630;
         }
-        #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
+        #carnet-render { 
+            width: 1000px; 
+            height: 630px; 
+            background: white; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            transform-origin: top left; 
+        }
 
         .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 4px; border-radius: 24px; width: fit-content; margin-left: auto; margin-right: auto; }
         .btn-toggle { background: transparent; border: none; padding: 8px 20px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
@@ -585,17 +590,22 @@
             });
         }
 
-        // FIX DEFINITIVO: MEDICIÓN CON OFFSETWIDTH (RESPETA MAX-WIDTH)
+        // FIX FINAL: CLIENTWIDTH + RESIZEOBSERVER
         function ajustarEscala() {
             const viewport = el('card-viewport');
             const render = el('carnet-render');
             if(viewport && render) {
-                const viewportWidth = viewport.offsetWidth;
+                const viewportWidth = viewport.clientWidth;
                 const scale = viewportWidth / 1000;
                 render.style.transform = `scale(${scale})`;
-                viewport.style.height = `${630 * scale}px`;
             }
         }
+
+        // Observador de cambios de tamaño
+        const resizeObserver = new ResizeObserver(() => ajustarEscala());
+        window.addEventListener('DOMContentLoaded', () => {
+            if (el('card-viewport')) resizeObserver.observe(el('card-viewport'));
+        });
         window.addEventListener('resize', ajustarEscala);
 
         function renderizarCarnet(vista) {
@@ -605,10 +615,7 @@
             
             if (vista === 'front') {
                 container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;"><img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div></div>`;
-                setTimeout(() => { 
-                    autoAjustarTextos(container); 
-                    requestAnimationFrame(() => ajustarEscala()); 
-                }, 300);
+                setTimeout(() => { autoAjustarTextos(container); ajustarEscala(); }, 100);
             } else if (vista === 'back') {
                 const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF` : window.location.origin;
                 const urlValidador = `${baseUrl}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
@@ -618,9 +625,8 @@
                 
                 setTimeout(() => { 
                     try { const qrEl = container.querySelector('#qr-container'); if(qrEl){ const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(qrEl, { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H });} } catch(e) {}
-                    autoAjustarTextos(container); 
-                    requestAnimationFrame(() => ajustarEscala()); 
-                }, 300);
+                    autoAjustarTextos(container); ajustarEscala(); 
+                }, 100);
             }
         }
 
