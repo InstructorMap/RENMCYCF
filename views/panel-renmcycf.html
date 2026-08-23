@@ -109,7 +109,6 @@
                     <div class="col-span-2"><p class="text-xs text-slate-500 uppercase font-bold mb-1">Especialidades</p><div id="dos-especialidades" class="flex flex-wrap gap-2"></div></div>
                 </div>
                 
-                <!-- SELLO DDJJ -->
                 <div id="sello-ddjj" class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl flex items-center gap-3">
                     <i data-lucide="check-circle" class="w-6 h-6 text-emerald-600 flex-shrink-0"></i>
                     <div>
@@ -120,17 +119,12 @@
 
                 <div>
                     <h3 class="text-lg font-black uppercase tracking-wider text-[#0a1128] mb-4 flex items-center gap-2 border-b-2 border-[#d4af37] pb-2"><i data-lucide="file-check" class="text-[#d4af37]"></i> Auditoría Documental</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="dos-imagenes">
-                        <!-- Las fotos se inyectan acá con altura fija -->
-                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="dos-imagenes"></div>
                 </div>
 
-                <!-- CORRECCIÓN (SI FUE OBSERVADO) -->
                 <div id="bloque-correccion" class="hidden">
                     <h3 class="text-lg font-black uppercase tracking-wider text-red-800 mb-4 flex items-center gap-2 border-b-2 border-red-200 pb-2"><i data-lucide="alert-triangle" class="text-red-600"></i> Corrección Adjunta</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="dos-correccion-img">
-                        <!-- Foto corregida acá -->
-                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="dos-correccion-img"></div>
                 </div>
 
             </div>
@@ -424,7 +418,6 @@
                     <div class="glass-card p-6 xl:col-span-8 flex items-center justify-center bg-black/40 overflow-hidden relative" style="min-height: 500px;">
                         <div class="absolute top-4 right-4 bg-black/50 px-3 py-1 rounded text-xs font-mono text-slate-400" id="preview-indicator">VISTA: FRENTE</div>
                         <div id="preview-wrapper" style="transform: scale(0.65); transform-origin: center;">
-                            <!-- PREVIEW FRENTE -->
                             <div id="card-preview-frente" style="position: relative; width: 1000px; height: 630px; background-size: 1000px 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
                                 <div id="pre-foto" style="position:absolute; overflow:hidden;"><img src="https://ui-avatars.com/api/?name=F+P&background=0a1128&color=fff" style="width:100%;height:100%;object-fit:cover;"></div>
                                 <div id="pre-roseta" style="position:absolute; display:none;"><img src="" style="width:100%;height:100%;object-fit:contain;pointer-events:none;"></div>
@@ -436,7 +429,6 @@
                                 <div id="pre-matricula" style="position:absolute; font-family:'Inter', sans-serif; font-weight:900;">1000-26</div>
                                 <div id="pre-vence" style="position:absolute; font-family:'Inter', sans-serif; font-weight:900;">26/07/2027</div>
                             </div>
-                            <!-- PREVIEW DORSO -->
                             <div id="card-preview-dorso" style="position: relative; width: 1000px; height: 630px; background-size: 1000px 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.5); display: none;">
                                 <div id="pre-dorso_cat" style="position:absolute; font-family:'Inter', sans-serif; font-weight:600; color:#333;">A.1 Profesionales con título de Grado en carrera afines...</div>
                                 <div id="pre-qr" style="position:absolute; background: url('https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg') center/cover; border: 2px solid #ccc; border-radius: 10px;"></div>
@@ -451,43 +443,96 @@
                 <div class="glass-card p-8 border-yellow-500/30">
                     <h3 class="text-white font-bold mb-6 border-b border-white/10 pb-2">Parámetros del Sistema</h3>
                     <form id="form-config" class="space-y-6" onsubmit="guardarConfiguracion(event)">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                            <div><label>Arancel A1 (ARS)</label><input type="number" id="conf-arancel-a1" required></div>
-                            <div><label>Arancel A2 (ARS)</label><input type="number" id="conf-arancel-a2" required></div>
-                            <div><label>Arancel A3 (ARS)</label><input type="number" id="conf-arancel-a3" required></div>
-                            <div><label>Arancel A4 (ARS)</label><input type="number" id="conf-arancel-a4" required></div>
-                        </div>
-                        <div><label>Enlace de Pago (Mercado Pago)</label><input type="url" id="conf-mp-link" placeholder="https://mpago.la/..."></div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div><label>WhatsApp del Registro</label><input type="text" id="conf-whatsapp" placeholder="549XXXXXXXXXX"></div>
-                            <div><label>Email de Contacto</label><input type="email" id="conf-email"></div>
-                        </div>
-                        <div>
-                            <label>Imagen de Fondo del Hero</label>
-                            <div class="upload-zone" onclick="document.getElementById('input-hero-image').click()">
-                                <i data-lucide="image" class="w-8 h-8 mx-auto text-slate-400 mb-2"></i>
-                                <span class="text-xs text-slate-400">Clic para subir imagen</span>
-                                <input type="file" id="input-hero-image" accept="image/*" onchange="previewYGuardarImagen(this, 'preview-hero', 'hero_image')" style="display:none;">
+                        
+                        <!-- ARANCELES -->
+                        <div class="bg-black/20 p-4 rounded-xl border border-white/5">
+                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="dollar-sign" class="w-4 h-4"></i> Aranceles de Matriculación</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <div><label>Arancel A1 (ARS)</label><input type="number" id="conf-arancel-a1" required></div>
+                                <div><label>Arancel A2 (ARS)</label><input type="number" id="conf-arancel-a2" required></div>
+                                <div><label>Arancel A3 (ARS)</label><input type="number" id="conf-arancel-a3" required></div>
+                                <div><label>Arancel A4 (ARS)</label><input type="number" id="conf-arancel-a4" required></div>
                             </div>
-                            <img id="preview-hero" class="preview-img" src="" alt="Preview" style="display:none;">
-                            <input type="hidden" id="conf-hero-image-url">
                         </div>
-                        <div>
-                            <label>Logo del Registro</label>
-                            <div class="upload-zone" onclick="document.getElementById('input-logo').click()">
-                                <i data-lucide="image" class="w-8 h-8 mx-auto text-slate-400 mb-2"></i>
-                                <span class="text-xs text-slate-400">Clic para subir logo</span>
-                                <input type="file" id="input-logo" accept="image/*" onchange="previewYGuardarImagen(this, 'preview-logo', 'logo')" style="display:none;">
+
+                        <!-- PAGO Y CONTACTO -->
+                        <div class="bg-black/20 p-4 rounded-xl border border-white/5">
+                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="contact" class="w-4 h-4"></i> Pago y Contacto</h4>
+                            <div><label>Enlace de Pago (Mercado Pago)</label><input type="url" id="conf-mp-link" placeholder="https://mpago.la/..."></div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div><label>WhatsApp del Registro</label><input type="text" id="conf-whatsapp" placeholder="549XXXXXXXXXX"></div>
+                                <div><label>Email de Contacto</label><input type="email" id="conf-email"></div>
                             </div>
-                            <img id="preview-logo" class="preview-img" src="" alt="Preview" style="display:none;">
-                            <input type="hidden" id="conf-logo-url">
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div><label>Facebook URL</label><input type="url" id="conf-facebook"></div>
-                            <div><label>Instagram URL</label><input type="url" id="conf-instagram"></div>
-                            <div><label>Twitter URL</label><input type="url" id="conf-twitter"></div>
-                            <div><label>LinkedIn URL</label><input type="url" id="conf-linkedin"></div>
+
+                        <!-- VISIBILIDAD DE BOTONES DE CONTACTO -->
+                        <div class="bg-black/20 p-4 rounded-xl border border-white/5">
+                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4"></i> Visibilidad de Botones de Contacto</h4>
+                            <p class="text-xs text-slate-400 mb-4">Controla qué botones de contacto aparecen en el sitio público (menú flotante y secciones).</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-black/30 p-3 rounded-lg border border-white/10 flex items-center gap-3">
+                                    <input type="checkbox" id="conf-mostrar-wpp" class="w-5 h-5 rounded text-emerald-500 focus:ring-emerald-500 border-slate-600">
+                                    <label for="conf-mostrar-wpp" class="text-sm font-bold text-white mb-0 cursor-pointer flex items-center gap-2">
+                                        <i data-lucide="message-circle" class="w-5 h-5 text-green-500"></i> Mostrar WhatsApp
+                                    </label>
+                                </div>
+                                <div class="bg-black/30 p-3 rounded-lg border border-white/10 flex items-center gap-3">
+                                    <input type="checkbox" id="conf-mostrar-email" class="w-5 h-5 rounded text-sky-500 focus:ring-sky-500 border-slate-600">
+                                    <label for="conf-mostrar-email" class="text-sm font-bold text-white mb-0 cursor-pointer flex items-center gap-2">
+                                        <i data-lucide="mail" class="w-5 h-5 text-sky-500"></i> Mostrar Email
+                                    </label>
+                                </div>
+                                <div class="bg-black/30 p-3 rounded-lg border border-white/10 flex items-center gap-3">
+                                    <input type="checkbox" id="conf-mostrar-facebook" class="w-5 h-5 rounded text-blue-500 focus:ring-blue-500 border-slate-600">
+                                    <label for="conf-mostrar-facebook" class="text-sm font-bold text-white mb-0 cursor-pointer flex items-center gap-2">
+                                        <i data-lucide="facebook" class="w-5 h-5 text-blue-500"></i> Mostrar Facebook
+                                    </label>
+                                </div>
+                                <div class="bg-black/30 p-3 rounded-lg border border-white/10 flex items-center gap-3">
+                                    <input type="checkbox" id="conf-mostrar-instagram" class="w-5 h-5 rounded text-pink-500 focus:ring-pink-500 border-slate-600">
+                                    <label for="conf-mostrar-instagram" class="text-sm font-bold text-white mb-0 cursor-pointer flex items-center gap-2">
+                                        <i data-lucide="instagram" class="w-5 h-5 text-pink-500"></i> Mostrar Instagram
+                                    </label>
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- IDENTIDAD VISUAL -->
+                        <div class="bg-black/20 p-4 rounded-xl border border-white/5">
+                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="image" class="w-4 h-4"></i> Identidad Visual</h4>
+                            <div>
+                                <label>Imagen de Fondo del Hero</label>
+                                <div class="upload-zone" onclick="document.getElementById('input-hero-image').click()">
+                                    <i data-lucide="image" class="w-8 h-8 mx-auto text-slate-400 mb-2"></i>
+                                    <span class="text-xs text-slate-400">Clic para subir imagen</span>
+                                    <input type="file" id="input-hero-image" accept="image/*" onchange="previewYGuardarImagen(this, 'preview-hero', 'hero_image')" style="display:none;">
+                                </div>
+                                <img id="preview-hero" class="preview-img" src="" alt="Preview" style="display:none;">
+                                <input type="hidden" id="conf-hero-image-url">
+                            </div>
+                            <div class="mt-4">
+                                <label>Logo del Registro</label>
+                                <div class="upload-zone" onclick="document.getElementById('input-logo').click()">
+                                    <i data-lucide="image" class="w-8 h-8 mx-auto text-slate-400 mb-2"></i>
+                                    <span class="text-xs text-slate-400">Clic para subir logo</span>
+                                    <input type="file" id="input-logo" accept="image/*" onchange="previewYGuardarImagen(this, 'preview-logo', 'logo')" style="display:none;">
+                                </div>
+                                <img id="preview-logo" class="preview-img" src="" alt="Preview" style="display:none;">
+                                <input type="hidden" id="conf-logo-url">
+                            </div>
+                        </div>
+
+                        <!-- REDES SOCIALES -->
+                        <div class="bg-black/20 p-4 rounded-xl border border-white/5">
+                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Redes Sociales</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div><label>Facebook URL</label><input type="url" id="conf-facebook"></div>
+                                <div><label>Instagram URL</label><input type="url" id="conf-instagram"></div>
+                                <div><label>Twitter URL</label><input type="url" id="conf-twitter"></div>
+                                <div><label>LinkedIn URL</label><input type="url" id="conf-linkedin"></div>
+                            </div>
+                        </div>
+
                         <div class="flex justify-end pt-4">
                             <button type="submit" class="bg-yellow-600 hover:bg-yellow-500 text-black font-black px-6 py-3 rounded-xl">ACTUALIZAR CONFIGURACIÓN</button>
                         </div>
@@ -609,7 +654,6 @@
 
             if (rolData.rol !== 'superadmin') document.getElementById('menu-admin-section').style.display = 'none';
             
-            // Mostrar auditoría solo para directores y superadmin
             if (rolData.rol !== 'superadmin' && rolData.rol !== 'director' && rolData.rol !== 'titular') {
                 document.getElementById('nav-auditoria').style.display = 'none';
             }
@@ -864,7 +908,6 @@
             document.getElementById('dos-cat').innerText = item.categoria;
             document.getElementById('dos-provincia').innerText = item.provincia_laboral || 'No declarada';
             
-            // Directorio público
             const directorioEl = document.getElementById('dos-directorio');
             if (item.figurar_directorio) {
                 directorioEl.className = 'badge-aceptado px-2 py-1 rounded font-black text-sm';
@@ -874,7 +917,6 @@
                 directorioEl.innerText = 'OFF';
             }
             
-            // Especialidades
             const especialidadesEl = document.getElementById('dos-especialidades');
             especialidadesEl.innerHTML = '';
             if (item.especialidades && item.especialidades !== "null") {
@@ -888,7 +930,6 @@
                 especialidadesEl.innerHTML = '<span class="text-slate-400 text-xs">Sin especialidades declaradas</span>';
             }
             
-            // Sello DDJJ
             const selloDDJJ = document.getElementById('sello-ddjj');
             if (item.terminos_aceptados) {
                 selloDDJJ.classList.remove('hidden');
@@ -897,7 +938,6 @@
                 selloDDJJ.classList.add('hidden');
             }
 
-            // Fotos
             const containerFotos = document.getElementById('dos-imagenes');
             containerFotos.innerHTML = '';
             
@@ -923,7 +963,6 @@
                 }
             });
 
-            // Lógica de archivo corregido
             const bloqueCorreccion = document.getElementById('bloque-correccion');
             const containerCorreccion = document.getElementById('dos-correccion-img');
             containerCorreccion.innerHTML = '';
@@ -1230,7 +1269,6 @@
         async function toggleAliado(id, estado) { await db.from('renmcycf_aliados').update({ activo: estado }).eq('id', id); cargarAliadosPanel(); }
         async function eliminarAliado(id) { if (!confirm("¿Eliminar aliado definitivamente?")) return; await db.from('renmcycf_aliados').delete().eq('id', id); cargarAliadosPanel(); }
 
-
         // ==========================================
         // 6. PORTAL CIENTÍFICO Y DIVULGACIÓN (EX CAMPUS)
         // ==========================================
@@ -1379,6 +1417,12 @@
                     document.getElementById('conf-mp-link').value = data.mp_link || ''; 
                     document.getElementById('conf-whatsapp').value = data.whatsapp || ''; 
                     document.getElementById('conf-email').value = data.email || ''; 
+                    
+                    document.getElementById('conf-mostrar-wpp').checked = data.mostrar_wpp !== false;
+                    document.getElementById('conf-mostrar-email').checked = data.mostrar_email !== false;
+                    document.getElementById('conf-mostrar-facebook').checked = data.mostrar_facebook !== false;
+                    document.getElementById('conf-mostrar-instagram').checked = data.mostrar_instagram !== false;
+                    
                     document.getElementById('conf-facebook').value = data.facebook || ''; 
                     document.getElementById('conf-instagram').value = data.instagram || ''; 
                     document.getElementById('conf-twitter').value = data.twitter || ''; 
@@ -1402,6 +1446,12 @@
                     mp_link: document.getElementById('conf-mp-link').value,
                     whatsapp: document.getElementById('conf-whatsapp').value,
                     email: document.getElementById('conf-email').value,
+                    
+                    mostrar_wpp: document.getElementById('conf-mostrar-wpp').checked,
+                    mostrar_email: document.getElementById('conf-mostrar-email').checked,
+                    mostrar_facebook: document.getElementById('conf-mostrar-facebook').checked,
+                    mostrar_instagram: document.getElementById('conf-mostrar-instagram').checked,
+                    
                     facebook: document.getElementById('conf-facebook').value,
                     instagram: document.getElementById('conf-instagram').value,
                     twitter: document.getElementById('conf-twitter').value,
