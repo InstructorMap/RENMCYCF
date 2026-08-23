@@ -353,7 +353,7 @@
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
                         <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nueva Publicación</h3>
-                        <form id="form-curso" onsubmit="crearCurso(event)" class="space-y-4">
+                        <form id="form-curso" onsubmit="crearNoticia(event)" class="space-y-4">
                             <div><label>Título / Noticia</label><input type="text" id="camp-titulo" required></div>
                             <div><label>Descripción / Bajada</label><textarea id="camp-desc" rows="3"></textarea></div>
                             <div><label>Sección del Portal</label>
@@ -368,7 +368,7 @@
                         </form>
                     </div>
                     <div class="glass-card p-6 xl:col-span-2">
-                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Material Publicado</h3><button onclick="cargarCursosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
+                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Material Publicado</h3><button onclick="cargarNoticiasPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
                         <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Publicación</th><th class="p-3">Sección</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="campus-body"></tbody></table></div>
                     </div>
                 </div>
@@ -683,7 +683,7 @@
             if(id === 'auditoria') cargarAuditoria();
             if(id === 'padron') cargarPadron();
             if(id === 'aliados') cargarAliadosPanel();
-            if(id === 'campus') cargarCursosPanel();
+            if(id === 'campus') cargarNoticiasPanel();
             if(id === 'biblioteca') cargarBibliotecaPanel();
             if(id === 'tesis') cargarTesisPanel();
             if(id === 'diseno') cargarDisenoCredencial();
@@ -1234,18 +1234,18 @@
         // ==========================================
         // 6. PORTAL CIENTÍFICO Y DIVULGACIÓN (EX CAMPUS)
         // ==========================================
-        async function cargarCursosPanel() {
+        async function cargarNoticiasPanel() {
             const tbody = document.getElementById('campus-body'); tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center">Cargando...</td></tr>';
             try {
-                const { data, error } = await db.from('renmcycf_cursos').select('*').order('created_at', { ascending: false });
+                const { data, error } = await db.from('renmcycf_noticias').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
                 if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-slate-400">No hay publicaciones.</td></tr>'; return; }
-                tbody.innerHTML = data.map(c => `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3"><div class="flex items-center gap-3"><img src="${c.portada_url || 'https://via.placeholder.com/150x80/0f172a/3b82f6?text=POST'}" class="w-16 h-10 rounded object-cover border border-white/10"><div><span class="text-white font-bold block text-xs">${c.titulo}</span><span class="text-[9px] text-slate-400 truncate block max-w-[200px]">${c.descripcion || ''}</span></div></div></td><td class="p-3"><span class="bg-blue-900/30 text-blue-400 px-2 py-1 rounded text-[9px] font-bold uppercase">${c.categoria_requerida}</span></td><td class="p-3 text-right"><div class="flex justify-end gap-1 items-center"><button class="bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded hover:bg-emerald-500/40 text-[10px] font-bold uppercase tracking-wider transition-colors" onclick="abrirModalClases('${c.id}', '${c.titulo.replace(/'/g, "\\'")}')"><i data-lucide="folder-open" class="w-3 h-3 inline mr-1"></i> Adjuntos</button><button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40 transition-colors" onclick="eliminarCurso('${c.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`).join('');
+                tbody.innerHTML = data.map(c => `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3"><div class="flex items-center gap-3"><img src="${c.portada_url || 'https://via.placeholder.com/150x80/0f172a/3b82f6?text=POST'}" class="w-16 h-10 rounded object-cover border border-white/10"><div><span class="text-white font-bold block text-xs">${c.titulo}</span><span class="text-[9px] text-slate-400 truncate block max-w-[200px]">${c.descripcion || ''}</span></div></div></td><td class="p-3"><span class="bg-blue-900/30 text-blue-400 px-2 py-1 rounded text-[9px] font-bold uppercase">${c.categoria_requerida}</span></td><td class="p-3 text-right"><div class="flex justify-end gap-1 items-center"><button class="bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded hover:bg-emerald-500/40 text-[10px] font-bold uppercase tracking-wider transition-colors" onclick="abrirModalClases('${c.id}', '${c.titulo.replace(/'/g, "\\'")}')"><i data-lucide="folder-open" class="w-3 h-3 inline mr-1"></i> Adjuntos</button><button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40 transition-colors" onclick="eliminarNoticia('${c.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td></tr>`).join('');
                 lucide.createIcons();
             } catch (err) { tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
         }
 
-        async function crearCurso(e) {
+        async function crearNoticia(e) {
             e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); const orig = btn.innerHTML; btn.innerHTML = 'PUBLICANDO...'; btn.disabled = true;
             try {
                 const imgFile = document.getElementById('camp-portada').files[0]; let imgUrl = null;
@@ -1254,12 +1254,12 @@
                     await db.storage.from('renmcycf-campus').upload(fileName, imgFile);
                     imgUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-campus/${fileName}`;
                 }
-                await db.from('renmcycf_cursos').insert([{ titulo: document.getElementById('camp-titulo').value, descripcion: document.getElementById('camp-desc').value, categoria_requerida: document.getElementById('camp-cat').value, portada_url: imgUrl }]);
-                document.getElementById('form-curso').reset(); cargarCursosPanel();
+                await db.from('renmcycf_noticias').insert([{ titulo: document.getElementById('camp-titulo').value, descripcion: document.getElementById('camp-desc').value, categoria_requerida: document.getElementById('camp-cat').value, portada_url: imgUrl }]);
+                document.getElementById('form-curso').reset(); cargarNoticiasPanel();
             } catch(err) { alert('Error: ' + err.message); } finally { btn.innerHTML = orig; btn.disabled = false; }
         }
 
-        async function eliminarCurso(id) { if (!confirm("¿Eliminar publicación?")) return; await db.from('renmcycf_cursos').delete().eq('id', id); cargarCursosPanel(); }
+        async function eliminarNoticia(id) { if (!confirm("¿Eliminar publicación?")) return; await db.from('renmcycf_noticias').delete().eq('id', id); cargarNoticiasPanel(); }
 
         function toggleClaseInput() {
             const tipo = document.getElementById('clase-tipo').value;
