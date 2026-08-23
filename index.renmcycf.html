@@ -175,26 +175,25 @@
                 <div class="hero-overlay"></div>
                 <div class="relative max-w-5xl mx-auto z-10" data-aos="fade-up">
                     <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 text-forenseGold text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-8 border border-forenseGold/30 backdrop-blur-sm">
-                        <i data-lucide="shield-check" class="w-4 h-4"></i> Inscripciones Abiertas · Ciclo 2026
+                        <i data-lucide="shield-check" class="w-4 h-4"></i> <span id="hero-badge-text">Inscripciones Abiertas · Ciclo 2026</span>
                     </div>
-                    <h1 class="font-title text-4xl md:text-5xl lg:text-7xl font-black mb-6 text-white leading-[1.1] uppercase">
+                    <h1 id="hero-title" class="font-title text-4xl md:text-5xl lg:text-7xl font-black mb-6 text-white leading-[1.1] uppercase">
                         Respaldo Legal para tu <br><span class="text-forenseGold">Práctica Forense</span>
                     </h1>
-                    <p class="text-slate-100/90 mb-8 text-sm md:text-lg max-w-3xl mx-auto font-light leading-relaxed">
+                    <p id="hero-subtitle" class="text-slate-100/90 mb-8 text-sm md:text-lg max-w-3xl mx-auto font-light leading-relaxed">
                         El único padrón nacional centralizado con tecnología <strong class="text-forenseGold font-semibold">Blockchain</strong>.
                     </p>
                     
                     <div class="flex flex-col items-center gap-4 max-w-2xl mx-auto w-full">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                            <button onclick="switchSection('seccion-inscripcion')" class="bg-forenseGold text-forenseNavy font-black uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl shadow-lg hover:scale-105 transition-all text-center">Comenzar Inscripción</button>
-                            <button onclick="switchSection('seccion-verificacion')" class="bg-white/15 backdrop-blur-sm text-white border border-white/25 font-bold uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl hover:bg-white/25 transition-all text-center">Verificar Profesional</button>
+                            <button id="hero-cta-primary" onclick="switchSection('seccion-inscripcion')" class="bg-forenseGold text-forenseNavy font-black uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl shadow-lg hover:scale-105 transition-all text-center">Comenzar Inscripción</button>
+                            <button id="hero-cta-secondary" onclick="switchSection('seccion-verificacion')" class="bg-white/15 backdrop-blur-sm text-white border border-white/25 font-bold uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl hover:bg-white/25 transition-all text-center">Verificar Profesional</button>
                         </div>
                     </div>
 
                     <div class="flex justify-center gap-6 mt-12 pt-8 border-t border-white/10">
                         <a href="#" id="hero-wpp" target="_blank" rel="noopener" class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center hover:scale-110 transition shadow"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
                         <a href="#" id="hero-mail" class="w-10 h-10 rounded-full bg-sky-600 text-white flex items-center justify-center hover:scale-110 transition shadow"><i data-lucide="mail" class="w-5 h-5"></i></a>
-                        <!-- SVG Integrados -->
                         <a href="#" id="hero-fb" target="_blank" rel="noopener" class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-110 transition shadow">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"/></svg>
                         </a>
@@ -205,15 +204,12 @@
                 </div>
             </header>
 
-            <!-- Carrusel Institucional Dinámico -->
             <section id="carrusel-institucional" class="py-12 bg-slate-900 border-b border-slate-800 overflow-hidden hidden">
                 <div class="max-w-7xl mx-auto px-4 mb-6 text-center">
                     <h3 class="text-xs font-bold text-forenseGold uppercase tracking-[0.25em]">Instituciones y Universidades Aliadas</h3>
                 </div>
                 <div class="relative w-full overflow-hidden">
-                    <div id="aliados-marquee" class="animate-marquee flex gap-12 items-center text-slate-400 font-bold uppercase tracking-wider text-sm">
-                        <!-- Se inyecta desde Supabase -->
-                    </div>
+                    <div id="aliados-marquee" class="animate-marquee flex gap-12 items-center text-slate-400 font-bold uppercase tracking-wider text-sm"></div>
                 </div>
             </section>
         </section>
@@ -294,7 +290,7 @@
             </div>
         </section>
 
-        <!-- 4. MAPA INTELIGENTE (DIRECTORIO PÚBLICO) -->
+        <!-- 4. MAPA INTELIGENTE -->
         <section id="seccion-mapa" class="page-section py-16 bg-forenseNavy text-white relative min-h-[70vh]">
             <div class="max-w-7xl mx-auto px-4 relative z-10">
                 <div class="text-center mb-8">
@@ -303,7 +299,6 @@
                     <p class="text-slate-300 text-sm max-w-xl mx-auto">Encuentre profesionales habilitados por jurisdicción o especialidad.</p>
                 </div>
 
-                <!-- BUSCADOR INTELIGENTE EN EL MAPA -->
                 <div class="bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 md:p-6 mb-6 border border-white/10 shadow-lg">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -344,22 +339,22 @@
                     <div class="cat-card cat-a1 bg-gradient-to-b from-yellow-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
                         <span class="text-[10px] font-bold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-md uppercase">Jerarquía Máxima</span>
                         <h3 class="font-bold text-lg text-forenseNavy mt-3 mb-2">Categoría A1</h3>
-                        <p class="text-xs text-slate-600">Licenciaturas y Títulos de Grado Universitarios.</p>
+                        <p class="text-xs text-slate-600" id="cat-a1-desc">Licenciaturas y Títulos de Grado Universitarios.</p>
                     </div>
                     <div class="cat-card cat-a2 bg-gradient-to-b from-blue-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
                         <span class="text-[10px] font-bold text-blue-700 bg-blue-100 px-2.5 py-1 rounded-md uppercase">Nivel Superior</span>
                         <h3 class="font-bold text-lg text-forenseNavy mt-3 mb-2">Categoría A2</h3>
-                        <p class="text-xs text-slate-600">Técnicos Superiores y Terciarios Especializados.</p>
+                        <p class="text-xs text-slate-600" id="cat-a2-desc">Técnicos Superiores y Terciarios Especializados.</p>
                     </div>
                     <div class="cat-card cat-a3 bg-gradient-to-b from-emerald-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
                         <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-md uppercase">Nivel Auxiliar</span>
                         <h3 class="font-bold text-lg text-forenseNavy mt-3 mb-2">Categoría A3</h3>
-                        <p class="text-xs text-slate-600">Auxiliares, Peritos de Oficio y Diplomados.</p>
+                        <p class="text-xs text-slate-600" id="cat-a3-desc">Auxiliares, Peritos de Oficio y Diplomados.</p>
                     </div>
                     <div class="cat-card cat-a4 bg-gradient-to-b from-purple-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
                         <span class="text-[10px] font-bold text-purple-700 bg-purple-100 px-2.5 py-1 rounded-md uppercase">Consultoría</span>
                         <h3 class="font-bold text-lg text-forenseNavy mt-3 mb-2">Categoría A4</h3>
-                        <p class="text-xs text-slate-600">Consultores Técnicos y Estudiantes Avanzados.</p>
+                        <p class="text-xs text-slate-600" id="cat-a4-desc">Consultores Técnicos y Estudiantes Avanzados.</p>
                     </div>
                 </div>
             </div>
@@ -376,34 +371,7 @@
                     <p class="text-slate-600 text-sm max-w-2xl mx-auto">Plataforma centralizada de actualización académica, noticias institucionales e innovaciones tecnológicas forenses.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-white rounded-2xl p-8 shadow-xl border border-slate-200 flex flex-col justify-between hover:border-forenseGold transition-all">
-                        <div>
-                            <div class="w-14 h-14 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><i data-lucide="newspaper" class="w-7 h-7"></i></div>
-                            <h3 class="font-title font-black text-xl text-forenseNavy mb-3 uppercase">Divulgación de Noticias</h3>
-                            <p class="text-sm text-slate-600 leading-relaxed mb-6">Informes de actualidad gremial, comunicados oficiales del consejo directivo, resoluciones y novedades del ámbito legal-forense argentino.</p>
-                        </div>
-                        <button onclick="alert('Próximamente disponible.')" class="w-full bg-forenseNavy text-forenseGold py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-800 transition">Ver Noticias</button>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-8 shadow-xl border border-slate-200 flex flex-col justify-between hover:border-forenseGold transition-all">
-                        <div>
-                            <div class="w-14 h-14 bg-blue-100 text-blue-700 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><i data-lucide="flask-conical" class="w-7 h-7"></i></div>
-                            <h3 class="font-title font-black text-xl text-forenseNavy mb-3 uppercase">Divulgación Científica</h3>
-                            <p class="text-sm text-slate-600 leading-relaxed mb-6">Artículos de investigación revisados por pares, papers de balística, dactiloscopia, genética forense y análisis periciales avanzados.</p>
-                        </div>
-                        <button onclick="alert('Próximamente disponible.')" class="w-full bg-forenseNavy text-forenseGold py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-800 transition">Ver Papers y Estudios</button>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-8 shadow-xl border border-slate-200 flex flex-col justify-between hover:border-forenseGold transition-all">
-                        <div>
-                            <div class="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><i data-lucide="cpu" class="w-7 h-7"></i></div>
-                            <h3 class="font-title font-black text-xl text-forenseNavy mb-3 uppercase">Material Tecnológico</h3>
-                            <p class="text-sm text-slate-600 leading-relaxed mb-6">Novedades sobre software de reconstrucción escénica 3D, equipos de espectrometría de masas, luces forenses y escáneres láser.</p>
-                        </div>
-                        <button onclick="alert('Próximamente disponible.')" class="w-full bg-forenseNavy text-forenseGold py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-800 transition">Ver Innovación</button>
-                    </div>
-                </div>
+                <div id="contenedor-noticias-publicas" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
             </div>
         </section>
 
@@ -416,394 +384,18 @@
                 </div>
                 <div id="contenedor-biblioteca-ordenada" class="space-y-8 text-center text-slate-500">
                     <i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto mb-2"></i> Conectando con el repositorio oficial...
+                </div>
+
+                <div class="mt-16 pt-10 border-t border-slate-200">
+                    <h3 class="font-title text-xl md:text-2xl font-black text-forenseNavy mb-4 uppercase text-center">
+                        <i data-lucide="microscope" class="inline w-6 h-6 text-forenseGold mr-2"></i>Investigaciones de Matriculados (Tesis)
+                    </h3>
+                    <div id="contenedor-tesis-publicas" class="space-y-4 mt-8"></div>
                 </div>
             </div>
         </section>
 
         <!-- 8. LEGAJO DIGITAL -->
-        <section id="seccion-portafolio" class="page-section py-16 md:py-24 bg-slate-100 min-h-[70vh]">
-            <div class="max-w-4xl mx-auto px-4 text-center">
-                <i data-lucide="folder-check" class="w-20 h-20 text-forenseGold mx-auto mb-6"></i>
-                <h2 class="font-title text-3xl font-black text-forenseNavy mb-4 uppercase">Ingresar a Mi Legajo Digital</h2>
-                <p class="text-slate-600 mb-8 max-w-xl mx-auto">Accede a tu credencial digital, descarga tus certificados y entra al Portal Científico desde la aplicación de escritorio o móvil (PWA).</p>
-                <!-- FIX RUTA LEGAJO: De wallet.renmcycf.html a legajo.renmcycf.html -->
-                <a href="legajo.renmcycf.html" class="inline-flex bg-forenseGold text-forenseNavy px-8 py-4 rounded-xl font-black uppercase tracking-widest hover:scale-105 transition shadow-lg">Abrir Legajo Digital</a>
-            </div>
-        </section>
-
-        <!-- 9. INSCRIPCIÓN WIZARD (MÚLTIPLES DIPLOMAS) -->
-        <section id="seccion-inscripcion" class="page-section py-16 bg-white min-h-[70vh]">
-            <div class="max-w-4xl mx-auto px-4">
-                <div class="text-center mb-10">
-                    <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase"><i data-lucide="file-text" class="inline w-6 h-6 text-forenseGold mr-2"></i>Trámite de Matriculación</h2>
-                    <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-                    <p class="text-slate-600 text-sm">Siga los 3 pasos para generar su expediente y enviar la documentación al Comité de Auditoría.</p>
-                </div>
-
-                <div class="bg-white border border-slate-200 rounded-2xl shadow-xl p-6 md:p-10 relative overflow-hidden">
-                    
-                    <div class="step-indicator">
-                        <div class="step-dot active" id="dot-1">1</div>
-                        <div class="step-line" id="line-1"></div>
-                        <div class="step-dot" id="dot-2">2</div>
-                        <div class="step-line" id="line-2"></div>
-                        <div class="step-dot" id="dot-3">3</div>
-                    </div>
-
-                    <form id="form-inscripcion" onsubmit="enviarInscripcion(event)">
-                        
-                        <!-- PASO 1 -->
-                        <div id="step-1" class="form-step active space-y-6">
-                            <h3 class="font-black text-lg text-forenseNavy uppercase border-b border-slate-100 pb-2"><i data-lucide="user" class="inline w-5 h-5 text-forenseGold mr-1"></i> Datos Personales</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div><label class="form-label">Nombres Completos</label><input type="text" id="ins-nombres" required class="form-input"></div>
-                                <div><label class="form-label">Apellidos Completos</label><input type="text" id="ins-apellidos" required class="form-input"></div>
-                                <div><label class="form-label">DNI / Documento</label><input type="number" id="ins-dni" required class="form-input font-mono"></div>
-                                <div><label class="form-label">Año de Nac. (Ej: 1985)</label><input type="number" id="ins-ano-nac" min="1930" max="2010" required class="form-input font-mono" placeholder="1985"></div>
-                                <div><label class="form-label">Correo Electrónico</label><input type="email" id="ins-email" required class="form-input"></div>
-                                <div><label class="form-label">Teléfono / WhatsApp</label><input type="tel" id="ins-tel" required class="form-input font-mono" placeholder="Ej: 549351..."></div>
-                                <div class="md:col-span-2"><label class="form-label">Provincia / Ciudad Laboral</label><input type="text" id="ins-prov" required class="form-input" placeholder="Ej: Córdoba Capital"></div>
-                            </div>
-                            <div class="text-right pt-4"><button type="button" onclick="siguientePaso(2)" class="bg-forenseNavy text-white px-8 py-3 rounded-xl font-bold uppercase text-sm shadow hover:bg-slate-800 transition">Siguiente Paso &rarr;</button></div>
-                        </div>
-
-                        <!-- PASO 2 -->
-                        <div id="step-2" class="form-step space-y-6">
-                            <h3 class="font-black text-lg text-forenseNavy uppercase border-b border-slate-100 pb-2"><i data-lucide="briefcase" class="inline w-5 h-5 text-forenseGold mr-1"></i> Perfil Profesional</h3>
-                            <div>
-                                <label class="form-label">Título o Profesión Oficial</label>
-                                <input type="text" id="ins-profesion" required class="form-input" placeholder="Ej: Licenciado en Criminalística" oninput="detectarCategoriaInteligente()">
-                            </div>
-                            <div>
-                                <label class="form-label">Categoría a Solicitar</label>
-                                <select id="ins-categoria" class="form-input font-bold text-forenseNavy bg-slate-50" required onchange="actualizarLinkYPrecio()">
-                                    <option value="" disabled selected>Seleccione una jerarquía o escriba su título arriba...</option>
-                                    <option value="A1">Categoría A.1 - Grado Universitario</option>
-                                    <option value="A2">Categoría A.2 - Técnico Superior</option>
-                                    <option value="A3">Categoría A.3 - Auxiliar / Diplomado</option>
-                                    <option value="A4">Categoría A.4 - Consultor / Estudiante</option>
-                                </select>
-                            </div>
-                            <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                                <label class="form-label text-blue-900">Especialidades Adicionales (Opcional)</label>
-                                <p class="text-[10px] text-blue-700 mb-2">Escriba hasta 5 especialidades separadas por coma. Ej: Balística, Papiloscopía, Informática Forense</p>
-                                <input type="text" id="ins-especialidades" class="form-input" placeholder="Especialidad 1, Especialidad 2...">
-                            </div>
-                            <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 flex items-start gap-3">
-                                <input type="checkbox" id="ins-directorio" class="mt-1 w-5 h-5 rounded text-forenseGold focus:ring-forenseGold border-amber-300">
-                                <div>
-                                    <label for="ins-directorio" class="font-bold text-sm text-amber-900 cursor-pointer">Deseo figurar en el Directorio Público (Mapa Nacional)</label>
-                                    <p class="text-xs text-amber-700 mt-1">Al marcar esta casilla, autorizo que mi nombre, categoría, provincia y especialidades sean públicas para ser contactado por abogados o empresas.</p>
-                                </div>
-                            </div>
-                            <div class="flex justify-between pt-4">
-                                <button type="button" onclick="siguientePaso(1)" class="text-slate-500 font-bold px-4 py-2 hover:bg-slate-100 rounded-lg transition">&larr; Volver</button>
-                                <button type="button" onclick="siguientePaso(3)" class="bg-forenseNavy text-white px-8 py-3 rounded-xl font-bold uppercase text-sm shadow hover:bg-slate-800 transition">Siguiente Paso &rarr;</button>
-                            </div>
-                        </div>
-
-                        <!-- PASO 3 -->
-                        <div id="step-3" class="form-step space-y-6">
-                            <h3 class="font-black text-lg text-forenseNavy uppercase border-b border-slate-100 pb-2"><i data-lucide="file-up" class="inline w-5 h-5 text-forenseGold mr-1"></i> Documentación y Pago</h3>
-                            
-                            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 text-center flex flex-col md:flex-row items-center justify-between gap-4">
-                                <div class="text-left">
-                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">1. Arancel Administrativo</p>
-                                    <h4 id="display-precio-final" class="font-black text-2xl text-forenseNavy font-mono">Seleccione Categoría</h4>
-                                </div>
-                                <a id="btn-mercadopago" href="#" target="_blank" class="bg-sky-600 hover:bg-sky-700 text-white font-black text-sm uppercase tracking-widest px-8 py-4 rounded-xl shadow-lg transition opacity-50 pointer-events-none flex items-center gap-2">
-                                    <i data-lucide="credit-card" class="w-5 h-5"></i> Abonar en Mercado Pago
-                                </a>
-                            </div>
-
-                            <div class="space-y-3">
-                                <label class="form-label border-b border-slate-100 pb-1">2. Subida de Archivos Respaldatorios</label>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="border border-slate-200 p-3 rounded-lg bg-white"><span class="text-xs font-bold text-slate-700 block mb-1">Foto de Perfil (Para la credencial)</span><input type="file" id="file-foto" accept="image/*" required class="w-full text-xs text-slate-500"></div>
-                                    <div class="border border-slate-200 p-3 rounded-lg bg-white"><span class="text-xs font-bold text-slate-700 block mb-1">DNI Frente</span><input type="file" id="file-dni-frente" accept="image/*,application/pdf" required class="w-full text-xs text-slate-500"></div>
-                                    <div class="border border-slate-200 p-3 rounded-lg bg-white"><span class="text-xs font-bold text-slate-700 block mb-1">DNI Dorso</span><input type="file" id="file-dni-dorso" accept="image/*,application/pdf" required class="w-full text-xs text-slate-500"></div>
-                                    
-                                    <div class="border border-slate-200 p-3 rounded-lg bg-white">
-                                        <div class="flex justify-between items-center mb-1">
-                                            <span class="text-xs font-bold text-slate-700">Títulos y Certificados</span>
-                                            <span id="contador-archivos" class="text-[9px] font-bold text-white bg-forenseNavy px-2 py-0.5 rounded-full">0/10</span>
-                                        </div>
-                                        <input type="file" id="file-diplomas" multiple accept="image/*,application/pdf" required class="w-full text-xs text-slate-500" onchange="contarArchivos(this)">
-                                        <span class="text-[9px] text-slate-400 mt-1 block">Puede seleccionar hasta 10 archivos a la vez.</span>
-                                    </div>
-                                    
-                                    <div class="border-2 border-emerald-200 bg-emerald-50 p-4 rounded-lg md:col-span-2 text-center shadow-sm"><span class="text-sm font-black text-emerald-800 uppercase tracking-widest block mb-2"><i data-lucide="receipt" class="inline w-4 h-4 mr-1"></i>Comprobante de Pago</span><input type="file" id="file-pago" accept="image/*,application/pdf" required class="w-full text-xs text-emerald-700 mx-auto max-w-xs file:bg-emerald-600 file:text-white file:border-0 file:rounded file:px-3 file:py-1 file:font-bold"></div>
-                                </div>
-                            </div>
-
-                            <div class="bg-red-50 border border-red-200 p-5 rounded-xl mt-4">
-                                <label class="flex items-start gap-3 cursor-pointer">
-                                    <input type="checkbox" id="ins-ddjj" required class="mt-1 w-5 h-5 rounded text-red-600 border-red-300 focus:ring-red-500 cursor-pointer">
-                                    <span class="text-xs font-bold text-red-800 leading-relaxed">DECLARACIÓN JURADA: Declaro bajo juramento que los datos ingresados y la documentación adjunta son copias fieles de sus originales. Comprendo que la falsificación constituye un delito penal conforme a los Arts. 292 y 296 del Código Penal Argentino.</span>
-                                </label>
-                            </div>
-
-                            <div class="flex justify-between items-center pt-6 border-t border-slate-100">
-                                <button type="button" onclick="siguientePaso(2)" class="text-slate-500 font-bold px-4 py-2 hover:bg-slate-100 rounded-lg transition">&larr; Volver</button>
-                                <button type="submit" id="btn-submit-tramite" class="bg-forenseGold text-forenseNavy hover:bg-yellow-500 font-black uppercase tracking-widest text-sm px-8 py-4 rounded-xl shadow-xl transition-all flex items-center gap-2"><i data-lucide="send" class="w-5 h-5"></i> Enviar Expediente Completo</button>
-                            </div>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-forenseNavy text-white py-12 border-t-4 border-forenseGold mt-auto relative z-20">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h3 class="font-title text-2xl font-black text-forenseGold mb-2">RENMCYCF</h3>
-            <p class="text-xs text-slate-400 uppercase tracking-widest mb-6">Registro Nacional de Matriculados en Criminalística y Ciencias Forenses</p>
-            <div class="flex justify-center gap-4 mb-6">
-                <a href="#" id="footer-fb" target="_blank" rel="noopener" class="hover:text-white transition">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"/></svg>
-                </a>
-                <a href="#" id="footer-ig" target="_blank" rel="noopener" class="hover:text-white transition">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"/></svg>
-                </a>
-            </div>
-            <p class="text-[10px] text-slate-500">Desarrollado con tecnología ASARI SaaS · Todos los derechos reservados © 2026</p>
-        </div>
-    </footer>
-
-    <!-- BOTONES FLOTANTES SVG -->
-    <div class="floating-container" id="floatingMenu">
-        <a href="#" id="float-wpp" target="_blank" rel="noopener" class="float-option option-whatsapp" aria-label="Contactar por WhatsApp"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
-        <a href="#" id="float-mail" class="float-option option-email" aria-label="Enviar correo electrónico"><i data-lucide="mail" class="w-5 h-5"></i></a>
-        
-        <a href="#" id="float-fb" target="_blank" rel="noopener" class="float-option option-facebook" aria-label="Visitar Facebook">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"/></svg>
-        </a>
-        <a href="#" id="float-ig" target="_blank" rel="noopener" class="float-option option-instagram" aria-label="Visitar Instagram">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"/></svg>
-                        </a>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Carrusel Institucional Dinámico -->
-            <section id="carrusel-institucional" class="py-12 bg-slate-900 border-b border-slate-800 overflow-hidden hidden">
-                <div class="max-w-7xl mx-auto px-4 mb-6 text-center">
-                    <h3 class="text-xs font-bold text-forenseGold uppercase tracking-[0.25em]">Instituciones y Universidades Aliadas</h3>
-                </div>
-                <div class="relative w-full overflow-hidden">
-                    <div id="aliados-marquee" class="animate-marquee flex gap-12 items-center text-slate-400 font-bold uppercase tracking-wider text-sm">
-                        <!-- Se inyecta desde Supabase -->
-                    </div>
-                </div>
-            </section>
-        </section>
-
-        <!-- 2. VERIFICACIÓN PÚBLICA -->
-        <section id="seccion-verificacion" class="page-section py-16 md:py-24 bg-white min-h-[70vh]">
-            <div class="max-w-4xl mx-auto px-4">
-                <div class="text-center mb-10">
-                    <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase"><i data-lucide="search" class="inline w-6 h-6 text-forenseGold mr-2"></i>Verificación Pública</h2>
-                    <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-                    <p class="text-slate-500 max-w-lg mx-auto">Ingrese el DNI o la Matrícula Oficial para consultar la base de datos inmutable y verificar las credenciales del perito en tiempo real.</p>
-                </div>
-                <div class="bg-slate-50 rounded-2xl p-6 md:p-8 shadow-lg border border-slate-200">
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <div class="flex-1">
-                            <label class="form-label">Documento (DNI) o Matrícula</label>
-                            <input type="text" id="search-input" class="form-input text-lg font-mono" placeholder="Ej: 35123456 o 1007/26" onkeyup="if(event.key==='Enter')buscarProfesional()">
-                        </div>
-                        <div class="flex items-end">
-                            <button onclick="buscarProfesional()" id="btn-buscar-publico" class="w-full md:w-auto bg-forenseNavy hover:bg-slate-800 text-forenseGold font-black uppercase tracking-[0.15em] text-sm px-8 py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all"><i data-lucide="search" class="w-5 h-5"></i> Buscar</button>
-                        </div>
-                    </div>
-                    
-                    <div id="search-results" class="mt-8 hidden">
-                        <div class="bg-gradient-to-br from-forenseNavy to-slate-900 rounded-3xl p-8 shadow-2xl text-white border border-forenseGold/40 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 p-8 opacity-10"><i data-lucide="shield-check" class="w-48 h-48 text-forenseGold"></i></div>
-                            <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
-                                <div class="w-32 h-32 rounded-2xl bg-slate-800 border-2 border-forenseGold overflow-hidden shadow-xl shrink-0">
-                                    <img id="res-foto" src="" class="w-full h-full object-cover" alt="Foto Perito">
-                                </div>
-                                <div class="flex-1 text-center md:text-left">
-                                    <span id="res-cat" class="bg-forenseGold/20 text-forenseGold text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-forenseGold/30">---</span>
-                                    <h3 id="res-nombre" class="font-title font-black text-2xl md:text-3xl mt-3 text-white">---</h3>
-                                    <p class="text-sm font-bold text-slate-300 mt-1 uppercase" id="res-profesion">---</p>
-                                    <p class="text-sm font-mono text-slate-400 mt-1">DNI: <span id="res-dni"></span> · Matrícula: <span id="res-mat"></span></p>
-                                    
-                                    <div class="mt-3" id="res-especialidades-container">
-                                        <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Especialidades Avaladas</p>
-                                        <div id="res-especialidades" class="flex flex-wrap gap-2 justify-center md:justify-start"></div>
-                                    </div>
-                                    
-                                    <p class="text-xs text-emerald-400 mt-4 flex items-center justify-center md:justify-start gap-1 font-bold">
-                                        <i data-lucide="check-circle" class="w-4 h-4"></i> PROFESIONAL HABILITADO Y ACTIVO
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="search-empty" class="mt-8 hidden bg-red-50 border border-red-200 rounded-xl p-6 text-center text-red-800 font-bold text-sm shadow-sm flex flex-col items-center gap-2">
-                        <i data-lucide="alert-triangle" class="w-8 h-8 text-red-500"></i>
-                        No se encontraron registros activos para ese documento o matrícula.
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. SEGUIMIENTO DE TRÁMITE -->
-        <section id="seccion-tracking" class="page-section py-16 md:py-24 bg-slate-50 min-h-[70vh]">
-            <div class="max-w-3xl mx-auto px-4">
-                <div class="text-center mb-10">
-                    <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase"><i data-lucide="package-search" class="inline w-6 h-6 text-forenseGold mr-2"></i>Seguimiento de Trámite</h2>
-                    <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-                    <p class="text-slate-500">Ingrese su DNI para conocer el estado y trazabilidad de su expediente de inscripción.</p>
-                </div>
-                <div class="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-slate-200">
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <div class="flex-1">
-                            <label class="form-label">Número de DNI</label>
-                            <input type="number" id="track-dni" class="form-input font-mono text-lg text-center md:text-left" placeholder="Ej: 35123456" onkeyup="if(event.key==='Enter')buscarTracking()">
-                        </div>
-                        <div class="flex items-end">
-                            <button onclick="buscarTracking()" id="btn-buscar-track" class="w-full md:w-auto bg-forenseNavy text-forenseGold px-8 py-4 rounded-xl font-black uppercase text-sm shadow-lg hover:bg-slate-800 transition-all flex justify-center items-center"><i data-lucide="search" class="w-4 h-4 mr-2"></i> Rastrear</button>
-                        </div>
-                    </div>
-                    <div id="tracking-result" class="mt-8 hidden"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. MAPA INTELIGENTE (DIRECTORIO PÚBLICO) -->
-        <section id="seccion-mapa" class="page-section py-16 bg-forenseNavy text-white relative min-h-[70vh]">
-            <div class="max-w-7xl mx-auto px-4 relative z-10">
-                <div class="text-center mb-8">
-                    <h2 class="font-title text-2xl md:text-3xl font-black mb-3 uppercase text-white"><i data-lucide="map-pin" class="inline w-6 h-6 text-forenseGold mr-2"></i>Directorio Nacional de Peritos</h2>
-                    <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-                    <p class="text-slate-300 text-sm max-w-xl mx-auto">Encuentre profesionales habilitados por jurisdicción o especialidad.</p>
-                </div>
-
-                <!-- BUSCADOR INTELIGENTE EN EL MAPA -->
-                <div class="bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 md:p-6 mb-6 border border-white/10 shadow-lg">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="text-[10px] uppercase font-bold text-forenseGold mb-1 block">Filtrar por Provincia</label>
-                            <input type="text" id="map-filtro-prov" placeholder="Ej: Córdoba" class="w-full bg-black/40 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:border-forenseGold outline-none">
-                        </div>
-                        <div>
-                            <label class="text-[10px] uppercase font-bold text-forenseGold mb-1 block">Área o Especialidad</label>
-                            <input type="text" id="map-filtro-esp" placeholder="Ej: Balística, Perito..." class="w-full bg-black/40 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:border-forenseGold outline-none">
-                        </div>
-                        <div class="flex items-end">
-                            <button onclick="filtrarMapa()" class="w-full bg-forenseGold hover:bg-yellow-500 text-forenseNavy px-6 py-3 rounded-lg font-black uppercase text-sm transition shadow-md flex items-center justify-center gap-2"><i data-lucide="filter" class="w-4 h-4"></i> Filtrar Peritos</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white/5 rounded-2xl p-2 md:p-4 border border-white/10 shadow-2xl">
-                    <div id="mapa-profesionales" class="w-full h-[500px] rounded-xl z-10 border border-white/20 relative">
-                        <div id="map-loading" class="absolute inset-0 bg-black/60 z-[400] flex items-center justify-center rounded-xl">
-                            <div class="text-center text-forenseGold">
-                                <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i>
-                                <p class="text-xs font-bold uppercase tracking-widest">Cargando Profesionales...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. CATEGORÍAS -->
-        <section id="seccion-categorias" class="page-section py-16 bg-white min-h-[70vh]">
-            <div class="max-w-7xl mx-auto px-4">
-                <div class="text-center mb-14">
-                    <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase"><i data-lucide="layers" class="inline w-6 h-6 text-forenseGold mr-2"></i>Estructura del Padrón</h2>
-                    <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="cat-card cat-a1 bg-gradient-to-b from-yellow-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
-                        <span class="text-[10px] font-bold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-md uppercase">Jerarquía Máxima</span>
-                        <h3 class="font-bold text-lg text-forenseNavy mt-3 mb-2">Categoría A1</h3>
-                        <p class="text-xs text-slate-600">Licenciaturas y Títulos de Grado Universitarios.</p>
-                    </div>
-                    <div class="cat-card cat-a2 bg-gradient-to-b from-blue-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
-                        <span class="text-[10px] font-bold text-blue-700 bg-blue-100 px-2.5 py-1 rounded-md uppercase">Nivel Superior</span>
-                        <h3 class="font-bold text-lg text-forenseNavy mt-3 mb-2">Categoría A2</h3>
-                        <p class="text-xs text-slate-600">Técnicos Superiores y Terciarios Especializados.</p>
-                    </div>
-                    <div class="cat-card cat-a3 bg-gradient-to-b from-emerald-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
-                        <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-md uppercase">Nivel Auxiliar</span>
-                        <h3 class="font-bold text-lg text-forenseNavy mt-3 mb-2">Categoría A3</h3>
-                        <p class="text-xs text-slate-600">Auxiliares, Peritos de Oficio y Diplomados.</p>
-                    </div>
-                    <div class="cat-card cat-a4 bg-gradient-to-b from-purple-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
-                        <span class="text-[10px] font-bold text-purple-700 bg-purple-100 px-2.5 py-1 rounded-md uppercase">Consultoría</span>
-                        <h3 class="font-bold text-lg text-forenseNavy mt-3 mb-2">Categoría A4</h3>
-                        <p class="text-xs text-slate-600">Consultores Técnicos y Estudiantes Avanzados.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. PORTAL DE DIVULGACIÓN CIENTÍFICA -->
-        <section id="seccion-portal-divulgacion" class="page-section py-16 md:py-24 bg-slate-50 min-h-[70vh]">
-            <div class="max-w-7xl mx-auto px-4">
-                <div class="text-center mb-14">
-                    <h2 class="font-title text-2xl md:text-4xl font-black text-forenseNavy mb-3 uppercase">
-                        <i data-lucide="book-open" class="inline w-8 h-8 text-forenseGold mr-2"></i>Portal de Divulgación Científica
-                    </h2>
-                    <div class="w-24 h-1.5 bg-forenseGold mx-auto mb-4"></div>
-                    <p class="text-slate-600 text-sm max-w-2xl mx-auto">Plataforma centralizada de actualización académica, noticias institucionales e innovaciones tecnológicas forenses.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-white rounded-2xl p-8 shadow-xl border border-slate-200 flex flex-col justify-between hover:border-forenseGold transition-all">
-                        <div>
-                            <div class="w-14 h-14 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><i data-lucide="newspaper" class="w-7 h-7"></i></div>
-                            <h3 class="font-title font-black text-xl text-forenseNavy mb-3 uppercase">Divulgación de Noticias</h3>
-                            <p class="text-sm text-slate-600 leading-relaxed mb-6">Informes de actualidad gremial, comunicados oficiales del consejo directivo, resoluciones y novedades del ámbito legal-forense argentino.</p>
-                        </div>
-                        <button onclick="alert('Próximamente disponible.')" class="w-full bg-forenseNavy text-forenseGold py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-800 transition">Ver Noticias</button>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-8 shadow-xl border border-slate-200 flex flex-col justify-between hover:border-forenseGold transition-all">
-                        <div>
-                            <div class="w-14 h-14 bg-blue-100 text-blue-700 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><i data-lucide="flask-conical" class="w-7 h-7"></i></div>
-                            <h3 class="font-title font-black text-xl text-forenseNavy mb-3 uppercase">Divulgación Científica</h3>
-                            <p class="text-sm text-slate-600 leading-relaxed mb-6">Artículos de investigación revisados por pares, papers de balística, dactiloscopia, genética forense y análisis periciales avanzados.</p>
-                        </div>
-                        <button onclick="alert('Próximamente disponible.')" class="w-full bg-forenseNavy text-forenseGold py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-800 transition">Ver Papers y Estudios</button>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-8 shadow-xl border border-slate-200 flex flex-col justify-between hover:border-forenseGold transition-all">
-                        <div>
-                            <div class="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><i data-lucide="cpu" class="w-7 h-7"></i></div>
-                            <h3 class="font-title font-black text-xl text-forenseNavy mb-3 uppercase">Material Tecnológico</h3>
-                            <p class="text-sm text-slate-600 leading-relaxed mb-6">Novedades sobre software de reconstrucción escénica 3D, equipos de espectrometría de masas, luces forenses y escáneres láser.</p>
-                        </div>
-                        <button onclick="alert('Próximamente disponible.')" class="w-full bg-forenseNavy text-forenseGold py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-800 transition">Ver Innovación</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 7. BIBLIOTECA VIRTUAL -->
-        <section id="seccion-biblioteca" class="page-section py-16 md:py-24 bg-white min-h-[70vh]">
-            <div class="max-w-7xl mx-auto px-4">
-                <div class="text-center mb-12">
-                    <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase"><i data-lucide="library" class="inline w-6 h-6 text-forenseGold mr-2"></i>Biblioteca Virtual & Investigación</h2>
-                    <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-                </div>
-                <div id="contenedor-biblioteca-ordenada" class="space-y-8 text-center text-slate-500">
-                    <i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto mb-2"></i> Conectando con el repositorio oficial...
-                </div>
-            </div>
-        </section>
-
-        <!-- 8. LEGAJO DIGITAL (REPARADO) -->
         <section id="seccion-portafolio" class="page-section py-16 md:py-24 bg-slate-100 min-h-[70vh]">
             <div class="max-w-4xl mx-auto px-4 text-center">
                 <i data-lucide="folder-check" class="w-20 h-20 text-forenseGold mx-auto mb-6"></i>
@@ -834,7 +426,6 @@
 
                     <form id="form-inscripcion" onsubmit="enviarInscripcion(event)">
                         
-                        <!-- PASO 1 -->
                         <div id="step-1" class="form-step active space-y-6">
                             <h3 class="font-black text-lg text-forenseNavy uppercase border-b border-slate-100 pb-2"><i data-lucide="user" class="inline w-5 h-5 text-forenseGold mr-1"></i> Datos Personales</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -849,7 +440,6 @@
                             <div class="text-right pt-4"><button type="button" onclick="siguientePaso(2)" class="bg-forenseNavy text-white px-8 py-3 rounded-xl font-bold uppercase text-sm shadow hover:bg-slate-800 transition">Siguiente Paso &rarr;</button></div>
                         </div>
 
-                        <!-- PASO 2 -->
                         <div id="step-2" class="form-step space-y-6">
                             <h3 class="font-black text-lg text-forenseNavy uppercase border-b border-slate-100 pb-2"><i data-lucide="briefcase" class="inline w-5 h-5 text-forenseGold mr-1"></i> Perfil Profesional</h3>
                             <div>
@@ -884,7 +474,6 @@
                             </div>
                         </div>
 
-                        <!-- PASO 3 -->
                         <div id="step-3" class="form-step space-y-6">
                             <h3 class="font-black text-lg text-forenseNavy uppercase border-b border-slate-100 pb-2"><i data-lucide="file-up" class="inline w-5 h-5 text-forenseGold mr-1"></i> Documentación y Pago</h3>
                             
@@ -951,7 +540,7 @@
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"/></svg>
                 </a>
             </div>
-            <p class="text-[10px] text-slate-500">Desarrollado con tecnología ASARI SaaS · Todos los derechos reservados © 2026</p>
+            <p class="text-[10px] text-slate-500" id="footer-texto">Desarrollado con tecnología ASARI SaaS · Todos los derechos reservados © 2026</p>
         </div>
     </footer>
 
@@ -975,25 +564,61 @@
         AOS.init({ once: true });
         lucide.createIcons();
 
-        // 1. INICIALIZACIÓN DE SUPABASE
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co'; 
         const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE'; 
         const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
 
         let configGlobal = {};
         let mapInstance = null;
-        let peritosMapaDB = []; // Guarda todos los peritos descargados para el buscador
-        let markersLayerGroup = null; // Capa para limpiar los pines del mapa
+        let peritosMapaDB = [];
+        let markersLayerGroup = null;
 
         window.addEventListener('DOMContentLoaded', async () => {
+            try { await cargarTextosPublicos(); } catch(e) { console.warn(e); }
             try { await cargarConfiguracionPublica(); } catch(e) { console.warn(e); }
             try { await cargarAliadosPublicos(); } catch(e) { console.warn(e); }
-            try { cargarBibliotecaPublica(); } catch(e) { console.warn(e); }
+            try { await cargarNoticiasPublicas(); } catch(e) { console.warn(e); }
+            try { await cargarBibliotecaPublica(); } catch(e) { console.warn(e); }
+            try { await cargarTesisPublicas(); } catch(e) { console.warn(e); }
             try { initMap(); } catch(e) { console.warn(e); }
         });
 
         // ==========================================
-        // 2. CONFIGURACIÓN DINÁMICA
+        // TEXTOS DINÁMICOS DESDE SUPABASE
+        // ==========================================
+        async function cargarTextosPublicos() {
+            try {
+                const { data, error } = await db.from('renmcycf_contenido').select('clave, valor');
+                if (error) throw error;
+                if (!data) return;
+
+                const map = {
+                    'hero_badge_text': 'hero-badge-text',
+                    'hero_title': 'hero-title',
+                    'hero_subtitle': 'hero-subtitle',
+                    'hero_cta_primary': 'hero-cta-primary',
+                    'hero_cta_secondary': 'hero-cta-secondary',
+                    'cat_a1_desc': 'cat-a1-desc',
+                    'cat_a2_desc': 'cat-a2-desc',
+                    'cat_a3_desc': 'cat-a3-desc',
+                    'cat_a4_desc': 'cat-a4-desc',
+                    'footer_texto': 'footer-texto'
+                };
+
+                data.forEach(item => {
+                    const elementId = map[item.clave];
+                    if (elementId) {
+                        const el = document.getElementById(elementId);
+                        if (el) el.innerText = item.valor || el.innerText;
+                    }
+                });
+            } catch (err) {
+                console.error("Error cargando textos públicos:", err);
+            }
+        }
+
+        // ==========================================
+        // CONFIGURACIÓN DINÁMICA
         // ==========================================
         async function cargarConfiguracionPublica() {
             try {
@@ -1032,7 +657,7 @@
         }
 
         // ==========================================
-        // 3. MENÚS Y SECCIONES
+        // MENÚS Y SECCIONES
         // ==========================================
         function switchSection(sectionId) {
             document.querySelectorAll('.page-section').forEach(sec => { sec.classList.remove('active-section'); sec.style.display = 'none'; });
@@ -1059,9 +684,8 @@
         }
 
         // ==========================================
-        // 4. VERIFICACIÓN PÚBLICA (CON SUMADOR DE VISTAS)
+        // VERIFICACIÓN PÚBLICA (CON SUMADOR DE VISTAS)
         // ==========================================
-        
         async function sumarVisitaProfesional(padronId) {
             try {
                 const { data: padronActual, error: errorLectura } = await db
@@ -1099,7 +723,6 @@
                 if (error || !data) { 
                     errDiv.classList.remove('hidden'); 
                 } else {
-                    // SUMAR LA VISTA AL ENCONTRARLO
                     sumarVisitaProfesional(data.id);
                     
                     document.getElementById('res-nombre').innerText = `${data.nombres} ${data.apellidos}`;
@@ -1127,7 +750,7 @@
         }
 
         // ==========================================
-        // 5. SEGUIMIENTO DE TRÁMITE
+        // SEGUIMIENTO DE TRÁMITE
         // ==========================================
         async function buscarTracking() {
             const dni = document.getElementById('track-dni').value.trim();
@@ -1197,7 +820,7 @@
         }
 
         // ==========================================
-        // 6. FORMULARIO WIZARD E INTELIGENCIA
+        // FORMULARIO WIZARD E INTELIGENCIA
         // ==========================================
         function contarArchivos(input) {
             const contador = document.getElementById('contador-archivos');
@@ -1256,7 +879,7 @@
         }
 
         // ==========================================
-        // 7. ENVÍO DE INSCRIPCIÓN (Multi-Diplomas)
+        // ENVÍO DE INSCRIPCIÓN (Multi-Diplomas)
         // ==========================================
         async function enviarInscripcion(e) {
             e.preventDefault();
@@ -1282,11 +905,9 @@
                     return await uploadFileObj(document.getElementById(inputId).files[0], prefix, bucket);
                 };
 
-                // Subir Multiples Diplomas
                 const filesDiplomas = Array.from(document.getElementById('file-diplomas').files);
                 const promesasDiplomas = filesDiplomas.map((f, i) => uploadFileObj(f, `diploma_${i+1}`));
 
-                // Subir Todo
                 const [urlFoto, urlFrente, urlDorso, urlPago, ...urlsDiplomas] = await Promise.all([
                     uploadUnico('file-foto', 'foto_perfil', 'renmcycf-media'),
                     uploadUnico('file-dni-frente', 'dni_frente'),
@@ -1313,8 +934,8 @@
                     foto_perfil_url: urlFoto,
                     dni_frente_url: urlFrente,
                     dni_dorso_url: urlDorso,
-                    diploma_url: urlsDiplomas.length > 0 ? urlsDiplomas[0] : null, // Retrocompatibilidad para el panel actual
-                    diplomas_urls: JSON.stringify(urlsDiplomas), // Aquí viajan los 10
+                    diploma_url: urlsDiplomas.length > 0 ? urlsDiplomas[0] : null,
+                    diplomas_urls: JSON.stringify(urlsDiplomas),
                     estado: 'PENDIENTE',
                     terminos_aceptados: true,
                     fecha_aceptacion_terminos: new Date().toISOString()
@@ -1334,7 +955,7 @@
         }
 
         // ==========================================
-        // 8. MAPA (DIRECTORIO PÚBLICO INTELIGENTE)
+        // MAPA (DIRECTORIO PÚBLICO INTELIGENTE)
         // ==========================================
         async function initMap() {
             if (mapInstance) return;
@@ -1374,7 +995,6 @@
         function renderizarPines(peritos) {
             markersLayerGroup.clearLayers();
             
-            // Coordenadas base por provincia para esparcir (Demo rápida)
             const coordsBase = {
                 'buenos aires': {lat: -34.6, lng: -58.4}, 'caba': {lat: -34.6, lng: -58.4}, 'cordoba': {lat: -31.4, lng: -64.1}, 'córdoba': {lat: -31.4, lng: -64.1},
                 'santa fe': {lat: -31.6, lng: -60.7}, 'mendoza': {lat: -32.8, lng: -68.8}, 'tucuman': {lat: -32.8, lng: -65.2}, 'tucumán': {lat: -32.8, lng: -65.2},
@@ -1428,8 +1048,65 @@
         }
 
         // ==========================================
-        // 9. PORTAL CIENTÍFICO Y DIVULGACIÓN
+        // PORTAL CIENTÍFICO Y DIVULGACIÓN
         // ==========================================
+        async function cargarNoticiasPublicas() {
+            const container = document.getElementById('contenedor-noticias-publicas');
+            if (!container) return;
+            
+            try {
+                const { data, error } = await db.from('renmcycf_noticias')
+                                               .select('*')
+                                               .order('created_at', { ascending: false })
+                                               .limit(6);
+                
+                if (error) throw error;
+                
+                if (!data || data.length === 0) {
+                    container.innerHTML = `
+                        <div class="md:col-span-3 bg-white rounded-2xl p-12 shadow-xl border border-slate-200 text-center text-slate-500 font-medium">
+                            <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-4 text-slate-300"></i>
+                            No hay publicaciones disponibles en este momento.
+                        </div>`;
+                    lucide.createIcons();
+                    return;
+                }
+
+                container.innerHTML = data.map(item => {
+                    let iconName = 'newspaper';
+                    let bgColor = 'bg-amber-100 text-amber-700';
+                    if (item.categoria_requerida === 'CIENCIA') { iconName = 'flask-conical'; bgColor = 'bg-blue-100 text-blue-700'; }
+                    if (item.categoria_requerida === 'TECNOLOGIA') { iconName = 'cpu'; bgColor = 'bg-emerald-100 text-emerald-700'; }
+                    
+                    const imagen = item.portada_url || 'https://via.placeholder.com/400x200/0f172a/d4af37?text=RENMCYCF';
+                    const descripcion = item.descripcion || 'Publicación oficial del Registro Nacional.';
+                    
+                    return `
+                    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col hover:border-forenseGold hover:shadow-2xl transition-all duration-300">
+                        <div class="h-40 bg-slate-100 relative overflow-hidden">
+                            <img src="${imagen}" class="w-full h-full object-cover" alt="${item.titulo}">
+                            <div class="absolute top-3 left-3 ${bgColor} w-10 h-10 rounded-xl flex items-center justify-center shadow-md border border-white/50">
+                                <i data-lucide="${iconName}" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-1">
+                            <span class="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-2">${item.categoria_requerida || 'GENERAL'}</span>
+                            <h3 class="font-title font-black text-lg text-forenseNavy mb-2 leading-snug">${item.titulo}</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed flex-1">${descripcion}</p>
+                            <div class="mt-4 pt-4 border-t border-slate-100">
+                                <span class="text-xs font-bold text-slate-400 flex items-center gap-2"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${new Date(item.created_at).toLocaleDateString('es-AR')}</span>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+                
+                lucide.createIcons();
+            } catch (err) {
+                console.error("Error cargando noticias:", err);
+                container.innerHTML = '<div class="md:col-span-3 text-center text-slate-500 py-10">No se pudieron cargar las publicaciones.</div>';
+            }
+        }
+
         async function cargarBibliotecaPublica() {
             const container = document.getElementById('contenedor-biblioteca-ordenada');
             if (!container) return;
@@ -1456,6 +1133,54 @@
                 container.innerHTML = html;
                 lucide.createIcons();
             } catch (err) { console.error(err); }
+        }
+
+        // ==========================================
+        // TESIS APROBADAS
+        // ==========================================
+        async function cargarTesisPublicas() {
+            const container = document.getElementById('contenedor-tesis-publicas');
+            if (!container) return;
+            
+            try {
+                const { data, error } = await db.from('renmcycf_publicaciones')
+                                               .select('*')
+                                               .eq('estado', 'APROBADO')
+                                               .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                if (!data || data.length === 0) {
+                    container.innerHTML = `
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-8 text-center text-slate-500 text-sm">
+                            <i data-lucide="graduation-cap" class="w-8 h-8 mx-auto mb-3 text-slate-300"></i>
+                            Aún no hay investigaciones aprobadas publicadas.
+                        </div>`;
+                    lucide.createIcons();
+                    return;
+                }
+
+                container.innerHTML = data.map(t => {
+                    return `
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md hover:border-forenseGold/50 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i data-lucide="file-text" class="w-4 h-4 text-forenseGold"></i>
+                                <h4 class="font-bold text-slate-800 text-sm md:text-base leading-snug">${t.titulo}</h4>
+                            </div>
+                            <p class="text-xs text-slate-500 flex items-center gap-1"><i data-lucide="user" class="w-3.5 h-3.5"></i> Autor: ${t.autor_nombre || 'Matriculado RENMCYCF'}</p>
+                        </div>
+                        <a href="${t.pdf_url}" target="_blank" class="inline-flex items-center justify-center gap-2 bg-forenseNavy hover:bg-slate-800 text-forenseGold px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition shadow whitespace-nowrap">
+                            <i data-lucide="download" class="w-4 h-4"></i> Descargar PDF
+                        </a>
+                    </div>`;
+                }).join('');
+                
+                lucide.createIcons();
+            } catch (err) {
+                console.error("Error cargando tesis:", err);
+                container.innerHTML = '<div class="text-center text-slate-500 py-6 text-sm">No se pudieron cargar las investigaciones.</div>';
+            }
         }
     </script>
 </body>
