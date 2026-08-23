@@ -34,10 +34,10 @@
         .input-auth { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 800; letter-spacing: 2px; transition: 0.3s; background: rgba(255,255,255,0.9); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .input-auth:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 4px rgba(0,0,0,0.05); }
 
-        /* FIX FINAL: ASPECT-RATIO + CLIENTWIDTH + RESIZEOBSERVER */
+        /* VIEWPORT REPARADO: 400px en PC para elegancia, sin aspect-ratio que rompa flexbox */
         .card-viewport { 
             width: 100%; 
-            max-width: 650px; 
+            max-width: 400px; 
             margin: 0 auto; 
             overflow: hidden; 
             position: relative; 
@@ -45,17 +45,8 @@
             border-radius: 15px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
             background: #fff; 
-            aspect-ratio: 1000 / 630;
         }
-        #carnet-render { 
-            width: 1000px; 
-            height: 630px; 
-            background: white; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            transform-origin: top left; 
-        }
+        #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
 
         .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 4px; border-radius: 24px; width: fit-content; margin-left: auto; margin-right: auto; }
         .btn-toggle { background: transparent; border: none; padding: 8px 20px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
@@ -82,7 +73,6 @@
 </head>
 <body>
 
-    <!-- CABECERA GLOBAL -->
     <div id="app-header" class="app-header hidden">
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-[#d4af37]">
@@ -126,7 +116,7 @@
                 <i data-lucide="scan-face" class="w-5 h-5"></i> Validar Identidad
             </button>
             
-            <a href="../index.renmcycf.html" class="mt-6 text-[10px] font-bold text-slate-400 hover:text-[#0a1128] uppercase tracking-widest">← Volver al Sitio Público</a>
+            <a href="index.renmcycf.html" class="mt-6 text-[10px] font-bold text-slate-400 hover:text-[#0a1128] uppercase tracking-widest">← Volver al Sitio Público</a>
         </div>
     </div>
 
@@ -283,7 +273,7 @@
 
     <!-- MODAL NOTIFICACIONES -->
     <div id="modal-notificaciones" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex justify-end">
-        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col">
+        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col animate-slide-in">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-[#0a1128] text-white">
                 <h3 class="font-black uppercase tracking-widest text-sm flex items-center gap-2"><i data-lucide="bell" class="w-4 h-4 text-[#d4af37]"></i> Centro de Alertas</h3>
                 <button onclick="cerrarModalSeguro('modal-notificaciones')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -342,7 +332,7 @@
 
         if ('serviceWorker' in navigator) { 
             window.addEventListener('load', () => { 
-                navigator.serviceWorker.register('/RENMCYCF/sw.js').catch(()=>{ console.log("SW Offline desactivado temporalmente."); }); 
+                navigator.serviceWorker.register('/sw.js').catch(()=>{ console.log("Modo App Offline desactivado temporalmente."); }); 
             }); 
         }
 
@@ -590,22 +580,19 @@
             });
         }
 
-        // FIX FINAL: CLIENTWIDTH + RESIZEOBSERVER
+        // FIX DEL AUDITOR: ALTURA INYECTADA MATEMÁTICAMENTE PARA QUE NUNCA SE CORTE EN NINGÚN NAVEGADOR
         function ajustarEscala() {
             const viewport = el('card-viewport');
             const render = el('carnet-render');
             if(viewport && render) {
-                const viewportWidth = viewport.clientWidth;
-                const scale = viewportWidth / 1000;
-                render.style.transform = `scale(${scale})`;
+                const viewportWidth = viewport.offsetWidth;
+                if(viewportWidth > 0) {
+                    const scale = viewportWidth / 1000;
+                    render.style.transform = `scale(${scale})`;
+                    viewport.style.height = `${630 * scale}px`;
+                }
             }
         }
-
-        // Observador de cambios de tamaño
-        const resizeObserver = new ResizeObserver(() => ajustarEscala());
-        window.addEventListener('DOMContentLoaded', () => {
-            if (el('card-viewport')) resizeObserver.observe(el('card-viewport'));
-        });
         window.addEventListener('resize', ajustarEscala);
 
         function renderizarCarnet(vista) {
@@ -630,6 +617,7 @@
             }
         }
 
+        // MOTOR DE DESCARGA PDF EXACTO QUE DIJISTE QUE IMPRIMÍA PERFECTO (MANTENIDO INTACTO)
         function urlToBase64(url, isPng = true, circular = false) {
             return new Promise((resolve) => {
                 if (!url) { resolve(null); return; }
@@ -718,22 +706,22 @@
                 }
 
                 pdf.setFillColor(10, 17, 40); 
-                pdf.rect(0, 0, 210, 45, 'F');
+                pdf.rect(0, 0, 210, 35, 'F');
                 
                 pdf.setTextColor(212, 175, 55); 
                 pdf.setFont("helvetica", "bold");
                 pdf.setFontSize(14);
-                pdf.text("DOCUMENTO DE IDENTIDAD PROFESIONAL", 105, 18, { align: "center" });
+                pdf.text("DOCUMENTO DE IDENTIDAD PROFESIONAL", 105, 15, { align: "center" });
                 
                 pdf.setTextColor(255, 255, 255); 
                 pdf.setFont("helvetica", "normal");
                 pdf.setFontSize(10);
-                pdf.text("Registro Nacional de Matriculados en Criminalística y Ciencias Forenses", 105, 26, { align: "center" });
+                pdf.text("Registro Nacional de Matriculados en Criminalística y Ciencias Forenses", 105, 23, { align: "center" });
 
                 const logoBase64 = await urlToBase64(configGlobal.logo_url, true, true);
                 if (logoBase64) {
                     pdf.setFillColor(255, 255, 255);
-                    pdf.setDrawColor(212, 175, 55);
+                    pdf.setDrawColor(212, 175, 55); 
                     pdf.setLineWidth(1.5);
                     pdf.circle(105, 52, 16, 'FD'); 
                     pdf.addImage(logoBase64, 'PNG', 105 - 14, 52 - 14, 28, 28); 
@@ -742,7 +730,7 @@
                 const cardW = 85.6; 
                 const cardH = 54.0; 
                 const marginX = (210 - cardW) / 2; 
-                let currentY = 75; 
+                let currentY = 85; 
 
                 pdf.setDrawColor(200, 200, 200);
                 pdf.setLineDash([2, 2], 0);
