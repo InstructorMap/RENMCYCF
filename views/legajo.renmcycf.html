@@ -34,26 +34,9 @@
         .input-auth { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 800; letter-spacing: 2px; transition: 0.3s; background: rgba(255,255,255,0.9); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .input-auth:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 4px rgba(0,0,0,0.05); }
 
-        /* FIX DEFINITIVO: CAJA PROPORCIONAL INAMOVIBLE (Ratio 1000/630 = 63%) */
-        .card-viewport { 
-            width: 100%; 
-            max-width: 420px; 
-            margin: 0 auto 20px auto; 
-            position: relative; 
-            overflow: hidden; 
-            border-radius: 15px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
-            background: #fff; 
-        }
-        #carnet-render { 
-            width: 1000px; 
-            height: 630px; 
-            background: white; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            transform-origin: top left; 
-        }
+        /* VIEWPORT BLINDADO PARA PC Y CELULAR */
+        .card-viewport { width: 100%; max-width: 400px; margin: 0 auto; overflow: hidden; position: relative; margin-bottom: 20px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); background: #fff; }
+        #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
 
         .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 4px; border-radius: 24px; width: fit-content; margin-left: auto; margin-right: auto; }
         .btn-toggle { background: transparent; border: none; padding: 8px 20px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
@@ -128,7 +111,7 @@
     </div>
 
     <!-- PANTALLA 2: TÉRMINOS Y CONDICIONES -->
-    <div id="screen-tc" class="screen bg-white" style="z-index:50;">
+    <div id="screen-tc" class="screen bg-white absolute inset-0 z-50">
         <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4">
             <div class="text-center mb-6">
                 <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="scale" class="w-6 h-6"></i></div>
@@ -155,7 +138,7 @@
     </div>
 
     <!-- PANTALLA 2.5: FOTO CROPPER -->
-    <div id="screen-foto" class="screen bg-white" style="z-index:50;">
+    <div id="screen-foto" class="screen bg-white absolute inset-0 z-50">
         <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4 text-center">
             <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="camera" class="w-6 h-6"></i></div>
             <h2 class="text-xl font-black text-[#0a1128] uppercase mb-4">Fotografía Oficial</h2>
@@ -170,6 +153,7 @@
                 <button class="bg-white border-2 border-slate-200 text-slate-700 font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full transition-transform active:scale-95" onclick="abrirSelectorArchivo(false)"><i data-lucide="image-plus" class="w-5 h-5"></i> SUBIR FOTO (GALERÍA)</button>
                 <input type="file" id="input-foto-oficial" accept="image/*" class="hidden" onchange="iniciarRecorte(this)">
                 <input type="file" id="input-foto-camara" accept="image/*" capture="user" class="hidden" onchange="iniciarRecorte(this)">
+                <button id="btn-cerrar-foto" onclick="abrirPerfil()" class="hidden mt-4 text-[10px] font-black uppercase text-slate-400 hover:text-slate-600 underline">Cancelar y volver al Perfil</button>
             </div>
 
             <div id="foto-cropper-ui" class="hidden flex-1 flex-col h-full w-full">
@@ -196,9 +180,7 @@
             </div>
         </div>
         
-        <!-- CARD VIEWPORT CON ESPACIO PREVISTO (63% DEL ANCHO) -->
         <div class="card-viewport" id="card-viewport">
-            <div style="padding-top: 63%; display: block;"></div>
             <div id="carnet-render"><div class="flex items-center justify-center h-full w-full text-slate-400 bg-slate-100"><i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i></div></div>
         </div>
         
@@ -213,10 +195,11 @@
                 <h4 class="text-white font-black text-xl font-mono" id="metric-vistas">0</h4>
                 <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Búsquedas Mensuales</p>
             </div>
-            <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner">
-                <i data-lucide="check-square" class="w-5 h-5 text-emerald-400 mx-auto mb-1"></i>
-                <h4 class="text-white font-black text-xl font-mono">100%</h4>
-                <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Perfil Completo</p>
+            <!-- BOTÓN EDITAR PERFIL -->
+            <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner cursor-pointer hover:bg-slate-700 transition-colors" onclick="abrirPerfil()">
+                <i data-lucide="user-cog" class="w-5 h-5 text-emerald-400 mx-auto mb-1"></i>
+                <h4 class="text-white font-black text-xl font-mono">EDITAR</h4>
+                <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Actualizar Datos</p>
             </div>
         </div>
 
@@ -228,6 +211,49 @@
                 <i data-lucide="award" class="w-5 h-5 text-blue-600"></i> Mis Títulos
             </button>
         </div>
+    </div>
+
+    <!-- PANTALLA DE EDICIÓN DE PERFIL -->
+    <div id="screen-perfil" class="screen">
+        <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center">
+            <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Mi Perfil</h2>
+            <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Gestión de datos de contacto</p>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm">
+            <!-- Selector de Foto -->
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+                <div class="flex items-center gap-3">
+                    <img id="perfil-foto-preview" src="" class="w-12 h-12 rounded-full object-cover border-2 border-[#d4af37]">
+                    <div>
+                        <h4 class="font-bold text-sm text-[#0a1128]">Fotografía Oficial</h4>
+                        <p class="text-[9px] text-slate-400">Visible en padrón nacional</p>
+                    </div>
+                </div>
+                <button onclick="cambiarPantallaLogin('screen-foto')" class="bg-slate-100 text-[#0a1128] p-3 rounded-xl hover:bg-slate-200 transition-colors shadow-sm"><i data-lucide="camera" class="w-5 h-5"></i></button>
+            </div>
+
+            <!-- Formulario Contacto -->
+            <form id="form-perfil" onsubmit="guardarPerfil(event)">
+                <div class="mb-3">
+                    <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Teléfono / WhatsApp</label>
+                    <input type="tel" id="perfil-telefono" class="form-input text-sm mb-0" placeholder="Ej: +54 9 11...">
+                </div>
+                <div class="mb-3">
+                    <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Email de Contacto</label>
+                    <input type="email" id="perfil-email" class="form-input text-sm mb-0" placeholder="correo@ejemplo.com">
+                </div>
+                <div class="mb-5">
+                    <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Enlace LinkedIn (Opcional)</label>
+                    <input type="url" id="perfil-linkedin" class="form-input text-sm mb-0" placeholder="https://linkedin.com/in/...">
+                </div>
+                
+                <button type="submit" id="btn-guardar-perfil" class="w-full bg-[#0a1128] text-[#d4af37] font-black uppercase text-xs tracking-wider py-4 rounded-xl flex justify-center items-center gap-2 shadow-md transition-transform active:scale-95">
+                    <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios
+                </button>
+            </form>
+        </div>
+        <button class="w-full bg-slate-200 text-slate-600 font-bold text-xs py-4 rounded-xl uppercase tracking-wider" onclick="switchNavTab('wallet')">Cancelar y Volver</button>
     </div>
 
     <!-- PANTALLA 4: PORTAL CIENTÍFICO -->
@@ -282,7 +308,7 @@
 
     <!-- MODAL NOTIFICACIONES -->
     <div id="modal-notificaciones" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex justify-end">
-        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col">
+        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col animate-slide-in">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-[#0a1128] text-white">
                 <h3 class="font-black uppercase tracking-widest text-sm flex items-center gap-2"><i data-lucide="bell" class="w-4 h-4 text-[#d4af37]"></i> Centro de Alertas</h3>
                 <button onclick="cerrarModalSeguro('modal-notificaciones')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -341,7 +367,7 @@
 
         if ('serviceWorker' in navigator) { 
             window.addEventListener('load', () => { 
-                navigator.serviceWorker.register('/sw.js').catch(()=>{ console.log("Modo Offline desactivado temporalmente."); }); 
+                navigator.serviceWorker.register('/sw.js').catch(()=>{ console.log("Modo App Offline desactivado temporalmente."); }); 
             }); 
         }
 
@@ -430,6 +456,56 @@
             } catch (err) { alert("Error de red: " + err.message); btn.innerHTML = `Firmar Acuerdo`; btn.disabled = false; }
         }
 
+        // GESTIÓN DE PERFIL DE USUARIO
+        function abrirPerfil() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            safeClass('screen-perfil', 'add', 'active');
+            
+            // Llenar campos con los datos actuales
+            if(el('perfil-telefono')) el('perfil-telefono').value = alumnoActual.telefono_contacto || '';
+            if(el('perfil-email')) el('perfil-email').value = alumnoActual.email_contacto || '';
+            if(el('perfil-linkedin')) el('perfil-linkedin').value = alumnoActual.linkedin_url || '';
+            
+            const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
+            if(el('perfil-foto-preview')) el('perfil-foto-preview').src = fotoUrl;
+        }
+
+        async function guardarPerfil(e) {
+            e.preventDefault();
+            const btn = el('btn-guardar-perfil'); if(!btn) return;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> GUARDANDO...`; 
+            btn.disabled = true;
+
+            const tel = el('perfil-telefono').value.trim();
+            const email = el('perfil-email').value.trim();
+            const ln = el('perfil-linkedin').value.trim();
+
+            try {
+                const { error } = await db.from('renmcycf_padron').update({
+                    telefono_contacto: tel,
+                    email_contacto: email,
+                    linkedin_url: ln
+                }).eq('id', alumnoActual.id);
+
+                if (error) throw error;
+
+                alumnoActual.telefono_contacto = tel;
+                alumnoActual.email_contacto = email;
+                alumnoActual.linkedin_url = ln;
+
+                alert("Perfil actualizado correctamente en el Padrón Nacional.");
+                switchNavTab('wallet');
+            } catch (err) {
+                alert("Error al actualizar datos: " + err.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
         // CROPPER
         function abrirSelectorArchivo(usaCamara) { 
             const iCam = el('input-foto-camara'); const iOf = el('input-foto-oficial');
@@ -469,7 +545,14 @@
                     await db.storage.from('renmcycf-media').upload(fileName, fileToUpload, { cacheControl: '3600', upsert: true });
                     const fotoUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
                     await db.from('renmcycf_padron').update({ foto_perfil_url: fotoUrl }).eq('id', alumnoActual.id);
-                    alumnoActual.foto_perfil_url = fotoUrl; iniciarWallet();
+                    alumnoActual.foto_perfil_url = fotoUrl; 
+                    
+                    // Si viene desde "Mi Perfil", devolverlo al Perfil en lugar del Wallet general
+                    if(document.getElementById('btn-cerrar-foto') && !document.getElementById('btn-cerrar-foto').classList.contains('hidden')) {
+                        abrirPerfil();
+                    } else {
+                        iniciarWallet();
+                    }
                 }, 'image/jpeg', 0.85);
             } catch (err) { alert("Error: " + err.message); btn.innerHTML = txt; btn.disabled = false; }
         }
@@ -479,6 +562,15 @@
             safeClass(screenId, 'add', 'active');
             if(screenId !== 'screen-login' && el('dynamic-bg')) el('dynamic-bg').style.display = 'none';
             if(screenId === 'screen-tc') toggleBotonAceptar();
+
+            // Si entra a tomar foto y ya estaba logueado (editando perfil), mostramos botón de cancelar
+            if(screenId === 'screen-foto') {
+                if (alumnoActual && alumnoActual.foto_perfil_url) {
+                    safeClass('btn-cerrar-foto', 'remove', 'hidden');
+                } else {
+                    safeClass('btn-cerrar-foto', 'add', 'hidden');
+                }
+            }
         }
 
         function iniciarWallet() {
@@ -489,8 +581,8 @@
             if(el('user-name')) el('user-name').innerText = `${alumnoActual.nombres} ${alumnoActual.apellidos}`;
             if(el('user-profesion')) el('user-profesion').innerText = alumnoActual.profesion || 'Profesional Titulado';
             
-            const seed = new Date().getDate() + parseInt(alumnoActual.dni || 0);
-            if(el('metric-vistas')) el('metric-vistas').innerText = (seed % 30) + 12;
+            // Métricas reales de Base de Datos
+            if(el('metric-vistas')) el('metric-vistas').innerText = alumnoActual.contador_vistas || 0;
             
             cargarNotificacionesFicticias();
         }
@@ -590,7 +682,6 @@
             });
         }
 
-        // EL SECRETO: ESCALA PERFECTA BASADA EN EL ANCHO DEL CONTENEDOR 
         function ajustarEscala() {
             const viewport = el('card-viewport');
             const render = el('carnet-render');
@@ -599,6 +690,7 @@
                 if(viewportWidth > 0) {
                     const scale = viewportWidth / 1000;
                     render.style.transform = `scale(${scale})`;
+                    viewport.style.height = `${630 * scale}px`;
                 }
             }
         }
@@ -626,7 +718,6 @@
             }
         }
 
-        // MOTOR DE DESCARGA PDF EXACTO A4 (INTACTO COMO PEDISTE)
         function urlToBase64(url, isPng = true, circular = false) {
             return new Promise((resolve) => {
                 if (!url) { resolve(null); return; }
