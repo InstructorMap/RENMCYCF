@@ -156,6 +156,37 @@
             }
         }
 
+        async function sumarVisitaProfesional(padronId) {
+            try {
+                // Obtener el contador actual
+                const { data: padronActual, error: errorLectura } = await db
+                    .from('renmcycf_padron')
+                    .select('contador_vistas')
+                    .eq('id', padronId)
+                    .single();
+                
+                if (errorLectura) {
+                    console.warn("No se pudo leer el contador de visitas:", errorLectura);
+                    return;
+                }
+                
+                const contadorActual = padronActual?.contador_vistas || 0;
+                const nuevoContador = contadorActual + 1;
+                
+                // Actualizar con el nuevo valor
+                const { error: errorActualizacion } = await db
+                    .from('renmcycf_padron')
+                    .update({ contador_vistas: nuevoContador })
+                    .eq('id', padronId);
+                
+                if (errorActualizacion) {
+                    console.warn("No se pudo actualizar el contador de visitas:", errorActualizacion);
+                }
+            } catch (err) {
+                console.warn("Error al sumar visita:", err);
+            }
+        }
+
         async function validarProfesional() {
             const params = new URLSearchParams(window.location.search);
             const matQuery = params.get('mat');
@@ -198,6 +229,12 @@
                 if (vence && hoy > vence) {
                     mostrarError(`CERTIFICACIÓN VENCIDA.\nExpiró el ${vence.toLocaleDateString('es-AR')}. Requiere renovación anual obligatoria.`, true);
                     return;
+                }
+
+                // ACCIÓN A: Sumar +1 al contador de visitas
+                // Se ejecuta de forma asíncrona sin bloquear la visualización
+                if (padron.id) {
+                    sumarVisitaProfesional(padron.id);
                 }
 
                 document.getElementById('success-screen').classList.remove('hidden');
@@ -256,58 +293,6 @@
             cargarIdentidadVisual();
             validarProfesional();
         });
-
-        // Inicializar iconos de Lucide
-lucide.createIcons();
-
-// Función de control global de pestañas (Tabs)
-function showTab(tabId) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
-    
-    const targetTab = document.getElementById('view-' + tabId);
-    const targetNav = document.getElementById('nav-' + tabId);
-    
-    if (targetTab) targetTab.classList.add('active');
-    if (targetNav) targetNav.classList.add('active');
-}
-
-// Funciones de cierre de modales
-function cerrarExpediente() {
-    const modal = document.getElementById('modal-expediente');
-    if (modal) modal.classList.add('hidden');
-}
-
-function cerrarModalClases() {
-    const modal = document.getElementById('modal-clases');
-    if (modal) modal.classList.add('hidden');
-}
-
-function cerrarModalEdicion() {
-    const modal = document.getElementById('modal-editar-padron');
-    if (modal) modal.classList.add('hidden');
-}
-
-// Validación y cierre de sesión
-function cerrarSesion() {
-    localStorage.clear();
-    window.location.reload();
-}
-
-// Validación de inputs dinámicos en el panel de clases
-function toggleClaseInput() {
-    const tipo = document.getElementById('clase-tipo').value;
-    const inputUrl = document.getElementById('clase-input-url');
-    const inputFile = document.getElementById('clase-input-file');
-
-    if (tipo === 'PDF') {
-        if (inputUrl) inputUrl.classList.add('hidden');
-        if (inputFile) inputFile.classList.remove('hidden');
-    } else {
-        if (inputUrl) inputUrl.classList.remove('hidden');
-        if (inputFile) inputFile.classList.add('hidden');
-    }
-}
     </script>
 </body>
 </html>
