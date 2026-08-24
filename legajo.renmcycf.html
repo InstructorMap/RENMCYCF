@@ -23,47 +23,8 @@
         :root { --forense-navy: #0a1128; --forense-gold: #d4af37; --bg-app: #f1f5f9; }
         body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-app); color: #333; height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; overscroll-behavior-y: none; }
 
-        /* ==========================================
-           FONDO CON MARCA DE AGUA
-           ========================================== */
-        .watermark-bg {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            background-image: radial-gradient(circle at 50% 50%, rgba(10, 17, 40, 0.03) 0%, transparent 70%);
-        }
-        .watermark-logo {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.04;
-            width: 600px;
-            height: 600px;
-            object-fit: contain;
-            filter: grayscale(100%);
-        }
-        .watermark-ring {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 0;
-            pointer-events: none;
-            width: 800px;
-            height: 800px;
-            border-radius: 50%;
-            border: 3px dashed rgba(10, 17, 40, 0.06);
-        }
-
         .glass-panel { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
 
-        /* ==========================================
-           HEADER CON FRANJA AZUL Y LOGO
-           ========================================== */
         .app-header { background: linear-gradient(135deg, #0a1128 0%, #1e3a8a 50%, #0a1128 100%); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.15); position: sticky; top: 0; border-bottom: 3px solid var(--forense-gold); }
         .app-header::after {
             content: '';
@@ -99,9 +60,39 @@
             padding: 4px;
         }
 
-        /* ==========================================
-           PANTALLAS
-           ========================================== */
+        .watermark-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle at 50% 50%, rgba(10, 17, 40, 0.03) 0%, transparent 70%);
+        }
+        .watermark-logo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.04;
+            width: 600px;
+            height: 600px;
+            object-fit: contain;
+            filter: grayscale(100%);
+        }
+        .watermark-ring {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            border: 3px dashed rgba(10, 17, 40, 0.06);
+        }
+
         .screen { display: none; flex: 1; flex-direction: column; padding: 16px; padding-bottom: 90px; z-index: 2; position: relative; overflow-y: auto; opacity: 0; transform: translateX(20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .screen.active { display: flex; opacity: 1; transform: translateX(0); }
 
@@ -109,9 +100,6 @@
         .input-auth { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 800; letter-spacing: 2px; transition: 0.3s; background: rgba(255,255,255,0.95); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .input-auth:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 4px rgba(0,0,0,0.05); }
 
-        /* ==========================================
-           LAYOUT WALLET RESPONSIVE Y SIMÉTRICO
-           ========================================== */
         .card-viewport { width: 100%; max-width: 420px; margin: 0 auto; overflow: hidden; position: relative; margin-bottom: 20px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); background: #fff; }
         #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
 
@@ -137,12 +125,11 @@
         .form-container { margin-bottom: 30px; }
 
         /* ==========================================
-           LAYOUT RESPONSIVE PARA PANTALLAS GRANDES
+           LAYOUT RESPONSIVE
            ========================================== */
         @media (min-width: 768px) {
             .screen { padding: 30px; padding-bottom: 90px; }
             
-            /* Layout Wallet: Carnet centrado + acciones debajo en grid simétrico */
             .screen-wallet-content {
                 display: flex;
                 flex-direction: column;
@@ -167,7 +154,6 @@
                 grid-column: 1 / -1;
             }
             
-            /* Layout Perfil centrado */
             .screen-perfil .form-container,
             .screen-perfil .btn-cancelar {
                 max-width: 480px;
@@ -175,7 +161,6 @@
                 margin-right: auto;
             }
             
-            /* Layout Portal/Biblioteca/Tesis centrados */
             .screen-portal .content-centered,
             .screen-biblioteca .content-centered,
             .screen-publicaciones .content-centered {
@@ -235,6 +220,48 @@
             min-height: 50px;
         }
         .foto-btn:active { transform: scale(0.97); }
+
+        /* ==========================================
+           PANTALLA PERFIL - BOTONES SIEMPRE VISIBLES
+           ========================================== */
+        #screen-perfil {
+            padding-bottom: 30px;
+        }
+        #screen-perfil .form-container {
+            margin-bottom: 15px;
+        }
+        /* Botones sticky al fondo de la pantalla de perfil */
+        .perfil-actions {
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(to top, var(--bg-app) 70%, transparent 100%);
+            padding-top: 15px;
+            padding-bottom: 5px;
+            z-index: 5;
+        }
+        .perfil-actions .btn-cancelar {
+            margin-bottom: 0;
+        }
+        /* En PC, los botones van en fila */
+        @media (min-width: 768px) {
+            .perfil-actions {
+                display: flex;
+                gap: 12px;
+                max-width: 480px;
+                margin-left: auto;
+                margin-right: auto;
+                width: 100%;
+            }
+            .perfil-actions .btn-cancelar {
+                flex-shrink: 0;
+                width: auto;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            #btn-guardar-perfil {
+                flex: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -403,45 +430,48 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE EDICIÓN DE PERFIL -->
+    <!-- PANTALLA DE EDICIÓN DE PERFIL - CORREGIDA -->
     <div id="screen-perfil" class="screen">
-        <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center content-centered">
-            <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Mi Perfil</h2>
-            <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Gestión de datos de contacto</p>
+        <div class="mb-4 bg-white p-4 rounded-xl border border-slate-200 text-center content-centered">
+            <h2 class="text-lg font-black text-[#0a1128] font-title uppercase">Mi Perfil</h2>
+            <p class="text-[9px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Gestión de datos de contacto</p>
         </div>
 
-        <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm form-container content-centered">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm form-container content-centered">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
                 <div class="flex items-center gap-3">
-                    <img id="perfil-foto-preview" src="" class="w-12 h-12 rounded-full object-cover border-2 border-[#d4af37]">
+                    <img id="perfil-foto-preview" src="" class="w-10 h-10 rounded-full object-cover border-2 border-[#d4af37]">
                     <div>
-                        <h4 class="font-bold text-sm text-[#0a1128]">Fotografía Oficial</h4>
-                        <p class="text-[9px] text-slate-400">Visible en padrón nacional</p>
+                        <h4 class="font-bold text-xs text-[#0a1128]">Fotografía Oficial</h4>
+                        <p class="text-[8px] text-slate-400">Visible en padrón nacional</p>
                     </div>
                 </div>
-                <button onclick="cambiarPantallaLogin('screen-foto')" class="bg-slate-100 text-[#0a1128] p-3 rounded-xl hover:bg-slate-200 transition-colors shadow-sm"><i data-lucide="camera" class="w-5 h-5"></i></button>
+                <button onclick="cambiarPantallaLogin('screen-foto')" class="bg-slate-100 text-[#0a1128] p-2.5 rounded-xl hover:bg-slate-200 transition-colors shadow-sm"><i data-lucide="camera" class="w-4 h-4"></i></button>
             </div>
 
             <form id="form-perfil" onsubmit="guardarPerfil(event)">
-                <div class="mb-3">
-                    <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Teléfono / WhatsApp</label>
-                    <input type="tel" id="perfil-telefono" class="form-input text-sm mb-0" placeholder="Ej: +54 9 11...">
+                <div class="mb-2">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Teléfono / WhatsApp</label>
+                    <input type="tel" id="perfil-telefono" class="form-input text-sm mb-0 py-2.5" placeholder="Ej: +54 9 11...">
+                </div>
+                <div class="mb-2">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Email de Contacto</label>
+                    <input type="email" id="perfil-email" class="form-input text-sm mb-0 py-2.5" placeholder="correo@ejemplo.com">
                 </div>
                 <div class="mb-3">
-                    <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Email de Contacto</label>
-                    <input type="email" id="perfil-email" class="form-input text-sm mb-0" placeholder="correo@ejemplo.com">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Enlace LinkedIn (Opcional)</label>
+                    <input type="url" id="perfil-linkedin" class="form-input text-sm mb-0 py-2.5" placeholder="https://linkedin.com/in/...">
                 </div>
-                <div class="mb-5">
-                    <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Enlace LinkedIn (Opcional)</label>
-                    <input type="url" id="perfil-linkedin" class="form-input text-sm mb-0" placeholder="https://linkedin.com/in/...">
-                </div>
-                
-                <button type="submit" id="btn-guardar-perfil" class="w-full bg-[#0a1128] text-[#d4af37] font-black uppercase text-xs tracking-wider py-4 rounded-xl flex justify-center items-center gap-2 shadow-md transition-transform active:scale-95">
-                    <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios
-                </button>
             </form>
         </div>
-        <button class="btn-cancelar w-full bg-slate-200 text-slate-600 font-bold text-xs py-4 rounded-xl uppercase tracking-wider mb-6 content-centered" onclick="switchNavTab('wallet')">Cancelar y Volver</button>
+
+        <!-- BOTONES SIEMPRE VISIBLES - STICKY AL FONDO -->
+        <div class="perfil-actions">
+            <button type="button" id="btn-guardar-perfil" class="w-full bg-[#0a1128] text-[#d4af37] font-black uppercase text-xs tracking-wider py-4 rounded-xl flex justify-center items-center gap-2 shadow-md transition-transform active:scale-95 hover:bg-slate-800" onclick="guardarPerfil(event)">
+                <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios
+            </button>
+            <button class="btn-cancelar w-full bg-slate-200 text-slate-600 font-bold text-xs py-4 rounded-xl uppercase tracking-wider hover:bg-slate-300 transition-colors" onclick="switchNavTab('wallet')">Cancelar y Volver</button>
+        </div>
     </div>
 
     <!-- PANTALLA 4: PORTAL CIENTÍFICO -->
