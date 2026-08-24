@@ -27,24 +27,38 @@
 
         .app-header { background-color: var(--forense-navy); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 50; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: sticky; top: 0; }
         
-        /* CORRECCIÓN 1: Aumentado padding-bottom para que la barra inferior no tape el contenido */
-        .screen { display: none; flex: 1; flex-direction: column; padding: 20px; padding-bottom: 120px; z-index: 2; position: relative; overflow-y: auto; opacity: 0; transform: translateX(20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* ==========================================
+           CORRECCIÓN PRINCIPAL: CONTENEDOR CENTRADO
+           En PC, todo se centra en un ancho máximo
+           de 480px simulando la vista móvil
+           ========================================== */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            position: relative;
+            background-color: var(--bg-app);
+        }
+
+        .screen { display: none; flex: 1; flex-direction: column; padding: 16px; padding-bottom: 100px; z-index: 2; position: relative; overflow-y: auto; opacity: 0; transform: translateX(20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .screen.active { display: flex; opacity: 1; transform: translateX(0); }
 
         .login-bg { position: fixed; inset: 0; z-index: 0; object-fit: cover; width: 100%; height: 100%; opacity: 0.2; filter: grayscale(30%); display: none; }
         .input-auth { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 800; letter-spacing: 2px; transition: 0.3s; background: rgba(255,255,255,0.9); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .input-auth:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 4px rgba(0,0,0,0.05); }
 
-        /* VIEWPORT BLINDADO PARA PC Y CELULAR */
         .card-viewport { width: 100%; max-width: 400px; margin: 0 auto; overflow: hidden; position: relative; margin-bottom: 20px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); background: #fff; }
         #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
 
-        .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 4px; border-radius: 24px; width: fit-content; margin-left: auto; margin-right: auto; }
+        .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; background: #e2e8f0; padding: 4px; border-radius: 24px; width: fit-content; margin-left: auto; margin-right: auto; }
         .btn-toggle { background: transparent; border: none; padding: 8px 20px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
         .btn-toggle.active { background: white; color: var(--forense-navy); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
-        /* CORRECCIÓN 2: Barra inferior con altura calculada correctamente */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; padding: 10px 5px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; padding: 10px 5px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #94a3b8; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; }
         .nav-item.active { color: var(--forense-navy); transform: translateY(-2px); }
         .nav-item.active i { color: var(--forense-gold); }
@@ -61,287 +75,298 @@
         .tc-box h3 { color: var(--forense-navy); font-weight: 900; font-size: 14px; margin-bottom: 10px; }
         .form-input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-bottom: 15px; background: white; color: #1e293b; }
         .form-input:focus { border-color: var(--forense-navy); box-shadow: 0 0 0 3px rgba(10, 17, 40, 0.1); }
-        
-        /* CORRECCIÓN 3: Margen adicional para formularios en pantallas con scroll */
         .form-container { margin-bottom: 30px; }
+
+        /* Modales centrados también */
+        .modal-centered {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
 
-    <div id="app-header" class="app-header hidden">
-        <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-[#d4af37]">
-                <img id="nav-mini-logo" src="https://ui-avatars.com/api/?name=R+N&background=fff&color=0a1128" class="w-5 h-5 object-contain">
-            </div>
-            <div>
-                <h1 class="text-[10px] font-black tracking-widest text-[#d4af37] uppercase leading-tight">RENMCYCF</h1>
-                <p class="text-[8px] font-bold text-slate-300 uppercase opacity-80">Legajo Digital</p>
-            </div>
-        </div>
-        
-        <div class="flex items-center gap-4">
-            <button onclick="abrirNotificaciones()" class="relative text-slate-300 hover:text-white transition-colors ml-2 hidden" id="btn-campana">
-                <i data-lucide="bell" class="w-6 h-6"></i>
-                <span id="badge-notificaciones" class="absolute -top-1 -right-1 flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                </span>
-            </button>
-            <button onclick="cerrarSesion()" class="text-slate-400 hover:text-red-400 transition-colors">
-                <i data-lucide="log-out" class="w-5 h-5"></i>
-            </button>
-        </div>
-    </div>
+    <div class="app-container">
 
-    <!-- PANTALLA 1: LOGIN -->
-    <img id="dynamic-bg" src="" class="login-bg">
-    <div id="screen-login" class="screen active" style="justify-content: center; opacity: 1; transform: translateX(0);">
-        <div class="login-container glass-panel p-8 rounded-3xl mx-4">
-            <div class="w-24 h-24 bg-[#0a1128] rounded-full shadow-xl flex items-center justify-center mx-auto mb-6 border-4 border-[#d4af37] overflow-hidden" id="logo-container">
-                <i data-lucide="fingerprint" class="w-12 h-12 text-[#d4af37]" id="default-logo"></i>
-                <img id="dynamic-logo" src="" class="w-full h-full object-contain hidden p-2 bg-white">
-            </div>
-            <h1 class="text-2xl font-black text-[#0a1128] mb-1 font-title uppercase tracking-tight">Legajo Digital</h1>
-            <p class="text-[10px] text-slate-500 mb-8 font-black uppercase tracking-widest border-b border-slate-200 pb-4 w-full">Identidad y Certificación Oficial</p>
-            
-            <input type="tel" id="input-dni" class="input-auth" placeholder="NÚMERO DE DNI" autocomplete="off" onkeyup="if(event.key==='Enter')ingresar()">
-            <div id="login-error" class="text-red-600 text-xs font-bold mt-2 mb-4 hidden bg-red-50 p-3 rounded-lg border border-red-200 w-full"></div>
-            
-            <button class="w-full bg-[#0a1128] text-[#d4af37] hover:bg-slate-800 font-black uppercase tracking-widest py-4 rounded-xl shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2 mt-4" id="btn-ingresar" onclick="ingresar()">
-                <i data-lucide="scan-face" class="w-5 h-5"></i> Validar Identidad
-            </button>
-            
-            <a href="index.renmcycf.html" class="mt-6 text-[10px] font-bold text-slate-400 hover:text-[#0a1128] uppercase tracking-widest">← Volver al Sitio Público</a>
-        </div>
-    </div>
-
-    <!-- PANTALLA 2: TÉRMINOS Y CONDICIONES -->
-    <div id="screen-tc" class="screen bg-white absolute inset-0 z-50">
-        <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4">
-            <div class="text-center mb-6">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="scale" class="w-6 h-6"></i></div>
-                <h2 class="text-xl font-black text-[#0a1128] uppercase">Acuerdo de Adhesión</h2>
-            </div>
-            <div class="tc-box flex-1 mb-6 border border-slate-200">
-                <h3>1. VERACIDAD DE DATOS E IMAGEN</h3>
-                <p>El Profesional declara bajo juramento que los datos aportados, así como la fotografía facial y títulos, son auténticos.</p><br>
-                <h3>2. USO DE PLATAFORMA</h3>
-                <p>La Credencial es intransferible. Autoriza al Registro a exhibir su habilitación en el Validador Público mediante código QR.</p><br>
-                <h3>3. TRATAMIENTO DE DATOS</h3>
-                <p>En cumplimiento de la Ley 25.326, la información será almacenada en bases auditadas.</p>
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
-                <label class="flex items-start gap-3 cursor-pointer">
-                    <input type="checkbox" id="check-tc" class="mt-1 w-5 h-5 accent-[#0a1128]" onchange="toggleBotonAceptar()">
-                    <span class="text-xs font-bold text-slate-700 leading-tight">He leído, comprendo y acepto los Términos y declaro bajo juramento mi identidad.</span>
-                </label>
-            </div>
-            <button class="w-full bg-slate-300 text-slate-500 font-black uppercase py-4 rounded-xl transition-all cursor-not-allowed" id="btn-aceptar-tc" onclick="aceptarTerminos()" disabled>
-                Firmar Acuerdo
-            </button>
-        </div>
-    </div>
-
-    <!-- PANTALLA 2.5: FOTO CROPPER -->
-    <div id="screen-foto" class="screen bg-white absolute inset-0 z-50">
-        <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4 text-center">
-            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="camera" class="w-6 h-6"></i></div>
-            <h2 class="text-xl font-black text-[#0a1128] uppercase mb-4">Fotografía Oficial</h2>
-            
-            <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 shadow-sm mb-6 text-left text-xs text-amber-900 leading-relaxed">
-                <p class="font-black uppercase mb-1"><i data-lucide="alert-triangle" class="inline w-4 h-4 text-amber-600"></i> Atención Auditores</p>
-                La fotografía será su identidad en el Padrón Nacional. Debe ser en <strong>primer plano, fondo claro, sin anteojos oscuros ni gorras.</strong> Si la foto es rechazada, su credencial será suspendida.
-            </div>
-
-            <div id="foto-selector-ui" class="flex-1 flex flex-col justify-center gap-4">
-                <button class="bg-[#0a1128] text-white font-black py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full shadow-lg transition-transform active:scale-95" onclick="abrirSelectorArchivo(true)"><i data-lucide="camera" class="w-6 h-6 text-[#d4af37]"></i> TOMAR FOTO (CÁMARA)</button>
-                <button class="bg-white border-2 border-slate-200 text-slate-700 font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full transition-transform active:scale-95" onclick="abrirSelectorArchivo(false)"><i data-lucide="image-plus" class="w-5 h-5"></i> SUBIR FOTO (GALERÍA)</button>
-                <input type="file" id="input-foto-oficial" accept="image/*" class="hidden" onchange="iniciarRecorte(this)">
-                <input type="file" id="input-foto-camara" accept="image/*" capture="user" class="hidden" onchange="iniciarRecorte(this)">
-                <button id="btn-cerrar-foto" onclick="abrirPerfil()" class="hidden mt-4 text-[10px] font-black uppercase text-slate-400 hover:text-slate-600 underline">Cancelar y volver al Perfil</button>
-            </div>
-
-            <div id="foto-cropper-ui" class="hidden flex-1 flex-col h-full w-full">
-                <div class="relative flex-1 w-full bg-slate-900 rounded-xl overflow-hidden mb-4 shadow-inner"><img id="image-to-crop" src="" style="display:block; max-width: 100%;"></div>
-                <div class="flex gap-3 mb-6">
-                    <button class="flex-1 bg-slate-200 text-slate-700 font-bold py-3 rounded-lg text-xs" onclick="cancelarRecorte()">VOLVER</button>
-                    <button class="flex-[2] bg-[#d4af37] text-[#0a1128] font-black py-3 rounded-lg text-xs shadow-md" id="btn-guardar-recorte" onclick="procesarYSubirRecorte()">GUARDAR ENCUADRE</button>
+        <div id="app-header" class="app-header hidden">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center border border-[#d4af37]">
+                    <img id="nav-mini-logo" src="https://ui-avatars.com/api/?name=R+N&background=fff&color=0a1128" class="w-5 h-5 object-contain">
+                </div>
+                <div>
+                    <h1 class="text-[10px] font-black tracking-widest text-[#d4af37] uppercase leading-tight">RENMCYCF</h1>
+                    <p class="text-[8px] font-bold text-slate-300 uppercase opacity-80">Legajo Digital</p>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- PANTALLA 3: LEGAJO Y CREDENCIAL (WALLET) -->
-    <div id="screen-wallet" class="screen">
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-between items-center relative overflow-hidden">
-            <div class="absolute right-0 top-0 bottom-0 w-2 bg-emerald-400"></div>
-            <div>
-                <div class="text-[9px] text-emerald-600 font-bold uppercase tracking-widest flex items-center gap-1 mb-1"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sistema Activo</div>
-                <div class="text-sm font-black text-[#0a1128] font-title uppercase tracking-tight line-clamp-1" id="user-name">---</div>
-                <div class="text-[10px] font-mono font-bold text-slate-500" id="user-profesion">---</div>
-            </div>
-            <div class="w-10 h-10 rounded-full bg-[#0a1128] text-[#d4af37] flex items-center justify-center shadow-md shrink-0 border border-[#d4af37]">
-                <i data-lucide="shield-check" class="w-5 h-5"></i>
-            </div>
-        </div>
-        
-        <div class="card-viewport" id="card-viewport">
-            <div id="carnet-render"><div class="flex items-center justify-center h-full w-full text-slate-400 bg-slate-100"><i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i></div></div>
-        </div>
-        
-        <div class="view-toggles">
-            <button class="btn-toggle active" id="btn-toggle-front" onclick="cambiarVista('front')">FRENTE</button>
-            <button class="btn-toggle" id="btn-toggle-back" onclick="cambiarVista('back')">DORSO Y QR</button>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner">
-                <i data-lucide="eye" class="w-5 h-5 text-blue-400 mx-auto mb-1"></i>
-                <h4 class="text-white font-black text-xl font-mono" id="metric-vistas">0</h4>
-                <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Búsquedas Mensuales</p>
-            </div>
-            <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner cursor-pointer hover:bg-slate-700 transition-colors" onclick="abrirPerfil()">
-                <i data-lucide="user-cog" class="w-5 h-5 text-emerald-400 mx-auto mb-1"></i>
-                <h4 class="text-white font-black text-xl font-mono">EDITAR</h4>
-                <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Actualizar Datos</p>
+            
+            <div class="flex items-center gap-4">
+                <button onclick="abrirNotificaciones()" class="relative text-slate-300 hover:text-white transition-colors ml-2 hidden" id="btn-campana">
+                    <i data-lucide="bell" class="w-6 h-6"></i>
+                    <span id="badge-notificaciones" class="absolute -top-1 -right-1 flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                    </span>
+                </button>
+                <button onclick="cerrarSesion()" class="text-slate-400 hover:text-red-400 transition-colors">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                </button>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-8">
-            <button id="btn-descargar-carnet" class="bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="descargarCarnetOficial()">
-                <i data-lucide="download" class="w-5 h-5 text-[#d4af37]"></i> Bajar Documento (PDF)
-            </button>
-            <button class="bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="abrirModalDiplomas()">
-                <i data-lucide="award" class="w-5 h-5 text-blue-600"></i> Mis Títulos
-            </button>
+        <!-- PANTALLA 1: LOGIN -->
+        <img id="dynamic-bg" src="" class="login-bg">
+        <div id="screen-login" class="screen active" style="justify-content: center; opacity: 1; transform: translateX(0);">
+            <div class="login-container glass-panel p-8 rounded-3xl mx-4">
+                <div class="w-24 h-24 bg-[#0a1128] rounded-full shadow-xl flex items-center justify-center mx-auto mb-6 border-4 border-[#d4af37] overflow-hidden" id="logo-container">
+                    <i data-lucide="fingerprint" class="w-12 h-12 text-[#d4af37]" id="default-logo"></i>
+                    <img id="dynamic-logo" src="" class="w-full h-full object-contain hidden p-2 bg-white">
+                </div>
+                <h1 class="text-2xl font-black text-[#0a1128] mb-1 font-title uppercase tracking-tight">Legajo Digital</h1>
+                <p class="text-[10px] text-slate-500 mb-8 font-black uppercase tracking-widest border-b border-slate-200 pb-4 w-full">Identidad y Certificación Oficial</p>
+                
+                <input type="tel" id="input-dni" class="input-auth" placeholder="NÚMERO DE DNI" autocomplete="off" onkeyup="if(event.key==='Enter')ingresar()">
+                <div id="login-error" class="text-red-600 text-xs font-bold mt-2 mb-4 hidden bg-red-50 p-3 rounded-lg border border-red-200 w-full"></div>
+                
+                <button class="w-full bg-[#0a1128] text-[#d4af37] hover:bg-slate-800 font-black uppercase tracking-widest py-4 rounded-xl shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2 mt-4" id="btn-ingresar" onclick="ingresar()">
+                    <i data-lucide="scan-face" class="w-5 h-5"></i> Validar Identidad
+                </button>
+                
+                <a href="index.renmcycf.html" class="mt-6 text-[10px] font-bold text-slate-400 hover:text-[#0a1128] uppercase tracking-widest">← Volver al Sitio Público</a>
+            </div>
         </div>
-    </div>
 
-    <!-- PANTALLA DE EDICIÓN DE PERFIL -->
-    <div id="screen-perfil" class="screen">
-        <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center">
-            <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Mi Perfil</h2>
-            <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Gestión de datos de contacto</p>
+        <!-- PANTALLA 2: TÉRMINOS Y CONDICIONES -->
+        <div id="screen-tc" class="screen bg-white absolute inset-0 z-50">
+            <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4">
+                <div class="text-center mb-6">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="scale" class="w-6 h-6"></i></div>
+                    <h2 class="text-xl font-black text-[#0a1128] uppercase">Acuerdo de Adhesión</h2>
+                </div>
+                <div class="tc-box flex-1 mb-6 border border-slate-200">
+                    <h3>1. VERACIDAD DE DATOS E IMAGEN</h3>
+                    <p>El Profesional declara bajo juramento que los datos aportados, así como la fotografía facial y títulos, son auténticos.</p><br>
+                    <h3>2. USO DE PLATAFORMA</h3>
+                    <p>La Credencial es intransferible. Autoriza al Registro a exhibir su habilitación en el Validador Público mediante código QR.</p><br>
+                    <h3>3. TRATAMIENTO DE DATOS</h3>
+                    <p>En cumplimiento de la Ley 25.326, la información será almacenada en bases auditadas.</p>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="check-tc" class="mt-1 w-5 h-5 accent-[#0a1128]" onchange="toggleBotonAceptar()">
+                        <span class="text-xs font-bold text-slate-700 leading-tight">He leído, comprendo y acepto los Términos y declaro bajo juramento mi identidad.</span>
+                    </label>
+                </div>
+                <button class="w-full bg-slate-300 text-slate-500 font-black uppercase py-4 rounded-xl transition-all cursor-not-allowed" id="btn-aceptar-tc" onclick="aceptarTerminos()" disabled>
+                    Firmar Acuerdo
+                </button>
+            </div>
         </div>
 
-        <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm form-container">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
-                <div class="flex items-center gap-3">
-                    <img id="perfil-foto-preview" src="" class="w-12 h-12 rounded-full object-cover border-2 border-[#d4af37]">
-                    <div>
-                        <h4 class="font-bold text-sm text-[#0a1128]">Fotografía Oficial</h4>
-                        <p class="text-[9px] text-slate-400">Visible en padrón nacional</p>
+        <!-- PANTALLA 2.5: FOTO CROPPER -->
+        <div id="screen-foto" class="screen bg-white absolute inset-0 z-50">
+            <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4 text-center">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="camera" class="w-6 h-6"></i></div>
+                <h2 class="text-xl font-black text-[#0a1128] uppercase mb-4">Fotografía Oficial</h2>
+                
+                <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 shadow-sm mb-6 text-left text-xs text-amber-900 leading-relaxed">
+                    <p class="font-black uppercase mb-1"><i data-lucide="alert-triangle" class="inline w-4 h-4 text-amber-600"></i> Atención Auditores</p>
+                    La fotografía será su identidad en el Padrón Nacional. Debe ser en <strong>primer plano, fondo claro, sin anteojos oscuros ni gorras.</strong> Si la foto es rechazada, su credencial será suspendida.
+                </div>
+
+                <div id="foto-selector-ui" class="flex-1 flex flex-col justify-center gap-4">
+                    <button class="bg-[#0a1128] text-white font-black py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full shadow-lg transition-transform active:scale-95" onclick="abrirSelectorArchivo(true)"><i data-lucide="camera" class="w-6 h-6 text-[#d4af37]"></i> TOMAR FOTO (CÁMARA)</button>
+                    <button class="bg-white border-2 border-slate-200 text-slate-700 font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-3 w-full transition-transform active:scale-95" onclick="abrirSelectorArchivo(false)"><i data-lucide="image-plus" class="w-5 h-5"></i> SUBIR FOTO (GALERÍA)</button>
+                    <input type="file" id="input-foto-oficial" accept="image/*" class="hidden" onchange="iniciarRecorte(this)">
+                    <input type="file" id="input-foto-camara" accept="image/*" capture="user" class="hidden" onchange="iniciarRecorte(this)">
+                    <button id="btn-cerrar-foto" onclick="abrirPerfil()" class="hidden mt-4 text-[10px] font-black uppercase text-slate-400 hover:text-slate-600 underline">Cancelar y volver al Perfil</button>
+                </div>
+
+                <div id="foto-cropper-ui" class="hidden flex-1 flex-col h-full w-full">
+                    <div class="relative flex-1 w-full bg-slate-900 rounded-xl overflow-hidden mb-4 shadow-inner"><img id="image-to-crop" src="" style="display:block; max-width: 100%;"></div>
+                    <div class="flex gap-3 mb-6">
+                        <button class="flex-1 bg-slate-200 text-slate-700 font-bold py-3 rounded-lg text-xs" onclick="cancelarRecorte()">VOLVER</button>
+                        <button class="flex-[2] bg-[#d4af37] text-[#0a1128] font-black py-3 rounded-lg text-xs shadow-md" id="btn-guardar-recorte" onclick="procesarYSubirRecorte()">GUARDAR ENCUADRE</button>
                     </div>
                 </div>
-                <button onclick="cambiarPantallaLogin('screen-foto')" class="bg-slate-100 text-[#0a1128] p-3 rounded-xl hover:bg-slate-200 transition-colors shadow-sm"><i data-lucide="camera" class="w-5 h-5"></i></button>
+            </div>
+        </div>
+
+        <!-- PANTALLA 3: LEGAJO Y CREDENCIAL (WALLET) -->
+        <div id="screen-wallet" class="screen">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-between items-center relative overflow-hidden">
+                <div class="absolute right-0 top-0 bottom-0 w-2 bg-emerald-400"></div>
+                <div>
+                    <div class="text-[9px] text-emerald-600 font-bold uppercase tracking-widest flex items-center gap-1 mb-1"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sistema Activo</div>
+                    <div class="text-sm font-black text-[#0a1128] font-title uppercase tracking-tight line-clamp-1" id="user-name">---</div>
+                    <div class="text-[10px] font-mono font-bold text-slate-500" id="user-profesion">---</div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-[#0a1128] text-[#d4af37] flex items-center justify-center shadow-md shrink-0 border border-[#d4af37]">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                </div>
+            </div>
+            
+            <div class="card-viewport" id="card-viewport">
+                <div id="carnet-render"><div class="flex items-center justify-center h-full w-full text-slate-400 bg-slate-100"><i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i></div></div>
+            </div>
+            
+            <div class="view-toggles">
+                <button class="btn-toggle active" id="btn-toggle-front" onclick="cambiarVista('front')">FRENTE</button>
+                <button class="btn-toggle" id="btn-toggle-back" onclick="cambiarVista('back')">DORSO Y QR</button>
             </div>
 
-            <form id="form-perfil" onsubmit="guardarPerfil(event)">
-                <div class="mb-3">
-                    <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Teléfono / WhatsApp</label>
-                    <input type="tel" id="perfil-telefono" class="form-input text-sm mb-0" placeholder="Ej: +54 9 11...">
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner">
+                    <i data-lucide="eye" class="w-5 h-5 text-blue-400 mx-auto mb-1"></i>
+                    <h4 class="text-white font-black text-xl font-mono" id="metric-vistas">0</h4>
+                    <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Búsquedas Mensuales</p>
                 </div>
-                <div class="mb-3">
-                    <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Email de Contacto</label>
-                    <input type="email" id="perfil-email" class="form-input text-sm mb-0" placeholder="correo@ejemplo.com">
+                <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner cursor-pointer hover:bg-slate-700 transition-colors" onclick="abrirPerfil()">
+                    <i data-lucide="user-cog" class="w-5 h-5 text-emerald-400 mx-auto mb-1"></i>
+                    <h4 class="text-white font-black text-xl font-mono">EDITAR</h4>
+                    <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Actualizar Datos</p>
                 </div>
-                <div class="mb-5">
-                    <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Enlace LinkedIn (Opcional)</label>
-                    <input type="url" id="perfil-linkedin" class="form-input text-sm mb-0" placeholder="https://linkedin.com/in/...">
-                </div>
-                
-                <button type="submit" id="btn-guardar-perfil" class="w-full bg-[#0a1128] text-[#d4af37] font-black uppercase text-xs tracking-wider py-4 rounded-xl flex justify-center items-center gap-2 shadow-md transition-transform active:scale-95">
-                    <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios
-                </button>
-            </form>
-        </div>
-        <button class="w-full bg-slate-200 text-slate-600 font-bold text-xs py-4 rounded-xl uppercase tracking-wider mb-6" onclick="switchNavTab('wallet')">Cancelar y Volver</button>
-    </div>
-
-    <!-- PANTALLA 4: PORTAL CIENTÍFICO -->
-    <div id="screen-portal" class="screen">
-        <div class="mb-4 bg-white p-4 rounded-xl border border-slate-200 text-center">
-            <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Portal Científico</h2>
-            <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Feed Oficial de Actualidad</p>
-        </div>
-        <div id="feed-portal-container" class="space-y-4 pb-4">
-            <div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>
-        </div>
-    </div>
-
-    <!-- PANTALLA 5: BIBLIOTECA PREMIUM -->
-    <div id="screen-biblioteca" class="screen">
-        <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center">
-            <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Biblioteca</h2>
-            <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Repositorio Premium liberado</p>
-        </div>
-        <div id="wallet-biblioteca-container" class="space-y-3 pb-4">
-            <div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>
-        </div>
-    </div>
-
-    <!-- PANTALLA 6: TESIS Y PUBLICACIONES -->
-    <div id="screen-publicaciones" class="screen">
-        <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center">
-            <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Investigación</h2>
-            <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Presentación de Tesis al Comité</p>
-        </div>
-
-        <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm form-container">
-            <h3 class="font-bold text-sm text-[#0a1128] mb-3 flex items-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4 text-[#d4af37]"></i> Subir Documento</h3>
-            <form id="form-subir-tesis" onsubmit="subirPublicacion(event)">
-                <input type="text" id="tesis-titulo" class="form-input text-sm" placeholder="Título de la publicación" required>
-                <textarea id="tesis-resumen" class="form-input text-sm" placeholder="Breve resumen (máx 300 caracteres)..." rows="3" maxlength="300" required></textarea>
-                
-                <div class="mb-4">
-                    <label class="block text-xs font-bold text-slate-500 mb-1">Archivo PDF (Max. 10MB)</label>
-                    <input type="file" id="tesis-pdf" accept=".pdf" required class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#0a1128] file:text-[#d4af37]">
-                </div>
-                
-                <button type="submit" id="btn-subir-tesis" class="w-full bg-[#d4af37] text-[#0a1128] font-black uppercase text-xs tracking-wider py-3 rounded-xl flex justify-center items-center gap-2">
-                    <i data-lucide="send" class="w-4 h-4"></i> Enviar a Comité
-                </button>
-            </form>
-        </div>
-
-        <h3 class="font-bold text-xs text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-2">Estado de mis envíos</h3>
-        <div id="lista-mis-tesis" class="space-y-3 pb-4"></div>
-    </div>
-
-    <!-- MODAL NOTIFICACIONES -->
-    <div id="modal-notificaciones" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex justify-end">
-        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col animate-slide-in">
-            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-[#0a1128] text-white">
-                <h3 class="font-black uppercase tracking-widest text-sm flex items-center gap-2"><i data-lucide="bell" class="w-4 h-4 text-[#d4af37]"></i> Centro de Alertas</h3>
-                <button onclick="cerrarModalSeguro('modal-notificaciones')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
             </div>
-            <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50" id="lista-notificaciones"></div>
-        </div>
-    </div>
 
-    <!-- MODAL DIPLOMAS -->
-    <div id="modal-diplomas" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden flex flex-col p-4 pt-10">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-white font-black uppercase text-xl"><i data-lucide="award" class="inline w-5 h-5 text-[#d4af37]"></i> Títulos Registrados</h3>
-            <button onclick="cerrarModalSeguro('modal-diplomas')" class="text-slate-400 hover:text-white"><i data-lucide="x-circle" class="w-8 h-8"></i></button>
+            <div class="grid grid-cols-2 gap-3 mb-8">
+                <button id="btn-descargar-carnet" class="bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="descargarCarnetOficial()">
+                    <i data-lucide="download" class="w-5 h-5 text-[#d4af37]"></i> Bajar Documento (PDF)
+                </button>
+                <button class="bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="abrirModalDiplomas()">
+                    <i data-lucide="award" class="w-5 h-5 text-blue-600"></i> Mis Títulos
+                </button>
+            </div>
         </div>
-        <div class="flex-1 overflow-y-auto space-y-4 pb-10" id="lista-diplomas-modal"></div>
-    </div>
 
-    <!-- BARRA NAVEGACIÓN INFERIOR PWA -->
-    <div class="bottom-nav hidden" id="bottom-nav">
-        <div class="nav-item active" id="tab-wallet" onclick="switchNavTab('wallet')">
-            <i data-lucide="id-card" class="w-6 h-6 mb-1"></i><span>Credencial</span>
+        <!-- PANTALLA DE EDICIÓN DE PERFIL -->
+        <div id="screen-perfil" class="screen">
+            <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center">
+                <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Mi Perfil</h2>
+                <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Gestión de datos de contacto</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm form-container">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+                    <div class="flex items-center gap-3">
+                        <img id="perfil-foto-preview" src="" class="w-12 h-12 rounded-full object-cover border-2 border-[#d4af37]">
+                        <div>
+                            <h4 class="font-bold text-sm text-[#0a1128]">Fotografía Oficial</h4>
+                            <p class="text-[9px] text-slate-400">Visible en padrón nacional</p>
+                        </div>
+                    </div>
+                    <button onclick="cambiarPantallaLogin('screen-foto')" class="bg-slate-100 text-[#0a1128] p-3 rounded-xl hover:bg-slate-200 transition-colors shadow-sm"><i data-lucide="camera" class="w-5 h-5"></i></button>
+                </div>
+
+                <form id="form-perfil" onsubmit="guardarPerfil(event)">
+                    <div class="mb-3">
+                        <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Teléfono / WhatsApp</label>
+                        <input type="tel" id="perfil-telefono" class="form-input text-sm mb-0" placeholder="Ej: +54 9 11...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Email de Contacto</label>
+                        <input type="email" id="perfil-email" class="form-input text-sm mb-0" placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Enlace LinkedIn (Opcional)</label>
+                        <input type="url" id="perfil-linkedin" class="form-input text-sm mb-0" placeholder="https://linkedin.com/in/...">
+                    </div>
+                    
+                    <button type="submit" id="btn-guardar-perfil" class="w-full bg-[#0a1128] text-[#d4af37] font-black uppercase text-xs tracking-wider py-4 rounded-xl flex justify-center items-center gap-2 shadow-md transition-transform active:scale-95">
+                        <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios
+                    </button>
+                </form>
+            </div>
+            <button class="w-full bg-slate-200 text-slate-600 font-bold text-xs py-4 rounded-xl uppercase tracking-wider mb-6" onclick="switchNavTab('wallet')">Cancelar y Volver</button>
         </div>
-        <div class="nav-item" id="tab-portal" onclick="switchNavTab('portal')">
-            <i data-lucide="newspaper" class="w-6 h-6 mb-1"></i><span>Portal</span>
+
+        <!-- PANTALLA 4: PORTAL CIENTÍFICO -->
+        <div id="screen-portal" class="screen">
+            <div class="mb-4 bg-white p-4 rounded-xl border border-slate-200 text-center">
+                <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Portal Científico</h2>
+                <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Feed Oficial de Actualidad</p>
+            </div>
+            <div id="feed-portal-container" class="space-y-4 pb-4">
+                <div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>
+            </div>
         </div>
-        <div class="nav-item" id="tab-biblioteca" onclick="switchNavTab('biblioteca')">
-            <i data-lucide="library" class="w-6 h-6 mb-1"></i><span>Biblioteca</span>
+
+        <!-- PANTALLA 5: BIBLIOTECA PREMIUM -->
+        <div id="screen-biblioteca" class="screen">
+            <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center">
+                <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Biblioteca</h2>
+                <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Repositorio Premium liberado</p>
+            </div>
+            <div id="wallet-biblioteca-container" class="space-y-3 pb-4">
+                <div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>
+            </div>
         </div>
-        <div class="nav-item" id="tab-publicaciones" onclick="switchNavTab('publicaciones')">
-            <i data-lucide="microscope" class="w-6 h-6 mb-1"></i><span>Tesis</span>
+
+        <!-- PANTALLA 6: TESIS Y PUBLICACIONES -->
+        <div id="screen-publicaciones" class="screen">
+            <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center">
+                <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Investigación</h2>
+                <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Presentación de Tesis al Comité</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm form-container">
+                <h3 class="font-bold text-sm text-[#0a1128] mb-3 flex items-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4 text-[#d4af37]"></i> Subir Documento</h3>
+                <form id="form-subir-tesis" onsubmit="subirPublicacion(event)">
+                    <input type="text" id="tesis-titulo" class="form-input text-sm" placeholder="Título de la publicación" required>
+                    <textarea id="tesis-resumen" class="form-input text-sm" placeholder="Breve resumen (máx 300 caracteres)..." rows="3" maxlength="300" required></textarea>
+                    
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-slate-500 mb-1">Archivo PDF (Max. 10MB)</label>
+                        <input type="file" id="tesis-pdf" accept=".pdf" required class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#0a1128] file:text-[#d4af37]">
+                    </div>
+                    
+                    <button type="submit" id="btn-subir-tesis" class="w-full bg-[#d4af37] text-[#0a1128] font-black uppercase text-xs tracking-wider py-3 rounded-xl flex justify-center items-center gap-2">
+                        <i data-lucide="send" class="w-4 h-4"></i> Enviar a Comité
+                    </button>
+                </form>
+            </div>
+
+            <h3 class="font-bold text-xs text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-2">Estado de mis envíos</h3>
+            <div id="lista-mis-tesis" class="space-y-3 pb-4"></div>
         </div>
+
+        <!-- MODAL NOTIFICACIONES -->
+        <div id="modal-notificaciones" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex justify-end">
+            <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col animate-slide-in modal-centered ml-auto">
+                <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-[#0a1128] text-white">
+                    <h3 class="font-black uppercase tracking-widest text-sm flex items-center gap-2"><i data-lucide="bell" class="w-4 h-4 text-[#d4af37]"></i> Centro de Alertas</h3>
+                    <button onclick="cerrarModalSeguro('modal-notificaciones')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+                </div>
+                <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50" id="lista-notificaciones"></div>
+            </div>
+        </div>
+
+        <!-- MODAL DIPLOMAS -->
+        <div id="modal-diplomas" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden flex flex-col p-4 pt-10">
+            <div class="modal-centered flex flex-col h-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-white font-black uppercase text-xl"><i data-lucide="award" class="inline w-5 h-5 text-[#d4af37]"></i> Títulos Registrados</h3>
+                    <button onclick="cerrarModalSeguro('modal-diplomas')" class="text-slate-400 hover:text-white"><i data-lucide="x-circle" class="w-8 h-8"></i></button>
+                </div>
+                <div class="flex-1 overflow-y-auto space-y-4 pb-10" id="lista-diplomas-modal"></div>
+            </div>
+        </div>
+
+        <!-- BARRA NAVEGACIÓN INFERIOR PWA -->
+        <div class="bottom-nav hidden" id="bottom-nav">
+            <div class="nav-item active" id="tab-wallet" onclick="switchNavTab('wallet')">
+                <i data-lucide="id-card" class="w-6 h-6 mb-1"></i><span>Credencial</span>
+            </div>
+            <div class="nav-item" id="tab-portal" onclick="switchNavTab('portal')">
+                <i data-lucide="newspaper" class="w-6 h-6 mb-1"></i><span>Portal</span>
+            </div>
+            <div class="nav-item" id="tab-biblioteca" onclick="switchNavTab('biblioteca')">
+                <i data-lucide="library" class="w-6 h-6 mb-1"></i><span>Biblioteca</span>
+            </div>
+            <div class="nav-item" id="tab-publicaciones" onclick="switchNavTab('publicaciones')">
+                <i data-lucide="microscope" class="w-6 h-6 mb-1"></i><span>Tesis</span>
+            </div>
+        </div>
+
     </div>
 
     <script>
