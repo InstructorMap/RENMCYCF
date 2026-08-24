@@ -222,16 +222,18 @@
             background: #cbd5e1;
         }
 
-        /* FOTO CROPPER */
+        /* ==========================================
+           PANTALLA FOTO - STICKY BUTTONS SIEMPRE VISIBLES
+           ========================================== */
         #screen-foto {
-            padding-bottom: 30px;
+            padding-bottom: 0;
+            overflow-y: auto;
         }
         #foto-selector-ui {
             display: flex;
             flex-direction: column;
             justify-content: center;
             gap: 12px;
-            padding-bottom: 20px;
             flex: 1;
         }
         #foto-cropper-ui {
@@ -239,7 +241,6 @@
             flex-direction: column;
             flex: 1;
             gap: 12px;
-            padding-bottom: 20px;
         }
         .foto-btn {
             padding: 14px 20px;
@@ -257,6 +258,18 @@
             min-height: 50px;
         }
         .foto-btn:active { transform: scale(0.97); }
+        
+        /* Sticky actions para el cropper */
+        .foto-sticky-actions {
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(to top, white 70%, transparent 100%);
+            padding: 15px 0 10px;
+            z-index: 20;
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
 
         /* RESPONSIVE */
         @media (min-width: 768px) {
@@ -381,7 +394,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA 2.5: FOTO CROPPER -->
+    <!-- PANTALLA 2.5: FOTO CROPPER - STICKY BUTTONS SIEMPRE VISIBLES -->
     <div id="screen-foto" class="screen bg-white absolute inset-0 z-50">
         <div class="max-w-md mx-auto w-full flex flex-col h-full pt-2 text-center">
             <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2"><i data-lucide="camera" class="w-5 h-5"></i></div>
@@ -392,7 +405,8 @@
                 La fotografía será su identidad. Debe ser en <strong>primer plano, fondo claro, sin anteojos oscuros ni gorras.</strong>
             </div>
 
-            <div id="foto-selector-ui" class="flex-1 flex flex-col justify-center gap-3" style="padding-bottom: 20px;">
+            <!-- SELECTOR DE FOTO -->
+            <div id="foto-selector-ui" class="flex-1 flex flex-col justify-center gap-3">
                 <button class="foto-btn bg-[#0a1128] text-white hover:bg-slate-800 shadow-lg" onclick="abrirSelectorArchivo(true)">
                     <i data-lucide="camera" class="w-5 h-5 text-[#d4af37]"></i> TOMAR FOTO
                 </button>
@@ -404,11 +418,14 @@
                 <button id="btn-cerrar-foto" onclick="abrirPerfil()" class="hidden mt-2 text-[10px] font-black uppercase text-slate-400 hover:text-slate-600 underline">Cancelar y volver al Perfil</button>
             </div>
 
-            <div id="foto-cropper-ui" class="hidden flex-1 flex-col h-full w-full" style="gap: 12px; padding-bottom: 20px;">
-                <div class="relative flex-1 w-full bg-slate-900 rounded-xl overflow-hidden shadow-inner" style="min-height: 300px;">
-                    <img id="image-to-crop" src="" style="display:block; max-width: 100%;">
+            <!-- CROPPER UI -->
+            <div id="foto-cropper-ui" class="hidden flex-1 flex-col h-full w-full" style="gap: 0;">
+                <div class="relative flex-1 w-full bg-slate-900 rounded-xl overflow-hidden shadow-inner" style="min-height: 250px; max-height: calc(100vh - 250px);">
+                    <img id="image-to-crop" src="" style="display:block; max-width: 100%; max-height: 100%;">
                 </div>
-                <div class="flex gap-3">
+                
+                <!-- BOTONES STICKY SIEMPRE VISIBLES -->
+                <div class="foto-sticky-actions">
                     <button class="flex-1 foto-btn bg-slate-200 text-slate-700 hover:bg-slate-300" onclick="cancelarRecorte()">VOLVER</button>
                     <button class="flex-[2] foto-btn bg-[#d4af37] text-[#0a1128] hover:bg-yellow-500 shadow-md" id="btn-guardar-recorte" onclick="procesarYSubirRecorte()">GUARDAR ENCUADRE</button>
                 </div>
@@ -463,10 +480,9 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE EDICIÓN DE PERFIL - DISEÑO PREMIUM -->
+    <!-- PANTALLA DE EDICIÓN DE PERFIL -->
     <div id="screen-perfil" class="screen">
         <div class="perfil-content">
-            <!-- FOTO DE PERFIL GRANDE Y CENTRADA -->
             <div class="perfil-foto-section">
                 <img id="perfil-foto-preview" src="" class="perfil-foto-avatar" alt="Foto de perfil">
                 <div>
@@ -478,7 +494,6 @@
                 </button>
             </div>
 
-            <!-- FORMULARIO DE CONTACTO -->
             <div class="perfil-form-section">
                 <h3 class="font-black text-xs text-[#0a1128] uppercase mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
                     <i data-lucide="contact" class="w-4 h-4 text-[#d4af37]"></i> Datos de Contacto
@@ -498,7 +513,6 @@
             </div>
         </div>
 
-        <!-- BOTONES STICKY SIEMPRE VISIBLES -->
         <div class="perfil-actions">
             <button type="button" class="btn-guardar" id="btn-guardar-perfil" onclick="guardarPerfil(event)">
                 <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios
