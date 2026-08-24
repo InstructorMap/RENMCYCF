@@ -26,20 +26,6 @@
         .glass-panel { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
 
         .app-header { background: linear-gradient(135deg, #0a1128 0%, #1e3a8a 50%, #0a1128 100%); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.15); position: sticky; top: 0; border-bottom: 3px solid var(--forense-gold); }
-        .app-header::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--forense-gold), transparent);
-            animation: headerShine 3s ease-in-out infinite;
-        }
-        @keyframes headerShine {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
         .header-logo-ring {
             width: 44px;
             height: 44px;
@@ -74,11 +60,10 @@
             transform: translate(-50%, -50%);
             z-index: 0;
             pointer-events: none;
-            opacity: 0.04;
-            width: 600px;
-            height: 600px;
+            opacity: 0.05;
+            width: 500px;
+            height: 500px;
             object-fit: contain;
-            filter: grayscale(100%);
         }
         .watermark-ring {
             position: fixed;
@@ -87,8 +72,8 @@
             transform: translate(-50%, -50%);
             z-index: 0;
             pointer-events: none;
-            width: 800px;
-            height: 800px;
+            width: 700px;
+            height: 700px;
             border-radius: 50%;
             border: 3px dashed rgba(10, 17, 40, 0.06);
         }
@@ -120,72 +105,124 @@
         
         .tc-box { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; max-height: 300px; overflow-y: auto; text-align: left; font-size: 12px; line-height: 1.6; color: #475569; margin-bottom: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); }
         .tc-box h3 { color: var(--forense-navy); font-weight: 900; font-size: 14px; margin-bottom: 10px; }
-        .form-input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-bottom: 15px; background: white; color: #1e293b; }
+        .form-input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-bottom: 12px; background: white; color: #1e293b; }
         .form-input:focus { border-color: var(--forense-navy); box-shadow: 0 0 0 3px rgba(10, 17, 40, 0.1); }
-        .form-container { margin-bottom: 30px; }
 
         /* ==========================================
-           LAYOUT RESPONSIVE
+           PANTALLA DE PERFIL - DISEÑO PREMIUM
            ========================================== */
-        @media (min-width: 768px) {
-            .screen { padding: 30px; padding-bottom: 90px; }
-            
-            .screen-wallet-content {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 30px;
-                max-width: 700px;
-                margin: 0 auto;
-                width: 100%;
-            }
-            .card-section {
-                width: 100%;
-                max-width: 500px;
-            }
-            .actions-section {
-                width: 100%;
-                max-width: 500px;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
-            }
-            .actions-section .full-width {
-                grid-column: 1 / -1;
-            }
-            
-            .screen-perfil .form-container,
-            .screen-perfil .btn-cancelar {
-                max-width: 480px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            
-            .screen-portal .content-centered,
-            .screen-biblioteca .content-centered,
-            .screen-publicaciones .content-centered {
-                max-width: 600px;
-                margin-left: auto;
-                margin-right: auto;
-            }
+        #screen-perfil {
+            padding-bottom: 20px;
+        }
+        .perfil-content {
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .perfil-foto-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+        .perfil-foto-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--forense-gold);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        .perfil-foto-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--forense-navy);
+            color: var(--forense-gold);
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .perfil-foto-btn:hover {
+            background: #1e293b;
+            transform: translateY(-1px);
+        }
+        .perfil-form-section {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+        .perfil-actions {
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(to top, var(--bg-app) 80%, transparent 100%);
+            padding: 15px 0 10px;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .perfil-actions .btn-guardar {
+            width: 100%;
+            padding: 14px;
+            background: var(--forense-navy);
+            color: var(--forense-gold);
+            border: none;
+            border-radius: 14px;
+            font-weight: 900;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .perfil-actions .btn-guardar:hover {
+            background: #1e293b;
+            transform: translateY(-1px);
+        }
+        .perfil-actions .btn-cancelar {
+            width: 100%;
+            padding: 12px;
+            background: #e2e8f0;
+            color: #475569;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .perfil-actions .btn-cancelar:hover {
+            background: #cbd5e1;
         }
 
-        @media (min-width: 1024px) {
-            .screen { padding: 40px; padding-bottom: 90px; }
-            .card-section {
-                max-width: 550px;
-            }
-            .card-viewport {
-                max-width: 550px;
-            }
-            .actions-section {
-                max-width: 550px;
-            }
-        }
-
-        /* ==========================================
-           FOTO CROPPER - BOTONES SIEMPRE VISIBLES
-           ========================================== */
+        /* FOTO CROPPER */
         #screen-foto {
             padding-bottom: 30px;
         }
@@ -221,58 +258,56 @@
         }
         .foto-btn:active { transform: scale(0.97); }
 
-        /* ==========================================
-           PANTALLA PERFIL - BOTONES SIEMPRE VISIBLES
-           ========================================== */
-        #screen-perfil {
-            padding-bottom: 30px;
-        }
-        #screen-perfil .form-container {
-            margin-bottom: 15px;
-        }
-        /* Botones sticky al fondo de la pantalla de perfil */
-        .perfil-actions {
-            position: sticky;
-            bottom: 0;
-            background: linear-gradient(to top, var(--bg-app) 70%, transparent 100%);
-            padding-top: 15px;
-            padding-bottom: 5px;
-            z-index: 5;
-        }
-        .perfil-actions .btn-cancelar {
-            margin-bottom: 0;
-        }
-        /* En PC, los botones van en fila */
+        /* RESPONSIVE */
         @media (min-width: 768px) {
-            .perfil-actions {
+            .screen { padding: 30px; padding-bottom: 90px; }
+            .screen-wallet-content {
                 display: flex;
-                gap: 12px;
-                max-width: 480px;
-                margin-left: auto;
-                margin-right: auto;
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+                max-width: 700px;
+                margin: 0 auto;
                 width: 100%;
             }
+            .card-section {
+                width: 100%;
+                max-width: 500px;
+            }
+            .actions-section {
+                width: 100%;
+                max-width: 500px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+            .actions-section .full-width {
+                grid-column: 1 / -1;
+            }
+            .perfil-actions {
+                flex-direction: row;
+                gap: 12px;
+            }
+            .perfil-actions .btn-guardar {
+                flex: 1;
+            }
             .perfil-actions .btn-cancelar {
-                flex-shrink: 0;
                 width: auto;
                 padding-left: 20px;
                 padding-right: 20px;
-            }
-            #btn-guardar-perfil {
-                flex: 1;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- MARCA DE AGUA DE FONDO -->
+    <!-- MARCA DE AGUA DE FONDO (LOGO SECUNDARIO) -->
     <div class="watermark-bg"></div>
     <div class="watermark-ring"></div>
-    <img id="watermark-logo-img" class="watermark-logo" src="" alt="">
+    <img id="watermark-logo-img" class="watermark-logo" src="https://ui-avatars.com/api/?name=R+N&background=fff&color=0a1128" alt="">
 
-    <div id="app-header" class="app-header hidden" style="position: relative;">
-        <div class="flex items-center gap-3 relative z-10">
+    <div id="app-header" class="app-header hidden">
+        <div class="flex items-center gap-3">
             <div class="header-logo-ring">
                 <i data-lucide="fingerprint" class="w-6 h-6 text-[#0a1128]" id="header-default-logo"></i>
                 <img id="nav-mini-logo" src="https://ui-avatars.com/api/?name=R+N&background=fff&color=0a1128" class="hidden">
@@ -283,7 +318,7 @@
             </div>
         </div>
         
-        <div class="flex items-center gap-4 relative z-10">
+        <div class="flex items-center gap-4">
             <button onclick="abrirNotificaciones()" class="relative text-slate-300 hover:text-white transition-colors ml-2 hidden" id="btn-campana">
                 <i data-lucide="bell" class="w-6 h-6"></i>
                 <span id="badge-notificaciones" class="absolute -top-1 -right-1 flex h-2 w-2">
@@ -346,7 +381,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA 2.5: FOTO CROPPER - BOTONES SIEMPRE VISIBLES -->
+    <!-- PANTALLA 2.5: FOTO CROPPER -->
     <div id="screen-foto" class="screen bg-white absolute inset-0 z-50">
         <div class="max-w-md mx-auto w-full flex flex-col h-full pt-2 text-center">
             <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2"><i data-lucide="camera" class="w-5 h-5"></i></div>
@@ -384,7 +419,6 @@
     <!-- PANTALLA 3: LEGAJO Y CREDENCIAL (WALLET) -->
     <div id="screen-wallet" class="screen">
         <div class="screen-wallet-content">
-            <!-- SECCIÓN DEL CARNET -->
             <div class="card-section">
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-between items-center relative overflow-hidden">
                     <div class="absolute right-0 top-0 bottom-0 w-2 bg-emerald-400"></div>
@@ -408,7 +442,6 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN DE ACCIONES - GRID SIMÉTRICO -->
             <div class="actions-section">
                 <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner">
                     <i data-lucide="eye" class="w-5 h-5 text-blue-400 mx-auto mb-1"></i>
@@ -430,80 +463,80 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE EDICIÓN DE PERFIL - CORREGIDA -->
+    <!-- PANTALLA DE EDICIÓN DE PERFIL - DISEÑO PREMIUM -->
     <div id="screen-perfil" class="screen">
-        <div class="mb-4 bg-white p-4 rounded-xl border border-slate-200 text-center content-centered">
-            <h2 class="text-lg font-black text-[#0a1128] font-title uppercase">Mi Perfil</h2>
-            <p class="text-[9px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Gestión de datos de contacto</p>
-        </div>
-
-        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm form-container content-centered">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
-                <div class="flex items-center gap-3">
-                    <img id="perfil-foto-preview" src="" class="w-10 h-10 rounded-full object-cover border-2 border-[#d4af37]">
-                    <div>
-                        <h4 class="font-bold text-xs text-[#0a1128]">Fotografía Oficial</h4>
-                        <p class="text-[8px] text-slate-400">Visible en padrón nacional</p>
-                    </div>
+        <div class="perfil-content">
+            <!-- FOTO DE PERFIL GRANDE Y CENTRADA -->
+            <div class="perfil-foto-section">
+                <img id="perfil-foto-preview" src="" class="perfil-foto-avatar" alt="Foto de perfil">
+                <div>
+                    <h3 class="font-black text-sm text-[#0a1128] text-center uppercase">Fotografía Oficial</h3>
+                    <p class="text-[9px] text-slate-400 text-center">Visible en el Padrón Nacional</p>
                 </div>
-                <button onclick="cambiarPantallaLogin('screen-foto')" class="bg-slate-100 text-[#0a1128] p-2.5 rounded-xl hover:bg-slate-200 transition-colors shadow-sm"><i data-lucide="camera" class="w-4 h-4"></i></button>
+                <button onclick="cambiarPantallaLogin('screen-foto')" class="perfil-foto-btn">
+                    <i data-lucide="camera" class="w-4 h-4"></i> Cambiar Fotografía
+                </button>
             </div>
 
-            <form id="form-perfil" onsubmit="guardarPerfil(event)">
-                <div class="mb-2">
+            <!-- FORMULARIO DE CONTACTO -->
+            <div class="perfil-form-section">
+                <h3 class="font-black text-xs text-[#0a1128] uppercase mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
+                    <i data-lucide="contact" class="w-4 h-4 text-[#d4af37]"></i> Datos de Contacto
+                </h3>
+                <div class="mb-3">
                     <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Teléfono / WhatsApp</label>
-                    <input type="tel" id="perfil-telefono" class="form-input text-sm mb-0 py-2.5" placeholder="Ej: +54 9 11...">
-                </div>
-                <div class="mb-2">
-                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Email de Contacto</label>
-                    <input type="email" id="perfil-email" class="form-input text-sm mb-0 py-2.5" placeholder="correo@ejemplo.com">
+                    <input type="tel" id="perfil-telefono" class="form-input text-sm" placeholder="Ej: +54 9 11...">
                 </div>
                 <div class="mb-3">
-                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Enlace LinkedIn (Opcional)</label>
-                    <input type="url" id="perfil-linkedin" class="form-input text-sm mb-0 py-2.5" placeholder="https://linkedin.com/in/...">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Email de Contacto</label>
+                    <input type="email" id="perfil-email" class="form-input text-sm" placeholder="correo@ejemplo.com">
                 </div>
-            </form>
+                <div>
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Enlace LinkedIn (Opcional)</label>
+                    <input type="url" id="perfil-linkedin" class="form-input text-sm" placeholder="https://linkedin.com/in/...">
+                </div>
+            </div>
         </div>
 
-        <!-- BOTONES SIEMPRE VISIBLES - STICKY AL FONDO -->
+        <!-- BOTONES STICKY SIEMPRE VISIBLES -->
         <div class="perfil-actions">
-            <button type="button" id="btn-guardar-perfil" class="w-full bg-[#0a1128] text-[#d4af37] font-black uppercase text-xs tracking-wider py-4 rounded-xl flex justify-center items-center gap-2 shadow-md transition-transform active:scale-95 hover:bg-slate-800" onclick="guardarPerfil(event)">
+            <button type="button" class="btn-guardar" id="btn-guardar-perfil" onclick="guardarPerfil(event)">
                 <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios
             </button>
-            <button class="btn-cancelar w-full bg-slate-200 text-slate-600 font-bold text-xs py-4 rounded-xl uppercase tracking-wider hover:bg-slate-300 transition-colors" onclick="switchNavTab('wallet')">Cancelar y Volver</button>
+            <button class="btn-cancelar" onclick="switchNavTab('wallet')">Cancelar y Volver</button>
         </div>
     </div>
 
     <!-- PANTALLA 4: PORTAL CIENTÍFICO -->
     <div id="screen-portal" class="screen">
-        <div class="mb-4 bg-white p-4 rounded-xl border border-slate-200 text-center content-centered">
+        <div class="mb-4 bg-white p-4 rounded-xl border border-slate-200 text-center">
             <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Portal Científico</h2>
             <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Feed Oficial de Actualidad</p>
         </div>
-        <div id="feed-portal-container" class="space-y-4 pb-4 content-centered">
+        <div id="feed-portal-container" class="space-y-4 pb-4">
             <div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>
         </div>
     </div>
 
     <!-- PANTALLA 5: BIBLIOTECA PREMIUM -->
     <div id="screen-biblioteca" class="screen">
-        <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center content-centered">
+        <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center">
             <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Biblioteca</h2>
             <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Repositorio Premium liberado</p>
         </div>
-        <div id="wallet-biblioteca-container" class="space-y-3 pb-4 content-centered">
+        <div id="wallet-biblioteca-container" class="space-y-3 pb-4">
             <div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>
         </div>
     </div>
 
     <!-- PANTALLA 6: TESIS Y PUBLICACIONES -->
     <div id="screen-publicaciones" class="screen">
-        <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center content-centered">
+        <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center">
             <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Investigación</h2>
             <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Presentación de Tesis al Comité</p>
         </div>
 
-        <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm form-container content-centered">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm">
             <h3 class="font-bold text-sm text-[#0a1128] mb-3 flex items-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4 text-[#d4af37]"></i> Subir Documento</h3>
             <form id="form-subir-tesis" onsubmit="subirPublicacion(event)">
                 <input type="text" id="tesis-titulo" class="form-input text-sm" placeholder="Título de la publicación" required>
@@ -520,8 +553,8 @@
             </form>
         </div>
 
-        <h3 class="font-bold text-xs text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-2 content-centered">Estado de mis envíos</h3>
-        <div id="lista-mis-tesis" class="space-y-3 pb-4 content-centered"></div>
+        <h3 class="font-bold text-xs text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-2">Estado de mis envíos</h3>
+        <div id="lista-mis-tesis" class="space-y-3 pb-4"></div>
     </div>
 
     <!-- MODAL NOTIFICACIONES -->
@@ -688,7 +721,7 @@
         }
 
         async function guardarPerfil(e) {
-            e.preventDefault();
+            if (e && e.preventDefault) e.preventDefault();
             const btn = el('btn-guardar-perfil'); if(!btn) return;
             const originalText = btn.innerHTML;
             btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> GUARDANDO...`; 
