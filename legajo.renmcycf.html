@@ -27,7 +27,8 @@
 
         .app-header { background-color: var(--forense-navy); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 50; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: sticky; top: 0; }
         
-        .screen { display: none; flex: 1; flex-direction: column; padding: 20px; padding-bottom: 90px; z-index: 2; position: relative; overflow-y: auto; opacity: 0; transform: translateX(20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* CORRECCIÓN 1: Aumentado padding-bottom para que la barra inferior no tape el contenido */
+        .screen { display: none; flex: 1; flex-direction: column; padding: 20px; padding-bottom: 120px; z-index: 2; position: relative; overflow-y: auto; opacity: 0; transform: translateX(20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .screen.active { display: flex; opacity: 1; transform: translateX(0); }
 
         .login-bg { position: fixed; inset: 0; z-index: 0; object-fit: cover; width: 100%; height: 100%; opacity: 0.2; filter: grayscale(30%); display: none; }
@@ -42,7 +43,8 @@
         .btn-toggle { background: transparent; border: none; padding: 8px 20px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
         .btn-toggle.active { background: white; color: var(--forense-navy); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; padding: 12px 5px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
+        /* CORRECCIÓN 2: Barra inferior con altura calculada correctamente */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; padding: 10px 5px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #94a3b8; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; }
         .nav-item.active { color: var(--forense-navy); transform: translateY(-2px); }
         .nav-item.active i { color: var(--forense-gold); }
@@ -59,6 +61,9 @@
         .tc-box h3 { color: var(--forense-navy); font-weight: 900; font-size: 14px; margin-bottom: 10px; }
         .form-input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-bottom: 15px; background: white; color: #1e293b; }
         .form-input:focus { border-color: var(--forense-navy); box-shadow: 0 0 0 3px rgba(10, 17, 40, 0.1); }
+        
+        /* CORRECCIÓN 3: Margen adicional para formularios en pantallas con scroll */
+        .form-container { margin-bottom: 30px; }
     </style>
 </head>
 <body>
@@ -158,7 +163,7 @@
 
             <div id="foto-cropper-ui" class="hidden flex-1 flex-col h-full w-full">
                 <div class="relative flex-1 w-full bg-slate-900 rounded-xl overflow-hidden mb-4 shadow-inner"><img id="image-to-crop" src="" style="display:block; max-width: 100%;"></div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mb-6">
                     <button class="flex-1 bg-slate-200 text-slate-700 font-bold py-3 rounded-lg text-xs" onclick="cancelarRecorte()">VOLVER</button>
                     <button class="flex-[2] bg-[#d4af37] text-[#0a1128] font-black py-3 rounded-lg text-xs shadow-md" id="btn-guardar-recorte" onclick="procesarYSubirRecorte()">GUARDAR ENCUADRE</button>
                 </div>
@@ -195,7 +200,6 @@
                 <h4 class="text-white font-black text-xl font-mono" id="metric-vistas">0</h4>
                 <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Búsquedas Mensuales</p>
             </div>
-            <!-- BOTÓN EDITAR PERFIL -->
             <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner cursor-pointer hover:bg-slate-700 transition-colors" onclick="abrirPerfil()">
                 <i data-lucide="user-cog" class="w-5 h-5 text-emerald-400 mx-auto mb-1"></i>
                 <h4 class="text-white font-black text-xl font-mono">EDITAR</h4>
@@ -203,7 +207,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="grid grid-cols-2 gap-3 mb-8">
             <button id="btn-descargar-carnet" class="bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="descargarCarnetOficial()">
                 <i data-lucide="download" class="w-5 h-5 text-[#d4af37]"></i> Bajar Documento (PDF)
             </button>
@@ -220,8 +224,7 @@
             <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Gestión de datos de contacto</p>
         </div>
 
-        <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm">
-            <!-- Selector de Foto -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm form-container">
             <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
                 <div class="flex items-center gap-3">
                     <img id="perfil-foto-preview" src="" class="w-12 h-12 rounded-full object-cover border-2 border-[#d4af37]">
@@ -233,7 +236,6 @@
                 <button onclick="cambiarPantallaLogin('screen-foto')" class="bg-slate-100 text-[#0a1128] p-3 rounded-xl hover:bg-slate-200 transition-colors shadow-sm"><i data-lucide="camera" class="w-5 h-5"></i></button>
             </div>
 
-            <!-- Formulario Contacto -->
             <form id="form-perfil" onsubmit="guardarPerfil(event)">
                 <div class="mb-3">
                     <label class="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Teléfono / WhatsApp</label>
@@ -253,7 +255,7 @@
                 </button>
             </form>
         </div>
-        <button class="w-full bg-slate-200 text-slate-600 font-bold text-xs py-4 rounded-xl uppercase tracking-wider" onclick="switchNavTab('wallet')">Cancelar y Volver</button>
+        <button class="w-full bg-slate-200 text-slate-600 font-bold text-xs py-4 rounded-xl uppercase tracking-wider mb-6" onclick="switchNavTab('wallet')">Cancelar y Volver</button>
     </div>
 
     <!-- PANTALLA 4: PORTAL CIENTÍFICO -->
@@ -285,7 +287,7 @@
             <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Presentación de Tesis al Comité</p>
         </div>
 
-        <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm form-container">
             <h3 class="font-bold text-sm text-[#0a1128] mb-3 flex items-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4 text-[#d4af37]"></i> Subir Documento</h3>
             <form id="form-subir-tesis" onsubmit="subirPublicacion(event)">
                 <input type="text" id="tesis-titulo" class="form-input text-sm" placeholder="Título de la publicación" required>
@@ -456,13 +458,11 @@
             } catch (err) { alert("Error de red: " + err.message); btn.innerHTML = `Firmar Acuerdo`; btn.disabled = false; }
         }
 
-        // GESTIÓN DE PERFIL DE USUARIO
         function abrirPerfil() {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             safeClass('screen-perfil', 'add', 'active');
             
-            // Llenar campos con los datos actuales
             if(el('perfil-telefono')) el('perfil-telefono').value = alumnoActual.telefono_contacto || '';
             if(el('perfil-email')) el('perfil-email').value = alumnoActual.email_contacto || '';
             if(el('perfil-linkedin')) el('perfil-linkedin').value = alumnoActual.linkedin_url || '';
@@ -506,7 +506,6 @@
             }
         }
 
-        // CROPPER
         function abrirSelectorArchivo(usaCamara) { 
             const iCam = el('input-foto-camara'); const iOf = el('input-foto-oficial');
             if(usaCamara && iCam) iCam.click(); else if(iOf) iOf.click(); 
@@ -547,7 +546,6 @@
                     await db.from('renmcycf_padron').update({ foto_perfil_url: fotoUrl }).eq('id', alumnoActual.id);
                     alumnoActual.foto_perfil_url = fotoUrl; 
                     
-                    // Si viene desde "Mi Perfil", devolverlo al Perfil en lugar del Wallet general
                     if(document.getElementById('btn-cerrar-foto') && !document.getElementById('btn-cerrar-foto').classList.contains('hidden')) {
                         abrirPerfil();
                     } else {
@@ -563,7 +561,6 @@
             if(screenId !== 'screen-login' && el('dynamic-bg')) el('dynamic-bg').style.display = 'none';
             if(screenId === 'screen-tc') toggleBotonAceptar();
 
-            // Si entra a tomar foto y ya estaba logueado (editando perfil), mostramos botón de cancelar
             if(screenId === 'screen-foto') {
                 if (alumnoActual && alumnoActual.foto_perfil_url) {
                     safeClass('btn-cerrar-foto', 'remove', 'hidden');
@@ -581,7 +578,6 @@
             if(el('user-name')) el('user-name').innerText = `${alumnoActual.nombres} ${alumnoActual.apellidos}`;
             if(el('user-profesion')) el('user-profesion').innerText = alumnoActual.profesion || 'Profesional Titulado';
             
-            // Métricas reales de Base de Datos
             if(el('metric-vistas')) el('metric-vistas').innerText = alumnoActual.contador_vistas || 0;
             
             cargarNotificacionesFicticias();
