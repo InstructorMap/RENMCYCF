@@ -25,6 +25,7 @@
 
         .glass-panel { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
 
+        /* FRANJA AZUL SIEMPRE VISIBLE */
         .app-header { background: linear-gradient(135deg, #0a1128 0%, #1e3a8a 50%, #0a1128 100%); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.15); position: sticky; top: 0; border-bottom: 3px solid var(--forense-gold); }
         .header-logo-ring {
             width: 44px;
@@ -46,12 +47,13 @@
             padding: 4px;
         }
 
+        /* MARCAS DE AGUA CON Z-INDEX 0 */
         .watermark-bg {
             position: fixed;
             inset: 0;
             z-index: 0;
             pointer-events: none;
-            background-image: radial-gradient(circle at 50% 50%, rgba(10, 17, 40, 0.03) 0%, transparent 70%);
+            background-image: radial-gradient(circle at 50% 50%, rgba(10, 17, 40, 0.04) 0%, transparent 70%);
         }
         .watermark-logo {
             position: fixed;
@@ -60,7 +62,7 @@
             transform: translate(-50%, -50%);
             z-index: 0;
             pointer-events: none;
-            opacity: 0.05;
+            opacity: 0.06;
             width: 500px;
             height: 500px;
             object-fit: contain;
@@ -75,10 +77,11 @@
             width: 700px;
             height: 700px;
             border-radius: 50%;
-            border: 3px dashed rgba(10, 17, 40, 0.06);
+            border: 3px dashed rgba(10, 17, 40, 0.07);
         }
 
-        .screen { display: none; flex: 1; flex-direction: column; padding: 16px; padding-bottom: 90px; z-index: 2; position: relative; overflow-y: auto; opacity: 0; transform: translateX(20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* PANTALLAS CON FONDO TRANSPARENTE PARA QUE SE VEAN LAS MARCAS DE AGUA */
+        .screen { display: none; flex: 1; flex-direction: column; padding: 16px; padding-bottom: 90px; z-index: 2; position: relative; overflow-y: auto; opacity: 0; transform: translateX(20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; }
         .screen.active { display: flex; opacity: 1; transform: translateX(0); }
 
         .login-bg { position: fixed; inset: 0; z-index: 0; object-fit: cover; width: 100%; height: 100%; opacity: 0.15; filter: grayscale(30%); display: none; }
@@ -228,6 +231,7 @@
         #screen-foto {
             padding-bottom: 0;
             overflow-y: auto;
+            background: white;
         }
         #foto-selector-ui {
             display: flex;
@@ -271,15 +275,43 @@
             width: 100%;
         }
 
-        /* RESPONSIVE */
-        @media (min-width: 768px) {
+        /* ==========================================
+           GRID LAYOUT PARA ESCRITORIO (2 COLUMNAS)
+           ========================================== */
+        @media (max-width: 767px) {
+            /* MÓVIL: Apilado vertical (comportamiento actual) */
+            .screen-wallet-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                width: 100%;
+            }
+            .card-section {
+                width: 100%;
+                max-width: 420px;
+            }
+            .actions-section {
+                width: 100%;
+                max-width: 420px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .actions-section .full-width {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            /* TABLET: Apilado vertical centrado */
             .screen { padding: 30px; padding-bottom: 90px; }
             .screen-wallet-content {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 gap: 30px;
-                max-width: 700px;
+                max-width: 600px;
                 margin: 0 auto;
                 width: 100%;
             }
@@ -310,6 +342,66 @@
                 padding-right: 20px;
             }
         }
+
+        @media (min-width: 1024px) {
+            /* ESCRITORIO: Grid de 2 columnas */
+            .screen { padding: 30px; padding-bottom: 90px; }
+            
+            .screen-wallet-content {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+                max-width: 1100px;
+                margin: 0 auto;
+                width: 100%;
+                align-items: start;
+            }
+            
+            .card-section {
+                width: 100%;
+                max-width: 500px;
+                justify-self: center;
+            }
+            
+            .actions-section {
+                width: 100%;
+                max-width: 450px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                justify-self: start;
+            }
+            
+            /* El bloque de bienvenida va arriba en el panel derecho */
+            .card-section .welcome-block {
+                order: -1;
+            }
+            
+            .actions-section .full-width {
+                grid-column: 1 / -1;
+            }
+            
+            /* Grid interno para métricas y botones */
+            .actions-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+            
+            .perfil-actions {
+                flex-direction: row;
+                gap: 12px;
+                max-width: 600px;
+            }
+            .perfil-actions .btn-guardar {
+                flex: 1;
+            }
+            .perfil-actions .btn-cancelar {
+                width: auto;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -319,7 +411,8 @@
     <div class="watermark-ring"></div>
     <img id="watermark-logo-img" class="watermark-logo" src="https://ui-avatars.com/api/?name=R+N&background=fff&color=0a1128" alt="">
 
-    <div id="app-header" class="app-header hidden">
+    <!-- FRANJA AZUL SIEMPRE VISIBLE -->
+    <div id="app-header" class="app-header">
         <div class="flex items-center gap-3">
             <div class="header-logo-ring">
                 <i data-lucide="fingerprint" class="w-6 h-6 text-[#0a1128]" id="header-default-logo"></i>
@@ -433,11 +526,13 @@
         </div>
     </div>
 
-    <!-- PANTALLA 3: LEGAJO Y CREDENCIAL (WALLET) -->
+    <!-- PANTALLA 3: LEGAJO Y CREDENCIAL (WALLET) - GRID LAYOUT EN PC -->
     <div id="screen-wallet" class="screen">
         <div class="screen-wallet-content">
+            <!-- COLUMNA IZQUIERDA: CREDENCIAL -->
             <div class="card-section">
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-between items-center relative overflow-hidden">
+                <!-- BLOQUE DE BIENVENIDA (SOLO MÓVIL) -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-between items-center relative overflow-hidden welcome-block-mobile">
                     <div class="absolute right-0 top-0 bottom-0 w-2 bg-emerald-400"></div>
                     <div>
                         <div class="text-[9px] text-emerald-600 font-bold uppercase tracking-widest flex items-center gap-1 mb-1"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sistema Activo</div>
@@ -459,17 +554,35 @@
                 </div>
             </div>
 
+            <!-- COLUMNA DERECHA: PANEL DE ACCIONES (SOLO PC) -->
             <div class="actions-section">
-                <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner">
-                    <i data-lucide="eye" class="w-5 h-5 text-blue-400 mx-auto mb-1"></i>
-                    <h4 class="text-white font-black text-xl font-mono" id="metric-vistas">0</h4>
-                    <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Búsquedas</p>
+                <!-- BLOQUE DE BIENVENIDA PARA PC -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex justify-between items-center relative overflow-hidden welcome-block-desktop" style="display: none;">
+                    <div class="absolute right-0 top-0 bottom-0 w-2 bg-emerald-400"></div>
+                    <div>
+                        <div class="text-[9px] text-emerald-600 font-bold uppercase tracking-widest flex items-center gap-1 mb-1"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sistema Activo</div>
+                        <div class="text-sm font-black text-[#0a1128] font-title uppercase tracking-tight line-clamp-1" id="user-name-pc">---</div>
+                        <div class="text-[10px] font-mono font-bold text-slate-500" id="user-profesion-pc">---</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-[#0a1128] text-[#d4af37] flex items-center justify-center shadow-md shrink-0 border border-[#d4af37]">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
                 </div>
-                <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner cursor-pointer hover:bg-slate-700 transition-colors" onclick="abrirPerfil()">
-                    <i data-lucide="user-cog" class="w-5 h-5 text-emerald-400 mx-auto mb-1"></i>
-                    <h4 class="text-white font-black text-xl font-mono">EDITAR</h4>
-                    <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Actualizar Datos</p>
+                
+                <!-- GRID DE MÉTRICAS Y BOTONES -->
+                <div class="actions-grid">
+                    <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner">
+                        <i data-lucide="eye" class="w-5 h-5 text-blue-400 mx-auto mb-1"></i>
+                        <h4 class="text-white font-black text-xl font-mono" id="metric-vistas">0</h4>
+                        <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Búsquedas</p>
+                    </div>
+                    <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner cursor-pointer hover:bg-slate-700 transition-colors" onclick="abrirPerfil()">
+                        <i data-lucide="user-cog" class="w-5 h-5 text-emerald-400 mx-auto mb-1"></i>
+                        <h4 class="text-white font-black text-xl font-mono">EDITAR</h4>
+                        <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Actualizar Datos</p>
+                    </div>
                 </div>
+                
                 <button id="btn-descargar-carnet" class="full-width bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="descargarCarnetOficial()">
                     <i data-lucide="download" class="w-5 h-5 text-[#d4af37]"></i> Bajar Documento (PDF)
                 </button>
@@ -838,13 +951,36 @@
             switchNavTab('wallet');
             safeClass('bottom-nav', 'remove', 'hidden');
             if(el('dynamic-bg')) el('dynamic-bg').style.display = 'none';
-            if(el('user-name')) el('user-name').innerText = `${alumnoActual.nombres} ${alumnoActual.apellidos}`;
-            if(el('user-profesion')) el('user-profesion').innerText = alumnoActual.profesion || 'Profesional Titulado';
+            
+            const nombreCompleto = `${alumnoActual.nombres} ${alumnoActual.apellidos}`;
+            const profesion = alumnoActual.profesion || 'Profesional Titulado';
+            
+            // Actualizar ambos bloques (móvil y PC)
+            if(el('user-name')) el('user-name').innerText = nombreCompleto;
+            if(el('user-profesion')) el('user-profesion').innerText = profesion;
+            if(el('user-name-pc')) el('user-name-pc').innerText = nombreCompleto;
+            if(el('user-profesion-pc')) el('user-profesion-pc').innerText = profesion;
             
             if(el('metric-vistas')) el('metric-vistas').innerText = alumnoActual.contador_vistas || 0;
             
+            // Ajustar visibilidad de bloques de bienvenida según pantalla
+            ajustarVisibilidadBienvenida();
+            
             cargarNotificacionesFicticias();
         }
+
+        function ajustarVisibilidadBienvenida() {
+            const isDesktop = window.innerWidth >= 1024;
+            const mobileBlock = document.querySelector('.welcome-block-mobile');
+            const desktopBlock = document.querySelector('.welcome-block-desktop');
+            
+            if (mobileBlock) mobileBlock.style.display = isDesktop ? 'none' : 'flex';
+            if (desktopBlock) desktopBlock.style.display = isDesktop ? 'flex' : 'none';
+        }
+
+        window.addEventListener('resize', () => {
+            if (alumnoActual) ajustarVisibilidadBienvenida();
+        });
 
         function cerrarSesion() {
             alumnoActual = null; localStorage.removeItem('renmcycf_dni_session'); 
