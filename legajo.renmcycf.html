@@ -459,9 +459,9 @@
         </div>
     </div>
 
-    <!-- PANTALLA 2.5: FOTO CROPPER - CLASES CORREGIDAS -->
+    <!-- PANTALLA 2.5: FOTO CROPPER - CAMISA DE FUERZA MATEMÁTICA -->
     <div id="screen-foto" class="screen bg-white">
-        <div class="max-w-md mx-auto w-full flex flex-col h-full pt-2 text-center">
+        <div class="max-w-md mx-auto w-full flex flex-col h-full pt-2 text-center pb-10">
             <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2"><i data-lucide="camera" class="w-5 h-5"></i></div>
             <h2 class="text-lg font-black text-[#0a1128] uppercase mb-2">Fotografía Oficial</h2>
             
@@ -472,10 +472,10 @@
 
             <!-- SELECTOR DE FOTO -->
             <div id="foto-selector-ui" class="flex-1 flex flex-col justify-center gap-3">
-                <button class="foto-btn bg-[#0a1128] text-white hover:bg-slate-800 shadow-lg" onclick="abrirSelectorArchivo(true)">
+                <button class="bg-[#0a1128] text-white hover:bg-slate-800 shadow-lg py-4 px-6 rounded-xl font-black text-[13px] flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="abrirSelectorArchivo(true)">
                     <i data-lucide="camera" class="w-5 h-5 text-[#d4af37]"></i> TOMAR FOTO
                 </button>
-                <button class="foto-btn bg-white border-2 border-slate-200 text-slate-700 hover:border-slate-300" onclick="abrirSelectorArchivo(false)">
+                <button class="bg-white border-2 border-slate-200 text-slate-700 hover:border-slate-300 py-4 px-6 rounded-xl font-bold text-[13px] flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="abrirSelectorArchivo(false)">
                     <i data-lucide="image-plus" class="w-5 h-5 text-blue-600"></i> SUBIR DESDE GALERÍA
                 </button>
                 <input type="file" id="input-foto-oficial" accept="image/*" class="hidden" onchange="iniciarRecorte(this)">
@@ -483,16 +483,15 @@
                 <button id="btn-cerrar-foto" onclick="abrirPerfil()" class="hidden mt-2 text-[10px] font-black uppercase text-slate-400 hover:text-slate-600 underline">Cancelar y volver al Perfil</button>
             </div>
 
-            <!-- CROPPER UI - CLASES CORREGIDAS -->
-            <div id="foto-cropper-ui" class="hidden flex-col h-full w-full">
-                <div class="relative flex-1 w-full bg-slate-900 rounded-xl overflow-hidden shadow-inner" style="min-height: 250px;">
-                    <img id="image-to-crop" src="" style="display:block; max-width: 100%; max-height: 100%;">
+            <!-- CROPPER UI CON CAMISA DE FUERZA MATEMÁTICA -->
+            <div id="foto-cropper-ui" class="hidden flex-col w-full gap-4 mt-2">
+                <div class="w-full bg-slate-900 rounded-xl overflow-hidden shadow-inner flex items-center justify-center" style="height: 45vh; min-height: 250px; max-height: 400px;">
+                    <img id="image-to-crop" src="" style="max-width: 100%; max-height: 100%; display: block;">
                 </div>
                 
-                <!-- BOTONES EN FLUJO NORMAL -->
-                <div class="flex gap-3 w-full mt-4 pb-8">
-                    <button class="flex-1 foto-btn bg-slate-200 text-slate-700 hover:bg-slate-300" onclick="cancelarRecorte()">VOLVER</button>
-                    <button class="flex-[2] foto-btn bg-[#d4af37] text-[#0a1128] hover:bg-yellow-500 shadow-md" id="btn-guardar-recorte" onclick="procesarYSubirRecorte()">GUARDAR ENCUADRE</button>
+                <div class="flex gap-3 w-full">
+                    <button class="flex-1 bg-slate-200 text-slate-700 hover:bg-slate-300 py-3.5 rounded-xl font-black text-xs transition-transform active:scale-95" onclick="cancelarRecorte()">VOLVER</button>
+                    <button class="flex-[2] bg-[#d4af37] text-[#0a1128] hover:bg-yellow-500 shadow-md py-3.5 rounded-xl font-black text-xs transition-transform active:scale-95" id="btn-guardar-recorte" onclick="procesarYSubirRecorte()">GUARDAR ENCUADRE</button>
                 </div>
             </div>
         </div>
