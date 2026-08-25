@@ -1174,5 +1174,73 @@
             }
         }
     </script>
+
+    <button id="btn-pagar-matricula" onclick="procesarPagoSuscripcion({ plan: 'Matrícula Anual', monto: 15000 })" class="w-full bg-forenseNavy text-forenseGold py-4 rounded-xl font-black uppercase text-sm tracking-wider shadow-lg hover:bg-slate-800 transition">
+    Pagar Matrícula
+    </button>
+
+    
+    <script>
+    // ==========================================
+    // MÓDULO DE PAGO - MERCADO PAGO (PREPARADO)
+    // ==========================================
+
+    // Configuración inicial (vacía por ahora)
+    const MP_CONFIG = {
+        publicKey: "APP_USR-TU_PUBLIC_KEY_AQUI", // Aquí pondrás tu Public Key más adelante
+        endpointBackend: "/api/crear-suscripcion" // Ruta futura de tu backend en Vercel
+    };
+
+     // Inicializar el SDK cuando esté listo
+    let mp = null;
+    if (window.MercadoPago && MP_CONFIG.publicKey !== "APP_USR-TU_PUBLIC_KEY_AQUI") {
+        mp = new MercadoPago(MP_CONFIG.publicKey, {
+            locale: 'es-AR'
+        });
+    }
+
+    // Función que se disparará al hacer clic en "Pagar Suscripción"
+    async function procesarPagoSuscripcion(datosMatricula) {
+        const btnPagar = document.getElementById('btn-pagar-matricula');
+    
+        if (btnPagar) {
+            btnPagar.disabled = true;
+            btnPagar.innerText = "Conectando con pasarela...";
+         }
+
+    try {
+        // --- CÓDIGO FUTURO (Se activará al conectar la API) ---
+        /*
+        const response = await fetch(MP_CONFIG.endpointBackend, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datosMatricula)
+        });
+        const preference = await response.json();
+        
+        // Redirigir al Checkout de Mercado Pago
+        window.location.href = preference.init_point;
+        */
+
+        // --- SIMULACIÓN TEMPORAL (Para que la app no falle ahora) ---
+        setTimeout(() => {
+            alert("¡Estructura de pago lista! Aquí se abrirá el checkout de Mercado Pago en el futuro.");
+            if (btnPagar) {
+                btnPagar.disabled = false;
+                btnPagar.innerText = "Pagar Matrícula";
+            }
+        }, 1000);
+
+    } catch (error) {
+        console.error("Error al procesar el pago:", error);
+        alert("Ocurrió un error al intentar conectar con el medio de pago.");
+        if (btnPagar) {
+            btnPagar.disabled = false;
+            btnPagar.innerText = "Pagar Matrícula";
+        }
+    }
+}
+</script>
+
 </body>
 </html>
