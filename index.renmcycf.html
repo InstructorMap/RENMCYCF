@@ -61,7 +61,18 @@
             content: ''; position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; 
             border: 2px solid rgba(212, 175, 55, 0.6); border-radius: 110px 110px 12px 12px; pointer-events: none; 
         }
-        .logo-arcada img { width: 100%; height: 100%; object-fit: contain; padding: 12px; z-index: 10; position: relative; }
+        /* CORRECCIÓN: Logo circular con fondo transparente */
+        .logo-arcada img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover;          /* Cambiado de contain a cover para recortar */
+            padding: 0;                  /* Eliminado padding para llenar el contenedor */
+            border-radius: 50%;          /* Forzar redondez perfecta */
+            z-index: 10; 
+            position: relative;
+            mix-blend-mode: multiply;    /* Mezcla el fondo blanco con el contenedor */
+            background: transparent;     /* Fondo transparente */
+        }
 
         .form-input {
             width: 100%; padding: 12px 16px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 10px;
@@ -952,7 +963,7 @@
             try {
                 document.getElementById('map-loading').style.display = 'flex';
                 const { data } = await db.from('renmcycf_padron')
-                                       .select('nombres, apellidos, categoria, profesion, provincia_laboral, especialidades, telefono, email, foto_perfil_url')
+                                       .select('nombres, apellidos, categoria, profesion, provincia_laboral, especialidades, telefono, email, foto_perfil_url, facebook_url, instagram_url, linkedin_url')
                                        .eq('estado_legal', 'ACTIVO')
                                        .eq('figurar_directorio', true);
                 if (data) { peritosMapaDB = data; renderizarPines(peritosMapaDB); }
@@ -1010,8 +1021,20 @@
 
                 const fotoHtml = p.foto_perfil_url ? `<img src="${p.foto_perfil_url}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #d4af37; flex-shrink:0;">` : `<div style="width:45px; height:45px; border-radius:50%; background:#0a1128; color:#d4af37; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:16px; border:2px solid #d4af37; flex-shrink:0;">${p.nombres.charAt(0)}${p.apellidos.charAt(0)}</div>`;
 
+                // Redes sociales condicionales
+                let socialButtons = '';
+                if (p.facebook_url && p.facebook_url !== '' && p.facebook_url !== null) {
+                    socialButtons += `<a href="${p.facebook_url}" target="_blank" rel="noopener" style="width:32px; height:32px; background:#1877f2; color:white; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; font-weight:bold; font-size:14px;">f</a>`;
+                }
+                if (p.instagram_url && p.instagram_url !== '' && p.instagram_url !== null) {
+                    socialButtons += `<a href="${p.instagram_url}" target="_blank" rel="noopener" style="width:32px; height:32px; background:linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color:white; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; font-weight:bold; font-size:13px;">IG</a>`;
+                }
+                if (p.linkedin_url && p.linkedin_url !== '' && p.linkedin_url !== null) {
+                    socialButtons += `<a href="${p.linkedin_url}" target="_blank" rel="noopener" style="width:32px; height:32px; background:#0a66c2; color:white; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; font-weight:bold; font-size:12px;">in</a>`;
+                }
+
                 const popupHTML = `
-                    <div style="font-family:Inter,sans-serif; width: 260px;">
+                    <div style="font-family:Inter,sans-serif; width: 270px;">
                         <div style="display:flex; gap:10px; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:10px; margin-bottom:10px;">
                             ${fotoHtml}
                             <div>
@@ -1022,10 +1045,11 @@
                         <p style="font-size: 11px; color: #334155; font-weight:700; margin-bottom:4px;">${p.profesion || 'Profesional Titulado'}</p>
                         <p style="font-size: 10px; color: #64748b; margin-bottom:8px;">📍 ${p.provincia_laboral || 'Argentina'}</p>
                         <div style="margin-bottom:12px;">${espBadges}</div>
-                        <div style="display:flex; gap:6px;">
-                            <a href="https://wa.me/${p.telefono}" target="_blank" style="flex:1; font-size:10px; background:#25d366; color:white; padding:6px 0; border-radius:6px; text-decoration:none; display:flex; align-items:center; justify-content:center; font-weight:bold;">WhatsApp</a>
+                        <div style="display:flex; gap:6px; margin-bottom:${socialButtons ? '8px' : '0'};">
+                            <a href="https://wa.me/${p.telefono || ''}" target="_blank" rel="noopener" style="flex:1; font-size:10px; background:#25d366; color:white; padding:6px 0; border-radius:6px; text-decoration:none; display:flex; align-items:center; justify-content:center; font-weight:bold;">WhatsApp</a>
                             ${p.email ? `<a href="mailto:${p.email}" target="_blank" style="flex:1; font-size:10px; background:#0ea5e9; color:white; padding:6px 0; border-radius:6px; text-decoration:none; display:flex; align-items:center; justify-content:center; font-weight:bold;">Correo</a>` : ''}
                         </div>
+                        ${socialButtons ? `<div style="display:flex; gap:8px; justify-content:center; border-top:1px solid #e2e8f0; padding-top:8px; margin-top:4px;">${socialButtons}</div>` : ''}
                     </div>
                 `;
                 marker.bindPopup(popupHTML);
