@@ -28,6 +28,7 @@
         .sidebar-link.active { color: var(--neon-gold); background: rgba(217, 119, 6, 0.1); border-left: 3px solid var(--neon-gold); }
         input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="password"], input[type="date"], input[type="color"], input[type="tel"], select, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; padding: 10px 12px; color: white; outline: none; transition: all 0.3s; font-size: 0.85rem; }
         input:focus, select:focus, textarea:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
+        input[readonly] { background: rgba(0,0,0,0.5); cursor: not-allowed; opacity: 0.6; }
         label { display: block; font-size: 0.65rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
         th { background: rgba(0,0,0,0.4); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
         tr { border-bottom: 1px solid var(--glass-border); }
@@ -651,7 +652,7 @@
                         </div>
                         
                         <div class="flex justify-end">
-                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition-transform active:scale-95">CREAR USUARIO</button>
+                            <button type="submit" id="btn-submit-usuario" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition-transform active:scale-95">CREAR USUARIO</button>
                         </div>
                     </form>
                     
@@ -1738,9 +1739,13 @@
                         <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase bg-blue-900/30 text-blue-400">${u.rol}</span></td>
                         <td class="p-3">${permisosHTML}</td>
                         <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${u.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">${u.activo?'ACTIVO':'INACTIVO'}</span></td>
-                        <td class="p-3 text-right"><button onclick="toggleEstadoUsuario('${u.id}',${!u.activo})" class="text-[10px] font-bold border border-white/10 px-2 py-1 rounded hover:bg-white/5 transition-colors">${u.activo?'SUSPENDER':'ACTIVAR'}</button></td>
+                        <td class="p-3 text-right">
+                            <button onclick='editarUsuarioForm(${JSON.stringify(u).replace(/'/g, "&#39;")})' class="text-[10px] font-bold border border-blue-500/30 text-blue-400 px-2 py-1 rounded hover:bg-blue-500/10 transition-colors mr-2"><i data-lucide="edit" class="w-3 h-3 inline"></i> EDITAR</button>
+                            <button onclick="toggleEstadoUsuario('${u.id}',${!u.activo})" class="text-[10px] font-bold border border-white/10 px-2 py-1 rounded hover:bg-white/5 transition-colors">${u.activo?'SUSPENDER':'ACTIVAR'}</button>
+                        </td>
                     </tr>`;
                 }).join('');
+                lucide.createIcons();
             } catch (err) { tbody.innerHTML = `<tr><td colspan="5" class="text-red-400 p-3">Error: ${err.message}</td></tr>`; }
         }
 
@@ -1749,12 +1754,57 @@
             cargarUsuarios(); 
         }
 
+        // FUNCIÓN PARA EDITAR USUARIO (TAREA 2)
+        function editarUsuarioForm(u) {
+            // Llenar los campos del formulario
+            document.getElementById('usr-email').value = u.email || '';
+            document.getElementById('usr-rol').value = u.rol || 'asesor';
+            document.getElementById('usr-nombres').value = u.nombres || '';
+            document.getElementById('usr-apellidos').value = u.apellidos || '';
+            
+            // Bloquear el campo de email
+            document.getElementById('usr-email').readOnly = true;
+            
+            // Limpiar todos los checkboxes
+            const checkboxes = document.querySelectorAll('#form-usuarios input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = false);
+            
+            // Leer y marcar los permisos
+            let permisos = [];
+            if (u.modulos_permitidos) {
+                try {
+                    permisos = typeof u.modulos_permitidos === 'string' ? JSON.parse(u.modulos_permitidos) : u.modulos_permitidos;
+                } catch(e) {
+                    permisos = [];
+                }
+            }
+            
+            // Marcar checkboxes que coincidan
+            checkboxes.forEach(cb => {
+                if (permisos.includes(cb.value)) {
+                    cb.checked = true;
+                }
+            });
+            
+            // Cambiar texto del botón
+            const btnSubmit = document.getElementById('btn-submit-usuario');
+            if (btnSubmit) {
+                btnSubmit.textContent = 'ACTUALIZAR USUARIO';
+            }
+            
+            // Subir al formulario
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Enfocar el formulario
+            document.getElementById('form-usuarios').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         // TAREA 4: CREAR USUARIO CON PERMISOS GRANULARES
         async function crearUsuario(e) {
             e.preventDefault();
             const btn = e.target.querySelector('button[type="submit"]');
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline"></i> CREANDO...';
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline"></i> PROCESANDO...';
             btn.disabled = true;
             lucide.createIcons();
             
@@ -1800,8 +1850,17 @@
             } catch (err) {
                 alert("Error al crear usuario: " + err.message);
             } finally {
+                // TAREA 3: LIMPIAR FORMULARIO
+                document.getElementById('usr-email').readOnly = false;
+                
                 btn.innerHTML = originalHTML;
                 btn.disabled = false;
+                
+                const btnSubmit = document.getElementById('btn-submit-usuario');
+                if (btnSubmit) {
+                    btnSubmit.textContent = 'CREAR USUARIO';
+                }
+                
                 lucide.createIcons();
             }
         }
