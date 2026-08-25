@@ -564,7 +564,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA DE EDICIÓN DE PERFIL -->
+    <!-- PANTALLA DE EDICIÓN DE PERFIL - AMPLIADA -->
     <div id="screen-perfil" class="screen">
         <div class="perfil-content">
             <div class="perfil-foto-section">
@@ -580,19 +580,55 @@
 
             <div class="perfil-form-section">
                 <h3 class="font-black text-xs text-[#0a1128] uppercase mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
-                    <i data-lucide="contact" class="w-4 h-4 text-[#d4af37]"></i> Datos de Contacto
+                    <i data-lucide="contact" class="w-4 h-4 text-[#d4af37]"></i> Datos de Contacto y Redes
                 </h3>
+                
+                <!-- Teléfono -->
                 <div class="mb-3">
                     <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Teléfono / WhatsApp</label>
                     <input type="tel" id="perfil-telefono" class="form-input text-sm" placeholder="Ej: +54 9 11...">
                 </div>
+                
+                <!-- Email -->
                 <div class="mb-3">
                     <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Email de Contacto</label>
                     <input type="email" id="perfil-email" class="form-input text-sm" placeholder="correo@ejemplo.com">
                 </div>
-                <div>
-                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Enlace LinkedIn (Opcional)</label>
+                
+                <!-- Ciudad/Provincia Laboral -->
+                <div class="mb-3">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Ciudad / Provincia Laboral</label>
+                    <input type="text" id="perfil-provincia" class="form-input text-sm" placeholder="Ej: Córdoba Capital">
+                </div>
+                
+                <!-- Facebook -->
+                <div class="mb-3">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Facebook (URL)</label>
+                    <input type="url" id="perfil-facebook" class="form-input text-sm" placeholder="https://facebook.com/tu.perfil">
+                </div>
+                
+                <!-- Instagram -->
+                <div class="mb-3">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Instagram (URL)</label>
+                    <input type="url" id="perfil-instagram" class="form-input text-sm" placeholder="https://instagram.com/tu.perfil">
+                </div>
+                
+                <!-- LinkedIn -->
+                <div class="mb-5">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">LinkedIn (URL)</label>
                     <input type="url" id="perfil-linkedin" class="form-input text-sm" placeholder="https://linkedin.com/in/...">
+                </div>
+                
+                <!-- Switch Directorio Público -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <label class="text-xs font-bold text-[#0a1128] cursor-pointer" for="perfil-directorio">Figurar en el Directorio Público (Mapa Nacional)</label>
+                        <p class="text-[9px] text-slate-400 mt-1">Autorizo que mi nombre, categoría y provincia sean visibles</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3">
+                        <input type="checkbox" id="perfil-directorio" class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#d4af37] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#0a1128]"></div>
+                    </label>
                 </div>
             </div>
         </div>
@@ -810,9 +846,13 @@
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             safeClass('screen-perfil', 'add', 'active');
             
-            if(el('perfil-telefono')) el('perfil-telefono').value = alumnoActual.telefono_contacto || '';
-            if(el('perfil-email')) el('perfil-email').value = alumnoActual.email_contacto || '';
+            if(el('perfil-telefono')) el('perfil-telefono').value = alumnoActual.telefono || alumnoActual.telefono_contacto || '';
+            if(el('perfil-email')) el('perfil-email').value = alumnoActual.email || alumnoActual.email_contacto || '';
+            if(el('perfil-provincia')) el('perfil-provincia').value = alumnoActual.provincia_laboral || '';
+            if(el('perfil-facebook')) el('perfil-facebook').value = alumnoActual.facebook_url || '';
+            if(el('perfil-instagram')) el('perfil-instagram').value = alumnoActual.instagram_url || '';
             if(el('perfil-linkedin')) el('perfil-linkedin').value = alumnoActual.linkedin_url || '';
+            if(el('perfil-directorio')) el('perfil-directorio').checked = alumnoActual.figurar_directorio || false;
             
             const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
             if(el('perfil-foto-preview')) el('perfil-foto-preview').src = fotoUrl;
@@ -827,20 +867,32 @@
 
             const tel = el('perfil-telefono').value.trim();
             const email = el('perfil-email').value.trim();
-            const ln = el('perfil-linkedin').value.trim();
+            const provincia = el('perfil-provincia').value.trim();
+            const facebook = el('perfil-facebook').value.trim();
+            const instagram = el('perfil-instagram').value.trim();
+            const linkedin = el('perfil-linkedin').value.trim();
+            const directorio = el('perfil-directorio').checked;
 
             try {
                 const { error } = await db.from('renmcycf_padron').update({
-                    telefono_contacto: tel,
-                    email_contacto: email,
-                    linkedin_url: ln
+                    telefono: tel,
+                    email: email,
+                    provincia_laboral: provincia,
+                    facebook_url: facebook,
+                    instagram_url: instagram,
+                    linkedin_url: linkedin,
+                    figurar_directorio: directorio
                 }).eq('id', alumnoActual.id);
 
                 if (error) throw error;
 
-                alumnoActual.telefono_contacto = tel;
-                alumnoActual.email_contacto = email;
-                alumnoActual.linkedin_url = ln;
+                alumnoActual.telefono = tel;
+                alumnoActual.email = email;
+                alumnoActual.provincia_laboral = provincia;
+                alumnoActual.facebook_url = facebook;
+                alumnoActual.instagram_url = instagram;
+                alumnoActual.linkedin_url = linkedin;
+                alumnoActual.figurar_directorio = directorio;
 
                 alert("Perfil actualizado correctamente en el Padrón Nacional.");
                 switchNavTab('wallet');
