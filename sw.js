@@ -1,13 +1,13 @@
 // =========================================================
 // SERVICE WORKER - RENMCYCF (ASARI SaaS)
-// Versión: 2.0.0 (Actualizado)
+// Versión: 2.1.0 (Actualizado - Exclusión de Panel)
 // =========================================================
 
-const CACHE_NAME = 'renmcycf-cache-v2';
+const CACHE_NAME = 'renmcycf-cache-v2.1'; // <-- Aumentamos la versión para forzar la purga
 const urlsToCache = [
   '/',
   '/index.renmcycf.html',
-  '/wallet.renmcycf.html',
+  '/legajo.renmcycf.html', // <-- Actualizado al nombre correcto
   '/validador.renmcycf.html',
   '/logo-192.png',
   '/logo-512.png',
@@ -35,7 +35,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Cache abierta');
+        console.log('Cache abierta v2.1');
         return cache.addAll(urlsToCache);
       })
   );
@@ -58,10 +58,14 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// 3. ESTRATEGIA DE RED: Stale-While-Revalidate modificado
-// (Busca primero en la red para tener datos frescos, si falla, usa el caché)
+// 3. ESTRATEGIA DE RED: Escudo para el Panel y Stale-While-Revalidate
 self.addEventListener('fetch', event => {
-  // Ignorar peticiones a Supabase (PostgREST/Storage) para no cachear datos dinámicos sensibles
+  // ESCUDO 1: Ignorar el Panel de Administración por completo (Nunca Cachear)
+  if (event.request.url.includes('panel-renmcycf.html')) {
+    return; // Pasa de largo hacia el servidor
+  }
+
+  // ESCUDO 2: Ignorar peticiones a Supabase (PostgREST/Storage)
   if (event.request.url.includes('supabase.co')) {
     return; 
   }
