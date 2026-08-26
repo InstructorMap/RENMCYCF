@@ -76,6 +76,9 @@
         .cat-a2 { border-top-color: #3b82f6; }
         .cat-a3 { border-top-color: #10b981; }
         .cat-a4 { border-top-color: #8b5cf6; }
+        .cat-b1 { border-top-color: #ef4444; }
+        .cat-b2 { border-top-color: #f97316; }
+        .cat-b3 { border-top-color: #eab308; }
 
         .mobile-menu {
             position: fixed; top: 0; right: -100%; width: 80%; max-width: 360px; height: 100vh;
@@ -321,14 +324,18 @@
             </div>
         </section>
 
-        <!-- 5. CATEGORÍAS - SIN ETIQUETAS SUPERIORES -->
+        <!-- 5. CATEGORÍAS - CON SUBTÍTULOS Y NUEVAS CATEGORÍAS B -->
         <section id="seccion-categorias" class="page-section py-16 bg-white min-h-[70vh]">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-14">
                     <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase"><i data-lucide="layers" class="inline w-6 h-6 text-forenseGold mr-2"></i>Estructura del Padrón</h2>
                     <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
                 </div>
+                
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- SUBTÍTULO ÁREA CRIMINALÍSTICA -->
+                    <h3 class="w-full col-span-full text-sm font-bold text-slate-400 uppercase tracking-widest mt-2 mb-2">Área Criminalística y Forense</h3>
+                    
                     <div class="cat-card cat-a1 bg-gradient-to-b from-yellow-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
                         <h3 class="font-bold text-lg text-forenseNavy mb-2">Categoría A1</h3>
                         <p class="text-xs text-slate-600" id="cat-a1-desc">Licenciaturas y Títulos de Grado Universitarios.</p>
@@ -345,9 +352,26 @@
                         <h3 class="font-bold text-lg text-forenseNavy mb-2">Categoría A4</h3>
                         <p class="text-xs text-slate-600" id="cat-a4-desc">Consultores Técnicos y Estudiantes Avanzados.</p>
                     </div>
+
+                    <!-- SUBTÍTULO ÁREA SEGURIDAD -->
+                    <h3 class="w-full col-span-full text-sm font-bold text-slate-400 uppercase tracking-widest mt-6 mb-2">Área Seguridad Pública y Privada</h3>
+                    
+                    <div class="cat-card cat-b1 bg-gradient-to-b from-red-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                        <h3 class="font-bold text-lg text-forenseNavy mb-2">Categoría B1</h3>
+                        <p class="text-xs text-slate-600">Licenciaturas y Títulos de Grado en Seguridad.</p>
+                    </div>
+                    <div class="cat-card cat-b2 bg-gradient-to-b from-orange-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                        <h3 class="font-bold text-lg text-forenseNavy mb-2">Categoría B2</h3>
+                        <p class="text-xs text-slate-600">Técnicos Superiores en Seguridad.</p>
+                    </div>
+                    <div class="cat-card cat-b3 bg-gradient-to-b from-yellow-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                        <h3 class="font-bold text-lg text-forenseNavy mb-2">Categoría B3</h3>
+                        <p class="text-xs text-slate-600">Técnicos, Auxiliares y Diplomados en Seguridad.</p>
+                    </div>
                 </div>
             </div>
         </section>
+
         <!-- 6. PORTAL DE DIVULGACIÓN CIENTÍFICA -->
         <section id="seccion-portal-divulgacion" class="page-section py-16 md:py-24 bg-slate-50 min-h-[70vh]">
             <div class="max-w-7xl mx-auto px-4">
@@ -442,6 +466,9 @@
                                     <option value="A2">Categoría A.2 - Técnico Superior</option>
                                     <option value="A3">Categoría A.3 - Auxiliar / Diplomado</option>
                                     <option value="A4">Categoría A.4 - Consultor / Estudiante</option>
+                                    <option value="B1">Categoría B.1 - Grado en Seguridad</option>
+                                    <option value="B2">Categoría B.2 - Técnico Superior en Seguridad</option>
+                                    <option value="B3">Categoría B.3 - Téc. / Auxiliar en Seguridad</option>
                                 </select>
                             </div>
                             <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
@@ -817,17 +844,30 @@
             else { contador.classList.replace('bg-emerald-600', 'bg-forenseNavy'); }
         }
 
+        // TAREA 3: DETECCIÓN INTELIGENTE CON CATEGORÍAS B
         function detectarCategoriaInteligente() {
             const prof = document.getElementById('ins-profesion').value.toLowerCase();
             const select = document.getElementById('ins-categoria');
-            if (prof.includes('licenciado') || prof.includes('grado') || prof.includes('médico') || prof.includes('doctor') || prof.includes('licenciatura')) {
-                select.value = 'A1';
-            } else if (prof.includes('técnico') || prof.includes('superior') || prof.includes('tecnico')) {
-                select.value = 'A2';
-            } else if (prof.includes('auxiliar') || prof.includes('diplomado') || prof.includes('perito')) {
-                select.value = 'A3';
-            } else if (prof.includes('estudiante') || prof.includes('consultor') || prof.includes('cursante')) {
-                select.value = 'A4';
+            
+            if (prof.includes('seguridad')) {
+                if (prof.includes('licenciado') || prof.includes('grado') || prof.includes('licenciatura')) {
+                    select.value = 'B1';
+                } else if (prof.includes('superior')) {
+                    select.value = 'B2';
+                } else {
+                    select.value = 'B3';
+                }
+            } else {
+                // Lógica original A1 a A4
+                if (prof.includes('licenciado') || prof.includes('grado') || prof.includes('médico') || prof.includes('doctor') || prof.includes('licenciatura')) {
+                    select.value = 'A1';
+                } else if (prof.includes('técnico') || prof.includes('superior') || prof.includes('tecnico')) {
+                    select.value = 'A2';
+                } else if (prof.includes('auxiliar') || prof.includes('diplomado') || prof.includes('perito')) {
+                    select.value = 'A3';
+                } else if (prof.includes('estudiante') || prof.includes('consultor') || prof.includes('cursante')) {
+                    select.value = 'A4';
+                }
             }
             actualizarLinkYPrecio();
         }
@@ -851,14 +891,25 @@
             }
         }
 
+        // TAREA 4: MAPEO DE PRECIOS CON CATEGORÍAS B
         function actualizarLinkYPrecio() {
             const cat = document.getElementById('ins-categoria').value;
             const btnPago = document.getElementById('btn-mercadopago');
             const displayPrecio = document.getElementById('display-precio-final');
-            if (cat && configGlobal[`arancel_${cat.toLowerCase()}`]) {
-                const precio = configGlobal[`arancel_${cat.toLowerCase()}`];
-                displayPrecio.innerText = `$${new Intl.NumberFormat('es-AR').format(precio)} ARS`;
-                if (configGlobal.mp_link) { btnPago.href = configGlobal.mp_link; btnPago.classList.remove('opacity-50', 'pointer-events-none'); }
+
+            if (cat) {
+                let catRef = cat.toLowerCase();
+                if (cat === 'B1') catRef = 'a1';
+                if (cat === 'B2') catRef = 'a2';
+                if (cat === 'B3') catRef = 'a3';
+
+                if (configGlobal[`arancel_${catRef}`]) {
+                    const precio = configGlobal[`arancel_${catRef}`];
+                    displayPrecio.innerText = `$${new Intl.NumberFormat('es-AR').format(precio)} ARS`;
+                    if (configGlobal.mp_link) { btnPago.href = configGlobal.mp_link; btnPago.classList.remove('opacity-50', 'pointer-events-none'); }
+                } else {
+                    displayPrecio.innerText = 'Seleccione Categoría'; btnPago.removeAttribute('href'); btnPago.classList.add('opacity-50', 'pointer-events-none');
+                }
             } else {
                 displayPrecio.innerText = 'Seleccione Categoría'; btnPago.removeAttribute('href'); btnPago.classList.add('opacity-50', 'pointer-events-none');
             }
