@@ -145,6 +145,7 @@
                 <button onclick="switchSection('seccion-tracking')" class="nav-btn hover:text-forenseGold transition-colors flex items-center gap-1 px-2 py-1" data-target="seccion-tracking"><i data-lucide="package-search" class="w-4 h-4"></i> Seguimiento</button>
                 <button onclick="switchSection('seccion-mapa')" class="nav-btn hover:text-forenseGold transition-colors flex items-center gap-1 px-2 py-1" data-target="seccion-mapa"><i data-lucide="map-pin" class="w-4 h-4"></i> Mapa</button>
                 <button onclick="switchSection('seccion-categorias')" class="nav-btn hover:text-forenseGold transition-colors flex items-center gap-1 px-2 py-1" data-target="seccion-categorias"><i data-lucide="layers" class="w-4 h-4"></i> Categorías</button>
+                <button onclick="switchSection('seccion-comite')" class="nav-btn hover:text-forenseGold transition-colors flex items-center gap-1 px-2 py-1" data-target="seccion-comite"><i data-lucide="shield" class="w-4 h-4"></i> Autoridades</button>
                 <button onclick="switchSection('seccion-portal-divulgacion')" class="nav-btn hover:text-forenseGold transition-colors flex items-center gap-1 px-2 py-1" data-target="seccion-portal-divulgacion"><i data-lucide="book-open" class="w-4 h-4"></i> Portal Científico</button>
                 <button onclick="switchSection('seccion-biblioteca')" class="nav-btn hover:text-forenseGold transition-colors flex items-center gap-1 px-2 py-1" data-target="seccion-biblioteca"><i data-lucide="library" class="w-4 h-4"></i> Biblioteca</button>
                 <button onclick="switchSection('seccion-portafolio')" class="nav-btn hover:text-forenseGold transition-colors flex items-center gap-1 px-2 py-1 text-forenseBlue" data-target="seccion-portafolio"><i data-lucide="folder-check" class="w-4 h-4"></i> Legajo Digital</button>
@@ -166,6 +167,7 @@
         <button onclick="switchSection('seccion-tracking'); toggleMobileMenu();" class="text-white text-base font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="package-search" class="w-5 h-5 text-forenseGold"></i> Seguimiento</button>
         <button onclick="switchSection('seccion-mapa'); toggleMobileMenu();" class="text-white text-base font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-forenseGold"></i> Mapa</button>
         <button onclick="switchSection('seccion-categorias'); toggleMobileMenu();" class="text-white text-base font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="layers" class="w-5 h-5 text-forenseGold"></i> Categorías</button>
+        <button onclick="switchSection('seccion-comite'); toggleMobileMenu();" class="text-white text-base font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="shield" class="w-5 h-5 text-forenseGold"></i> Autoridades</button>
         <button onclick="switchSection('seccion-portal-divulgacion'); toggleMobileMenu();" class="text-white text-base font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="book-open" class="w-5 h-5 text-forenseGold"></i> Portal Científico</button>
         <button onclick="switchSection('seccion-biblioteca'); toggleMobileMenu();" class="text-white text-base font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="library" class="w-5 h-5 text-forenseGold"></i> Biblioteca</button>
         <button onclick="switchSection('seccion-portafolio'); toggleMobileMenu();" class="text-white text-base font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="folder-check" class="w-5 h-5 text-forenseGold"></i> Legajo Digital</button>
@@ -368,6 +370,22 @@
                         <h3 class="font-bold text-lg text-forenseNavy mb-2">Categoría B3</h3>
                         <p class="text-xs text-slate-600">Técnicos, Auxiliares y Diplomados en Seguridad.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMITÉ EVALUADOR -->
+        <section id="seccion-comite" class="page-section py-16 md:py-24 bg-slate-50 min-h-[70vh]" style="display: none;">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-14">
+                    <h2 class="font-title text-2xl md:text-4xl font-black text-forenseNavy mb-3 uppercase">
+                        <i data-lucide="shield" class="inline w-8 h-8 text-forenseGold mr-2"></i>Comité Evaluador
+                    </h2>
+                    <div class="w-24 h-1.5 bg-forenseGold mx-auto mb-4"></div>
+                    <p class="text-slate-600 text-sm max-w-2xl mx-auto">Autoridades encargadas de la auditoría documental y certificación de matrículas a nivel nacional.</p>
+                </div>
+                <div id="contenedor-comite" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="col-span-full text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando autoridades...</div>
                 </div>
             </div>
         </section>
@@ -595,6 +613,7 @@
             try { await cargarNoticiasPublicas(); } catch(e) { console.warn(e); }
             try { await cargarBibliotecaPublica(); } catch(e) { console.warn(e); }
             try { await cargarTesisPublicas(); } catch(e) { console.warn(e); }
+            try { await cargarComitePublico(); } catch(e) { console.warn(e); }
             try { initMap(); } catch(e) { console.warn(e); }
         });
 
@@ -667,6 +686,47 @@
                     seccion.classList.remove('hidden');
                 } else { seccion.classList.add('hidden'); }
             } catch (err) { console.error("Error aliados:", err); }
+        }
+
+        // ==========================================
+        // COMITÉ EVALUADOR PÚBLICO
+        // ==========================================
+        async function cargarComitePublico() {
+            const container = document.getElementById('contenedor-comite');
+            const seccion = document.getElementById('seccion-comite');
+            if (!container || !seccion) return;
+            
+            try {
+                const { data, error } = await db.from('renmcycf_comite').select('*').eq('activo', true).order('created_at', { ascending: true });
+                
+                if (error) throw error;
+                
+                if (!data || data.length === 0) {
+                    seccion.style.display = 'none';
+                    return;
+                }
+                
+                seccion.style.display = 'block';
+                
+                container.innerHTML = data.map(m => {
+                    const fotoUrl = m.foto_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nombre)}&background=0a1128&color=d4af37&size=200`;
+                    
+                    return `
+                    <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 text-center hover:shadow-xl transition-all hover:border-forenseGold/50">
+                        <div class="w-24 h-24 rounded-full overflow-hidden border-3 border-forenseGold mx-auto mb-4 shadow-md">
+                            <img src="${fotoUrl}" alt="${m.nombre}" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-title font-black text-lg text-forenseNavy mb-1">${m.nombre}</h3>
+                        <p class="text-forenseGold font-bold text-xs uppercase tracking-widest mb-3">${m.titulo || 'Miembro del Comité'}</p>
+                        ${m.resena ? `<p class="text-slate-500 text-sm italic leading-relaxed">${m.resena}</p>` : ''}
+                    </div>`;
+                }).join('');
+                
+                lucide.createIcons();
+            } catch (err) {
+                console.error("Error cargando comité:", err);
+                seccion.style.display = 'none';
+            }
         }
 
         // ==========================================
@@ -844,7 +904,6 @@
             else { contador.classList.replace('bg-emerald-600', 'bg-forenseNavy'); }
         }
 
-        // TAREA 3: DETECCIÓN INTELIGENTE CON CATEGORÍAS B
         function detectarCategoriaInteligente() {
             const prof = document.getElementById('ins-profesion').value.toLowerCase();
             const select = document.getElementById('ins-categoria');
@@ -858,7 +917,6 @@
                     select.value = 'B3';
                 }
             } else {
-                // Lógica original A1 a A4
                 if (prof.includes('licenciado') || prof.includes('grado') || prof.includes('médico') || prof.includes('doctor') || prof.includes('licenciatura')) {
                     select.value = 'A1';
                 } else if (prof.includes('técnico') || prof.includes('superior') || prof.includes('tecnico')) {
@@ -891,7 +949,6 @@
             }
         }
 
-        // TAREA 4: MAPEO DE PRECIOS CON CATEGORÍAS B
         function actualizarLinkYPrecio() {
             const cat = document.getElementById('ins-categoria').value;
             const btnPago = document.getElementById('btn-mercadopago');
@@ -1061,7 +1118,6 @@
 
                 const fotoHtml = p.foto_perfil_url ? `<img src="${p.foto_perfil_url}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #d4af37; flex-shrink:0;">` : `<div style="width:45px; height:45px; border-radius:50%; background:#0a1128; color:#d4af37; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:16px; border:2px solid #d4af37; flex-shrink:0;">${p.nombres.charAt(0)}${p.apellidos.charAt(0)}</div>`;
 
-                // Redes sociales condicionales
                 let socialButtons = '';
                 if (p.facebook_url && p.facebook_url !== '' && p.facebook_url !== null) {
                     socialButtons += `<a href="${p.facebook_url}" target="_blank" rel="noopener" style="width:32px; height:32px; background:#1877f2; color:white; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; font-weight:bold; font-size:14px;">f</a>`;
@@ -1233,73 +1289,6 @@
             }
         }
     </script>
-
-    <button id="btn-pagar-matricula" onclick="procesarPagoSuscripcion({ plan: 'Matrícula Anual', monto: 15000 })" class="w-full bg-forenseNavy text-forenseGold py-4 rounded-xl font-black uppercase text-sm tracking-wider shadow-lg hover:bg-slate-800 transition">
-    Pagar Matrícula
-    </button>
-
-    
-    <script>
-    // ==========================================
-    // MÓDULO DE PAGO - MERCADO PAGO (PREPARADO)
-    // ==========================================
-
-    // Configuración inicial (vacía por ahora)
-    const MP_CONFIG = {
-        publicKey: "APP_USR-TU_PUBLIC_KEY_AQUI", // Aquí pondrás tu Public Key más adelante
-        endpointBackend: "/api/crear-suscripcion" // Ruta futura de tu backend en Vercel
-    };
-
-     // Inicializar el SDK cuando esté listo
-    let mp = null;
-    if (window.MercadoPago && MP_CONFIG.publicKey !== "APP_USR-TU_PUBLIC_KEY_AQUI") {
-        mp = new MercadoPago(MP_CONFIG.publicKey, {
-            locale: 'es-AR'
-        });
-    }
-
-    // Función que se disparará al hacer clic en "Pagar Suscripción"
-    async function procesarPagoSuscripcion(datosMatricula) {
-        const btnPagar = document.getElementById('btn-pagar-matricula');
-    
-        if (btnPagar) {
-            btnPagar.disabled = true;
-            btnPagar.innerText = "Conectando con pasarela...";
-         }
-
-    try {
-        // --- CÓDIGO FUTURO (Se activará al conectar la API) ---
-        /*
-        const response = await fetch(MP_CONFIG.endpointBackend, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datosMatricula)
-        });
-        const preference = await response.json();
-        
-        // Redirigir al Checkout de Mercado Pago
-        window.location.href = preference.init_point;
-        */
-
-        // --- SIMULACIÓN TEMPORAL (Para que la app no falle ahora) ---
-        setTimeout(() => {
-            alert("¡Estructura de pago lista! Aquí se abrirá el checkout de Mercado Pago en el futuro.");
-            if (btnPagar) {
-                btnPagar.disabled = false;
-                btnPagar.innerText = "Pagar Matrícula";
-            }
-        }, 1000);
-
-    } catch (error) {
-        console.error("Error al procesar el pago:", error);
-        alert("Ocurrió un error al intentar conectar con el medio de pago.");
-        if (btnPagar) {
-            btnPagar.disabled = false;
-            btnPagar.innerText = "Pagar Matrícula";
-        }
-    }
-}
-</script>
 
 </body>
 </html>
