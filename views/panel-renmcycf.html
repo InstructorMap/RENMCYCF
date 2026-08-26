@@ -361,6 +361,7 @@
                     <div class="glass-card p-6 xl:col-span-1">
                         <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nuevo Miembro del Comité</h3>
                         <form id="form-comite" onsubmit="guardarMiembroComite(event)" class="space-y-4">
+                            <input type="hidden" id="comite-id">
                             <div><label>Nombre Completo</label><input type="text" id="comite-nombre" required></div>
                             <div><label>Título / Profesión</label><input type="text" id="comite-titulo" required></div>
                             <div><label>Breve Reseña</label><textarea id="comite-resena" rows="3"></textarea></div>
@@ -1471,7 +1472,7 @@
         async function eliminarAliado(id) { if (!confirm("¿Eliminar aliado definitivamente?")) return; await db.from('renmcycf_aliados').delete().eq('id', id); cargarAliadosPanel(); }
 
         // ==========================================
-        // 13. COMITÉ EVALUADOR (NUEVO MÓDULO)
+        // 13. COMITÉ EVALUADOR (CON EDICIÓN)
         // ==========================================
         async function cargarComitePanel() {
             const tbody = document.getElementById('comite-body');
@@ -1485,19 +1486,36 @@
                 <tr class="border-b border-white/5 hover:bg-white/5">
                     <td class="p-3">
                         <div class="flex items-center gap-3">
-                            <img src="${m.foto_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nombre)}&background=0a1128&color=fff`}" class="w-10 h-10 rounded-full object-cover border border-white/20">
+                            <img src="${m.foto_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nombre)}&background=0a1128&color=fff`}" class="w-12 h-12 rounded-lg object-cover object-top border border-white/20">
                             <span class="text-white font-bold block">${m.nombre}</span>
                         </div>
                     </td>
                     <td class="p-3"><span class="text-slate-300 text-xs">${m.titulo || 'Sin título'}</span></td>
                     <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${m.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">${m.activo?'ACTIVO':'INACTIVO'}</span></td>
                     <td class="p-3 text-right">
+                        <button class="border border-blue-500/30 text-blue-400 px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-blue-500/10" onclick='editarMiembroComite(${JSON.stringify(m).replace(/'/g, "&#39;")})'><i data-lucide="edit" class="w-3 h-3 inline"></i> EDITAR</button>
                         <button class="border border-white/20 text-white px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-white/10" onclick="toggleEstadoComite('${m.id}', ${!m.activo})">${m.activo?'Ocultar':'Mostrar'}</button>
                         <button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40" onclick="eliminarMiembroComite('${m.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                     </td>
                 </tr>`).join('');
                 lucide.createIcons();
             } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
+        }
+
+        function editarMiembroComite(m) {
+            document.getElementById('comite-id').value = m.id || '';
+            document.getElementById('comite-nombre').value = m.nombre || '';
+            document.getElementById('comite-titulo').value = m.titulo || '';
+            document.getElementById('comite-resena').value = m.resena || '';
+            document.getElementById('comite-activo').checked = m.activo || false;
+            
+            const btnSubmit = document.querySelector('#form-comite button[type="submit"]');
+            if (btnSubmit) {
+                btnSubmit.textContent = 'ACTUALIZAR MIEMBRO';
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('form-comite').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         async function guardarMiembroComite(e) {
@@ -1507,28 +1525,33 @@
             btn.innerHTML = 'GUARDANDO...'; btn.disabled = true;
             
             try {
+                const id = document.getElementById('comite-id').value;
                 const nombre = document.getElementById('comite-nombre').value.trim();
                 const titulo = document.getElementById('comite-titulo').value.trim();
                 const resena = document.getElementById('comite-resena').value.trim();
                 const activo = document.getElementById('comite-activo').checked;
                 const fotoFile = document.getElementById('comite-foto').files[0];
                 
-                let fotoUrl = null;
-                if (fotoFile) {
-                    const fileName = `comite_${Date.now()}.${fotoFile.name.split('.').pop()}`;
-                    await db.storage.from('renmcycf-media').upload(fileName, fotoFile);
-                    fotoUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
-                }
-                
-                const { error } = await db.from('renmcycf_comite').insert([{
+                const payload = {
                     nombre: nombre,
                     titulo: titulo,
                     resena: resena,
-                    foto_url: fotoUrl,
                     activo: activo
-                }]);
+                };
                 
-                if (error) throw error;
+                if (fotoFile) {
+                    const fileName = `comite_${Date.now()}.${fotoFile.name.split('.').pop()}`;
+                    await db.storage.from('renmcycf-media').upload(fileName, fotoFile);
+                    payload.foto_url = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
+                }
+                
+                if (id) {
+                    const { error } = await db.from('renmcycf_comite').update(payload).eq('id', id);
+                    if (error) throw error;
+                } else {
+                    const { error } = await db.from('renmcycf_comite').insert([payload]);
+                    if (error) throw error;
+                }
                 
                 alert("✅ Miembro del comité guardado exitosamente.");
                 document.getElementById('form-comite').reset();
@@ -1536,8 +1559,15 @@
             } catch (err) {
                 alert("Error: " + err.message);
             } finally {
+                document.getElementById('comite-id').value = '';
                 btn.innerHTML = orig;
                 btn.disabled = false;
+                
+                const btnSubmit = document.querySelector('#form-comite button[type="submit"]');
+                if (btnSubmit) {
+                    btnSubmit.textContent = 'GUARDAR MIEMBRO';
+                }
+                
                 lucide.createIcons();
             }
         }
@@ -1847,7 +1877,6 @@
             cargarUsuarios(); 
         }
 
-        // FUNCIÓN PARA EDITAR USUARIO
         function editarUsuarioForm(u) {
             document.getElementById('usr-db-id').value = u.id || '';
             document.getElementById('usr-email').value = u.email || '';
@@ -1884,7 +1913,6 @@
             document.getElementById('form-usuarios').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // FUNCIÓN PARA CREAR/EDITAR USUARIO
         async function crearUsuario(e) {
             e.preventDefault();
             const btn = e.target.querySelector('button[type="submit"]');
