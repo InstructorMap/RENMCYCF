@@ -254,6 +254,7 @@
 
                 <div class="px-2 py-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-6">Sistema</div>
                 <button onclick="showTab('aliados')" id="nav-aliados" class="sidebar-link w-full"><i data-lucide="award" class="w-4 h-4"></i> Gestión Aliados</button>
+                <button onclick="showTab('comite')" id="nav-comite" class="sidebar-link w-full"><i data-lucide="users-round" class="w-4 h-4"></i> Comité Evaluador</button>
                 <button onclick="showTab('masiva')" id="nav-masiva" class="sidebar-link w-full"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Carga Masiva</button>
                 <button onclick="showTab('diseno')" id="nav-diseno" class="sidebar-link w-full"><i data-lucide="layout-template" class="w-4 h-4"></i> Diseño Credencial</button>
                 <button onclick="showTab('configuracion')" id="nav-configuracion" class="sidebar-link w-full"><i data-lucide="settings" class="w-4 h-4"></i> Configuración Core</button>
@@ -350,6 +351,30 @@
                         <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Instituciones Aliadas</h3><button onclick="cargarAliadosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
                         <p class="text-xs text-slate-400 mb-4">Si no hay aliados activos, el carrusel se ocultará automáticamente de la página pública.</p>
                         <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Logo</th><th class="p-3">Institución</th><th class="p-3">Estado</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="aliados-body"></tbody></table></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMITÉ EVALUADOR -->
+            <div id="view-comite" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 xl:col-span-1">
+                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nuevo Miembro del Comité</h3>
+                        <form id="form-comite" onsubmit="guardarMiembroComite(event)" class="space-y-4">
+                            <div><label>Nombre Completo</label><input type="text" id="comite-nombre" required></div>
+                            <div><label>Título / Profesión</label><input type="text" id="comite-titulo" required></div>
+                            <div><label>Breve Reseña</label><textarea id="comite-resena" rows="3"></textarea></div>
+                            <div><label>Foto de Perfil</label><input type="file" id="comite-foto" accept="image/*" class="text-slate-400"></div>
+                            <div class="bg-black/30 p-4 rounded-xl border border-white/10 flex items-center gap-3">
+                                <input type="checkbox" id="comite-activo" checked class="w-5 h-5">
+                                <label for="comite-activo" class="text-sm font-bold text-white mb-0 cursor-pointer">Miembro Activo</label>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">GUARDAR MIEMBRO</button>
+                        </form>
+                    </div>
+                    <div class="glass-card p-6 xl:col-span-2">
+                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Miembros Actuales del Comité</h3><button onclick="cargarComitePanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
+                        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Miembro</th><th class="p-3">Título</th><th class="p-3">Estado</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="comite-body"></tbody></table></div>
                     </div>
                 </div>
             </div>
@@ -749,7 +774,7 @@
                     const btn = document.getElementById(id);
                     if (btn) btn.style.display = 'flex';
                 });
-                ['nav-aliados', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios'].forEach(id => {
+                ['nav-aliados', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios'].forEach(id => {
                     const btn = document.getElementById(id);
                     if (btn) btn.style.display = 'flex';
                 });
@@ -761,7 +786,7 @@
                     if (navElement) navElement.style.display = permisos.includes(modulo) ? 'flex' : 'none';
                 });
                 
-                const sistemaButtons = ['nav-aliados', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios'];
+                const sistemaButtons = ['nav-aliados', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios'];
                 const tienePermisoSistema = permisos.includes('mod-sistema');
                 sistemaButtons.forEach(id => {
                     const el = document.getElementById(id);
@@ -833,7 +858,7 @@
             document.getElementById('view-' + id).classList.add('active');
             document.getElementById('nav-' + id)?.classList.add('active');
             
-            const titles = { 'dashboard':'Dashboard Estadístico', 'solicitudes':'Bandeja de CRM', 'auditoria':'Auditoría Comité', 'padron':'Padrón Nacional', 'aliados':'Gestión de Aliados', 'campus':'Portal Científico', 'biblioteca':'Biblioteca', 'tesis':'Auditoría de Tesis', 'masiva':'Inyección Masiva', 'diseno':'Calibrador de Credenciales', 'configuracion':'Configuración', 'contenido':'Textos del Sitio', 'usuarios':'Usuarios y Roles' };
+            const titles = { 'dashboard':'Dashboard Estadístico', 'solicitudes':'Bandeja de CRM', 'auditoria':'Auditoría Comité', 'padron':'Padrón Nacional', 'aliados':'Gestión de Aliados', 'comite':'Comité Evaluador', 'campus':'Portal Científico', 'biblioteca':'Biblioteca', 'tesis':'Auditoría de Tesis', 'masiva':'Inyección Masiva', 'diseno':'Calibrador de Credenciales', 'configuracion':'Configuración', 'contenido':'Textos del Sitio', 'usuarios':'Usuarios y Roles' };
             document.getElementById('page-title').textContent = titles[id] || id;
             
             if(id === 'dashboard') actualizarDashboard();
@@ -841,6 +866,7 @@
             if(id === 'auditoria') cargarAuditoria();
             if(id === 'padron') cargarPadron();
             if(id === 'aliados') cargarAliadosPanel();
+            if(id === 'comite') cargarComitePanel();
             if(id === 'campus') cargarNoticiasPanel();
             if(id === 'biblioteca') cargarBibliotecaPanel();
             if(id === 'tesis') cargarTesisPanel();
@@ -1445,6 +1471,97 @@
         async function eliminarAliado(id) { if (!confirm("¿Eliminar aliado definitivamente?")) return; await db.from('renmcycf_aliados').delete().eq('id', id); cargarAliadosPanel(); }
 
         // ==========================================
+        // 13. COMITÉ EVALUADOR (NUEVO MÓDULO)
+        // ==========================================
+        async function cargarComitePanel() {
+            const tbody = document.getElementById('comite-body');
+            tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center">Cargando...</td></tr>';
+            try {
+                const { data, error } = await db.from('renmcycf_comite').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+                if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">No hay miembros cargados.</td></tr>'; return; }
+                
+                tbody.innerHTML = data.map(m => `
+                <tr class="border-b border-white/5 hover:bg-white/5">
+                    <td class="p-3">
+                        <div class="flex items-center gap-3">
+                            <img src="${m.foto_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nombre)}&background=0a1128&color=fff`}" class="w-10 h-10 rounded-full object-cover border border-white/20">
+                            <span class="text-white font-bold block">${m.nombre}</span>
+                        </div>
+                    </td>
+                    <td class="p-3"><span class="text-slate-300 text-xs">${m.titulo || 'Sin título'}</span></td>
+                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${m.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">${m.activo?'ACTIVO':'INACTIVO'}</span></td>
+                    <td class="p-3 text-right">
+                        <button class="border border-white/20 text-white px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-white/10" onclick="toggleEstadoComite('${m.id}', ${!m.activo})">${m.activo?'Ocultar':'Mostrar'}</button>
+                        <button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40" onclick="eliminarMiembroComite('${m.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>`).join('');
+                lucide.createIcons();
+            } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
+        }
+
+        async function guardarMiembroComite(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const orig = btn.innerHTML;
+            btn.innerHTML = 'GUARDANDO...'; btn.disabled = true;
+            
+            try {
+                const nombre = document.getElementById('comite-nombre').value.trim();
+                const titulo = document.getElementById('comite-titulo').value.trim();
+                const resena = document.getElementById('comite-resena').value.trim();
+                const activo = document.getElementById('comite-activo').checked;
+                const fotoFile = document.getElementById('comite-foto').files[0];
+                
+                let fotoUrl = null;
+                if (fotoFile) {
+                    const fileName = `comite_${Date.now()}.${fotoFile.name.split('.').pop()}`;
+                    await db.storage.from('renmcycf-media').upload(fileName, fotoFile);
+                    fotoUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
+                }
+                
+                const { error } = await db.from('renmcycf_comite').insert([{
+                    nombre: nombre,
+                    titulo: titulo,
+                    resena: resena,
+                    foto_url: fotoUrl,
+                    activo: activo
+                }]);
+                
+                if (error) throw error;
+                
+                alert("✅ Miembro del comité guardado exitosamente.");
+                document.getElementById('form-comite').reset();
+                cargarComitePanel();
+            } catch (err) {
+                alert("Error: " + err.message);
+            } finally {
+                btn.innerHTML = orig;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        async function toggleEstadoComite(id, estado) {
+            try {
+                await db.from('renmcycf_comite').update({ activo: estado }).eq('id', id);
+                cargarComitePanel();
+            } catch (err) {
+                alert("Error: " + err.message);
+            }
+        }
+
+        async function eliminarMiembroComite(id) {
+            if (!confirm("¿Eliminar miembro del comité definitivamente?")) return;
+            try {
+                await db.from('renmcycf_comite').delete().eq('id', id);
+                cargarComitePanel();
+            } catch (err) {
+                alert("Error: " + err.message);
+            }
+        }
+
+        // ==========================================
         // 6. PORTAL CIENTÍFICO Y DIVULGACIÓN (EX CAMPUS)
         // ==========================================
         async function cargarNoticiasPanel() {
@@ -1732,26 +1849,17 @@
 
         // FUNCIÓN PARA EDITAR USUARIO
         function editarUsuarioForm(u) {
-            // Asignar ID de base de datos al campo oculto
             document.getElementById('usr-db-id').value = u.id || '';
-            
-            // Llenar los campos del formulario
             document.getElementById('usr-email').value = u.email || '';
             document.getElementById('usr-rol').value = u.rol || 'asesor';
             document.getElementById('usr-nombres').value = u.nombres || '';
             document.getElementById('usr-apellidos').value = u.apellidos || '';
-            
-            // Bloquear el campo de email
             document.getElementById('usr-email').readOnly = true;
-            
-            // Ocultar el bloque del UID
             document.getElementById('box-uid').style.display = 'none';
             
-            // Limpiar todos los checkboxes
             const checkboxes = document.querySelectorAll('#form-usuarios input[type="checkbox"]');
             checkboxes.forEach(cb => cb.checked = false);
             
-            // Leer y marcar los permisos
             let permisos = [];
             if (u.modulos_permitidos) {
                 try {
@@ -1761,20 +1869,17 @@
                 }
             }
             
-            // Marcar checkboxes que coincidan
             checkboxes.forEach(cb => {
                 if (permisos.includes(cb.value)) {
                     cb.checked = true;
                 }
             });
             
-            // Cambiar texto del botón
             const btnSubmit = document.querySelector('#form-usuarios button[type="submit"]');
             if (btnSubmit) {
                 btnSubmit.textContent = 'ACTUALIZAR USUARIO';
             }
             
-            // Subir al formulario
             window.scrollTo({ top: 0, behavior: 'smooth' });
             document.getElementById('form-usuarios').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -1806,7 +1911,6 @@
                 const uid = document.getElementById('usr-uid').value.trim();
 
                 if (dbId) {
-                    // ES UNA EDICIÓN (UPDATE SEGURO)
                     const { error } = await db.from('renmcycf_roles').update({
                         rol: rol,
                         nombres: nombres,
@@ -1815,7 +1919,6 @@
                     }).eq('id', dbId);
                     if (error) throw error;
                 } else {
-                    // ES UNA CREACIÓN (INSERT CON USER_ID)
                     if (!uid) throw new Error("Debe pegar el UID de Supabase Auth para crear un usuario nuevo.");
                     const { error } = await db.from('renmcycf_roles').insert([{
                         user_id: uid,
@@ -1835,7 +1938,6 @@
             } catch (err) {
                 alert("Error al crear usuario: " + err.message);
             } finally {
-                // Limpiar el formulario
                 document.getElementById('usr-db-id').value = '';
                 document.getElementById('box-uid').style.display = 'block';
                 document.getElementById('usr-email').readOnly = false;
