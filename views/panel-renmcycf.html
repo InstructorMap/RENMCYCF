@@ -57,6 +57,7 @@
         .badge-rechazado { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
         .permission-checkbox { display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px; border: 1px solid var(--glass-border); }
         .permission-checkbox label { margin-bottom: 0; color: #e2e8f0; }
+        input[readonly] { background: rgba(0,0,0,0.5); cursor: not-allowed; opacity: 0.6; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -595,6 +596,9 @@
                     <h3 class="text-white font-bold mb-6"><i data-lucide="users" class="text-emerald-500 inline mr-2"></i> Gestión de Usuarios</h3>
                     
                     <form id="form-usuarios" class="space-y-6 mb-8" onsubmit="crearUsuario(event)">
+                        <!-- CAMPO OCULTO PARA ID DE BASE DE DATOS -->
+                        <input type="hidden" id="usr-db-id">
+                        
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div><label>Email</label><input type="email" id="usr-email" required placeholder="usuario@ejemplo.com"></div>
                             <div><label>Rol Principal</label>
@@ -607,6 +611,13 @@
                             </div>
                             <div><label>Nombres</label><input type="text" id="usr-nombres" required></div>
                             <div><label>Apellidos</label><input type="text" id="usr-apellidos" required></div>
+                        </div>
+                        
+                        <!-- CAMPO UID DE SUPABASE AUTH -->
+                        <div class="md:col-span-2" id="box-uid">
+                            <label>UID de Supabase Auth (Requerido al crear nuevo)</label>
+                            <input type="text" id="usr-uid" placeholder="Ej: dd057f27-a081-4c3a-8810-10152c712f3a" class="font-mono text-sm text-blue-400">
+                            <p class="text-[9px] text-slate-400 mt-1">Copia el User UID desde Supabase > Authentication > Users.</p>
                         </div>
                         
                         <!-- PERMISOS GRANULARES -->
@@ -708,7 +719,6 @@
             lucide.createIcons();
         }
 
-        // CIRUGÍA 1: verificarSesion() REPARADA
         async function verificarSesion() {
             const { data: { session }, error } = await db.auth.getSession();
             if (error || !session) { document.getElementById('login-screen').style.display = 'flex'; return; }
@@ -723,7 +733,6 @@
             cargarIdentidadDossier();
             cargarWhatsappRegistro();
 
-            // LÓGICA DINÁMICA DE PERMISOS REPARADA
             const navButtons = {
                 'mod-dashboard': 'nav-dashboard',
                 'mod-solicitudes': 'nav-solicitudes',
@@ -736,12 +745,10 @@
 
             if (rolData.rol === 'superadmin') {
                 document.getElementById('menu-admin-section').style.display = 'block';
-                // Enciende botones principales
                 Object.values(navButtons).forEach(id => {
                     const btn = document.getElementById(id);
                     if (btn) btn.style.display = 'flex';
                 });
-                // Enciende botones de sistema
                 ['nav-aliados', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios'].forEach(id => {
                     const btn = document.getElementById(id);
                     if (btn) btn.style.display = 'flex';
@@ -1723,17 +1730,28 @@
             cargarUsuarios(); 
         }
 
+        // FUNCIÓN PARA EDITAR USUARIO
         function editarUsuarioForm(u) {
+            // Asignar ID de base de datos al campo oculto
+            document.getElementById('usr-db-id').value = u.id || '';
+            
+            // Llenar los campos del formulario
             document.getElementById('usr-email').value = u.email || '';
             document.getElementById('usr-rol').value = u.rol || 'asesor';
             document.getElementById('usr-nombres').value = u.nombres || '';
             document.getElementById('usr-apellidos').value = u.apellidos || '';
             
+            // Bloquear el campo de email
             document.getElementById('usr-email').readOnly = true;
             
+            // Ocultar el bloque del UID
+            document.getElementById('box-uid').style.display = 'none';
+            
+            // Limpiar todos los checkboxes
             const checkboxes = document.querySelectorAll('#form-usuarios input[type="checkbox"]');
             checkboxes.forEach(cb => cb.checked = false);
             
+            // Leer y marcar los permisos
             let permisos = [];
             if (u.modulos_permitidos) {
                 try {
@@ -1743,27 +1761,30 @@
                 }
             }
             
+            // Marcar checkboxes que coincidan
             checkboxes.forEach(cb => {
                 if (permisos.includes(cb.value)) {
                     cb.checked = true;
                 }
             });
             
+            // Cambiar texto del botón
             const btnSubmit = document.querySelector('#form-usuarios button[type="submit"]');
             if (btnSubmit) {
                 btnSubmit.textContent = 'ACTUALIZAR USUARIO';
             }
             
+            // Subir al formulario
             window.scrollTo({ top: 0, behavior: 'smooth' });
             document.getElementById('form-usuarios').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // CIRUGÍA 2: crearUsuario(e) REPARADA
+        // FUNCIÓN PARA CREAR/EDITAR USUARIO
         async function crearUsuario(e) {
             e.preventDefault();
             const btn = e.target.querySelector('button[type="submit"]');
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline"></i> CREANDO...';
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline"></i> PROCESANDO...';
             btn.disabled = true;
             lucide.createIcons();
             
@@ -1781,29 +1802,42 @@
                     ['mod-dashboard', 'mod-solicitudes', 'mod-auditoria', 'mod-padron', 'mod-campus', 'mod-biblioteca', 'mod-tesis', 'mod-sistema'] : 
                     permisosSeleccionados;
                 
-                // UPSERT SEGURO SIN UPDATED_AT
-                const { data, error } = await db
-                    .from('renmcycf_roles')
-                    .upsert({
+                const dbId = document.getElementById('usr-db-id').value;
+                const uid = document.getElementById('usr-uid').value.trim();
+
+                if (dbId) {
+                    // ES UNA EDICIÓN (UPDATE SEGURO)
+                    const { error } = await db.from('renmcycf_roles').update({
+                        rol: rol,
+                        nombres: nombres,
+                        apellidos: apellidos,
+                        modulos_permitidos: modulosFinales
+                    }).eq('id', dbId);
+                    if (error) throw error;
+                } else {
+                    // ES UNA CREACIÓN (INSERT CON USER_ID)
+                    if (!uid) throw new Error("Debe pegar el UID de Supabase Auth para crear un usuario nuevo.");
+                    const { error } = await db.from('renmcycf_roles').insert([{
+                        user_id: uid,
                         email: email,
                         rol: rol,
                         nombres: nombres,
                         apellidos: apellidos,
                         activo: true,
                         modulos_permitidos: modulosFinales
-                    }, { 
-                        onConflict: 'email',
-                        ignoreDuplicates: false 
-                    });
+                    }]);
+                    if (error) throw error;
+                }
                 
-                if (error) throw error;
-                
-                alert("✅ Usuario creado/actualizado exitosamente. Recuerde crear las credenciales en Supabase Auth.");
+                alert("✅ Usuario creado/actualizado exitosamente.");
                 document.getElementById('form-usuarios').reset();
                 cargarUsuarios();
             } catch (err) {
                 alert("Error al crear usuario: " + err.message);
             } finally {
+                // Limpiar el formulario
+                document.getElementById('usr-db-id').value = '';
+                document.getElementById('box-uid').style.display = 'block';
                 document.getElementById('usr-email').readOnly = false;
                 btn.innerHTML = originalHTML;
                 btn.disabled = false;
