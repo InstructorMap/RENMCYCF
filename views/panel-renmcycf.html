@@ -28,7 +28,6 @@
         .sidebar-link.active { color: var(--neon-gold); background: rgba(217, 119, 6, 0.1); border-left: 3px solid var(--neon-gold); }
         input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="password"], input[type="date"], input[type="color"], input[type="tel"], select, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; padding: 10px 12px; color: white; outline: none; transition: all 0.3s; font-size: 0.85rem; }
         input:focus, select:focus, textarea:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
-        input[readonly] { background: rgba(0,0,0,0.5); cursor: not-allowed; opacity: 0.6; }
         label { display: block; font-size: 0.65rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
         th { background: rgba(0,0,0,0.4); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
         tr { border-bottom: 1px solid var(--glass-border); }
@@ -219,7 +218,6 @@
                             <option value="A2">A.2</option>
                             <option value="A3">A.3</option>
                             <option value="A4">A.4</option>
-                            <!-- TAREA 1: CATEGORÍAS B1, B2, B3 -->
                             <option value="B1">B.1 - Profesional con título de grado</option>
                             <option value="B2">B.2 - Técnico Superior</option>
                             <option value="B3">B.3 - Lic. / Téc. en Seguridad</option>
@@ -510,13 +508,13 @@
                                 <div class="bg-black/30 p-3 rounded-lg border border-white/10 flex items-center gap-3">
                                     <input type="checkbox" id="conf-mostrar-facebook" class="w-5 h-5 rounded text-blue-500 focus:ring-blue-500 border-slate-600">
                                     <label for="conf-mostrar-facebook" class="text-sm font-bold text-white mb-0 cursor-pointer flex items-center gap-2">
-                                        <i data-lucide="facebook" class="w-5 h-5 text-blue-500"></i> Mostrar Facebook
+                                        <i data-lucide="globe" class="w-5 h-5 text-blue-500"></i> Mostrar Facebook
                                     </label>
                                 </div>
                                 <div class="bg-black/30 p-3 rounded-lg border border-white/10 flex items-center gap-3">
                                     <input type="checkbox" id="conf-mostrar-instagram" class="w-5 h-5 rounded text-pink-500 focus:ring-pink-500 border-slate-600">
                                     <label for="conf-mostrar-instagram" class="text-sm font-bold text-white mb-0 cursor-pointer flex items-center gap-2">
-                                        <i data-lucide="instagram" class="w-5 h-5 text-pink-500"></i> Mostrar Instagram
+                                        <i data-lucide="camera" class="w-5 h-5 text-pink-500"></i> Mostrar Instagram
                                     </label>
                                 </div>
                             </div>
@@ -596,7 +594,6 @@
                 <div class="glass-card p-8 border-emerald-500/30">
                     <h3 class="text-white font-bold mb-6"><i data-lucide="users" class="text-emerald-500 inline mr-2"></i> Gestión de Usuarios</h3>
                     
-                    <!-- TAREA 4: FORMULARIO REDISEÑADO SIN CONTRASEÑA -->
                     <form id="form-usuarios" class="space-y-6 mb-8" onsubmit="crearUsuario(event)">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div><label>Email</label><input type="email" id="usr-email" required placeholder="usuario@ejemplo.com"></div>
@@ -652,7 +649,7 @@
                         </div>
                         
                         <div class="flex justify-end">
-                            <button type="submit" id="btn-submit-usuario" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition-transform active:scale-95">CREAR USUARIO</button>
+                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition-transform active:scale-95">CREAR USUARIO</button>
                         </div>
                     </form>
                     
@@ -711,7 +708,7 @@
             lucide.createIcons();
         }
 
-        // TAREA 4: VERIFICACIÓN DE SESIÓN CON PERMISOS DINÁMICOS
+        // CIRUGÍA 1: verificarSesion() REPARADA
         async function verificarSesion() {
             const { data: { session }, error } = await db.auth.getSession();
             if (error || !session) { document.getElementById('login-screen').style.display = 'flex'; return; }
@@ -726,7 +723,7 @@
             cargarIdentidadDossier();
             cargarWhatsappRegistro();
 
-            // LÓGICA DINÁMICA DE PERMISOS
+            // LÓGICA DINÁMICA DE PERMISOS REPARADA
             const navButtons = {
                 'mod-dashboard': 'nav-dashboard',
                 'mod-solicitudes': 'nav-solicitudes',
@@ -734,33 +731,29 @@
                 'mod-padron': 'nav-padron',
                 'mod-campus': 'nav-campus',
                 'mod-biblioteca': 'nav-biblioteca',
-                'mod-tesis': 'nav-tesis',
-                'mod-sistema': 'nav-sistema'
+                'mod-tesis': 'nav-tesis'
             };
 
-            // Si es superadmin, mostrar todo
             if (rolData.rol === 'superadmin') {
                 document.getElementById('menu-admin-section').style.display = 'block';
+                // Enciende botones principales
                 Object.values(navButtons).forEach(id => {
-                    document.getElementById(id).style.display = 'flex';
+                    const btn = document.getElementById(id);
+                    if (btn) btn.style.display = 'flex';
                 });
-                // Mostrar también los botones de sistema
+                // Enciende botones de sistema
                 ['nav-aliados', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios'].forEach(id => {
-                    document.getElementById(id).style.display = 'flex';
+                    const btn = document.getElementById(id);
+                    if (btn) btn.style.display = 'flex';
                 });
             } else {
-                // Para otros roles, usar permisos dinámicos
                 const permisos = rolData.modulos_permitidos || [];
                 
-                // Mostrar/ocultar según permisos
                 Object.entries(navButtons).forEach(([modulo, navId]) => {
                     const navElement = document.getElementById(navId);
-                    if (navElement) {
-                        navElement.style.display = permisos.includes(modulo) ? 'flex' : 'none';
-                    }
+                    if (navElement) navElement.style.display = permisos.includes(modulo) ? 'flex' : 'none';
                 });
                 
-                // Botones del sistema requieren mod-sistema
                 const sistemaButtons = ['nav-aliados', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios'];
                 const tienePermisoSistema = permisos.includes('mod-sistema');
                 sistemaButtons.forEach(id => {
@@ -768,27 +761,16 @@
                     if (el) el.style.display = tienePermisoSistema ? 'flex' : 'none';
                 });
                 
-                // Mostrar sección admin si tiene algún permiso de sistema
                 const tienePermisosAdmin = permisos.some(p => ['mod-campus', 'mod-biblioteca', 'mod-tesis', 'mod-sistema'].includes(p));
                 document.getElementById('menu-admin-section').style.display = tienePermisosAdmin ? 'block' : 'none';
             }
 
-            // Redirección según permisos disponibles
             const permisos = rolData.modulos_permitidos || [];
             if (rolData.rol !== 'superadmin') {
-                if (permisos.includes('mod-solicitudes')) {
-                    showTab('solicitudes');
-                } else if (permisos.includes('mod-auditoria')) {
-                    showTab('auditoria');
-                } else if (permisos.includes('mod-dashboard')) {
-                    showTab('dashboard');
-                } else if (permisos[0]) {
-                    const modulo = permisos[0];
-                    const navId = navButtons[modulo];
-                    if (navId) {
-                        showTab(navId.replace('nav-', ''));
-                    }
-                }
+                if (permisos.includes('mod-solicitudes')) showTab('solicitudes');
+                else if (permisos.includes('mod-auditoria')) showTab('auditoria');
+                else if (permisos.includes('mod-dashboard')) showTab('dashboard');
+                else if (permisos[0] && navButtons[permisos[0]]) showTab(navButtons[permisos[0]].replace('nav-', ''));
             } else {
                 actualizarDashboard();
                 showTab('dashboard');
@@ -1170,7 +1152,6 @@
             } catch (err) { alert("Error: " + err.message); }
         }
 
-        // TAREA 2: AUTO-MATRÍCULA CORRELATIVA
         async function aprobarMatricula() {
             if (!itemDossierActual) return;
             
@@ -1181,7 +1162,6 @@
             lucide.createIcons();
 
             try {
-                // Consultar matrículas existentes
                 const { data: matriculas, error: errorConsulta } = await db
                     .from('renmcycf_padron')
                     .select('matricula_oficial')
@@ -1189,16 +1169,13 @@
                 
                 if (errorConsulta) throw errorConsulta;
                 
-                // Filtrar y extraer números
                 let maxNumero = 999;
                 if (matriculas && matriculas.length > 0) {
                     matriculas.forEach(m => {
                         const matricula = m.matricula_oficial || '';
-                        // Ignorar strings que contengan letras antes de la barra
                         const partes = matricula.split('/');
                         if (partes.length > 0) {
                             const numeroStr = partes[0].trim();
-                            // Solo procesar si es numérico
                             if (/^\d+$/.test(numeroStr)) {
                                 const numero = parseInt(numeroStr);
                                 if (numero > maxNumero) maxNumero = numero;
@@ -1207,17 +1184,11 @@
                     });
                 }
                 
-                // Calcular siguiente número
                 const siguienteNumero = maxNumero + 1;
-                
-                // Obtener año actual (2 dígitos)
                 const year = new Date().getFullYear();
                 const yearShort = year.toString().substr(-2);
-                
-                // Formato final
                 const matriculaSugerida = `${siguienteNumero}/${yearShort}`;
                 
-                // Prompt con valor por defecto
                 const mat = prompt(
                     `Ingrese el número de MATRÍCULA para ${itemDossierActual.nombres}:\n(Ej: 1000/26)`, 
                     matriculaSugerida
@@ -1352,7 +1323,6 @@
                 document.getElementById('edit-email').value = p.email || '';
                 document.getElementById('edit-provincia').value = p.provincia_laboral || '';
                 
-                // TAREA 3: CARGAR REDES SOCIALES
                 document.getElementById('edit-facebook').value = p.facebook_url || '';
                 document.getElementById('edit-instagram').value = p.instagram_url || '';
                 document.getElementById('edit-linkedin').value = p.linkedin_url || '';
@@ -1409,7 +1379,6 @@
                     categoria: document.getElementById('edit-categoria').value,
                     estado_legal: document.getElementById('edit-estado').value,
                     fecha_vencimiento: document.getElementById('edit-vencimiento').value || null,
-                    // TAREA 3: ENVIAR REDES SOCIALES
                     facebook_url: document.getElementById('edit-facebook').value || null,
                     instagram_url: document.getElementById('edit-instagram').value || null,
                     linkedin_url: document.getElementById('edit-linkedin').value || null
@@ -1712,7 +1681,7 @@
         }
 
         // ==========================================
-        // 11. GESTIÓN DE USUARIOS (TAREA 4)
+        // 11. GESTIÓN DE USUARIOS
         // ==========================================
         async function cargarUsuarios() {
             const tbody = document.getElementById('usuarios-body');
@@ -1754,22 +1723,17 @@
             cargarUsuarios(); 
         }
 
-        // FUNCIÓN PARA EDITAR USUARIO (TAREA 2)
         function editarUsuarioForm(u) {
-            // Llenar los campos del formulario
             document.getElementById('usr-email').value = u.email || '';
             document.getElementById('usr-rol').value = u.rol || 'asesor';
             document.getElementById('usr-nombres').value = u.nombres || '';
             document.getElementById('usr-apellidos').value = u.apellidos || '';
             
-            // Bloquear el campo de email
             document.getElementById('usr-email').readOnly = true;
             
-            // Limpiar todos los checkboxes
             const checkboxes = document.querySelectorAll('#form-usuarios input[type="checkbox"]');
             checkboxes.forEach(cb => cb.checked = false);
             
-            // Leer y marcar los permisos
             let permisos = [];
             if (u.modulos_permitidos) {
                 try {
@@ -1779,32 +1743,27 @@
                 }
             }
             
-            // Marcar checkboxes que coincidan
             checkboxes.forEach(cb => {
                 if (permisos.includes(cb.value)) {
                     cb.checked = true;
                 }
             });
             
-            // Cambiar texto del botón
-            const btnSubmit = document.getElementById('btn-submit-usuario');
+            const btnSubmit = document.querySelector('#form-usuarios button[type="submit"]');
             if (btnSubmit) {
                 btnSubmit.textContent = 'ACTUALIZAR USUARIO';
             }
             
-            // Subir al formulario
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Enfocar el formulario
             document.getElementById('form-usuarios').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // TAREA 4: CREAR USUARIO CON PERMISOS GRANULARES
+        // CIRUGÍA 2: crearUsuario(e) REPARADA
         async function crearUsuario(e) {
             e.preventDefault();
             const btn = e.target.querySelector('button[type="submit"]');
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline"></i> PROCESANDO...';
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline"></i> CREANDO...';
             btn.disabled = true;
             lucide.createIcons();
             
@@ -1814,19 +1773,15 @@
                 const nombres = document.getElementById('usr-nombres').value.trim();
                 const apellidos = document.getElementById('usr-apellidos').value.trim();
                 
-                // Recopilar permisos seleccionados
                 const permisosSeleccionados = [];
                 const checkboxes = document.querySelectorAll('#form-usuarios input[type="checkbox"]:checked');
-                checkboxes.forEach(cb => {
-                    permisosSeleccionados.push(cb.value);
-                });
+                checkboxes.forEach(cb => permisosSeleccionados.push(cb.value));
                 
-                // Si es superadmin, dar todos los permisos
                 const modulosFinales = rol === 'superadmin' ? 
                     ['mod-dashboard', 'mod-solicitudes', 'mod-auditoria', 'mod-padron', 'mod-campus', 'mod-biblioteca', 'mod-tesis', 'mod-sistema'] : 
                     permisosSeleccionados;
                 
-                // Upsert basado en email
+                // UPSERT SEGURO SIN UPDATED_AT
                 const { data, error } = await db
                     .from('renmcycf_roles')
                     .upsert({
@@ -1835,8 +1790,7 @@
                         nombres: nombres,
                         apellidos: apellidos,
                         activo: true,
-                        modulos_permitidos: JSON.stringify(modulosFinales),
-                        updated_at: new Date().toISOString()
+                        modulos_permitidos: modulosFinales
                     }, { 
                         onConflict: 'email',
                         ignoreDuplicates: false 
@@ -1850,13 +1804,11 @@
             } catch (err) {
                 alert("Error al crear usuario: " + err.message);
             } finally {
-                // TAREA 3: LIMPIAR FORMULARIO
                 document.getElementById('usr-email').readOnly = false;
-                
                 btn.innerHTML = originalHTML;
                 btn.disabled = false;
                 
-                const btnSubmit = document.getElementById('btn-submit-usuario');
+                const btnSubmit = document.querySelector('#form-usuarios button[type="submit"]');
                 if (btnSubmit) {
                     btnSubmit.textContent = 'CREAR USUARIO';
                 }
