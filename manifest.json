@@ -1,8 +1,8 @@
 {
-  "name": "Wallet RENMCYCF",
+  "name": "Legajo RENMCYCF",
   "short_name": "RENMCYCF",
   "description": "Credencial Digital y Plataforma Oficial del Registro Nacional de Matriculados en Criminalística y Ciencias Forenses.",
-  "start_url": "./wallet.renmcycf.html",
+  "start_url": "./legajo.renmcycf.html",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#0a1128",
