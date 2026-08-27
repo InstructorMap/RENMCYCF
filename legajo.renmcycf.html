@@ -5,676 +5,1444 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0a1128">
-    <title>Mi Legajo Digital · RENMCYCF</title>
+    <title>Legajo Digital · RENMCYCF</title>
     
-    <link rel="manifest" href="manifest.json">
-    
-    <!-- Librerías Core -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Librerías para Credencial y Foto -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; -webkit-tap-highlight-color: transparent; }
-        .font-title { font-family: 'Montserrat', sans-serif; }
-        
-        /* App Layout (Mobile First) */
-        #app-layout { display: none; padding-bottom: 80px; } /* Espacio para el nav inferior */
-        
-        /* Bottom Navigation Bar */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0a1128; border-top: 2px solid #d4af37; display: flex; justify-content: space-around; padding: 10px 5px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 50; box-shadow: 0 -5px 20px rgba(0,0,0,0.3); }
-        .nav-item { display: flex; flex-direction: column; items-center; justify-content: center; color: #94a3b8; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; gap: 4px; transition: all 0.3s; width: 25%; text-align: center; }
-        .nav-item.active { color: #d4af37; transform: translateY(-3px); }
-        .nav-item i { margin: 0 auto; }
-        
-        .tab-content { display: none; animation: fadeIn 0.3s ease forwards; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        :root { --forense-navy: #0a1128; --forense-gold: #d4af37; --bg-app: #f1f5f9; }
+        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-app); color: #333; height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; overscroll-behavior-y: none; }
 
-        /* Login Screen */
-        #login-screen { position: fixed; inset: 0; z-index: 100; background: #0a1128; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .login-box { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; text-align: center; width: 100%; max-width: 380px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+        .glass-panel { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
 
-        input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 12px; color: white; outline: none; transition: border-color 0.3s; margin-bottom: 15px; text-align: center; font-size: 16px; }
-        input:focus { border-color: #d4af37; }
+        /* FRANJA AZUL SIEMPRE VISIBLE */
+        .app-header { background: linear-gradient(135deg, #0a1128 0%, #1e3a8a 50%, #0a1128 100%); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.15); position: sticky; top: 0; border-bottom: 3px solid var(--forense-gold); }
+        .header-logo-ring {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--forense-gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .header-logo-ring img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 4px;
+        }
 
-        /* Estilos del Recortador de Fotos */
-        #cropper-modal { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.9); display: none; flex-direction: column; }
-        .cropper-container-wrapper { flex: 1; position: relative; width: 100%; height: 100%; overflow: hidden; }
+        /* MARCAS DE AGUA CON Z-INDEX 0 */
+        .watermark-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle at 50% 50%, rgba(10, 17, 40, 0.04) 0%, transparent 70%);
+        }
+        .watermark-logo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.06;
+            width: 500px;
+            height: 500px;
+            object-fit: contain;
+        }
+        .watermark-ring {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            border: 3px dashed rgba(10, 17, 40, 0.07);
+        }
 
-        /* Credencial Render */
-        .credencial-wrapper { transform: scale(0.32); transform-origin: top left; }
-        @media (min-width: 380px) { .credencial-wrapper { transform: scale(0.35); } }
-        @media (min-width: 420px) { .credencial-wrapper { transform: scale(0.39); } }
-        @media (min-width: 768px) { .credencial-wrapper { transform: scale(0.6); transform-origin: top center; margin: 0 auto; } }
+        /* PANTALLAS CON FONDO TRANSPARENTE + MIN-HEIGHT FIX */
+        .screen { display: none; flex: 1; flex-direction: column; padding: 16px; padding-bottom: 90px; z-index: 2; position: relative; overflow-y: auto; opacity: 0; transform: translateX(20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; min-height: 0; }
+        .screen.active { display: flex; opacity: 1; transform: translateX(0); }
+
+        .login-bg { position: fixed; inset: 0; z-index: 0; object-fit: cover; width: 100%; height: 100%; opacity: 0.15; filter: grayscale(30%); display: none; }
+        .input-auth { width: 100%; padding: 16px; border: 2px solid transparent; border-radius: 12px; font-size: 18px; outline: none; text-align: center; font-weight: 800; letter-spacing: 2px; transition: 0.3s; background: rgba(255,255,255,0.95); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .input-auth:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2), inset 0 2px 4px rgba(0,0,0,0.05); }
+
+        .card-viewport { width: 100%; max-width: 420px; margin: 0 auto; overflow: hidden; position: relative; margin-bottom: 20px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); background: #fff; }
+        #carnet-render { width: 1000px; height: 630px; background: white; position: absolute; top: 0; left: 0; transform-origin: top left; }
+
+        .view-toggles { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; background: #e2e8f0; padding: 4px; border-radius: 24px; width: fit-content; margin-left: auto; margin-right: auto; }
+        .btn-toggle { background: transparent; border: none; padding: 8px 20px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
+        .btn-toggle.active { background: white; color: var(--forense-navy); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; padding: 10px 5px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #94a3b8; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: var(--forense-navy); transform: translateY(-2px); }
+        .nav-item.active i { color: var(--forense-gold); }
+
+        .cropper-view-box, .cropper-face { border-radius: 50%; } 
+        .cropper-line, .cropper-point { background-color: var(--forense-gold); }
+
+        .skeleton { background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         
-        .cred-card { position: relative; width: 1000px; height: 630px; background-size: 1000px 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.2); margin-bottom: 20px; }
+        .tc-box { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; max-height: 300px; overflow-y: auto; text-align: left; font-size: 12px; line-height: 1.6; color: #475569; margin-bottom: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); }
+        .tc-box h3 { color: var(--forense-navy); font-weight: 900; font-size: 14px; margin-bottom: 10px; }
+        .form-input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; margin-bottom: 12px; background: white; color: #1e293b; }
+        .form-input:focus { border-color: var(--forense-navy); box-shadow: 0 0 0 3px rgba(10, 17, 40, 0.1); }
+
+        /* ==========================================
+           PANTALLA DE PERFIL - DISEÑO PREMIUM
+           ========================================== */
+        #screen-perfil {
+            padding-bottom: 20px;
+        }
+        .perfil-content {
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .perfil-foto-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+        .perfil-foto-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--forense-gold);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        .perfil-foto-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--forense-navy);
+            color: var(--forense-gold);
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .perfil-foto-btn:hover {
+            background: #1e293b;
+            transform: translateY(-1px);
+        }
+        .perfil-form-section {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+        /* FIX: Eliminado position:sticky y bottom:0, ahora fluye naturalmente */
+        .perfil-actions {
+            margin-top: 20px;
+            background: linear-gradient(to top, var(--bg-app) 80%, transparent 100%);
+            padding: 15px 0 10px;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+        .perfil-actions .btn-guardar {
+            width: 100%;
+            padding: 14px;
+            background: var(--forense-navy);
+            color: var(--forense-gold);
+            border: none;
+            border-radius: 14px;
+            font-weight: 900;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .perfil-actions .btn-guardar:hover {
+            background: #1e293b;
+            transform: translateY(-1px);
+        }
+        .perfil-actions .btn-cancelar {
+            width: 100%;
+            padding: 12px;
+            background: #e2e8f0;
+            color: #475569;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .perfil-actions .btn-cancelar:hover {
+            background: #cbd5e1;
+        }
+
+        /* ==========================================
+           PANTALLA FOTO - REGLAS ELIMINADAS PARA EVITAR CONFLICTO CON TAILWIND
+           (Tailwind gestiona todo mediante utilidades)
+           ========================================== */
+        .foto-btn {
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            transition: all 0.3s;
+            cursor: pointer;
+            min-height: 50px;
+        }
+        .foto-btn:active { transform: scale(0.97); }
+
+        /* ==========================================
+           GRID LAYOUT PARA ESCRITORIO (2 COLUMNAS)
+           ========================================== */
+        @media (max-width: 767px) {
+            /* MÓVIL: Apilado vertical (comportamiento actual) */
+            .screen-wallet-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                width: 100%;
+            }
+            .card-section {
+                width: 100%;
+                max-width: 420px;
+            }
+            .actions-section {
+                width: 100%;
+                max-width: 420px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .actions-section .full-width {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            /* TABLET: Apilado vertical centrado */
+            .screen { padding: 30px; padding-bottom: 90px; }
+            .screen-wallet-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+                max-width: 600px;
+                margin: 0 auto;
+                width: 100%;
+            }
+            .card-section {
+                width: 100%;
+                max-width: 500px;
+            }
+            .actions-section {
+                width: 100%;
+                max-width: 500px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+            .actions-section .full-width {
+                grid-column: 1 / -1;
+            }
+            .perfil-actions {
+                flex-direction: row;
+                gap: 12px;
+            }
+            .perfil-actions .btn-guardar {
+                flex: 1;
+            }
+            .perfil-actions .btn-cancelar {
+                width: auto;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            /* ESCRITORIO: Grid de 2 columnas */
+            .screen { padding: 30px; padding-bottom: 90px; }
+            
+            .screen-wallet-content {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+                max-width: 1100px;
+                margin: 0 auto;
+                width: 100%;
+                align-items: start;
+            }
+            
+            .card-section {
+                width: 100%;
+                max-width: 500px;
+                justify-self: center;
+            }
+            
+            .actions-section {
+                width: 100%;
+                max-width: 450px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                justify-self: start;
+            }
+            
+            /* El bloque de bienvenida va arriba en el panel derecho */
+            .card-section .welcome-block {
+                order: -1;
+            }
+            
+            .actions-section .full-width {
+                grid-column: 1 / -1;
+            }
+            
+            /* Grid interno para métricas y botones */
+            .actions-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+            
+            .perfil-actions {
+                flex-direction: row;
+                gap: 12px;
+                max-width: 600px;
+            }
+            .perfil-actions .btn-guardar {
+                flex: 1;
+            }
+            .perfil-actions .btn-cancelar {
+                width: auto;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- PANTALLA DE LOGIN -->
-    <div id="login-screen">
-        <div class="login-box">
-            <div class="w-20 h-20 bg-slate-800 border-2 border-[#d4af37] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <i data-lucide="fingerprint" class="w-10 h-10 text-[#d4af37]"></i>
+    <!-- MARCA DE AGUA DE FONDO (LOGO SECUNDARIO) -->
+    <div class="watermark-bg"></div>
+    <div class="watermark-ring"></div>
+    <img id="watermark-logo-img" class="watermark-logo" src="https://ui-avatars.com/api/?name=R+N&background=fff&color=0a1128" alt="">
+
+    <!-- FRANJA AZUL SIEMPRE VISIBLE -->
+    <div id="app-header" class="app-header">
+        <div class="flex items-center gap-3">
+            <div class="header-logo-ring">
+                <i data-lucide="fingerprint" class="w-6 h-6 text-[#0a1128]" id="header-default-logo"></i>
+                <img id="nav-mini-logo" src="https://ui-avatars.com/api/?name=R+N&background=fff&color=0a1128" class="hidden">
             </div>
-            <h1 class="text-2xl font-black text-white mb-1 tracking-widest uppercase font-title">Mi Legajo</h1>
-            <p class="text-[10px] text-slate-400 mb-8 uppercase font-bold tracking-widest">Profesionales RENMCYCF</p>
-            
-            <form onsubmit="iniciarSesion(event)">
-                <input type="email" id="login-email" placeholder="Correo Electrónico" required>
-                <input type="password" id="login-password" placeholder="Contraseña" required>
-                <div id="login-error" class="text-red-400 text-xs font-bold hidden mb-4 bg-red-900/30 py-2 rounded border border-red-500/50"></div>
-                <button type="submit" id="btn-login" class="w-full bg-[#d4af37] hover:bg-yellow-500 text-[#0a1128] font-black uppercase tracking-widest py-3.5 rounded-xl shadow-lg transition-all">Ingresar al Sistema</button>
-            </form>
-            <p class="text-slate-500 text-[10px] mt-6">¿No recuerda su clave? Solicite blanqueo a soporte técnico.</p>
+            <div>
+                <h1 class="text-[11px] font-black tracking-widest text-[#d4af37] uppercase leading-tight">RENMCYCF</h1>
+                <p class="text-[8px] font-bold text-slate-300 uppercase opacity-80">Legajo Digital · Credencial Oficial</p>
+            </div>
         </div>
-    </div>
-
-    <!-- CROPPER MODAL (Recorte de Foto) -->
-    <div id="cropper-modal">
-        <div class="p-4 bg-[#0a1128] flex justify-between items-center text-white border-b border-white/10">
-            <h3 class="font-bold uppercase tracking-widest text-xs"><i data-lucide="crop" class="inline w-4 h-4 mr-2"></i>Encuadre 1:1</h3>
-            <button onclick="cerrarCropper()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
-        </div>
-        <div class="cropper-container-wrapper">
-            <img id="image-to-crop" src="" alt="Imagen a recortar">
-        </div>
-        <div class="p-4 bg-[#0a1128] border-t border-white/10 flex gap-3">
-            <button onclick="cerrarCropper()" class="flex-1 bg-slate-700 text-white py-3 rounded-lg font-bold text-xs uppercase tracking-widest">Cancelar</button>
-            <button onclick="guardarRecorte()" id="btn-guardar-recorte" class="flex-1 bg-[#d4af37] text-[#0a1128] py-3 rounded-lg font-black text-xs uppercase tracking-widest shadow-lg">Aplicar Foto</button>
-        </div>
-    </div>
-
-    <!-- APP PRINCIPAL -->
-    <div id="app-layout">
         
-        <!-- HEADER APP -->
-        <header class="bg-[#0a1128] text-white pt-6 pb-6 px-5 rounded-b-[30px] shadow-lg relative z-20">
-            <div class="flex justify-between items-center mb-6">
-                <div>
-                    <h2 class="text-[10px] text-[#d4af37] font-bold uppercase tracking-widest mb-1">Bienvenido/a</h2>
-                    <h1 class="text-xl font-black font-title truncate max-w-[200px]" id="ui-user-name">Cargando...</h1>
-                </div>
-                <div class="relative">
-                    <img id="ui-user-avatar" src="https://ui-avatars.com/api/?name=P&background=d4af37&color=0a1128" class="w-12 h-12 rounded-full border-2 border-[#d4af37] object-cover shadow-md">
-                    <div id="ui-status-dot" class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#0a1128]"></div>
-                </div>
-            </div>
-            
-            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 flex items-center justify-between">
-                <div>
-                    <p class="text-[9px] text-slate-400 uppercase font-bold tracking-widest mb-1">Estado Registral</p>
-                    <p class="text-sm font-black text-white" id="ui-status-text">VERIFICANDO...</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-[9px] text-slate-400 uppercase font-bold tracking-widest mb-1">Matrícula</p>
-                    <p class="text-sm font-mono font-bold text-[#d4af37]" id="ui-matricula">---</p>
-                </div>
-            </div>
-        </header>
-
-        <!-- CONTENEDORES DE PESTAÑAS -->
-        <main class="p-5 pt-8">
-
-            <!-- TAB: EXPEDIENTE (Estado y Mensajes) -->
-            <div id="tab-expediente" class="tab-content active space-y-5">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-black text-lg text-[#0a1128] uppercase tracking-wider"><i data-lucide="inbox" class="inline w-5 h-5 text-[#d4af37] mr-1"></i> Mi Trámite</h3>
-                    <button onclick="cargarDatosUsuario()" class="text-slate-400"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
-                </div>
-                
-                <div id="box-alerta-tramite"></div> <!-- Aquí se inyectan las alertas dinámicas -->
-
-                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mt-4">
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Información del Padrón</h4>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex justify-between"><span class="text-slate-500">Documento:</span><span class="font-mono font-bold text-slate-800" id="info-dni">---</span></div>
-                        <div class="flex justify-between"><span class="text-slate-500">Categoría Asignada:</span><span class="font-bold text-[#d4af37]" id="info-cat">---</span></div>
-                        <div class="flex justify-between"><span class="text-slate-500">Profesión:</span><span class="font-bold text-slate-800 text-right max-w-[150px] truncate" id="info-prof">---</span></div>
-                        <div class="flex justify-between border-t border-slate-100 pt-3"><span class="text-slate-500">Vencimiento:</span><span class="font-mono font-bold text-red-500" id="info-vence">---</span></div>
-                    </div>
-                </div>
-                
-                <button onclick="cerrarSesion()" class="w-full mt-6 py-4 bg-red-50 text-red-600 font-bold uppercase text-xs tracking-widest rounded-xl border border-red-100 hover:bg-red-100 transition flex items-center justify-center gap-2"><i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesión Segura</button>
-            </div>
-
-            <!-- TAB: CREDENCIAL (Billetera Digital) -->
-            <div id="tab-credencial" class="tab-content">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="font-black text-lg text-[#0a1128] uppercase tracking-wider"><i data-lucide="award" class="inline w-5 h-5 text-[#d4af37] mr-1"></i> Billetera Digital</h3>
-                </div>
-
-                <div id="bloqueo-credencial" class="bg-red-50 border border-red-200 p-6 rounded-2xl text-center shadow-sm hidden">
-                    <i data-lucide="lock" class="w-10 h-10 text-red-400 mx-auto mb-3"></i>
-                    <h4 class="font-black text-red-800 text-sm uppercase mb-2">Credencial Bloqueada</h4>
-                    <p class="text-xs text-red-600">Su matrícula no se encuentra en estado ACTIVO. No puede descargar ni visualizar la credencial digital oficial.</p>
-                </div>
-
-                <div id="area-credencial" class="hidden">
-                    <p class="text-xs text-slate-500 text-center mb-4">Esta credencial digital tiene validez oficial y posee las mismas características de seguridad que el formato físico.</p>
-                    
-                    <!-- RENDERIZADO ALTA RESOLUCIÓN (Escalado por CSS para que quepa en pantalla) -->
-                    <div class="overflow-hidden md:overflow-visible mb-6" style="min-height: 250px;">
-                        <div class="credencial-wrapper" id="print-zone">
-                            
-                            <!-- FRENTE -->
-                            <div id="card-frente" class="cred-card">
-                                <div id="pre-foto" style="position:absolute; overflow:hidden; border-radius:10px;"><img id="dyn-foto" src="" style="width:100%;height:100%;object-fit:cover;object-position:top;"></div>
-                                <div id="pre-roseta" style="position:absolute; display:none;"><img id="dyn-roseta" src="" style="width:100%;height:100%;object-fit:contain;pointer-events:none;"></div>
-                                <div id="pre-profesion" style="position:absolute; font-family:'Montserrat', sans-serif; font-weight:900; text-transform:uppercase; white-space: nowrap; overflow:hidden;">---</div>
-                                <div id="pre-categoria" style="position:absolute; font-family:'Montserrat', sans-serif; font-weight:900;">---</div>
-                                <div id="pre-nombre" style="position:absolute; font-family:'Inter', sans-serif; font-weight:900; text-transform:uppercase;">---</div>
-                                <div id="pre-dni" style="position:absolute; font-family:'Inter', sans-serif; font-weight:900;">---</div>
-                                <div id="pre-ano_nac" style="position:absolute; font-family:'Inter', sans-serif; font-weight:900;">---</div>
-                                <div id="pre-matricula" style="position:absolute; font-family:'Inter', sans-serif; font-weight:900;">---</div>
-                                <div id="pre-vence" style="position:absolute; font-family:'Inter', sans-serif; font-weight:900;">---</div>
-                            </div>
-                            
-                            <!-- DORSO -->
-                            <div id="card-dorso" class="cred-card">
-                                <div id="pre-dorso_cat" style="position:absolute; font-family:'Inter', sans-serif; font-weight:600; color:#333; line-height:1.4;">---</div>
-                                <div id="pre-qr" style="position:absolute; background: white; padding:10px; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
-                                    <img id="dyn-qr" src="" style="width:100%;height:100%;">
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    
-                    <button onclick="descargarPDF()" id="btn-pdf" class="w-full bg-[#0a1128] hover:bg-slate-800 text-[#d4af37] py-4 rounded-xl font-black uppercase tracking-widest text-sm shadow-xl transition-all flex items-center justify-center gap-2 mt-4"><i data-lucide="download" class="w-5 h-5"></i> Exportar a PDF (Alta Calidad)</button>
-                </div>
-            </div>
-
-            <!-- TAB: PERFIL Y FOTO -->
-            <div id="tab-perfil" class="tab-content space-y-5">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-black text-lg text-[#0a1128] uppercase tracking-wider"><i data-lucide="camera" class="inline w-5 h-5 text-[#d4af37] mr-1"></i> Mi Identidad Visual</h3>
-                </div>
-                
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center">
-                    <p class="text-xs text-slate-500 mb-6">La foto de perfil se utilizará para la impresión de su credencial oficial y para el Directorio Público. Debe ser una foto clara, formal y de frente.</p>
-                    
-                    <div class="w-32 h-32 mx-auto rounded-full border-4 border-[#d4af37] overflow-hidden shadow-lg mb-6 relative group bg-slate-100">
-                        <img id="profile-edit-foto" src="" class="w-full h-full object-cover object-top" alt="Tu foto">
-                    </div>
-                    
-                    <input type="file" id="input-subir-foto" accept="image/jpeg, image/png" class="hidden" onchange="abrirRecortador(this)">
-                    <button onclick="document.getElementById('input-subir-foto').click()" class="bg-blue-50 text-blue-600 border border-blue-200 px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-blue-100 transition shadow-sm w-full flex items-center justify-center gap-2"><i data-lucide="upload" class="w-4 h-4"></i> Subir Nueva Foto 1:1</button>
-                </div>
-            </div>
-
-            <!-- TAB: BIBLIOTECA PREMIUM -->
-            <div id="tab-biblioteca" class="tab-content space-y-5">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-black text-lg text-[#0a1128] uppercase tracking-wider"><i data-lucide="library" class="inline w-5 h-5 text-[#d4af37] mr-1"></i> Repositorio</h3>
-                </div>
-                <p class="text-xs text-slate-500 mb-4">Acceso exclusivo a material bibliográfico, protocolos y papers reservados para matriculados activos.</p>
-                
-                <div id="contenedor-libros" class="space-y-4 pb-10">
-                    <div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando repositorio...</div>
-                </div>
-            </div>
-
-        </main>
-
-        <!-- BOTTOM NAV -->
-        <nav class="bottom-nav">
-            <div class="nav-item active" onclick="switchTab('expediente')" id="nav-expediente">
-                <i data-lucide="layout-dashboard" class="w-6 h-6"></i><span>Panel</span>
-            </div>
-            <div class="nav-item" onclick="switchTab('credencial')" id="nav-credencial">
-                <i data-lucide="award" class="w-6 h-6"></i><span>Credencial</span>
-            </div>
-            <div class="nav-item" onclick="switchTab('perfil')" id="nav-perfil">
-                <i data-lucide="user" class="w-6 h-6"></i><span>Perfil</span>
-            </div>
-            <div class="nav-item" onclick="switchTab('biblioteca')" id="nav-biblioteca">
-                <i data-lucide="library" class="w-6 h-6"></i><span>Biblioteca</span>
-            </div>
-        </nav>
+        <div class="flex items-center gap-4">
+            <button onclick="abrirNotificaciones()" class="relative text-slate-300 hover:text-white transition-colors ml-2 hidden" id="btn-campana">
+                <i data-lucide="bell" class="w-6 h-6"></i>
+                <span id="badge-notificaciones" class="absolute -top-1 -right-1 flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                </span>
+            </button>
+            <button onclick="cerrarSesion()" class="text-slate-400 hover:text-red-400 transition-colors">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+            </button>
+        </div>
     </div>
 
-    <!-- SCRIPTS CORE -->
+    <!-- PANTALLA 1: LOGIN -->
+    <img id="dynamic-bg" src="" class="login-bg">
+    <div id="screen-login" class="screen active" style="justify-content: center; opacity: 1; transform: translateX(0);">
+        <div class="login-container glass-panel p-8 rounded-3xl mx-auto" style="max-width: 420px; width: 100%; position: relative; z-index: 10;">
+            <div class="w-24 h-24 bg-[#0a1128] rounded-full shadow-xl flex items-center justify-center mx-auto mb-6 border-4 border-[#d4af37] overflow-hidden relative" id="logo-container">
+                <i data-lucide="fingerprint" class="w-12 h-12 text-[#d4af37]" id="default-logo"></i>
+                <img id="dynamic-logo" src="" class="w-full h-full object-contain hidden p-2 bg-white absolute inset-0">
+            </div>
+            <h1 class="text-2xl font-black text-[#0a1128] mb-1 font-title uppercase tracking-tight text-center">Legajo Digital</h1>
+            <p class="text-[10px] text-slate-500 mb-8 font-black uppercase tracking-widest border-b border-slate-200 pb-4 w-full text-center">Identidad y Certificación Oficial</p>
+            
+            <input type="tel" id="input-dni" class="input-auth" placeholder="NÚMERO DE DNI" autocomplete="off" onkeyup="if(event.key==='Enter')ingresar()">
+            <div id="login-error" class="text-red-600 text-xs font-bold mt-2 mb-4 hidden bg-red-50 p-3 rounded-lg border border-red-200 w-full"></div>
+            
+            <button class="w-full bg-[#0a1128] text-[#d4af37] hover:bg-slate-800 font-black uppercase tracking-widest py-4 rounded-xl shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2 mt-4" id="btn-ingresar" onclick="ingresar()">
+                <i data-lucide="scan-face" class="w-5 h-5"></i> Validar Identidad
+            </button>
+            
+            <a href="index.renmcycf.html" class="mt-6 text-[10px] font-bold text-slate-400 hover:text-[#0a1128] uppercase tracking-widest block text-center">← Volver al Sitio Público</a>
+        </div>
+    </div>
+
+    <!-- PANTALLA 2: TÉRMINOS Y CONDICIONES -->
+    <div id="screen-tc" class="screen bg-white absolute inset-0 z-50">
+        <div class="max-w-md mx-auto w-full flex flex-col h-full pt-4">
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3"><i data-lucide="scale" class="w-6 h-6"></i></div>
+                <h2 class="text-xl font-black text-[#0a1128] uppercase">Acuerdo de Adhesión</h2>
+            </div>
+            <div class="tc-box flex-1 mb-6 border border-slate-200">
+                <h3>1. VERACIDAD DE DATOS E IMAGEN</h3>
+                <p>El Profesional declara bajo juramento que los datos aportados, así como la fotografía facial y títulos, son auténticos.</p><br>
+                <h3>2. USO DE PLATAFORMA</h3>
+                <p>La Credencial es intransferible. Autoriza al Registro a exhibir su habilitación en el Validador Público mediante código QR.</p><br>
+                <h3>3. TRATAMIENTO DE DATOS</h3>
+                <p>En cumplimiento de la Ley 25.326, la información será almacenada en bases auditadas.</p>
+            </div>
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
+                <label class="flex items-start gap-3 cursor-pointer">
+                    <input type="checkbox" id="check-tc" class="mt-1 w-5 h-5 accent-[#0a1128]" onchange="toggleBotonAceptar()">
+                    <span class="text-xs font-bold text-slate-700 leading-tight">He leído, comprendo y acepto los Términos y declaro bajo juramento mi identidad.</span>
+                </label>
+            </div>
+            <button class="w-full bg-slate-300 text-slate-500 font-black uppercase py-4 rounded-xl transition-all cursor-not-allowed" id="btn-aceptar-tc" onclick="aceptarTerminos()" disabled>
+                Firmar Acuerdo
+            </button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 2.5: FOTO CROPPER - CAMISA DE FUERZA MATEMÁTICA -->
+    <div id="screen-foto" class="screen bg-white">
+        <div class="max-w-md mx-auto w-full flex flex-col h-full pt-2 text-center pb-10">
+            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2"><i data-lucide="camera" class="w-5 h-5"></i></div>
+            <h2 class="text-lg font-black text-[#0a1128] uppercase mb-2">Fotografía Oficial</h2>
+            
+            <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 shadow-sm mb-3 text-left text-[11px] text-amber-900 leading-relaxed">
+                <p class="font-black uppercase mb-1 flex items-center gap-1"><i data-lucide="alert-triangle" class="inline w-3.5 h-3.5 text-amber-600"></i> Atención</p>
+                La fotografía será su identidad. Debe ser en <strong>primer plano, fondo claro, sin anteojos oscuros ni gorras.</strong>
+            </div>
+
+            <!-- SELECTOR DE FOTO -->
+            <div id="foto-selector-ui" class="flex-1 flex flex-col justify-center gap-3">
+                <button class="bg-[#0a1128] text-white hover:bg-slate-800 shadow-lg py-4 px-6 rounded-xl font-black text-[13px] flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="abrirSelectorArchivo(true)">
+                    <i data-lucide="camera" class="w-5 h-5 text-[#d4af37]"></i> TOMAR FOTO
+                </button>
+                <button class="bg-white border-2 border-slate-200 text-slate-700 hover:border-slate-300 py-4 px-6 rounded-xl font-bold text-[13px] flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="abrirSelectorArchivo(false)">
+                    <i data-lucide="image-plus" class="w-5 h-5 text-blue-600"></i> SUBIR DESDE GALERÍA
+                </button>
+                <input type="file" id="input-foto-oficial" accept="image/*" class="hidden" onchange="iniciarRecorte(this)">
+                <input type="file" id="input-foto-camara" accept="image/*" capture="user" class="hidden" onchange="iniciarRecorte(this)">
+                <button id="btn-cerrar-foto" onclick="abrirPerfil()" class="hidden mt-2 text-[10px] font-black uppercase text-slate-400 hover:text-slate-600 underline">Cancelar y volver al Perfil</button>
+            </div>
+
+            <!-- CROPPER UI CON CAMISA DE FUERZA MATEMÁTICA -->
+            <div id="foto-cropper-ui" class="hidden flex-col w-full gap-4 mt-2">
+                <div class="w-full bg-slate-900 rounded-xl overflow-hidden shadow-inner flex items-center justify-center" style="height: 45vh; min-height: 250px; max-height: 400px;">
+                    <img id="image-to-crop" src="" style="max-width: 100%; max-height: 100%; display: block;">
+                </div>
+                
+                <div class="flex gap-3 w-full">
+                    <button class="flex-1 bg-slate-200 text-slate-700 hover:bg-slate-300 py-3.5 rounded-xl font-black text-xs transition-transform active:scale-95" onclick="cancelarRecorte()">VOLVER</button>
+                    <button class="flex-[2] bg-[#d4af37] text-[#0a1128] hover:bg-yellow-500 shadow-md py-3.5 rounded-xl font-black text-xs transition-transform active:scale-95" id="btn-guardar-recorte" onclick="procesarYSubirRecorte()">GUARDAR ENCUADRE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA 3: LEGAJO Y CREDENCIAL (WALLET) - GRID LAYOUT EN PC -->
+    <div id="screen-wallet" class="screen">
+        <div class="screen-wallet-content">
+            <!-- COLUMNA IZQUIERDA: CREDENCIAL -->
+            <div class="card-section">
+                <!-- BLOQUE DE BIENVENIDA (SOLO MÓVIL) -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex justify-between items-center relative overflow-hidden welcome-block-mobile">
+                    <div class="absolute right-0 top-0 bottom-0 w-2 bg-emerald-400"></div>
+                    <div>
+                        <div class="text-[9px] text-emerald-600 font-bold uppercase tracking-widest flex items-center gap-1 mb-1"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sistema Activo</div>
+                        <div class="text-sm font-black text-[#0a1128] font-title uppercase tracking-tight line-clamp-1" id="user-name">---</div>
+                        <div class="text-[10px] font-mono font-bold text-slate-500" id="user-profesion">---</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-[#0a1128] text-[#d4af37] flex items-center justify-center shadow-md shrink-0 border border-[#d4af37]">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                </div>
+                
+                <div class="card-viewport" id="card-viewport">
+                    <div id="carnet-render"><div class="flex items-center justify-center h-full w-full text-slate-400 bg-slate-100"><i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i></div></div>
+                </div>
+                
+                <div class="view-toggles">
+                    <button class="btn-toggle active" id="btn-toggle-front" onclick="cambiarVista('front')">FRENTE</button>
+                    <button class="btn-toggle" id="btn-toggle-back" onclick="cambiarVista('back')">DORSO Y QR</button>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: PANEL DE ACCIONES (SOLO PC) -->
+            <div class="actions-section">
+                <!-- BLOQUE DE BIENVENIDA PARA PC -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex justify-between items-center relative overflow-hidden welcome-block-desktop" style="display: none;">
+                    <div class="absolute right-0 top-0 bottom-0 w-2 bg-emerald-400"></div>
+                    <div>
+                        <div class="text-[9px] text-emerald-600 font-bold uppercase tracking-widest flex items-center gap-1 mb-1"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sistema Activo</div>
+                        <div class="text-sm font-black text-[#0a1128] font-title uppercase tracking-tight line-clamp-1" id="user-name-pc">---</div>
+                        <div class="text-[10px] font-mono font-bold text-slate-500" id="user-profesion-pc">---</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-[#0a1128] text-[#d4af37] flex items-center justify-center shadow-md shrink-0 border border-[#d4af37]">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                </div>
+                
+                <!-- GRID DE MÉTRICAS Y BOTONES -->
+                <div class="actions-grid">
+                    <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner">
+                        <i data-lucide="eye" class="w-5 h-5 text-blue-400 mx-auto mb-1"></i>
+                        <h4 class="text-white font-black text-xl font-mono" id="metric-vistas">0</h4>
+                        <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Búsquedas</p>
+                    </div>
+                    <div class="bg-slate-800 rounded-xl p-4 text-center border border-slate-700 shadow-inner cursor-pointer hover:bg-slate-700 transition-colors" onclick="abrirPerfil()">
+                        <i data-lucide="user-cog" class="w-5 h-5 text-emerald-400 mx-auto mb-1"></i>
+                        <h4 class="text-white font-black text-xl font-mono">EDITAR</h4>
+                        <p class="text-[8px] text-slate-400 uppercase font-bold tracking-widest mt-1">Actualizar Datos</p>
+                    </div>
+                </div>
+                
+                <button id="btn-descargar-carnet" class="full-width bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="descargarCarnetOficial()">
+                    <i data-lucide="download" class="w-5 h-5 text-[#d4af37]"></i> Bajar Documento (PDF)
+                </button>
+                <button class="full-width bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="abrirModalDiplomas()">
+                    <i data-lucide="award" class="w-5 h-5 text-blue-600"></i> Mis Títulos
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE EDICIÓN DE PERFIL - AMPLIADA -->
+    <div id="screen-perfil" class="screen">
+        <div class="perfil-content">
+            <div class="perfil-foto-section">
+                <img id="perfil-foto-preview" src="" class="perfil-foto-avatar" alt="Foto de perfil">
+                <div>
+                    <h3 class="font-black text-sm text-[#0a1128] text-center uppercase">Fotografía Oficial</h3>
+                    <p class="text-[9px] text-slate-400 text-center">Visible en el Padrón Nacional</p>
+                </div>
+                <button onclick="cambiarPantallaLogin('screen-foto')" class="perfil-foto-btn">
+                    <i data-lucide="camera" class="w-4 h-4"></i> Cambiar Fotografía
+                </button>
+            </div>
+
+            <div class="perfil-form-section">
+                <h3 class="font-black text-xs text-[#0a1128] uppercase mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
+                    <i data-lucide="contact" class="w-4 h-4 text-[#d4af37]"></i> Datos de Contacto y Redes
+                </h3>
+                
+                <!-- Teléfono -->
+                <div class="mb-3">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Teléfono / WhatsApp</label>
+                    <input type="tel" id="perfil-telefono" class="form-input text-sm" placeholder="Ej: +54 9 11...">
+                </div>
+                
+                <!-- Email -->
+                <div class="mb-3">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Email de Contacto</label>
+                    <input type="email" id="perfil-email" class="form-input text-sm" placeholder="correo@ejemplo.com">
+                </div>
+                
+                <!-- Ciudad/Provincia Laboral -->
+                <div class="mb-3">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Ciudad / Provincia Laboral</label>
+                    <input type="text" id="perfil-provincia" class="form-input text-sm" placeholder="Ej: Córdoba Capital">
+                </div>
+                
+                <!-- Facebook -->
+                <div class="mb-3">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Facebook (URL)</label>
+                    <input type="url" id="perfil-facebook" class="form-input text-sm" placeholder="https://facebook.com/tu.perfil">
+                </div>
+                
+                <!-- Instagram -->
+                <div class="mb-3">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">Instagram (URL)</label>
+                    <input type="url" id="perfil-instagram" class="form-input text-sm" placeholder="https://instagram.com/tu.perfil">
+                </div>
+                
+                <!-- LinkedIn -->
+                <div class="mb-5">
+                    <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase tracking-widest">LinkedIn (URL)</label>
+                    <input type="url" id="perfil-linkedin" class="form-input text-sm" placeholder="https://linkedin.com/in/...">
+                </div>
+                
+                <!-- Switch Directorio Público -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <label class="text-xs font-bold text-[#0a1128] cursor-pointer" for="perfil-directorio">Figurar en el Directorio Público (Mapa Nacional)</label>
+                        <p class="text-[9px] text-slate-400 mt-1">Autorizo que mi nombre, categoría y provincia sean visibles</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3">
+                        <input type="checkbox" id="perfil-directorio" class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#d4af37] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#0a1128]"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="perfil-actions">
+            <button type="button" class="btn-guardar" id="btn-guardar-perfil" onclick="guardarPerfil(event)">
+                <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios
+            </button>
+            <button class="btn-cancelar" onclick="switchNavTab('wallet')">Cancelar y Volver</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 4: PORTAL CIENTÍFICO -->
+    <div id="screen-portal" class="screen">
+        <div class="mb-4 bg-white p-4 rounded-xl border border-slate-200 text-center">
+            <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Portal Científico</h2>
+            <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Feed Oficial de Actualidad</p>
+        </div>
+        <div id="feed-portal-container" class="space-y-4 pb-4">
+            <div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>
+        </div>
+    </div>
+
+    <!-- PANTALLA 5: BIBLIOTECA PREMIUM -->
+    <div id="screen-biblioteca" class="screen">
+        <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center">
+            <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Biblioteca</h2>
+            <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Repositorio Premium liberado</p>
+        </div>
+        <div id="wallet-biblioteca-container" class="space-y-3 pb-4">
+            <div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>
+        </div>
+    </div>
+
+    <!-- PANTALLA 6: TESIS Y PUBLICACIONES -->
+    <div id="screen-publicaciones" class="screen">
+        <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 text-center">
+            <h2 class="text-xl font-black text-[#0a1128] font-title uppercase">Investigación</h2>
+            <p class="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Presentación de Tesis al Comité</p>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm">
+            <h3 class="font-bold text-sm text-[#0a1128] mb-3 flex items-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4 text-[#d4af37]"></i> Subir Documento</h3>
+            <form id="form-subir-tesis" onsubmit="subirPublicacion(event)">
+                <input type="text" id="tesis-titulo" class="form-input text-sm" placeholder="Título de la publicación" required>
+                <textarea id="tesis-resumen" class="form-input text-sm" placeholder="Breve resumen (máx 300 caracteres)..." rows="3" maxlength="300" required></textarea>
+                
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Archivo PDF (Max. 10MB)</label>
+                    <input type="file" id="tesis-pdf" accept=".pdf" required class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#0a1128] file:text-[#d4af37]">
+                </div>
+                
+                <button type="submit" id="btn-subir-tesis" class="w-full bg-[#d4af37] text-[#0a1128] font-black uppercase text-xs tracking-wider py-3 rounded-xl flex justify-center items-center gap-2">
+                    <i data-lucide="send" class="w-4 h-4"></i> Enviar a Comité
+                </button>
+            </form>
+        </div>
+
+        <h3 class="font-bold text-xs text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-200 pb-2">Estado de mis envíos</h3>
+        <div id="lista-mis-tesis" class="space-y-3 pb-4"></div>
+    </div>
+
+    <!-- MODAL NOTIFICACIONES -->
+    <div id="modal-notificaciones" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex justify-end">
+        <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col animate-slide-in ml-auto">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-[#0a1128] text-white">
+                <h3 class="font-black uppercase tracking-widest text-sm flex items-center gap-2"><i data-lucide="bell" class="w-4 h-4 text-[#d4af37]"></i> Centro de Alertas</h3>
+                <button onclick="cerrarModalSeguro('modal-notificaciones')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50" id="lista-notificaciones"></div>
+        </div>
+    </div>
+
+    <!-- MODAL DIPLOMAS -->
+    <div id="modal-diplomas" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden flex flex-col p-4 pt-10">
+        <div class="flex justify-between items-center mb-6" style="max-width: 480px; margin-left: auto; margin-right: auto; width: 100%;">
+            <h3 class="text-white font-black uppercase text-xl"><i data-lucide="award" class="inline w-5 h-5 text-[#d4af37]"></i> Títulos Registrados</h3>
+            <button onclick="cerrarModalSeguro('modal-diplomas')" class="text-slate-400 hover:text-white"><i data-lucide="x-circle" class="w-8 h-8"></i></button>
+        </div>
+        <div class="flex-1 overflow-y-auto space-y-4 pb-10" id="lista-diplomas-modal" style="max-width: 480px; margin-left: auto; margin-right: auto; width: 100%;"></div>
+    </div>
+
+    <!-- BARRA NAVEGACIÓN INFERIOR PWA -->
+    <div class="bottom-nav hidden" id="bottom-nav">
+        <div class="nav-item active" id="tab-wallet" onclick="switchNavTab('wallet')">
+            <i data-lucide="id-card" class="w-6 h-6 mb-1"></i><span>Credencial</span>
+        </div>
+        <div class="nav-item" id="tab-portal" onclick="switchNavTab('portal')">
+            <i data-lucide="newspaper" class="w-6 h-6 mb-1"></i><span>Portal</span>
+        </div>
+        <div class="nav-item" id="tab-biblioteca" onclick="switchNavTab('biblioteca')">
+            <i data-lucide="library" class="w-6 h-6 mb-1"></i><span>Biblioteca</span>
+        </div>
+        <div class="nav-item" id="tab-publicaciones" onclick="switchNavTab('publicaciones')">
+            <i data-lucide="microscope" class="w-6 h-6 mb-1"></i><span>Tesis</span>
+        </div>
+    </div>
+
     <script>
-        // ==========================================
-        // CONFIGURACIÓN DE SUPABASE Y GLOBALES
-        // ==========================================
+        const el = id => document.getElementById(id);
+        function safeClass(id, action, cls) {
+            const element = el(id);
+            if (element) {
+                if(action === 'add') element.classList.add(cls);
+                if(action === 'remove') element.classList.remove(cls);
+            }
+        }
+
         lucide.createIcons();
-        const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co'; 
-        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE'; 
+        const { jsPDF } = window.jspdf;
+        const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
+        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
         const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
 
-        let currentUser = null;
-        let userDataDB = null; // Puede ser de renmcycf_padron o renmcycf_solicitudes
-        let isPadron = false;
-        
-        let configCredencial = null;
-        let cropper = null;
+        let currentView = 'front';
+        let alumnoActual = null;
+        let configGlobal = {};
+        let configDiseno = {};
+        let bgCredencialFrente = ''; let bgCredencialDorso = ''; let rosetaUrl = '';
+        let cropperInstance = null; let archivoSeleccionadoParaRecortar = null;
 
-        // INICIALIZACIÓN
+        if ('serviceWorker' in navigator) { 
+            window.addEventListener('load', () => { 
+                navigator.serviceWorker.register('/sw.js').catch(()=>{ console.log("Modo App Offline desactivado temporalmente."); }); 
+            }); 
+        }
+
         window.addEventListener('DOMContentLoaded', async () => {
-            await verificarSesion();
+            try { await cargarConfiguracionInicial(); } catch(e){}
+            lucide.createIcons();
         });
 
-        // ==========================================
-        // 1. AUTENTICACIÓN Y ENRUTAMIENTO
-        // ==========================================
-        async function iniciarSesion(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value.trim();
-            const pass = document.getElementById('login-password').value.trim();
-            const btn = document.getElementById('btn-login');
-            const errorDiv = document.getElementById('login-error');
-            
-            errorDiv.classList.add('hidden');
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin mx-auto"></i>'; btn.disabled = true;
-
+        async function cargarConfiguracionInicial() {
             try {
-                const { error } = await db.auth.signInWithPassword({ email, password: pass });
-                if (error) throw error;
-                await verificarSesion();
-            } catch (err) {
-                errorDiv.innerText = "Credenciales incorrectas o usuario no registrado.";
-                errorDiv.classList.remove('hidden');
-                btn.innerHTML = 'INGRESAR AL SISTEMA'; btn.disabled = false;
-            }
-            lucide.createIcons();
-        }
-
-        async function verificarSesion() {
-            const { data: { session }, error } = await db.auth.getSession();
-            if (error || !session) { 
-                document.getElementById('login-screen').style.display = 'flex'; 
-                document.getElementById('app-layout').style.display = 'none';
-                return; 
-            }
-            
-            currentUser = session.user;
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-layout').style.display = 'block';
-            
-            await cargarDatosUsuario();
-        }
-
-        async function cerrarSesion() { 
-            await db.auth.signOut(); 
-            window.location.reload(); 
-        }
-
-        // ==========================================
-        // 2. CARGA DE DATOS DEL PROFESIONAL
-        // ==========================================
-        async function cargarDatosUsuario() {
-            const userEmail = currentUser.email;
-            
-            try {
-                // 1. Buscar en Padrón Oficial (Prioridad)
-                const { data: pData } = await db.from('renmcycf_padron').select('*').eq('email', userEmail).maybeSingle();
-                
-                if (pData) {
-                    userDataDB = pData;
-                    isPadron = true;
-                } else {
-                    // 2. Si no está matriculado, buscar en Solicitudes (Trámite en curso)
-                    const { data: sData } = await db.from('renmcycf_solicitudes').select('*').eq('email', userEmail).order('created_at', {ascending: false}).limit(1).maybeSingle();
-                    if (sData) {
-                        userDataDB = sData;
-                        isPadron = false;
-                    } else {
-                        // 3. Usuario Huérfano (No hizo el trámite)
-                        mostrarAlertaHuerfano();
-                        return;
+                const { data: config } = await db.from('renmcycf_config').select('*').eq('id', 1).maybeSingle();
+                if (config) {
+                    configGlobal = config;
+                    if (config.logo_url) { 
+                        if(el('dynamic-logo')) { el('dynamic-logo').src = config.logo_url; safeClass('dynamic-logo', 'remove', 'hidden'); safeClass('default-logo', 'add', 'hidden'); }
+                        if(el('nav-mini-logo')) { el('nav-mini-logo').src = config.logo_url; safeClass('nav-mini-logo', 'remove', 'hidden'); safeClass('header-default-logo', 'add', 'hidden'); }
+                        if(el('watermark-logo-img')) el('watermark-logo-img').src = config.logo_url;
                     }
+                    if (config.hero_image_url && el('dynamic-bg')) { el('dynamic-bg').src = config.hero_image_url; el('dynamic-bg').style.display = 'block'; }
                 }
-                
-                renderizarInterfaz();
-                cargarBiblioteca();
-                
-                // Si está en el padrón, pre-cargar el diseño de su credencial
-                if (isPadron) await prepararCredencial();
-                
-            } catch (err) { console.error(err); alert("Error de conexión con la base de datos."); }
+                const { data: cont } = await db.from('renmcycf_contenido').select('clave, valor').in('clave', ['credencial_style', 'credencial_bg', 'credencial_bg_dorso', 'credencial_roseta']);
+                if (cont) {
+                    const styleObj = cont.find(c => c.clave === 'credencial_style');
+                    if (styleObj && styleObj.valor) { try { configDiseno = JSON.parse(styleObj.valor); }catch(e){} }
+                    bgCredencialFrente = cont.find(c => c.clave === 'credencial_bg')?.valor || '';
+                    bgCredencialDorso = cont.find(c => c.clave === 'credencial_bg_dorso')?.valor || '';
+                    rosetaUrl = cont.find(c => c.clave === 'credencial_roseta')?.valor || '';
+                }
+            } catch (err) {}
+            
+            const savedDni = localStorage.getItem('renmcycf_dni_session');
+            if(savedDni && el('input-dni')) { el('input-dni').value = savedDni; ingresar(); }
         }
 
-        function renderizarInterfaz() {
-            const nombreCompleto = `${userDataDB.nombres} ${userDataDB.apellidos}`;
-            const fallbackFoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreCompleto)}&background=d4af37&color=0a1128`;
-            const fotoUrl = userDataDB.foto_perfil_url || fallbackFoto;
-            
-            // Header
-            document.getElementById('ui-user-name').innerText = nombreCompleto;
-            document.getElementById('ui-user-avatar').src = fotoUrl;
-            document.getElementById('profile-edit-foto').src = fotoUrl;
+        async function ingresar() {
+            const btn = el('btn-ingresar'); 
+            const errorDiv = el('login-error');
+            if(!btn || !errorDiv) return;
 
-            // Info de Padrón
-            document.getElementById('info-dni').innerText = userDataDB.dni || '---';
-            document.getElementById('info-cat').innerText = userDataDB.categoria || '---';
-            document.getElementById('info-prof').innerText = userDataDB.profesion || '---';
+            const dni = el('input-dni').value.replace(/\D/g, '');
+            safeClass('login-error', 'add', 'hidden');
             
-            const estadoActual = userDataDB.estado_legal || userDataDB.estado || 'DESCONOCIDO';
-            document.getElementById('ui-status-text').innerText = estadoActual;
+            if (dni.length < 7) { errorDiv.textContent = 'Ingrese un DNI válido.'; safeClass('login-error', 'remove', 'hidden'); return; }
 
-            const dot = document.getElementById('ui-status-dot');
-            const alertBox = document.getElementById('box-alerta-tramite');
+            btn.disabled = true; btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> CONECTANDO...`;
             
-            if (estadoActual === 'ACTIVO') {
-                dot.className = 'absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#0a1128]';
-                document.getElementById('ui-status-text').className = 'text-sm font-black text-emerald-400';
-                document.getElementById('ui-matricula').innerText = userDataDB.matricula_oficial || 'ASIGNADA';
-                document.getElementById('info-vence').innerText = new Date(userDataDB.fecha_vencimiento).toLocaleDateString('es-AR');
-                
-                alertBox.innerHTML = `
-                    <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl shadow-sm flex items-start gap-3">
-                        <i data-lucide="check-circle" class="w-6 h-6 text-emerald-500 shrink-0 mt-0.5"></i>
-                        <div>
-                            <h4 class="font-bold text-emerald-800 text-sm">Matrícula Activa</h4>
-                            <p class="text-xs text-emerald-600 mt-1">Su inscripción es válida. Puede utilizar todos los servicios del Legajo Digital y descargar su credencial oficial.</p>
-                        </div>
-                    </div>`;
-                
-                // Desbloquear Billetera
-                document.getElementById('bloqueo-credencial').classList.add('hidden');
-                document.getElementById('area-credencial').classList.remove('hidden');
+            try {
+                const { data: padron, error } = await db.from('renmcycf_padron').select('*').eq('dni', dni).maybeSingle();
+                if (error) throw new Error('Error de red. Revise su conexión.');
+                if (!padron) throw new Error('DNI no encontrado en el Padrón Oficial.');
+                if (padron.estado_legal !== 'ACTIVO') throw new Error(`Credencial suspendida/revocada. Contacte administración.`);
 
-            } else if (estadoActual === 'PENDIENTE' || estadoActual === 'EN AUDITORIA') {
-                dot.className = 'absolute bottom-0 right-0 w-3 h-3 rounded-full bg-amber-500 border-2 border-[#0a1128]';
-                document.getElementById('ui-status-text').className = 'text-sm font-black text-amber-400';
-                document.getElementById('ui-matricula').innerText = 'EN TRÁMITE';
+                alumnoActual = padron;
+                localStorage.setItem('renmcycf_dni_session', dni); 
+
+                if (!padron.terminos_aceptados) cambiarPantallaLogin('screen-tc');
+                else if (!padron.foto_perfil_url) cambiarPantallaLogin('screen-foto');
+                else iniciarWallet();
                 
-                alertBox.innerHTML = `
-                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl shadow-sm flex items-start gap-3">
-                        <i data-lucide="clock" class="w-6 h-6 text-amber-500 shrink-0 mt-0.5"></i>
-                        <div>
-                            <h4 class="font-bold text-amber-800 text-sm">Expediente en Análisis</h4>
-                            <p class="text-xs text-amber-700 mt-1">Su documentación está siendo verificada por el Comité Evaluador. La generación de la matrícula puede demorar entre 24 y 72 hs hábiles.</p>
-                        </div>
-                    </div>`;
-            } else if (estadoActual === 'OBSERVADO') {
-                dot.className = 'absolute bottom-0 right-0 w-3 h-3 rounded-full bg-red-500 border-2 border-[#0a1128]';
-                document.getElementById('ui-status-text').className = 'text-sm font-black text-red-400';
-                
-                alertBox.innerHTML = `
-                    <div class="bg-red-50 border border-red-200 p-4 rounded-xl shadow-sm flex items-start gap-3">
-                        <i data-lucide="alert-triangle" class="w-6 h-6 text-red-500 shrink-0 mt-0.5"></i>
-                        <div>
-                            <h4 class="font-bold text-red-800 text-sm">Trámite Observado</h4>
-                            <p class="text-xs text-red-700 mt-1">Hay problemas con su documentación. Por favor, ingrese al sitio web público, vaya a 'Seguimiento' y suba el archivo correcto.</p>
-                        </div>
-                    </div>`;
-            } else {
-                dot.className = 'absolute bottom-0 right-0 w-3 h-3 rounded-full bg-slate-500 border-2 border-[#0a1128]';
-                document.getElementById('ui-status-text').className = 'text-sm font-black text-slate-400';
-                alertBox.innerHTML = `<div class="bg-slate-100 p-4 rounded-xl border border-slate-200 text-xs text-slate-600 font-bold text-center">ESTADO: ${estadoActual}</div>`;
+            } catch (err) {
+                errorDiv.textContent = err.message; safeClass('login-error', 'remove', 'hidden');
+                btn.disabled = false; btn.innerHTML = `<i data-lucide="scan-face" class="w-5 h-5"></i> Validar Identidad`;
             }
             lucide.createIcons();
         }
 
-        function mostrarAlertaHuerfano() {
-            document.getElementById('ui-user-name').innerText = "Usuario Sin Trámite";
-            document.getElementById('ui-status-text').innerText = "SIN REGISTROS";
-            document.getElementById('box-alerta-tramite').innerHTML = `
-                <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl shadow-sm">
-                    <h4 class="font-bold text-blue-800 text-sm mb-2">No encontramos su expediente</h4>
-                    <p class="text-xs text-blue-700 mb-3">Esta cuenta de email no está asociada a ninguna matrícula ni solicitud en curso.</p>
-                    <a href="index.renmcycf.html" class="block w-full text-center bg-blue-600 text-white font-bold py-3 rounded-lg text-xs uppercase tracking-widest">Iniciar Trámite Ahora</a>
-                </div>`;
-            document.getElementById('bloqueo-credencial').classList.remove('hidden');
-            document.getElementById('area-credencial').classList.add('hidden');
+        function toggleBotonAceptar() {
+            const checkbox = el('check-tc'); const boton = el('btn-aceptar-tc');
+            if(!checkbox || !boton) return;
+            if (checkbox.checked) { 
+                boton.disabled = false; 
+                boton.className = 'w-full bg-[#0a1128] text-[#d4af37] font-black uppercase tracking-widest py-4 rounded-xl transition-all active:scale-95 shadow-lg'; 
+            } else { 
+                boton.disabled = true; 
+                boton.className = 'w-full bg-slate-300 text-slate-500 font-black uppercase py-4 rounded-xl transition-all cursor-not-allowed'; 
+            }
+        }
+
+        async function aceptarTerminos() {
+            const btn = el('btn-aceptar-tc'); if(!btn) return;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin inline mr-2"></i> FIRMANDO...`; btn.disabled = true;
+            try {
+                await db.from('renmcycf_padron').update({ terminos_aceptados: true, fecha_aceptacion_terminos: new Date().toISOString() }).eq('id', alumnoActual.id);
+                alumnoActual.terminos_aceptados = true;
+                if (!alumnoActual.foto_perfil_url) cambiarPantallaLogin('screen-foto'); else iniciarWallet();
+            } catch (err) { alert("Error de red: " + err.message); btn.innerHTML = `Firmar Acuerdo`; btn.disabled = false; }
+        }
+
+        function abrirPerfil() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            safeClass('screen-perfil', 'add', 'active');
+            
+            if(el('perfil-telefono')) el('perfil-telefono').value = alumnoActual.telefono || alumnoActual.telefono_contacto || '';
+            if(el('perfil-email')) el('perfil-email').value = alumnoActual.email || alumnoActual.email_contacto || '';
+            if(el('perfil-provincia')) el('perfil-provincia').value = alumnoActual.provincia_laboral || '';
+            if(el('perfil-facebook')) el('perfil-facebook').value = alumnoActual.facebook_url || '';
+            if(el('perfil-instagram')) el('perfil-instagram').value = alumnoActual.instagram_url || '';
+            if(el('perfil-linkedin')) el('perfil-linkedin').value = alumnoActual.linkedin_url || '';
+            if(el('perfil-directorio')) el('perfil-directorio').checked = alumnoActual.figurar_directorio || false;
+            
+            const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
+            if(el('perfil-foto-preview')) el('perfil-foto-preview').src = fotoUrl;
+        }
+
+        async function guardarPerfil(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const btn = el('btn-guardar-perfil'); if(!btn) return;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> GUARDANDO...`; 
+            btn.disabled = true;
+
+            const tel = el('perfil-telefono').value.trim();
+            const email = el('perfil-email').value.trim();
+            const provincia = el('perfil-provincia').value.trim();
+            const facebook = el('perfil-facebook').value.trim();
+            const instagram = el('perfil-instagram').value.trim();
+            const linkedin = el('perfil-linkedin').value.trim();
+            const directorio = el('perfil-directorio').checked;
+
+            try {
+                const { error } = await db.from('renmcycf_padron').update({
+                    telefono: tel,
+                    email: email,
+                    provincia_laboral: provincia,
+                    facebook_url: facebook,
+                    instagram_url: instagram,
+                    linkedin_url: linkedin,
+                    figurar_directorio: directorio
+                }).eq('id', alumnoActual.id);
+
+                if (error) throw error;
+
+                alumnoActual.telefono = tel;
+                alumnoActual.email = email;
+                alumnoActual.provincia_laboral = provincia;
+                alumnoActual.facebook_url = facebook;
+                alumnoActual.instagram_url = instagram;
+                alumnoActual.linkedin_url = linkedin;
+                alumnoActual.figurar_directorio = directorio;
+
+                alert("Perfil actualizado correctamente en el Padrón Nacional.");
+                switchNavTab('wallet');
+            } catch (err) {
+                alert("Error al actualizar datos: " + err.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        function abrirSelectorArchivo(usaCamara) { 
+            const iCam = el('input-foto-camara'); const iOf = el('input-foto-oficial');
+            if(usaCamara && iCam) iCam.click(); else if(iOf) iOf.click(); 
+        }
+        
+        function iniciarRecorte(inputElement) {
+            const file = inputElement.files[0]; if (!file) return;
+            if (file.size > 8 * 1024 * 1024) return alert("Archivo muy pesado. Máximo 8MB.");
+            
+            archivoSeleccionadoParaRecortar = file;
+            if(el('image-to-crop')) el('image-to-crop').src = URL.createObjectURL(file);
+            
+            // CORRECCIÓN QUIRÚRGICA: Remover 'flex' antes de ocultar
+            safeClass('foto-selector-ui', 'remove', 'flex');
+            safeClass('foto-selector-ui', 'add', 'hidden');
+            safeClass('foto-cropper-ui', 'remove', 'hidden');
+            safeClass('foto-cropper-ui', 'add', 'flex');
+
+            if (cropperInstance) cropperInstance.destroy();
+            const imgToCrop = el('image-to-crop');
+            if(imgToCrop) {
+                cropperInstance = new Cropper(imgToCrop, { aspectRatio: 1, viewMode: 1, dragMode: 'move', autoCropArea: 0.8, center: true, highlight: false, cropBoxMovable: false, toggleDragModeOnDblclick: false });
+            }
+        }
+        
+        function cancelarRecorte() {
+            if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
+            
+            // CORRECCIÓN QUIRÚRGICA: Remover 'flex' antes de ocultar
+            safeClass('foto-cropper-ui', 'remove', 'flex');
+            safeClass('foto-cropper-ui', 'add', 'hidden');
+            safeClass('foto-selector-ui', 'remove', 'hidden');
+            safeClass('foto-selector-ui', 'add', 'flex');
+        }
+        
+        async function procesarYSubirRecorte() {
+            if (!cropperInstance) return;
+            const btn = el('btn-guardar-recorte'); if(!btn) return;
+            const txt = btn.innerText; btn.innerHTML = `PROCESANDO...`; btn.disabled = true;
+            try {
+                const canvas = cropperInstance.getCroppedCanvas({ width: 600, height: 600, imageSmoothingEnabled: true, imageSmoothingQuality: 'high' });
+                canvas.toBlob(async (blob) => {
+                    const fileName = `${alumnoActual.dni}_foto_${Date.now()}.jpg`;
+                    const fileToUpload = new File([blob], fileName, { type: "image/jpeg" });
+                    await db.storage.from('renmcycf-media').upload(fileName, fileToUpload, { cacheControl: '3600', upsert: true });
+                    const fotoUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
+                    await db.from('renmcycf_padron').update({ foto_perfil_url: fotoUrl }).eq('id', alumnoActual.id);
+                    alumnoActual.foto_perfil_url = fotoUrl; 
+                    
+                    if(document.getElementById('btn-cerrar-foto') && !document.getElementById('btn-cerrar-foto').classList.contains('hidden')) {
+                        abrirPerfil();
+                    } else {
+                        iniciarWallet();
+                    }
+                }, 'image/jpeg', 0.85);
+            } catch (err) { alert("Error: " + err.message); btn.innerHTML = txt; btn.disabled = false; }
+        }
+
+        function cambiarPantallaLogin(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            safeClass(screenId, 'add', 'active');
+            if(screenId !== 'screen-login' && el('dynamic-bg')) el('dynamic-bg').style.display = 'none';
+            if(screenId === 'screen-tc') toggleBotonAceptar();
+
+            if(screenId === 'screen-foto') {
+                // Reset al abrir la pantalla de foto
+                safeClass('foto-cropper-ui', 'remove', 'flex');
+                safeClass('foto-cropper-ui', 'add', 'hidden');
+                safeClass('foto-selector-ui', 'remove', 'hidden');
+                safeClass('foto-selector-ui', 'add', 'flex');
+                
+                if (alumnoActual && alumnoActual.foto_perfil_url) {
+                    safeClass('btn-cerrar-foto', 'remove', 'hidden');
+                } else {
+                    safeClass('btn-cerrar-foto', 'add', 'hidden');
+                }
+            }
+        }
+
+        function iniciarWallet() {
+            safeClass('btn-campana', 'remove', 'hidden');
+            switchNavTab('wallet');
+            safeClass('bottom-nav', 'remove', 'hidden');
+            if(el('dynamic-bg')) el('dynamic-bg').style.display = 'none';
+            
+            const nombreCompleto = `${alumnoActual.nombres} ${alumnoActual.apellidos}`;
+            const profesion = alumnoActual.profesion || 'Profesional Titulado';
+            
+            // Actualizar ambos bloques (móvil y PC)
+            if(el('user-name')) el('user-name').innerText = nombreCompleto;
+            if(el('user-profesion')) el('user-profesion').innerText = profesion;
+            if(el('user-name-pc')) el('user-name-pc').innerText = nombreCompleto;
+            if(el('user-profesion-pc')) el('user-profesion-pc').innerText = profesion;
+            
+            if(el('metric-vistas')) el('metric-vistas').innerText = alumnoActual.contador_vistas || 0;
+            
+            // Ajustar visibilidad de bloques de bienvenida según pantalla
+            ajustarVisibilidadBienvenida();
+            
+            cargarNotificacionesReales();
+        }
+
+        function ajustarVisibilidadBienvenida() {
+            const isDesktop = window.innerWidth >= 1024;
+            const mobileBlock = document.querySelector('.welcome-block-mobile');
+            const desktopBlock = document.querySelector('.welcome-block-desktop');
+            
+            if (mobileBlock) mobileBlock.style.display = isDesktop ? 'none' : 'flex';
+            if (desktopBlock) desktopBlock.style.display = isDesktop ? 'flex' : 'none';
+        }
+
+        window.addEventListener('resize', () => {
+            if (alumnoActual) ajustarVisibilidadBienvenida();
+        });
+
+        function cerrarSesion() {
+            alumnoActual = null; localStorage.removeItem('renmcycf_dni_session'); 
+            if(el('input-dni')) el('input-dni').value = '';
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            safeClass('bottom-nav', 'add', 'hidden');
+            safeClass('btn-campana', 'add', 'hidden');
+            safeClass('screen-login', 'add', 'active');
+            if(el('dynamic-bg') && el('dynamic-bg').src) el('dynamic-bg').style.display = 'block';
+            if(el('btn-ingresar')){ el('btn-ingresar').disabled = false; el('btn-ingresar').innerHTML = `<i data-lucide="scan-face" class="w-5 h-5"></i> Validar Identidad`; }
+            lucide.createIcons();
+        }
+
+        function cerrarModalSeguro(id) { safeClass(id, 'add', 'hidden'); }
+
+        function abrirNotificaciones() {
+            safeClass('modal-notificaciones', 'remove', 'hidden');
+            const badge = el('badge-notificaciones'); if(badge) badge.remove();
+            cargarNotificacionesReales();
         }
 
         // ==========================================
-        // 3. RECORTADOR DE FOTOS (CROPPER.JS)
+        // CENTRO DE NOTIFICACIONES REAL - CONECTADO A SUPABASE
         // ==========================================
-        function abrirRecortador(input) {
-            const file = input.files[0];
-            if (!file) return;
-            const url = URL.createObjectURL(file);
-            const imageEl = document.getElementById('image-to-crop');
-            imageEl.src = url;
+        async function cargarNotificacionesReales() {
+            const container = el('lista-notificaciones'); if(!container) return;
+            container.innerHTML = '<div class="text-center py-8"><i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto text-slate-400"></i></div>';
+            lucide.createIcons();
             
-            document.getElementById('cropper-modal').style.display = 'flex';
+            let html = '';
             
-            if (cropper) cropper.destroy();
-            cropper = new Cropper(imageEl, {
-                aspectRatio: 1, // 1:1 Cuadrado
-                viewMode: 1,
-                dragMode: 'move',
-                autoCropArea: 0.9,
-                restore: false,
-                guides: true,
-                center: true,
-                highlight: false,
-                cropBoxMovable: true,
-                cropBoxResizable: true,
-                toggleDragModeOnDblclick: false,
+            // 1. Bloque Matrícula (Vencimiento)
+            const vencimiento = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'Sin datos';
+            html += `
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-[#d4af37] cursor-pointer" onclick="switchNavTab('wallet'); cerrarModalSeguro('modal-notificaciones');">
+                    <h4 class="text-xs font-black text-[#0a1128] uppercase flex items-center gap-2"><i data-lucide="calendar-check" class="w-4 h-4 text-[#d4af37]"></i> Vigencia de Matrícula</h4>
+                    <p class="text-[10px] text-slate-500 mt-1">Su credencial legal mantiene vigencia hasta el <b>${vencimiento}</b>.</p>
+                </div>`;
+            
+            // 2. Bloque Vistas (Contacto)
+            if (alumnoActual.contador_vistas && alumnoActual.contador_vistas > 0) {
+                html += `
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-emerald-500 cursor-pointer" onclick="abrirPerfil(); cerrarModalSeguro('modal-notificaciones');">
+                    <h4 class="text-xs font-black text-[#0a1128] uppercase flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4 text-emerald-500"></i> Tu Legajo fue consultado</h4>
+                    <p class="text-[10px] text-slate-500 mt-1">Tu legajo público fue consultado <b>${alumnoActual.contador_vistas} veces</b>. Revisa tus datos de contacto.</p>
+                </div>`;
+            }
+            
+            // 3. Bloque Portal (Última noticia)
+            try {
+                const { data: noticias } = await db.from('renmcycf_noticias').select('*').order('created_at', { ascending: false }).limit(1);
+                if (noticias && noticias.length > 0) {
+                    const noticia = noticias[0];
+                    const imagen = noticia.portada_url || 'https://via.placeholder.com/300x150/0a1128/d4af37?text=Noticia';
+                    html += `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500 cursor-pointer overflow-hidden" onclick="switchNavTab('portal'); cerrarModalSeguro('modal-notificaciones');">
+                        <h4 class="text-xs font-black text-[#0a1128] uppercase flex items-center gap-2"><i data-lucide="newspaper" class="w-4 h-4 text-blue-500"></i> Última del Portal</h4>
+                        <div class="flex gap-3 mt-2">
+                            <img src="${imagen}" class="w-16 h-12 object-cover rounded-lg shrink-0" alt="${noticia.titulo}">
+                            <p class="text-[10px] text-slate-600 leading-tight line-clamp-3">${noticia.titulo}</p>
+                        </div>
+                    </div>`;
+                }
+            } catch(e) { console.warn("Error cargando noticias en notificaciones:", e); }
+            
+            // 4. Bloque Biblioteca (Último material)
+            try {
+                const { data: biblioteca } = await db.from('renmcycf_biblioteca').select('*').eq('activo', true).order('created_at', { ascending: false }).limit(1);
+                if (biblioteca && biblioteca.length > 0) {
+                    const libro = biblioteca[0];
+                    const cover = libro.portada_url || 'https://via.placeholder.com/50x70/0a1128/d4af37?text=PDF';
+                    html += `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-purple-500 cursor-pointer" onclick="switchNavTab('biblioteca'); cerrarModalSeguro('modal-notificaciones');">
+                        <h4 class="text-xs font-black text-[#0a1128] uppercase flex items-center gap-2"><i data-lucide="library" class="w-4 h-4 text-purple-500"></i> Nuevo en Biblioteca</h4>
+                        <div class="flex gap-3 mt-2">
+                            <img src="${cover}" class="w-10 h-14 object-cover rounded-lg shrink-0" alt="${libro.titulo}">
+                            <div>
+                                <p class="text-[10px] font-bold text-[#0a1128] line-clamp-2">${libro.titulo}</p>
+                                <p class="text-[9px] text-slate-400 mt-1">${libro.autor || 'Institucional'}</p>
+                            </div>
+                        </div>
+                    </div>`;
+                }
+            } catch(e) { console.warn("Error cargando biblioteca en notificaciones:", e); }
+            
+            // 5. Bloque Tesis (Estado de última publicación)
+            try {
+                const { data: tesis } = await db.from('renmcycf_publicaciones').select('*').eq('autor_id', alumnoActual.id).order('created_at', { ascending: false }).limit(1);
+                if (tesis && tesis.length > 0) {
+                    const t = tesis[0];
+                    let color = 'border-slate-400'; let icon = 'clock'; let tex = 'EN REVISIÓN'; let iconColor = 'text-slate-500';
+                    if (t.estado === 'APROBADO') { color = 'border-emerald-500'; icon = 'check-circle'; tex = 'PUBLICADO'; iconColor = 'text-emerald-500'; }
+                    if (t.estado === 'RECHAZADO') { color = 'border-red-500'; icon = 'x-circle'; tex = 'DENEGADO'; iconColor = 'text-red-500'; }
+                    html += `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 ${color} cursor-pointer" onclick="switchNavTab('publicaciones'); cerrarModalSeguro('modal-notificaciones');">
+                        <h4 class="text-xs font-black text-[#0a1128] uppercase flex items-center gap-2"><i data-lucide="${icon}" class="w-4 h-4 ${iconColor}"></i> Estado de Tesis</h4>
+                        <p class="text-[10px] text-slate-500 mt-1 line-clamp-2">"${t.titulo}"</p>
+                        <span class="inline-block mt-2 text-[8px] font-black uppercase px-2 py-1 rounded ${t.estado === 'APROBADO' ? 'bg-emerald-100 text-emerald-700' : t.estado === 'RECHAZADO' ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-600'}">${tex}</span>
+                    </div>`;
+                }
+            } catch(e) { console.warn("Error cargando tesis en notificaciones:", e); }
+            
+            // Si no hay contenido dinámico, mostrar mensaje base
+            if (!html) {
+                html = '<div class="bg-white p-4 rounded-xl shadow-sm text-center"><p class="text-[10px] text-slate-400">No hay notificaciones disponibles.</p></div>';
+            }
+            
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function switchNavTab(tabId) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            const tabBtn = el(`tab-${tabId}`); if(tabBtn) tabBtn.classList.add('active');
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            safeClass(`screen-${tabId}`, 'add', 'active');
+            
+            if(tabId === 'wallet') { cambiarVista('front'); }
+            if(tabId === 'portal') cargarPortalCientifico();
+            if(tabId === 'biblioteca') cargarBibliotecaWallet();
+            if(tabId === 'publicaciones') cargarMisPublicaciones();
+        }
+
+        function cambiarVista(vista) {
+            currentView = vista;
+            document.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active'));
+            safeClass(`btn-toggle-${vista}`, 'add', 'active');
+            renderizarCarnet(vista);
+        }
+
+        function getSafeStyle(key) {
+            const props = configDiseno[key]; if (!props) return 'display: none;';
+            let style = `position: absolute; width: ${props.width}px; height: ${props.height}px; font-family: 'Inter', sans-serif; line-height: 1.1; letter-spacing: 0px; `;
+            if (key === 'profesion' || key === 'categoria') style += `font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-weight: 900; `; else style += `font-weight: 900; `;
+            if (props.size !== undefined) style += `font-size: ${props.size}px; `; if (props.color !== undefined) style += `color: ${props.color}; `;
+            let finalLeft = props.left; let finalTop = props.top;
+            if (key === 'foto' || key === 'qr' || key === 'roseta') { 
+                finalLeft = props.left - (props.width / 2); finalTop = props.top - (props.height / 2); 
+                style += `display: flex; align-items: center; justify-content: center; `; 
+            } else {
+                if (props.align === 'right') { finalLeft = props.left - props.width; style += `text-align: right; justify-content: flex-end; `; } 
+                else if (props.align === 'center') { style += `text-align: center; justify-content: center; `; } 
+                else { style += `text-align: left; justify-content: flex-start; `; }
+                style += `display: flex; align-items: center; white-space: nowrap; overflow: visible; `;
+            }
+            style += `left: ${finalLeft}px; top: ${finalTop}px; `; return style;
+        }
+
+        function autoAjustarTextos(contenedorPadre = document) {
+            if(!contenedorPadre) return;
+            const elements = contenedorPadre.querySelectorAll('div[style*="font-size"]');
+            elements.forEach(elm => {
+                const maxWidth = parseInt(elm.style.width); if (!maxWidth || elm.querySelector('img')) return;
+                const span = document.createElement('span'); 
+                span.style.fontSize = elm.style.fontSize; 
+                span.style.fontFamily = window.getComputedStyle(elm).fontFamily; 
+                span.style.fontWeight = window.getComputedStyle(elm).fontWeight; 
+                span.style.visibility = 'hidden'; 
+                span.style.position = 'absolute'; 
+                span.style.whiteSpace = 'nowrap'; 
+                span.innerText = elm.innerText; 
+                document.body.appendChild(span);
+                let textWidth = span.offsetWidth; let currentSize = parseInt(elm.style.fontSize);
+                while (textWidth > maxWidth && currentSize > 10) { currentSize--; span.style.fontSize = currentSize + 'px'; textWidth = span.offsetWidth; }
+                elm.style.fontSize = currentSize + 'px'; document.body.removeChild(span);
             });
         }
 
-        function cerrarCropper() {
-            document.getElementById('cropper-modal').style.display = 'none';
-            if (cropper) cropper.destroy();
-            document.getElementById('input-subir-foto').value = '';
-        }
-
-        async function guardarRecorte() {
-            if (!cropper || !isPadron) return; // Solo peritos activos/en padrón pueden editar su foto
-            
-            const btn = document.getElementById('btn-guardar-recorte');
-            const origHTML = btn.innerHTML;
-            btn.innerHTML = 'PROCESANDO...'; btn.disabled = true;
-
-            try {
-                // Obtener el blob de la imagen recortada (optimizada)
-                cropper.getCroppedCanvas({ width: 600, height: 600, fillColor: '#fff' }).toBlob(async (blob) => {
-                    if (!blob) throw new Error("Fallo al generar imagen.");
-                    
-                    const fileName = `foto_legajo_${userDataDB.dni}_${Date.now()}.jpg`;
-                    
-                    // Subir a Supabase Storage
-                    const { error: upErr } = await db.storage.from('renmcycf-media').upload(fileName, blob, { contentType: 'image/jpeg', upsert: true });
-                    if (upErr) throw upErr;
-                    
-                    const urlFoto = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
-                    
-                    // Actualizar en la base de datos (renmcycf_padron)
-                    const { error: dbErr } = await db.from('renmcycf_padron').update({ foto_perfil_url: urlFoto }).eq('id', userDataDB.id);
-                    if (dbErr) throw dbErr;
-                    
-                    // Actualizar UI
-                    userDataDB.foto_perfil_url = urlFoto;
-                    document.getElementById('ui-user-avatar').src = urlFoto;
-                    document.getElementById('profile-edit-foto').src = urlFoto;
-                    if(document.getElementById('dyn-foto')) document.getElementById('dyn-foto').src = urlFoto;
-                    
-                    alert("✅ Foto de perfil actualizada con éxito. Se verá reflejada en su credencial y directorio.");
-                    cerrarCropper();
-                }, 'image/jpeg', 0.85);
-            } catch (err) {
-                alert("Error actualizando la foto: " + err.message);
-                btn.innerHTML = origHTML; btn.disabled = false;
-            }
-        }
-
-        // ==========================================
-        // 4. CREDENCIAL DIGITAL (BILLETERA)
-        // ==========================================
-        async function prepararCredencial() {
-            if (!isPadron || userDataDB.estado_legal !== 'ACTIVO') return;
-
-            try {
-                // Leer diseño, fondos y estilos desde Supabase
-                const { data: configRows } = await db.from('renmcycf_contenido').select('clave, valor').in('clave', ['credencial_style', 'credencial_bg', 'credencial_bg_dorso', 'credencial_roseta']);
-                
-                let estilos = null; let bgFrente = ''; let bgDorso = ''; let roseta = '';
-                
-                configRows.forEach(row => {
-                    if(row.clave === 'credencial_style') estilos = JSON.parse(row.valor);
-                    if(row.clave === 'credencial_bg') bgFrente = row.valor;
-                    if(row.clave === 'credencial_bg_dorso') bgDorso = row.valor;
-                    if(row.clave === 'credencial_roseta') roseta = row.valor;
-                });
-
-                if(!estilos) return; // Si no hay diseño guardado, abortamos renderizado
-
-                // Aplicar fondos
-                if(bgFrente) document.getElementById('card-frente').style.backgroundImage = `url('${bgFrente}')`;
-                if(bgDorso) document.getElementById('card-dorso').style.backgroundImage = `url('${bgDorso}')`;
-                
-                // Aplicar Roseta
-                const elRosetaBox = document.getElementById('pre-roseta');
-                if (roseta) { elRosetaBox.style.display = 'block'; document.getElementById('dyn-roseta').src = roseta; }
-
-                // Generar QR de Verificación
-                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://renmcycf.vercel.app/%23seccion-verificacion`; // Redirige al inicio para buscar. Se podría parametrizar con el DNI.
-                document.getElementById('dyn-qr').src = qrUrl;
-
-                // Cargar Textos del Usuario
-                document.getElementById('dyn-foto').src = userDataDB.foto_perfil_url || `https://ui-avatars.com/api/?name=${userDataDB.nombres}+${userDataDB.apellidos}&background=0a1128&color=fff`;
-                document.getElementById('pre-profesion').innerText = userDataDB.profesion;
-                document.getElementById('pre-categoria').innerText = userDataDB.categoria;
-                document.getElementById('pre-nombre').innerText = `${userDataDB.nombres} ${userDataDB.apellidos}`;
-                document.getElementById('pre-dni').innerText = userDataDB.dni;
-                document.getElementById('pre-ano_nac').innerText = userDataDB.ano_nacimiento;
-                document.getElementById('pre-matricula').innerText = userDataDB.matricula_oficial;
-                document.getElementById('pre-vence').innerText = new Date(userDataDB.fecha_vencimiento).toLocaleDateString('es-AR');
-
-                // Obtener texto del dorso según categoría (Hardcodeado aquí por seguridad de la credencial oficial)
-                const descDorso = getDescripcionCategoriaDorso(userDataDB.categoria);
-                document.getElementById('pre-dorso_cat').innerText = descDorso;
-
-                // INYECTAR CSS DINÁMICO (El mismo motor que usamos en el Panel Admin)
-                for (const [key, props] of Object.entries(estilos)) {
-                    const el = document.getElementById(`pre-${key}`); if (!el) continue;
-                    
-                    if (props.top !== undefined) el.style.top = props.top + 'px';
-                    if (props.width !== undefined) el.style.width = props.width + 'px';
-                    if (props.height !== undefined) el.style.height = props.height + 'px';
-                    if (props.size !== undefined) el.style.fontSize = props.size + 'px';
-                    if (props.color !== undefined) el.style.color = props.color;
-                    
-                    if (key === 'foto' || key === 'qr' || key === 'roseta') {
-                        el.style.left = props.left + 'px'; el.style.right = 'auto'; el.style.transform = 'translate(-50%, -50%)'; el.style.display = 'flex'; el.style.alignItems = 'center'; el.style.justifyContent = 'center';
-                    } else {
-                        el.style.display = 'flex'; el.style.alignItems = 'center'; el.style.transform = 'none';
-                        if (props.align === 'right') { el.style.left = 'auto'; el.style.right = (1000 - props.left) + 'px'; el.style.justifyContent = 'flex-end'; el.style.textAlign = 'right'; } 
-                        else if (props.align === 'center') { el.style.left = props.left + 'px'; el.style.right = 'auto'; el.style.justifyContent = 'center'; el.style.textAlign = 'center'; } 
-                        else { el.style.left = props.left + 'px'; el.style.right = 'auto'; el.style.justifyContent = 'flex-start'; el.style.textAlign = 'left'; }
-                        el.style.whiteSpace = 'normal'; el.style.overflow = 'hidden';
-                    }
+        function ajustarEscala() {
+            const viewport = el('card-viewport');
+            const render = el('carnet-render');
+            if(viewport && render) {
+                const viewportWidth = viewport.clientWidth;
+                if(viewportWidth > 0) {
+                    const scale = viewportWidth / 1000;
+                    render.style.transform = `scale(${scale})`;
+                    viewport.style.height = `${630 * scale}px`;
                 }
-            } catch (e) { console.error("Error renderizando credencial:", e); }
+            }
         }
+        window.addEventListener('resize', ajustarEscala);
 
-        function getDescripcionCategoriaDorso(cat) {
-            const desc = {
-                'A1': 'A.1 Licenciaturas y Títulos de Grado Universitarios. Habilita peritajes de máxima jerarquía forense.',
-                'A2': 'A.2 Técnicos Superiores y Terciarios Especializados. Auxiliares técnicos con título de validez nacional.',
-                'A3': 'A.3 Auxiliares, Peritos de Oficio y Diplomados. Personal de apoyo empírico en la investigación criminal.',
-                'A4': 'A.4 Consultores Técnicos y Estudiantes Avanzados. Habilitados como observadores de parte.',
-                'B1': 'B.1 Licenciaturas y Títulos de Grado en Seguridad. Máxima jerarquía en planificación estratégica.',
-                'B2': 'B.2 Técnicos Superiores en Seguridad Ciudadana y Pública. Operatividad táctica avanzada.',
-                'B3': 'B.3 Auxiliares, Técnicos Medios y Diplomados en Seguridad. Apoyo logístico y operativo.'
-            };
-            return desc[cat] || 'Profesional avalado por el RENMCYCF bajo las normativas legales vigentes.';
-        }
-
-        async function descargarPDF() {
-            const btn = document.getElementById('btn-pdf'); const orig = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> PROCESANDO ALTA CALIDAD...'; btn.disabled = true; lucide.createIcons();
-
-            try {
-                // Hacer scroll al principio para evitar fallos de html2canvas en iOS
-                window.scrollTo(0,0);
+        function renderizarCarnet(vista) {
+            const container = el('carnet-render'); if (!container || !alumnoActual) return;
+            const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
+            const vence = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D';
+            
+            if (vista === 'front') {
+                container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialFrente}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index: 2; border-radius: 50%; overflow: hidden;"><img src="${fotoUrl}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index: 5; object-fit: fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index: 10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index: 10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index: 10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index: 10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div></div>`;
+                setTimeout(() => { autoAjustarTextos(container); ajustarEscala(); }, 100);
+            } else if (vista === 'back') {
+                const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF` : window.location.origin;
+                const urlValidador = `${baseUrl}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
+                let textoCat = ''; if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; else textoCat = 'Consultor/Estudiante inscripto.';
                 
-                const { jsPDF } = window.jspdf;
-                // PDF tamaño CR80 (Tarjeta estándar: 86mm x 54mm)
-                const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: [86, 54] });
+                container.innerHTML = `<div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);"><img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index: 10;">${textoCat}</div><div id="qr-container" style="${getSafeStyle('qr')} z-index: 10; background: white;"></div></div>`;
                 
-                // Config de renderizado HD (Scale 3 = alta calidad)
-                const opt = { scale: 3, useCORS: true, allowTaint: true, logging: false };
-
-                // FRENTE
-                const canvasFrente = await html2canvas(document.getElementById('card-frente'), opt);
-                const imgFrente = canvasFrente.toDataURL('image/jpeg', 0.95);
-                doc.addImage(imgFrente, 'JPEG', 0, 0, 86, 54);
-                
-                // DORSO
-                doc.addPage();
-                const canvasDorso = await html2canvas(document.getElementById('card-dorso'), opt);
-                const imgDorso = canvasDorso.toDataURL('image/jpeg', 0.95);
-                doc.addImage(imgDorso, 'JPEG', 0, 0, 86, 54);
-
-                // Descargar
-                doc.save(`Credencial_RENMCYCF_${userDataDB.matricula_oficial.replace('/','-')}.pdf`);
-            } catch (err) {
-                alert("Error al generar PDF. Intente desde una PC."); console.error(err);
-            } finally {
-                btn.innerHTML = orig; btn.disabled = false; lucide.createIcons();
+                setTimeout(() => { 
+                    try { const qrEl = container.querySelector('#qr-container'); if(qrEl){ const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(qrEl, { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H });} } catch(e) {}
+                    autoAjustarTextos(container); ajustarEscala(); 
+                }, 100);
             }
         }
 
-        // ==========================================
-        // 5. BIBLIOTECA
-        // ==========================================
-        async function cargarBiblioteca() {
-            const container = document.getElementById('contenedor-libros');
+        function urlToBase64(url, isPng = true, circular = false) {
+            return new Promise((resolve) => {
+                if (!url) { resolve(null); return; }
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const size = Math.min(img.width, img.height);
+                    canvas.width = circular ? size : img.width; 
+                    canvas.height = circular ? size : img.height;
+                    const ctx = canvas.getContext('2d');
+                    
+                    if (circular) {
+                        ctx.beginPath();
+                        ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+                        ctx.closePath();
+                        ctx.clip();
+                        const offsetX = (img.width - size) / 2;
+                        const offsetY = (img.height - size) / 2;
+                        ctx.drawImage(img, offsetX, offsetY, size, size, 0, 0, size, size);
+                    } else {
+                        ctx.drawImage(img, 0, 0);
+                    }
+                    resolve(canvas.toDataURL(isPng ? 'image/png' : 'image/jpeg'));
+                };
+                img.onerror = () => resolve(null);
+                img.src = url;
+            });
+        }
+
+        async function descargarCarnetOficial() {
+            if (!alumnoActual) return;
+            const btn = el('btn-descargar-carnet'); if(!btn) return;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 text-[#d4af37] animate-spin"></i><span class="text-[9px] uppercase font-black tracking-wider text-center mt-1">Generando...</span>`; 
+            lucide.createIcons();
+            
             try {
-                // Mostrar todos los libros (Públicos y Premium)
+                const exportBox = document.createElement('div');
+                exportBox.style.position = 'fixed'; exportBox.style.left = '-9999px'; exportBox.style.top = '0'; exportBox.style.width = '1000px'; exportBox.style.backgroundColor = '#fff'; exportBox.style.zIndex = '9999';
+                document.body.appendChild(exportBox);
+
+                const fotoUrl = alumnoActual.foto_perfil_url || 'https://ui-avatars.com/api/?name=U+S&background=0a1128&color=fff';
+                const vence = alumnoActual.fecha_vencimiento ? new Date(alumnoActual.fecha_vencimiento).toLocaleDateString('es-AR') : 'N/D';
+                const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF` : window.location.origin;
+                const urlValidador = `${baseUrl}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
+
+                const frontHtml = `<div id="export-front" style="position:relative;width:1000px;height:630px;overflow:hidden;background:#fff;border-radius:30px;"><img src="${bgCredencialFrente}" style="position:absolute;top:0;left:0;width:1000px;height:630px;z-index:1;" crossorigin="anonymous"><div style="${getSafeStyle('foto')} z-index:2;border-radius:50%;overflow:hidden;"><img src="${fotoUrl}" style="width:100%;height:100%;object-fit:cover;" crossorigin="anonymous"></div>${rosetaUrl ? `<img src="${rosetaUrl}" style="${getSafeStyle('roseta')} z-index:5;object-fit:fill;" crossorigin="anonymous">` : ''}<div style="${getSafeStyle('profesion')} z-index:10;">${alumnoActual.profesion || ''}</div><div style="${getSafeStyle('categoria')} z-index:10;">${alumnoActual.categoria || ''}</div><div style="${getSafeStyle('nombre')} z-index:10;">${alumnoActual.nombres} ${alumnoActual.apellidos}</div><div style="${getSafeStyle('dni')} z-index:10;">${new Intl.NumberFormat('es-AR').format(alumnoActual.dni)}</div><div style="${getSafeStyle('ano_nac')} z-index:10;">${alumnoActual.ano_nacimiento || ''}</div><div style="${getSafeStyle('matricula')} z-index:10;">${alumnoActual.matricula_oficial || ''}</div><div style="${getSafeStyle('vence')} z-index:10;">${vence}</div></div>`;
+                
+                let textoCat = ''; 
+                if(alumnoActual.categoria === 'A1') textoCat = 'A.1 Título de Grado otorgado por Univ. pública o privada.'; 
+                else if(alumnoActual.categoria === 'A2') textoCat = 'A.2 Técnicos Superiores y Terciarios especializados.'; 
+                else if(alumnoActual.categoria === 'A3') textoCat = 'A.3 Auxiliares y Diplomados en disciplinas afines.'; 
+                else textoCat = 'Consultor/Estudiante inscripto.';
+                
+                const backHtml = bgCredencialDorso ? `<div id="export-back" style="position:relative;width:1000px;height:630px;overflow:hidden;background:#fff;border-radius:30px;"><img src="${bgCredencialDorso}" style="position:absolute;top:0;left:0;width:1000px;height:630px;z-index:1;" crossorigin="anonymous"><div style="${getSafeStyle('dorso_cat')} z-index:10;">${textoCat}</div><div id="export-qr" style="${getSafeStyle('qr')} z-index:10;background:white;"></div></div>` : '';
+                
+                exportBox.innerHTML = frontHtml + backHtml;
+                
+                if (bgCredencialDorso) {
+                    await new Promise(r => setTimeout(r, 200));
+                    try { const qrSize = configDiseno['qr'] ? configDiseno['qr'].width : 200; new QRCode(exportBox.querySelector('#export-qr'), { text: urlValidador, width: qrSize, height: qrSize, colorDark: "#0a1128", colorLight: "#ffffff", correctLevel : QRCode.CorrectLevel.H }); } catch(e) {}
+                }
+                
+                autoAjustarTextos(exportBox);
+                await new Promise(r => setTimeout(r, 800)); 
+                
+                const canvasFront = await html2canvas(exportBox.querySelector('#export-front'), { useCORS: true, allowTaint: true, scale: 2, backgroundColor: '#ffffff' });
+                const imgFront = canvasFront.toDataURL('image/jpeg', 1.0);
+
+                let imgBack = null;
+                if (bgCredencialDorso) {
+                    const canvasBack = await html2canvas(exportBox.querySelector('#export-back'), { useCORS: true, allowTaint: true, scale: 2, backgroundColor: '#ffffff' });
+                    imgBack = canvasBack.toDataURL('image/jpeg', 1.0);
+                }
+
+                document.body.removeChild(exportBox);
+
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                
+                const heroBase64 = await urlToBase64(configGlobal.hero_image_url, false, false);
+                if (heroBase64) {
+                    pdf.setGState(new pdf.GState({opacity: 0.15}));
+                    pdf.addImage(heroBase64, 'JPEG', 0, 45, 210, 252);
+                    pdf.setGState(new pdf.GState({opacity: 1}));
+                }
+
+                pdf.setFillColor(10, 17, 40); 
+                pdf.rect(0, 0, 210, 35, 'F');
+                
+                pdf.setTextColor(212, 175, 55); 
+                pdf.setFont("helvetica", "bold");
+                pdf.setFontSize(14);
+                pdf.text("DOCUMENTO DE IDENTIDAD PROFESIONAL", 105, 15, { align: "center" });
+                
+                pdf.setTextColor(255, 255, 255); 
+                pdf.setFont("helvetica", "normal");
+                pdf.setFontSize(10);
+                pdf.text("Registro Nacional de Matriculados en Criminalística y Ciencias Forenses", 105, 23, { align: "center" });
+
+                const logoBase64 = await urlToBase64(configGlobal.logo_url, true, true);
+                if (logoBase64) {
+                    pdf.setFillColor(255, 255, 255);
+                    pdf.setDrawColor(212, 175, 55); 
+                    pdf.setLineWidth(1.5);
+                    pdf.circle(105, 52, 16, 'FD'); 
+                    pdf.addImage(logoBase64, 'PNG', 105 - 14, 52 - 14, 28, 28); 
+                }
+
+                const cardW = 85.6; 
+                const cardH = 54.0; 
+                const marginX = (210 - cardW) / 2; 
+                let currentY = 85; 
+
+                pdf.setDrawColor(200, 200, 200);
+                pdf.setLineDash([2, 2], 0);
+                
+                pdf.rect(marginX - 2, currentY - 2, cardW + 4, cardH + 4); 
+                pdf.addImage(imgFront, 'JPEG', marginX, currentY, cardW, cardH);
+                currentY += cardH + 15;
+
+                if (imgBack) {
+                    pdf.rect(marginX - 2, currentY - 2, cardW + 4, cardH + 4); 
+                    pdf.addImage(imgBack, 'JPEG', marginX, currentY, cardW, cardH);
+                    currentY += cardH + 15;
+                }
+
+                pdf.setTextColor(100, 100, 100);
+                pdf.setFont("helvetica", "normal");
+                pdf.setFontSize(8);
+                pdf.setLineDash([]); 
+                pdf.text("Este documento es personal e intransferible.", 105, currentY, { align: "center" });
+                currentY += 5;
+                pdf.text("La validez debe comprobarse escaneando el código QR en el validador oficial.", 105, currentY, { align: "center" });
+                currentY += 10;
+                pdf.setFontSize(7);
+                pdf.text(`Generado el ${new Date().toLocaleDateString('es-AR')} a las ${new Date().toLocaleTimeString('es-AR')}`, 105, currentY, { align: "center" });
+
+                pdf.save(`Credencial_RENMCYCF_${alumnoActual.matricula_oficial || alumnoActual.dni}.pdf`);
+
+            } catch (error) { 
+                console.error(error); 
+                alert("Error al generar el PDF. Verifique su conexión."); 
+            } finally { 
+                btn.innerHTML = originalText; 
+                lucide.createIcons(); 
+            }
+        }
+
+        function abrirModalDiplomas() {
+            const container = el('lista-diplomas-modal'); if(!container) return; 
+            container.innerHTML = ''; let hayDiplomas = false;
+            if (alumnoActual.diplomas_urls && alumnoActual.diplomas_urls !== "null") {
+                try { const arr = typeof alumnoActual.diplomas_urls === 'string' ? JSON.parse(alumnoActual.diplomas_urls) : alumnoActual.diplomas_urls;
+                    if(arr.length > 0) { hayDiplomas = true; arr.forEach((url, i) => { container.innerHTML += `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-center"><div><h4 class="text-white font-bold text-sm uppercase">Título Registrado #${i+1}</h4><p class="text-[10px] text-slate-400 font-mono mt-1">Validado por Comité</p></div><a href="${url}" target="_blank" class="bg-blue-600 text-white p-3 rounded-lg shadow-lg hover:bg-blue-500 transition-transform active:scale-95"><i data-lucide="download" class="w-5 h-5"></i></a></div>`; }); }
+                } catch(e) {}
+            }
+            if (!hayDiplomas && alumnoActual.diploma_url) { hayDiplomas = true; container.innerHTML = `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-center"><div><h4 class="text-white font-bold text-sm uppercase">Título Oficial Registrado</h4><p class="text-[10px] text-slate-400 font-mono mt-1">Validado por Comité</p></div><a href="${alumnoActual.diploma_url}" target="_blank" class="bg-blue-600 text-white p-3 rounded-lg shadow-lg hover:bg-blue-500 transition-transform active:scale-95"><i data-lucide="download" class="w-5 h-5"></i></a></div>`; }
+            if (!hayDiplomas) { container.innerHTML = '<div class="text-center text-slate-400 border border-dashed border-slate-700 p-6 rounded-xl">No hay diplomas o certificados registrados en su expediente.</div>'; }
+            safeClass('modal-diplomas', 'remove', 'hidden'); lucide.createIcons();
+        }
+
+        async function cargarPortalCientifico() {
+            const container = el('feed-portal-container'); if(!container) return;
+            try {
+                let data = null;
+                try { const { data: noticias } = await db.from('renmcycf_noticias').select('*').order('created_at', { ascending: false }).limit(20); if (noticias && noticias.length > 0) data = noticias; } catch(e) {}
+                if (!data) { const { data: cursos } = await db.from('renmcycf_cursos').select('*').order('created_at', { ascending: false }).limit(20); data = cursos; }
+                if (!data || data.length === 0) { container.innerHTML = '<p class="text-center text-slate-400 text-sm py-10 font-bold">No hay publicaciones recientes.</p>'; return; }
+                container.innerHTML = data.map(post => {
+                    const img = post.portada_url || 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=600';
+                    let tagColor = 'bg-[#0a1128] text-white'; if(post.categoria_requerida === 'CIENCIA') tagColor = 'bg-blue-600 text-white'; if(post.categoria_requerida === 'TECNOLOGIA') tagColor = 'bg-emerald-600 text-white';
+                    return `<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-4"><div class="h-32 w-full bg-slate-200 relative"><img src="${img}" class="w-full h-full object-cover"><span class="absolute top-2 left-2 ${tagColor} text-[8px] font-black uppercase px-2 py-1 rounded shadow">${post.categoria_requerida || 'NOTICIA'}</span></div><div class="p-4"><h3 class="font-black text-[#0a1128] text-sm leading-tight mb-2 line-clamp-2">${post.titulo}</h3><p class="text-xs text-slate-500 leading-relaxed line-clamp-3 mb-3">${post.descripcion || ''}</p><button class="text-[10px] font-black text-[#d4af37] uppercase tracking-widest hover:text-amber-500 flex items-center gap-1" onclick="alert('Abriendo documento...')">Leer Artículo <i data-lucide="arrow-right" class="w-3 h-3"></i></button></div></div>`;
+                }).join(''); lucide.createIcons();
+            } catch(e) { container.innerHTML = '<p class="text-center text-red-500 text-sm font-bold">Error de red.</p>'; }
+        }
+
+        async function cargarBibliotecaWallet() {
+            const container = el('wallet-biblioteca-container'); if(!container) return;
+            container.innerHTML = '<div class="skeleton h-48 w-full rounded-xl"></div><div class="skeleton h-48 w-full rounded-xl"></div>';
+            try {
                 const { data, error } = await db.from('renmcycf_biblioteca').select('*').eq('activo', true).order('created_at', { ascending: false });
                 if (error) throw error;
-                
-                if (data.length === 0) { container.innerHTML = '<p class="text-center text-xs text-slate-400">Biblioteca vacía.</p>'; return; }
-                
-                let html = '';
-                data.forEach(b => {
-                    const isPremium = b.tipo_acceso === 'PREMIUM';
-                    const iconColor = isPremium ? 'text-amber-500' : 'text-blue-500';
-                    const bgBadge = isPremium ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700';
-                    const linkAction = (isPremium && userDataDB.estado_legal !== 'ACTIVO') ? 
-                        `alert('Su matrícula no está activa. No puede descargar material premium.');` : 
-                        `window.open('${b.pdf_url}', '_blank');`;
-
-                    html += `
-                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4 hover:border-blue-300 transition cursor-pointer" onclick="${linkAction}">
-                            <div class="w-10 h-14 shrink-0 rounded bg-slate-100 overflow-hidden shadow">
-                                <img src="${b.portada_url || 'https://via.placeholder.com/50x70/0f172a/3b82f6?text=PDF'}" class="w-full h-full object-cover">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded ${bgBadge}">${b.tipo_acceso}</span>
-                                </div>
-                                <h4 class="font-bold text-[#0a1128] text-xs truncate">${b.titulo}</h4>
-                                <p class="text-[10px] text-slate-500 truncate">${b.autor || 'RENMCYCF Oficial'}</p>
-                            </div>
-                            <i data-lucide="${isPremium ? 'lock' : 'download'}" class="w-5 h-5 shrink-0 ${iconColor} opacity-50"></i>
-                        </div>
-                    `;
-                });
-                container.innerHTML = html;
-                lucide.createIcons();
-            } catch (e) { container.innerHTML = '<p class="text-center text-xs text-red-400">Error cargando repositorio.</p>'; }
+                if (!data || data.length === 0) { container.innerHTML = '<p class="col-span-2 text-center text-slate-400 text-sm py-4">Biblioteca en actualización.</p>'; return; }
+                container.innerHTML = data.map(b => {
+                    const cover = b.portada_url || 'https://via.placeholder.com/150x200/0a1128/d4af37?text=PDF';
+                    const label = b.tipo_acceso === 'PREMIUM' ? '<span class="absolute top-2 right-2 bg-[#0a1128] text-[#d4af37] text-[8px] font-black px-2 py-1 rounded border border-[#d4af37] shadow">Premium</span>' : '';
+                    return `<div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col relative group">${label}<img src="${cover}" class="w-full h-32 object-cover bg-slate-100 border-b border-slate-100"><div class="p-3 flex-1 flex flex-col justify-between"><div><h4 class="font-black text-xs text-[#0a1128] leading-tight mb-1 line-clamp-2">${b.titulo}</h4><p class="text-[9px] font-bold text-slate-400 mb-2 line-clamp-1">${b.autor || 'Institucional'}</p></div><a href="${b.pdf_url}" target="_blank" class="w-full text-center bg-[#f1f5f9] hover:bg-[#0a1128] hover:text-[#d4af37] text-slate-700 text-[9px] font-black uppercase tracking-wider py-2 rounded-lg transition-colors shadow-sm mt-auto">Descargar PDF</a></div></div>`;
+                }).join('');
+            } catch(e) { container.innerHTML = '<p class="col-span-2 text-center text-red-500 text-sm font-bold">Error de conexión.</p>'; }
         }
 
-        // ==========================================
-        // 6. NAVEGACIÓN TABS
-        // ==========================================
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(`tab-${tabId}`).classList.add('active');
-            document.getElementById(`nav-${tabId}`).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        async function cargarMisPublicaciones() {
+            const container = el('lista-mis-tesis'); if(!container) return;
+            try {
+                const { data, error } = await db.from('renmcycf_publicaciones').select('*').eq('autor_id', alumnoActual.id).order('created_at', { ascending: false });
+                if (error) throw error;
+                if (!data || data.length === 0) { container.innerHTML = '<p class="text-center text-slate-400 text-[10px] font-bold uppercase border border-dashed border-slate-300 rounded-xl p-4">Aún no ha enviado documentos.</p>'; return; }
+                container.innerHTML = data.map(t => {
+                    let color = 'bg-slate-50 text-slate-500 border-slate-200'; let icon = 'clock'; let tex = 'EN REVISIÓN';
+                    if (t.estado === 'APROBADO') { color = 'bg-emerald-50 text-emerald-600 border-emerald-200'; icon = 'check-circle'; tex = 'PUBLICADO';}
+                    if (t.estado === 'RECHAZADO') { color = 'bg-red-50 text-red-600 border-red-200'; icon = 'x-circle'; tex = 'DENEGADO'; }
+                    return `<div class="border border-slate-200 rounded-xl p-4 bg-white flex flex-col gap-2 shadow-sm"><div class="flex justify-between items-start"><div class="flex-1 pr-2"><h4 class="font-black text-xs text-[#0a1128] uppercase leading-tight line-clamp-2">${t.titulo}</h4><p class="text-[9px] text-slate-400 font-mono mt-1">Enviado el ${new Date(t.created_at).toLocaleDateString('es-AR')}</p></div><span class="${color} border text-[8px] font-black uppercase px-2 py-1 rounded flex items-center gap-1 shrink-0"><i data-lucide="${icon}" class="w-3 h-3"></i> ${tex}</span></div></div>`;
+                }).join('');
+                lucide.createIcons();
+            } catch(e) { container.innerHTML = '<p class="text-center text-red-500 text-xs font-bold">Error de conexión.</p>'; }
+        }
+
+        async function subirPublicacion(e) {
+            e.preventDefault(); const btn = el('btn-subir-tesis'); if(!btn) return;
+            const file = el('tesis-pdf').files[0];
+            if (!file) return alert("Seleccione un archivo PDF."); if (file.size > 10 * 1024 * 1024) return alert('El archivo supera los 10MB.');
+            const orig = btn.innerHTML; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> TRANSMITIENDO...'; btn.disabled = true;
+            try {
+                const fileName = `${alumnoActual.dni}_tesis_${Date.now()}.${file.name.split('.').pop()}`;
+                await db.storage.from('renmcycf-pdfs').upload(fileName, file);
+                const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${fileName}`;
+                await db.from('renmcycf_publicaciones').insert({ autor_id: alumnoActual.id, autor_nombre: `${alumnoActual.nombres} ${alumnoActual.apellidos}`, titulo: el('tesis-titulo').value.trim(), resumen: el('tesis-resumen').value.trim(), pdf_url: pdfUrl });
+                alert("Investigación enviada con éxito."); el('form-subir-tesis').reset(); cargarMisPublicaciones();
+            } catch (err) { alert("Error al subir: " + err.message); } finally { btn.innerHTML = orig; btn.disabled = false; lucide.createIcons(); }
         }
     </script>
 </body>
