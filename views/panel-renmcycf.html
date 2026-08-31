@@ -196,7 +196,7 @@
                 </div>
                 <div><label>Profesión / Título</label><input type="text" id="edit-profesion"></div>
                 
-                <!-- TAREA 3: REDES SOCIALES EN EDICIÓN -->
+                <!-- REDES SOCIALES EN EDICIÓN -->
                 <div class="bg-black/20 p-4 rounded-xl border border-white/5">
                     <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Redes Sociales del Profesional</h4>
                     <div class="grid grid-cols-1 gap-4">
@@ -879,15 +879,45 @@
 
         async function actualizarDashboard() {
             try {
+                // 1. Buscamos el total de activos para la tarjeta principal
                 const { count: activos } = await db.from('renmcycf_padron').select('*', { count: 'exact', head: true }).eq('estado_legal', 'ACTIVO');
-                const { count: pendientes } = await db.from('renmcycf_solicitudes').select('*', { count: 'exact', head: true }).eq('estado', 'PENDIENTE');
-                const { data: conf } = await db.from('renmcycf_config').select('arancel_a1').eq('id', 1).maybeSingle();
                 
-                const arancel = conf ? conf.arancel_a1 : 0;
+                // 2. Buscamos solicitudes pendientes (incluyendo renovaciones)
+                const { count: pendientes } = await db.from('renmcycf_solicitudes').select('*', { count: 'exact', head: true }).in('estado', ['PENDIENTE', 'RENOVACION_PENDIENTE']);
+                
+                // 3. Traemos TODA la configuración de aranceles (no solo A1)
+                const { data: conf } = await db.from('renmcycf_config').select('arancel_a1, arancel_a2, arancel_a3, arancel_a4').eq('id', 1).maybeSingle();
+                
+                // 4. Traemos a todos los usuarios activos para ver sus categorías reales
+                const { data: padronActivo } = await db.from('renmcycf_padron').select('categoria').eq('estado_legal', 'ACTIVO');
+                
+                // Armamos el diccionario de precios homologando las categorías B
+                const aranceles = {
+                    'A1': conf?.arancel_a1 || 0,
+                    'A2': conf?.arancel_a2 || 0,
+                    'A3': conf?.arancel_a3 || 0,
+                    'A4': conf?.arancel_a4 || 0,
+                    'B1': conf?.arancel_a2 || 0, // B1 paga como A2
+                    'B2': conf?.arancel_a3 || 0, // B2 paga como A3
+                    'B3': conf?.arancel_a3 || 0  // B3 paga como A3
+                };
+
+                // Sumamos matemáticamente lo que aporta cada usuario según su categoría
+                let ingresosTotales = 0;
+                if (padronActivo) {
+                    padronActivo.forEach(p => {
+                        const cat = p.categoria || 'A3'; // Fallback a A3 por las dudas
+                        ingresosTotales += (aranceles[cat] || 0);
+                    });
+                }
+                
+                const arancelRef = conf ? conf.arancel_a1 : 0;
+
+                // Actualizamos el DOM
                 document.getElementById('stat-matriculados').innerText = activos || 0;
                 document.getElementById('stat-pendientes').innerText = pendientes || 0;
-                document.getElementById('stat-arancel').innerText = `$${new Intl.NumberFormat('es-AR').format(arancel)}`;
-                document.getElementById('stat-caja').innerText = `$${new Intl.NumberFormat('es-AR').format((activos || 0) * arancel)}`;
+                document.getElementById('stat-arancel').innerText = `$${new Intl.NumberFormat('es-AR').format(arancelRef)}`; // Muestra el A1 como referencia
+                document.getElementById('stat-caja').innerText = `$${new Intl.NumberFormat('es-AR').format(ingresosTotales)}`; // Muestra la suma EXACTA
                 
                 actualizarGraficos();
             } catch (err) { console.error("Error Dashboard:", err); }
@@ -998,11 +1028,30 @@
             const tbody = document.getElementById('crm-body');
             tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center">Cargando...</td></tr>';
             try {
-                const { data, error } = await db.from('renmcycf_solicitudes').select('*').in('estado', ['PENDIENTE', 'OBSERVADO']).order('id', { ascending: false });
+                const { data, error } = await db.from('renmcycf_solicitudes').select('*').in('estado', ['PENDIENTE', 'OBSERVADO', 'RENOVACION_PENDIENTE']).order('id', { ascending: false });
                 if (error) throw error;
                 if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">Bandeja vacía.</td></tr>'; return; }
                 
                 tbody.innerHTML = data.map(p => {
+                    // RAMA RENOVACIÓN AUTOMÁTICA
+                    if (p.tipo_tramite === 'RENOVACION' || p.estado === 'RENOVACION_PENDIENTE') {
+                        return `
+                        <tr class="bg-blue-900/10 border-b border-blue-500/30">
+                            <td class="p-3">
+                                <div class="font-bold text-white">${p.nombres} ${p.apellidos} <span class="text-[9px] bg-blue-500 text-white px-2 py-0.5 rounded ml-2 shadow">RENOVACIÓN ANUAL</span></div>
+                                <div class="text-[10px] text-slate-400">DNI: ${p.dni}</div>
+                            </td>
+                            <td class="p-3"><span class="px-2 py-1 bg-slate-800 rounded text-[10px] font-bold text-blue-400">PAGO VIGENCIA</span></td>
+                            <td class="p-3 text-xs text-blue-400">
+                                <a href="${p.comprobante_url}" target="_blank" class="hover:underline flex items-center gap-1"><i data-lucide="receipt" class="w-3 h-3"></i> Ver Comprobante</a>
+                            </td>
+                            <td class="p-3 text-right">
+                                <button onclick="aprobarRenovacion('${p.id}', '${p.dni}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors shadow-md flex items-center gap-1 ml-auto"><i data-lucide="check-circle" class="w-3 h-3"></i> Renovar 1 Año</button>
+                            </td>
+                        </tr>`;
+                    }
+
+                    // RAMA INSCRIPCIÓN COMITÉ (ORIGINAL)
                     const bg = p.estado === 'OBSERVADO' ? 'bg-red-900/20 border-red-500/30' : 'hover:bg-white/5 border-white/5';
                     const tag = p.estado === 'OBSERVADO' ? '<span class="text-[9px] text-red-400 bg-red-400/10 px-1 rounded ml-2">Esperando Corrección</span>' : '';
                     return `
@@ -1017,6 +1066,24 @@
                 }).join('');
                 lucide.createIcons();
             } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">${err.message}</td></tr>`; }
+        }
+
+        async function aprobarRenovacion(idSol, dni) {
+            if(!confirm("¿Desea aprobar este pago y extender la matrícula 1 año?")) return;
+            try {
+                const { data: padron, error: errPad } = await db.from('renmcycf_padron').select('fecha_vencimiento').eq('dni', dni).single();
+                if(errPad) throw errPad;
+                
+                let baseDate = new Date(padron.fecha_vencimiento);
+                if (baseDate < new Date()) baseDate = new Date(); // Si ya estaba vencida, renueva 1 año contando desde hoy
+                baseDate.setFullYear(baseDate.getFullYear() + 1);
+
+                await db.from('renmcycf_padron').update({ fecha_vencimiento: baseDate.toISOString(), estado_legal: 'ACTIVO' }).eq('dni', dni);
+                await db.from('renmcycf_solicitudes').update({ estado: 'APROBADO' }).eq('id', idSol);
+                
+                alert("✅ Renovación aprobada. El padrón ha sido actualizado.");
+                cargarSolicitudes();
+            } catch (err) { alert("Error: " + err.message); }
         }
 
         async function cargarAuditoria() {
