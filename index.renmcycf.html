@@ -179,52 +179,50 @@
 
         <!-- 1. INICIO -->
         <section id="seccion-inicio" class="page-section active-section">
-  <!-- REEMPLAZAR <header> CON ESTO PARA PROBAR -->
-<header class="hero-pattern pt-24 pb-24 md:pt-32 md:pb-36 px-4 relative flex items-center min-h-[85vh]">
+ <!-- REEMPLAZAR <header> CON ESTO PARA PROBAR -->
+<header class="hero-pattern pt-24 pb-48 md:pt-32 md:pb-56 px-4 relative flex flex-col items-center justify-center text-center border-b-4 border-forenseGold">
     <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80" class="hero-bg-img" alt="Background">
     <div class="hero-overlay"></div>
-    <div class="relative max-w-7xl mx-auto z-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <!-- Izquierda: Texto Principal -->
-        <div data-aos="fade-right">
-            <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 text-forenseGold text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-6 border border-forenseGold/30 backdrop-blur-sm">
-                <i data-lucide="shield-check" class="w-4 h-4"></i> Inscripciones Abiertas
-            </div>
-            <h1 class="font-title text-4xl md:text-5xl lg:text-6xl font-black mb-6 text-white leading-[1.1] uppercase">
-                Respaldo Legal para tu <span class="text-forenseGold">Práctica Forense</span>
-            </h1>
-            <p class="text-slate-200 mb-8 text-sm md:text-lg max-w-lg font-light leading-relaxed">
-                El único padrón nacional centralizado con tecnología <strong class="text-forenseGold">Blockchain</strong>.
-            </p>
-            <div class="flex gap-4">
-                <button class="bg-forenseGold text-forenseNavy font-black uppercase text-xs px-6 py-4 rounded-xl shadow-lg hover:scale-105 transition-all">Comenzar Inscripción</button>
-            </div>
+    <div class="relative max-w-5xl mx-auto z-10 w-full" data-aos="fade-up">
+        <h1 class="font-title text-4xl md:text-5xl lg:text-7xl font-black mb-6 text-white leading-[1.1] uppercase">
+            Respaldo Legal para tu <br><span class="text-forenseGold">Práctica Forense</span>
+        </h1>
+        <div class="flex justify-center gap-4 w-full mt-8">
+            <button class="bg-forenseGold text-forenseNavy font-black uppercase text-sm px-6 py-4 rounded-xl shadow-lg">Comenzar Inscripción</button>
         </div>
-        <!-- Derecha: Noticias Split -->
-        <div class="flex flex-col gap-4" data-aos="fade-left">
-            <h3 class="text-forenseGold text-xs font-bold uppercase tracking-widest mb-2 border-b border-white/10 pb-2">Últimas Novedades</h3>
+    </div>
+
+    <!-- Carrusel Flotante Inferior -->
+    <div class="absolute bottom-0 left-0 w-full translate-y-1/2 z-20 px-4">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
             
-            <!-- Tarjeta Noticia 1 -->
-            <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 flex gap-4 hover:bg-white/20 transition cursor-pointer group">
-                <img src="https://via.placeholder.com/100" class="w-20 h-20 rounded-lg object-cover">
-                <div class="flex-1">
-                    <span class="text-[9px] text-emerald-400 font-bold uppercase tracking-widest">Congreso</span>
-                    <h4 class="text-white font-bold text-sm leading-snug group-hover:text-forenseGold transition">Jornadas de Balística Forense 2026</h4>
-                    <p class="text-slate-300 text-xs mt-1 line-clamp-1">Inscripciones abiertas para el evento anual...</p>
+            <div class="bg-slate-900/80 backdrop-blur-md border border-white/20 p-4 rounded-2xl flex items-center gap-4 shadow-2xl hover:-translate-y-2 transition-transform cursor-pointer text-left">
+                <img src="https://via.placeholder.com/80" class="w-16 h-16 rounded-lg object-cover">
+                <div>
+                    <span class="text-[8px] text-forenseGold font-bold uppercase tracking-widest block mb-1">Última Noticia</span>
+                    <h4 class="text-white font-bold text-xs leading-tight">Jornadas Nacionales de Balística Forense</h4>
                 </div>
             </div>
 
-            <!-- Tarjeta Noticia 2 -->
-            <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 flex gap-4 hover:bg-white/20 transition cursor-pointer group">
-                <img src="https://via.placeholder.com/100" class="w-20 h-20 rounded-lg object-cover">
-                <div class="flex-1">
-                    <span class="text-[9px] text-blue-400 font-bold uppercase tracking-widest">Institucional</span>
-                    <h4 class="text-white font-bold text-sm leading-snug group-hover:text-forenseGold transition">Nuevo acuerdo con Universidades</h4>
-                    <p class="text-slate-300 text-xs mt-1 line-clamp-1">El comité evaluador firma nuevo convenio...</p>
+            <div class="hidden md:flex bg-slate-900/80 backdrop-blur-md border border-white/20 p-4 rounded-2xl items-center gap-4 shadow-2xl hover:-translate-y-2 transition-transform cursor-pointer text-left">
+                <img src="https://via.placeholder.com/80" class="w-16 h-16 rounded-lg object-cover">
+                <div>
+                    <span class="text-[8px] text-blue-400 font-bold uppercase tracking-widest block mb-1">Institucional</span>
+                    <h4 class="text-white font-bold text-xs leading-tight">Nuevo convenio con Universidad Siglo 21</h4>
                 </div>
             </div>
+
+            <div class="hidden md:flex bg-slate-900/80 backdrop-blur-md border border-white/20 p-4 rounded-2xl items-center gap-4 shadow-2xl hover:-translate-y-2 transition-transform cursor-pointer text-left">
+                <img src="https://via.placeholder.com/80" class="w-16 h-16 rounded-lg object-cover">
+                <div>
+                    <span class="text-[8px] text-emerald-400 font-bold uppercase tracking-widest block mb-1">Académico</span>
+                    <h4 class="text-white font-bold text-xs leading-tight">Aprobación de nuevos protocolos Periciales</h4>
+                </div>
+            </div>
+
         </div>
     </div>
-</header>
+</header> 
             <section id="carrusel-institucional" class="py-12 bg-slate-900 border-b border-slate-800 overflow-hidden hidden">
                 <div class="max-w-7xl mx-auto px-4 mb-6 text-center">
                     <h3 class="text-xs font-bold text-forenseGold uppercase tracking-[0.25em]">Instituciones y Universidades Aliadas</h3>
