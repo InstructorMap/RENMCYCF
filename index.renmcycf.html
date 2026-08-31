@@ -179,29 +179,52 @@
 
         <!-- 1. INICIO -->
         <section id="seccion-inicio" class="page-section active-section">
-            <header class="hero-pattern pt-24 pb-24 md:pt-32 md:pb-36 px-4 relative flex flex-col items-center justify-center text-center border-b-4 border-forenseGold">
-                <img id="dyn-hero-bg" src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80" class="hero-bg-img" alt="Background">
-                <div class="hero-overlay"></div>
-                <div class="relative max-w-5xl mx-auto z-10" data-aos="fade-up">
-                    <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 text-forenseGold text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-8 border border-forenseGold/30 backdrop-blur-sm">
-                        <i data-lucide="shield-check" class="w-4 h-4"></i> <span id="hero-badge-text">Inscripciones Abiertas · Ciclo 2026</span>
-                    </div>
-                    <h1 id="hero-title" class="font-title text-4xl md:text-5xl lg:text-7xl font-black mb-6 text-white leading-[1.1] uppercase">
-                        Respaldo Legal para tu <br><span class="text-forenseGold">Práctica Forense</span>
-                    </h1>
-                    <p id="hero-subtitle" class="text-slate-100/90 mb-8 text-sm md:text-lg max-w-3xl mx-auto font-light leading-relaxed">
-                        El único padrón nacional centralizado con tecnología <strong class="text-forenseGold font-semibold">Blockchain</strong>.
-                    </p>
-                    
-                    <div class="flex flex-col items-center gap-4 max-w-2xl mx-auto w-full">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                            <button id="hero-cta-primary" onclick="switchSection('seccion-inscripcion')" class="bg-forenseGold text-forenseNavy font-black uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl shadow-lg hover:scale-105 transition-all text-center">Comenzar Inscripción</button>
-                            <button id="hero-cta-secondary" onclick="switchSection('seccion-verificacion')" class="bg-white/15 backdrop-blur-sm text-white border border-white/25 font-bold uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl hover:bg-white/25 transition-all text-center">Verificar Profesional</button>
-                        </div>
-                    </div>
+  <!-- REEMPLAZAR <header> CON ESTO PARA PROBAR -->
+<header class="hero-pattern pt-24 pb-24 md:pt-32 md:pb-36 px-4 relative flex items-center min-h-[85vh]">
+    <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80" class="hero-bg-img" alt="Background">
+    <div class="hero-overlay"></div>
+    <div class="relative max-w-7xl mx-auto z-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <!-- Izquierda: Texto Principal -->
+        <div data-aos="fade-right">
+            <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 text-forenseGold text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-6 border border-forenseGold/30 backdrop-blur-sm">
+                <i data-lucide="shield-check" class="w-4 h-4"></i> Inscripciones Abiertas
+            </div>
+            <h1 class="font-title text-4xl md:text-5xl lg:text-6xl font-black mb-6 text-white leading-[1.1] uppercase">
+                Respaldo Legal para tu <span class="text-forenseGold">Práctica Forense</span>
+            </h1>
+            <p class="text-slate-200 mb-8 text-sm md:text-lg max-w-lg font-light leading-relaxed">
+                El único padrón nacional centralizado con tecnología <strong class="text-forenseGold">Blockchain</strong>.
+            </p>
+            <div class="flex gap-4">
+                <button class="bg-forenseGold text-forenseNavy font-black uppercase text-xs px-6 py-4 rounded-xl shadow-lg hover:scale-105 transition-all">Comenzar Inscripción</button>
+            </div>
+        </div>
+        <!-- Derecha: Noticias Split -->
+        <div class="flex flex-col gap-4" data-aos="fade-left">
+            <h3 class="text-forenseGold text-xs font-bold uppercase tracking-widest mb-2 border-b border-white/10 pb-2">Últimas Novedades</h3>
+            
+            <!-- Tarjeta Noticia 1 -->
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 flex gap-4 hover:bg-white/20 transition cursor-pointer group">
+                <img src="https://via.placeholder.com/100" class="w-20 h-20 rounded-lg object-cover">
+                <div class="flex-1">
+                    <span class="text-[9px] text-emerald-400 font-bold uppercase tracking-widest">Congreso</span>
+                    <h4 class="text-white font-bold text-sm leading-snug group-hover:text-forenseGold transition">Jornadas de Balística Forense 2026</h4>
+                    <p class="text-slate-300 text-xs mt-1 line-clamp-1">Inscripciones abiertas para el evento anual...</p>
                 </div>
-            </header>
+            </div>
 
+            <!-- Tarjeta Noticia 2 -->
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 flex gap-4 hover:bg-white/20 transition cursor-pointer group">
+                <img src="https://via.placeholder.com/100" class="w-20 h-20 rounded-lg object-cover">
+                <div class="flex-1">
+                    <span class="text-[9px] text-blue-400 font-bold uppercase tracking-widest">Institucional</span>
+                    <h4 class="text-white font-bold text-sm leading-snug group-hover:text-forenseGold transition">Nuevo acuerdo con Universidades</h4>
+                    <p class="text-slate-300 text-xs mt-1 line-clamp-1">El comité evaluador firma nuevo convenio...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
             <section id="carrusel-institucional" class="py-12 bg-slate-900 border-b border-slate-800 overflow-hidden hidden">
                 <div class="max-w-7xl mx-auto px-4 mb-6 text-center">
                     <h3 class="text-xs font-bold text-forenseGold uppercase tracking-[0.25em]">Instituciones y Universidades Aliadas</h3>
