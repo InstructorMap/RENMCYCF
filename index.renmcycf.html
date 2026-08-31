@@ -179,50 +179,53 @@
 
         <!-- 1. INICIO -->
         <section id="seccion-inicio" class="page-section active-section">
- <!-- REEMPLAZAR <header> CON ESTO PARA PROBAR -->
-<header class="hero-pattern pt-24 pb-48 md:pt-32 md:pb-56 px-4 relative flex flex-col items-center justify-center text-center border-b-4 border-forenseGold">
-    <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80" class="hero-bg-img" alt="Background">
-    <div class="hero-overlay"></div>
-    <div class="relative max-w-5xl mx-auto z-10 w-full" data-aos="fade-up">
-        <h1 class="font-title text-4xl md:text-5xl lg:text-7xl font-black mb-6 text-white leading-[1.1] uppercase">
-            Padrón Nacional de Registro <br><span class="text-forenseGold">en Criminalística y Ciencias Forenses</span>
-        </h1>
-        <div class="flex justify-center gap-4 w-full mt-8">
-            <button class="bg-forenseGold text-forenseNavy font-black uppercase text-sm px-6 py-4 rounded-xl shadow-lg">Comenzar Inscripción</button>
-        </div>
-    </div>
+            <header class="hero-pattern pt-24 pb-24 md:pt-32 md:pb-36 px-4 relative flex items-center min-h-[85vh] border-b-4 border-forenseGold">
+                <img id="dyn-hero-bg" 
+                     src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80" 
+                     class="hero-bg-img" 
+                     alt="Background"
+                     onerror="this.src='https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80'">
+                <div class="hero-overlay"></div>
+                
+                <div class="relative max-w-7xl mx-auto z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                    <!-- Izquierda: Texto Principal -->
+                    <div class="lg:col-span-7" data-aos="fade-right">
+                        <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 text-forenseGold text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-6 border border-forenseGold/30 backdrop-blur-sm">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i> <span id="hero-badge-text">Inscripciones Abiertas · Ciclo 2026</span>
+                        </div>
+                        <h1 id="hero-title" class="font-title text-4xl md:text-5xl lg:text-6xl font-black mb-6 text-white leading-[1.1] uppercase">
+                            Respaldo Legal para tu <br><span class="text-forenseGold">Práctica Forense</span>
+                        </h1>
+                        <p id="hero-subtitle" class="text-slate-200 mb-8 text-sm md:text-lg max-w-lg font-light leading-relaxed">
+                            El único padrón nacional centralizado con tecnología <strong class="text-forenseGold font-semibold">Blockchain</strong>.
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button id="hero-cta-primary" onclick="switchSection('seccion-inscripcion')" class="bg-forenseGold text-forenseNavy font-black uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl shadow-lg hover:scale-105 transition-all text-center">Comenzar Inscripción</button>
+                            <button id="hero-cta-secondary" onclick="switchSection('seccion-verificacion')" class="bg-white/15 backdrop-blur-sm text-white border border-white/25 font-bold uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl hover:bg-white/25 transition-all text-center">Verificar Profesional</button>
+                        </div>
+                    </div>
 
-    <!-- Carrusel Flotante Inferior -->
-    <div class="absolute bottom-0 left-0 w-full translate-y-1/2 z-20 px-4">
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
-            
-            <div class="bg-slate-900/80 backdrop-blur-md border border-white/20 p-4 rounded-2xl flex items-center gap-4 shadow-2xl hover:-translate-y-2 transition-transform cursor-pointer text-left">
-                <img src="https://via.placeholder.com/80" class="w-16 h-16 rounded-lg object-cover">
-                <div>
-                    <span class="text-[8px] text-forenseGold font-bold uppercase tracking-widest block mb-1">Última Noticia</span>
-                    <h4 class="text-white font-bold text-xs leading-tight">Jornadas Nacionales de Balística Forense</h4>
+                    <!-- Derecha: Noticia Destacada Única -->
+                    <div class="lg:col-span-5 flex flex-col w-full max-w-md mx-auto lg:mx-0 mt-8 lg:mt-0" data-aos="fade-left">
+                        <div class="flex justify-between items-end mb-4 border-b border-white/10 pb-2">
+                            <h3 class="text-forenseGold text-xs font-bold uppercase tracking-widest">Novedad Oficial</h3>
+                            <button onclick="switchSection('seccion-portal-divulgacion')" class="text-[10px] text-slate-300 hover:text-white uppercase font-bold tracking-wider flex items-center gap-1 transition-colors">
+                                Ver el Portal <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Contenedor dinámico -->
+                        <div id="hero-noticia-container" class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden hover:border-forenseGold/50 transition-all group cursor-pointer shadow-2xl" onclick="switchSection('seccion-portal-divulgacion')">
+                            <div class="p-10 text-center text-slate-400">
+                                <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> 
+                                <span class="text-xs font-bold uppercase">Cargando publicación...</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </header>
 
-            <div class="hidden md:flex bg-slate-900/80 backdrop-blur-md border border-white/20 p-4 rounded-2xl items-center gap-4 shadow-2xl hover:-translate-y-2 transition-transform cursor-pointer text-left">
-                <img src="https://via.placeholder.com/80" class="w-16 h-16 rounded-lg object-cover">
-                <div>
-                    <span class="text-[8px] text-blue-400 font-bold uppercase tracking-widest block mb-1">Institucional</span>
-                    <h4 class="text-white font-bold text-xs leading-tight">Nuevo convenio con Universidad Siglo 21</h4>
-                </div>
-            </div>
-
-            <div class="hidden md:flex bg-slate-900/80 backdrop-blur-md border border-white/20 p-4 rounded-2xl items-center gap-4 shadow-2xl hover:-translate-y-2 transition-transform cursor-pointer text-left">
-                <img src="https://via.placeholder.com/80" class="w-16 h-16 rounded-lg object-cover">
-                <div>
-                    <span class="text-[8px] text-emerald-400 font-bold uppercase tracking-widest block mb-1">Académico</span>
-                    <h4 class="text-white font-bold text-xs leading-tight">Aprobación de nuevos protocolos Periciales</h4>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</header> 
             <section id="carrusel-institucional" class="py-12 bg-slate-900 border-b border-slate-800 overflow-hidden hidden">
                 <div class="max-w-7xl mx-auto px-4 mb-6 text-center">
                     <h3 class="text-xs font-bold text-forenseGold uppercase tracking-[0.25em]">Instituciones y Universidades Aliadas</h3>
@@ -347,7 +350,7 @@
             </div>
         </section>
 
-        <!-- 5. CATEGORÍAS - CON SUBTÍTULOS Y NUEVAS CATEGORÍAS B -->
+        <!-- 5. CATEGORÍAS -->
         <section id="seccion-categorias" class="page-section py-16 bg-white min-h-[70vh]">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-14">
@@ -356,7 +359,6 @@
                 </div>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- SUBTÍTULO ÁREA CRIMINALÍSTICA -->
                     <h3 class="w-full col-span-full text-sm font-bold text-slate-400 uppercase tracking-widest mt-2 mb-2">Área Criminalística y Forense</h3>
                     
                     <div class="cat-card cat-a1 bg-gradient-to-b from-yellow-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
@@ -376,7 +378,6 @@
                         <p class="text-xs text-slate-600" id="cat-a4-desc">Consultores Técnicos y Estudiantes Avanzados.</p>
                     </div>
 
-                    <!-- SUBTÍTULO ÁREA SEGURIDAD -->
                     <h3 class="w-full col-span-full text-sm font-bold text-slate-400 uppercase tracking-widest mt-6 mb-2">Área Seguridad Pública y Privada</h3>
                     
                     <div class="cat-card cat-b1 bg-gradient-to-b from-red-50 to-white rounded-2xl p-6 border border-slate-200 shadow-lg">
@@ -632,6 +633,7 @@
             try { await cargarConfiguracionPublica(); } catch(e) { console.warn(e); }
             try { await cargarAliadosPublicos(); } catch(e) { console.warn(e); }
             try { await cargarNoticiasPublicas(); } catch(e) { console.warn(e); }
+            try { await cargarNoticiaHero(); } catch(e) { console.warn(e); }
             try { await cargarBibliotecaPublica(); } catch(e) { console.warn(e); }
             try { await cargarTesisPublicas(); } catch(e) { console.warn(e); }
             try { await cargarComitePublico(); } catch(e) { console.warn(e); }
@@ -688,7 +690,9 @@
                     setHref('float-fb', conf.facebook); setHref('float-ig', conf.instagram);
                     setHref('footer-fb', conf.facebook); setHref('footer-ig', conf.instagram);
                     if (conf.logo_url) document.getElementById('nav-logo').src = conf.logo_url;
-                    if (conf.hero_image_url) document.getElementById('dyn-hero-bg').src = conf.hero_image_url;
+                    if (conf.hero_image_url && conf.hero_image_url !== '' && conf.hero_image_url !== null) {
+                        document.getElementById('dyn-hero-bg').src = conf.hero_image_url;
+                    }
                 }
             } catch (err) { console.error("Error al cargar config:", err); }
         }
@@ -707,6 +711,72 @@
                     seccion.classList.remove('hidden');
                 } else { seccion.classList.add('hidden'); }
             } catch (err) { console.error("Error aliados:", err); }
+        }
+
+        // ==========================================
+        // NOTICIA DESTACADA DEL HERO
+        // ==========================================
+        async function cargarNoticiaHero() {
+            const container = document.getElementById('hero-noticia-container');
+            if (!container) return;
+            
+            try {
+                const { data, error } = await db.from('renmcycf_noticias')
+                                              .select('*')
+                                              .order('created_at', { ascending: false })
+                                              .limit(1)
+                                              .maybeSingle();
+                
+                if (error) throw error;
+                
+                if (!data) {
+                    container.innerHTML = `
+                        <div class="p-8 text-center text-slate-400">
+                            <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-3 opacity-50"></i>
+                            <p class="text-xs font-bold uppercase">Sin publicaciones aún</p>
+                        </div>`;
+                    lucide.createIcons();
+                    return;
+                }
+                
+                let iconName = 'newspaper';
+                let bgColor = 'bg-amber-500/20 text-amber-400';
+                if (data.categoria_requerida === 'CIENCIA') { iconName = 'flask-conical'; bgColor = 'bg-blue-500/20 text-blue-400'; }
+                if (data.categoria_requerida === 'TECNOLOGIA') { iconName = 'cpu'; bgColor = 'bg-emerald-500/20 text-emerald-400'; }
+                
+                const imagen = data.portada_url || 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=600';
+                const descripcion = data.descripcion || 'Publicación oficial del Registro Nacional.';
+                
+                container.innerHTML = `
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="${imagen}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${data.titulo}">
+                        <div class="absolute inset-0 bg-gradient-to-t from-forenseNavy/80 to-transparent"></div>
+                        <div class="absolute top-3 left-3 ${bgColor} w-10 h-10 rounded-xl flex items-center justify-center shadow-lg border border-white/30 backdrop-blur-sm">
+                            <i data-lucide="${iconName}" class="w-5 h-5"></i>
+                        </div>
+                        <div class="absolute bottom-3 left-3 right-3">
+                            <span class="text-[9px] font-bold uppercase tracking-widest text-forenseGold">${data.categoria_requerida || 'GENERAL'}</span>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h4 class="font-title font-black text-white text-base leading-snug mb-2 group-hover:text-forenseGold transition-colors">${data.titulo}</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed line-clamp-2">${descripcion}</p>
+                        <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
+                            <span class="text-[10px] text-slate-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> ${new Date(data.created_at).toLocaleDateString('es-AR')}</span>
+                            <span class="text-[10px] font-bold text-forenseGold uppercase tracking-wider flex items-center gap-1">Leer más <i data-lucide="arrow-right" class="w-3 h-3"></i></span>
+                        </div>
+                    </div>`;
+                
+                lucide.createIcons();
+            } catch (err) {
+                console.error("Error cargando noticia hero:", err);
+                container.innerHTML = `
+                    <div class="p-8 text-center text-slate-400">
+                        <i data-lucide="alert-circle" class="w-10 h-10 mx-auto mb-3 opacity-50"></i>
+                        <p class="text-xs font-bold uppercase">No se pudo cargar</p>
+                    </div>`;
+                lucide.createIcons();
+            }
         }
 
         // ==========================================
@@ -1081,9 +1151,9 @@
             try {
                 document.getElementById('map-loading').style.display = 'flex';
                 const { data } = await db.from('renmcycf_padron')
-                                       .select('nombres, apellidos, categoria, profesion, provincia_laboral, especialidades, telefono, email, foto_perfil_url, facebook_url, instagram_url, linkedin_url')
-                                       .eq('estado_legal', 'ACTIVO')
-                                       .eq('figurar_directorio', true);
+                                      .select('nombres, apellidos, categoria, profesion, provincia_laboral, especialidades, telefono, email, foto_perfil_url, facebook_url, instagram_url, linkedin_url')
+                                      .eq('estado_legal', 'ACTIVO')
+                                      .eq('figurar_directorio', true);
                 if (data) { peritosMapaDB = data; renderizarPines(peritosMapaDB); }
             } catch (err) { console.error("Error cargando mapa:", err); }
             finally { document.getElementById('map-loading').style.display = 'none'; }
@@ -1183,9 +1253,9 @@
             
             try {
                 const { data, error } = await db.from('renmcycf_noticias')
-                                               .select('*')
-                                               .order('created_at', { ascending: false })
-                                               .limit(6);
+                                              .select('*')
+                                              .order('created_at', { ascending: false })
+                                              .limit(6);
                 
                 if (error) throw error;
                 
@@ -1271,9 +1341,9 @@
             
             try {
                 const { data, error } = await db.from('renmcycf_publicaciones')
-                                               .select('*')
-                                               .eq('estado', 'APROBADO')
-                                               .order('created_at', { ascending: false });
+                                              .select('*')
+                                              .eq('estado', 'APROBADO')
+                                              .order('created_at', { ascending: false });
                 
                 if (error) throw error;
                 
