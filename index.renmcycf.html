@@ -190,8 +190,13 @@
                 <div class="relative max-w-7xl mx-auto z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
                     <!-- Izquierda: Texto Principal -->
                     <div class="lg:col-span-7" data-aos="fade-right">
-                        <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 text-forenseGold text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-6 border border-forenseGold/30 backdrop-blur-sm">
-                            <i data-lucide="shield-check" class="w-4 h-4"></i> <span id="hero-badge-text">Inscripciones Abiertas · Ciclo 2026</span>
+                        <div class="flex flex-wrap items-center gap-3 mb-6">
+                            <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 text-forenseGold text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] border border-forenseGold/30 backdrop-blur-sm shadow-lg">
+                                <i data-lucide="shield-check" class="w-4 h-4"></i> <span id="hero-badge-text">Inscripciones Abiertas · Ciclo 2026</span>
+                            </div>
+                            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] md:text-xs font-bold uppercase tracking-widest border border-emerald-500/30 backdrop-blur-sm shadow-lg" title="Profesionales verificados en la Blockchain">
+                                <i data-lucide="users" class="w-4 h-4"></i> <span id="hero-counter-matriculados" class="font-mono text-white text-sm">...</span> Activos
+                            </div>
                         </div>
                         <h1 id="hero-title" class="font-title text-4xl md:text-5xl lg:text-6xl font-black mb-6 text-white leading-[1.1] uppercase">
                             Respaldo Legal para tu <br><span class="text-forenseGold">Práctica Forense</span>
@@ -648,6 +653,7 @@
             try { await cargarTesisPublicas(); } catch(e) { console.warn(e); }
             try { await cargarComitePublico(); } catch(e) { console.warn(e); }
             try { initMap(); } catch(e) { console.warn(e); }
+            try { await cargarContadorMatriculados(); } catch(e) { console.warn(e); }
         });
 
         // ==========================================
@@ -1072,12 +1078,24 @@
                 if (configGlobal[`arancel_${catRef}`]) {
                     const precio = configGlobal[`arancel_${catRef}`];
                     displayPrecio.innerText = `$${new Intl.NumberFormat('es-AR').format(precio)} ARS`;
-                    if (configGlobal.mp_link) { btnPago.href = configGlobal.mp_link; btnPago.classList.remove('opacity-50', 'pointer-events-none'); }
+                    
+                    const linkPago = configGlobal[`mp_link_${catRef}`];
+                    if (linkPago && linkPago !== '') { 
+                        btnPago.href = linkPago; 
+                        btnPago.classList.remove('opacity-50', 'pointer-events-none'); 
+                    } else {
+                        btnPago.removeAttribute('href'); 
+                        btnPago.classList.add('opacity-50', 'pointer-events-none');
+                    }
                 } else {
-                    displayPrecio.innerText = 'Seleccione Categoría'; btnPago.removeAttribute('href'); btnPago.classList.add('opacity-50', 'pointer-events-none');
+                    displayPrecio.innerText = 'Seleccione Categoría'; 
+                    btnPago.removeAttribute('href'); 
+                    btnPago.classList.add('opacity-50', 'pointer-events-none');
                 }
             } else {
-                displayPrecio.innerText = 'Seleccione Categoría'; btnPago.removeAttribute('href'); btnPago.classList.add('opacity-50', 'pointer-events-none');
+                displayPrecio.innerText = 'Seleccione Categoría'; 
+                btnPago.removeAttribute('href'); 
+                btnPago.classList.add('opacity-50', 'pointer-events-none');
             }
         }
 
@@ -1424,16 +1442,53 @@
             countSpan.classList.remove('text-slate-400');
             countSpan.classList.add('text-red-500');
             countSpan.innerText = parseInt(currentLikes) + 1;
+            lucide.createIcons();
 
             // 2. Impacto en Supabase
             try {
-                const { data, error: errLectura } = await db.from('renmcycf_noticias').select('likes').eq('id', noticiaId).single();
-                if (errLectura) throw errLectura;
+                console.log('🟢 Intentando dar like a noticia ID:', noticiaId);
                 
-                const nuevosLikes = (data.likes || 0) + 1;
-                await db.from('renmcycf_noticias').update({ likes: nuevosLikes }).eq('id', noticiaId);
+                const { data, error: errLectura } = await db
+                    .from('renmcycf_noticias')
+                    .select('likes')
+                    .eq('id', noticiaId)
+                    .single();
+                
+                if (errLectura) {
+                    console.error('🔴 Error leyendo likes:', errLectura);
+                    throw errLectura;
+                }
+                
+                console.log('🟢 Valor actual en DB:', data);
+                
+                const likesActuales = Number(data.likes) || 0;
+                const nuevosLikes = likesActuales + 1;
+                
+                console.log('🟢 Nuevo valor a guardar:', nuevosLikes);
+                
+                const { error: errUpdate, data: dataUpdate } = await db
+                    .from('renmcycf_noticias')
+                    .update({ likes: nuevosLikes })
+                    .eq('id', noticiaId)
+                    .select();
+                
+                if (errUpdate) {
+                    console.error('🔴 Error actualizando:', errUpdate);
+                    throw errUpdate;
+                }
+                
+                console.log('✅ Like registrado correctamente:', dataUpdate);
+                
             } catch (err) {
-                console.warn("Error al registrar like:", err);
+                console.warn("❌ Error al registrar like:", err);
+                // Revertir visualmente si falla
+                icon.classList.remove('fill-red-500', 'text-red-500', 'scale-125');
+                icon.classList.add('text-slate-400');
+                countSpan.classList.remove('text-red-500');
+                countSpan.classList.add('text-slate-400');
+                countSpan.innerText = currentLikes;
+                btnEl.disabled = false;
+                lucide.createIcons();
             }
         }
 
@@ -1460,7 +1515,6 @@
             img.src = url;
             
             modal.classList.remove('hidden');
-            // Pequeño delay para permitir que el CSS aplique la transición de opacidad y escala
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
                 img.classList.remove('scale-95');
@@ -1477,11 +1531,49 @@
             img.classList.remove('scale-100');
             img.classList.add('scale-95');
             
-            // Esperar a que termine la transición antes de ocultarlo del todo
             setTimeout(() => {
                 modal.classList.add('hidden');
                 img.src = '';
             }, 300);
+        }
+
+        // ==========================================
+        // CONTADOR EN VIVO DE MATRICULADOS
+        // ==========================================
+        async function cargarContadorMatriculados() {
+            const counterEl = document.getElementById('hero-counter-matriculados');
+            if (!counterEl) return;
+
+            try {
+                const { count, error } = await db.from('renmcycf_padron')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('estado_legal', 'ACTIVO');
+                
+                if (error) throw error;
+
+                let start = 0;
+                const duration = 1500;
+                const increment = count / (duration / 16); 
+
+                if (count === 0) {
+                    counterEl.innerText = "0";
+                    return;
+                }
+
+                const timer = setInterval(() => {
+                    start += increment;
+                    if (start >= count) {
+                        clearInterval(timer);
+                        counterEl.innerText = count;
+                    } else {
+                        counterEl.innerText = Math.floor(start);
+                    }
+                }, 16);
+
+            } catch (err) {
+                console.warn("Error cargando contador de matriculados:", err);
+                counterEl.innerText = "---";
+            }
         }
     </script>
 
