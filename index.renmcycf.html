@@ -748,7 +748,7 @@
                 const descripcion = data.descripcion || 'Publicación oficial del Registro Nacional.';
                 
                 container.innerHTML = `
-                    <div class="relative h-48 overflow-hidden">
+                    <div class="relative h-80 md:h-96 overflow-hidden bg-slate-900 w-full flex justify-center">
                         <img src="${imagen}" class="w-full h-full object-contain bg-slate-900 group-hover:scale-105 transition-transform duration-500" alt="${data.titulo}">
                         <div class="absolute inset-0 bg-gradient-to-t from-forenseNavy/80 to-transparent"></div>
                         <div class="absolute top-3 left-3 ${bgColor} w-10 h-10 rounded-xl flex items-center justify-center shadow-lg border border-white/30 backdrop-blur-sm">
@@ -1289,7 +1289,7 @@
                     
                     return `
                     <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col hover:border-forenseGold hover:shadow-2xl transition-all duration-300">
-                        <div class="h-40 bg-slate-100 relative overflow-hidden">
+                        <div class="h-64 sm:h-72 relative overflow-hidden bg-slate-900 flex justify-center">
                             <img src="${imagen}" class="w-full h-full object-contain bg-slate-900" alt="${item.titulo}">
                             <div class="absolute top-3 left-3 ${bgColor} w-10 h-10 rounded-xl flex items-center justify-center shadow-md border border-white/50">
                                 <i data-lucide="${iconName}" class="w-5 h-5"></i>
