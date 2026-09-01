@@ -5,17 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Centro de Comando · RENMCYCF</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    
     <style>
         :root { --neon-blue: #3b82f6; --neon-gold: #fbbf24; --glass-bg: rgba(15, 23, 42, 0.6); --glass-border: rgba(255, 255, 255, 0.08); }
         body { font-family: 'Outfit', sans-serif; background-color: #030712; color: #e2e8f0; background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.10) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(217, 119, 6, 0.05) 0%, transparent 50%); background-attachment: fixed; }
@@ -35,16 +31,13 @@
         .tab-content.active { display: block; animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #020617; } ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-        
         .upload-zone { border: 2px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s; }
         .upload-zone:hover { border-color: var(--neon-blue); background: rgba(59,130,246,0.05); }
         .preview-img { max-width: 200px; max-height: 150px; border-radius: 8px; margin-top: 10px; }
         .editor-group { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
         .editor-group-title { font-size: 0.75rem; font-weight: 800; color: var(--neon-gold); text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-
-        #login-screen { position: fixed; inset: 0; z-index: 100; background: #030712; display: flex; align-items: center; justify-content: center; }
+     #login-screen { position: fixed; inset: 0; z-index: 100; background: #030712; display: flex; align-items: center; justify-content: center; }
         .login-box { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 40px; border-radius: 20px; text-align: center; width: 100%; max-width: 400px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
-
         @media print {
             body * { visibility: hidden; }
             #modal-expediente, #modal-expediente * { visibility: visible; }
@@ -52,7 +45,6 @@
             .print\:hidden { display: none !important; }
             .print-container { width: 100%; padding: 0 !important; box-shadow: none !important; margin: 0 !important; }
         }
-        
         .badge-aceptado { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
         .badge-rechazado { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
         .permission-checkbox { display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px; border: 1px solid var(--glass-border); }
@@ -61,7 +53,6 @@
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
-
     <!-- LOGIN CON SUPABASE AUTH -->
     <div id="login-screen">
         <div class="login-box">
@@ -78,7 +69,6 @@
             </form>
         </div>
     </div>
-
     <!-- MODAL EXPEDIENTE / DOSSIER DIGITAL -->
     <div id="modal-expediente" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto print:block print:bg-white print:p-0">
         <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col my-auto print-container" id="dossier-print-area">
@@ -508,7 +498,15 @@
                         <!-- PAGO Y CONTACTO -->
                         <div class="bg-black/20 p-4 rounded-xl border border-white/5">
                             <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="contact" class="w-4 h-4"></i> Pago y Contacto</h4>
-                            <div><label>Enlace de Pago (Mercado Pago)</label><input type="url" id="conf-mp-link" placeholder="https://mpago.la/..."></div>
+                            
+                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2 mt-6 border-t border-white/10 pt-4"><i data-lucide="link" class="w-4 h-4"></i> Enlaces de Pago (Mercado Pago)</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div><label>Link Categoría A1 (y B1)</label><input type="url" id="conf-mp-a1" placeholder="https://mpago.la/..."></div>
+                                <div><label>Link Categoría A2</label><input type="url" id="conf-mp-a2" placeholder="https://mpago.la/..."></div>
+                                <div><label>Link Categoría A3 (B2 y B3)</label><input type="url" id="conf-mp-a3" placeholder="https://mpago.la/..."></div>
+                                <div><label>Link Categoría A4</label><input type="url" id="conf-mp-a4" placeholder="https://mpago.la/..."></div>
+                            </div>
+                            
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                                 <div><label>WhatsApp del Registro</label><input type="text" id="conf-whatsapp" placeholder="549XXXXXXXXXX"></div>
                                 <div><label>Email de Contacto</label><input type="email" id="conf-email"></div>
@@ -879,45 +877,35 @@
 
         async function actualizarDashboard() {
             try {
-                // 1. Buscamos el total de activos para la tarjeta principal
                 const { count: activos } = await db.from('renmcycf_padron').select('*', { count: 'exact', head: true }).eq('estado_legal', 'ACTIVO');
-                
-                // 2. Buscamos solicitudes pendientes (incluyendo renovaciones)
                 const { count: pendientes } = await db.from('renmcycf_solicitudes').select('*', { count: 'exact', head: true }).in('estado', ['PENDIENTE', 'RENOVACION_PENDIENTE']);
-                
-                // 3. Traemos TODA la configuración de aranceles (no solo A1)
                 const { data: conf } = await db.from('renmcycf_config').select('arancel_a1, arancel_a2, arancel_a3, arancel_a4').eq('id', 1).maybeSingle();
-                
-                // 4. Traemos a todos los usuarios activos para ver sus categorías reales
                 const { data: padronActivo } = await db.from('renmcycf_padron').select('categoria').eq('estado_legal', 'ACTIVO');
                 
-                // Armamos el diccionario de precios homologando las categorías B
                 const aranceles = {
                     'A1': conf?.arancel_a1 || 0,
                     'A2': conf?.arancel_a2 || 0,
                     'A3': conf?.arancel_a3 || 0,
                     'A4': conf?.arancel_a4 || 0,
-                    'B1': conf?.arancel_a2 || 0, // B1 paga como A2
-                    'B2': conf?.arancel_a3 || 0, // B2 paga como A3
-                    'B3': conf?.arancel_a3 || 0  // B3 paga como A3
+                    'B1': conf?.arancel_a2 || 0,
+                    'B2': conf?.arancel_a3 || 0,
+                    'B3': conf?.arancel_a3 || 0
                 };
 
-                // Sumamos matemáticamente lo que aporta cada usuario según su categoría
                 let ingresosTotales = 0;
                 if (padronActivo) {
                     padronActivo.forEach(p => {
-                        const cat = p.categoria || 'A3'; // Fallback a A3 por las dudas
+                        const cat = p.categoria || 'A3';
                         ingresosTotales += (aranceles[cat] || 0);
                     });
                 }
                 
                 const arancelRef = conf ? conf.arancel_a1 : 0;
 
-                // Actualizamos el DOM
                 document.getElementById('stat-matriculados').innerText = activos || 0;
                 document.getElementById('stat-pendientes').innerText = pendientes || 0;
-                document.getElementById('stat-arancel').innerText = `$${new Intl.NumberFormat('es-AR').format(arancelRef)}`; // Muestra el A1 como referencia
-                document.getElementById('stat-caja').innerText = `$${new Intl.NumberFormat('es-AR').format(ingresosTotales)}`; // Muestra la suma EXACTA
+                document.getElementById('stat-arancel').innerText = `$${new Intl.NumberFormat('es-AR').format(arancelRef)}`;
+                document.getElementById('stat-caja').innerText = `$${new Intl.NumberFormat('es-AR').format(ingresosTotales)}`;
                 
                 actualizarGraficos();
             } catch (err) { console.error("Error Dashboard:", err); }
@@ -1033,7 +1021,6 @@
                 if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">Bandeja vacía.</td></tr>'; return; }
                 
                 tbody.innerHTML = data.map(p => {
-                    // RAMA RENOVACIÓN AUTOMÁTICA
                     if (p.tipo_tramite === 'RENOVACION' || p.estado === 'RENOVACION_PENDIENTE') {
                         return `
                         <tr class="bg-blue-900/10 border-b border-blue-500/30">
@@ -1051,7 +1038,6 @@
                         </tr>`;
                     }
 
-                    // RAMA INSCRIPCIÓN COMITÉ (ORIGINAL)
                     const bg = p.estado === 'OBSERVADO' ? 'bg-red-900/20 border-red-500/30' : 'hover:bg-white/5 border-white/5';
                     const tag = p.estado === 'OBSERVADO' ? '<span class="text-[9px] text-red-400 bg-red-400/10 px-1 rounded ml-2">Esperando Corrección</span>' : '';
                     return `
@@ -1075,7 +1061,7 @@
                 if(errPad) throw errPad;
                 
                 let baseDate = new Date(padron.fecha_vencimiento);
-                if (baseDate < new Date()) baseDate = new Date(); // Si ya estaba vencida, renueva 1 año contando desde hoy
+                if (baseDate < new Date()) baseDate = new Date();
                 baseDate.setFullYear(baseDate.getFullYear() + 1);
 
                 await db.from('renmcycf_padron').update({ fecha_vencimiento: baseDate.toISOString(), estado_legal: 'ACTIVO' }).eq('dni', dni);
@@ -1803,7 +1789,10 @@
                     document.getElementById('conf-arancel-a2').value = data.arancel_a2 || ''; 
                     document.getElementById('conf-arancel-a3').value = data.arancel_a3 || ''; 
                     document.getElementById('conf-arancel-a4').value = data.arancel_a4 || ''; 
-                    document.getElementById('conf-mp-link').value = data.mp_link || ''; 
+                    document.getElementById('conf-mp-a1').value = data.mp_link_a1 || ''; 
+                    document.getElementById('conf-mp-a2').value = data.mp_link_a2 || ''; 
+                    document.getElementById('conf-mp-a3').value = data.mp_link_a3 || ''; 
+                    document.getElementById('conf-mp-a4').value = data.mp_link_a4 || ''; 
                     document.getElementById('conf-whatsapp').value = data.whatsapp || ''; 
                     document.getElementById('conf-email').value = data.email || ''; 
                     
@@ -1832,7 +1821,10 @@
                     arancel_a2: document.getElementById('conf-arancel-a2').value, 
                     arancel_a3: document.getElementById('conf-arancel-a3').value, 
                     arancel_a4: document.getElementById('conf-arancel-a4').value, 
-                    mp_link: document.getElementById('conf-mp-link').value,
+                    mp_link_a1: document.getElementById('conf-mp-a1').value,
+                    mp_link_a2: document.getElementById('conf-mp-a2').value,
+                    mp_link_a3: document.getElementById('conf-mp-a3').value,
+                    mp_link_a4: document.getElementById('conf-mp-a4').value,
                     whatsapp: document.getElementById('conf-whatsapp').value,
                     email: document.getElementById('conf-email').value,
                     
