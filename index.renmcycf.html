@@ -613,6 +613,16 @@
         <button type="button" class="main-float" onclick="toggleFloatingMenu()" aria-label="Abrir menú flotante de contacto"><i data-lucide="share-2" class="w-6 h-6 main-icon transition-transform"></i></button>
     </div>
 
+    <!-- MODAL VISOR DE IMAGEN (LIGHTBOX) -->
+    <div id="modal-visor-imagen" class="fixed inset-0 bg-black/95 backdrop-blur-sm z-[200] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300" onclick="cerrarModalImagen()">
+        <button onclick="cerrarModalImagen()" class="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white transition-colors z-[210]" aria-label="Cerrar visor">
+            <i data-lucide="x" class="w-8 h-8 md:w-10 md:h-10"></i>
+        </button>
+        <div class="relative max-w-5xl max-h-[90vh] w-full h-full flex items-center justify-center">
+            <img id="visor-imagen-src" src="" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-transform duration-300 scale-95" alt="Vista ampliada" onclick="event.stopPropagation()">
+        </div>
+    </div>
+
     <!-- SCRIPTS CORE -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
@@ -749,7 +759,7 @@
                 
                 container.innerHTML = `
                     <div class="relative aspect-[4/5] sm:aspect-square overflow-hidden bg-slate-50 w-full flex justify-center items-center border-b border-slate-100">
-                        <img src="${imagen}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-md" alt="${data.titulo}">
+                        <img src="${imagen}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-md cursor-pointer" alt="${data.titulo}" onclick="event.stopPropagation(); abrirModalImagen('${imagen}')">
                         <div class="absolute top-3 left-3 ${bgColor} w-10 h-10 rounded-xl flex items-center justify-center shadow-lg border border-white/30 backdrop-blur-sm">
                             <i data-lucide="${iconName}" class="w-5 h-5"></i>
                         </div>
@@ -1289,7 +1299,7 @@
                     return `
                     <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col hover:border-forenseGold hover:shadow-2xl transition-all duration-300">
                         <div class="aspect-square relative overflow-hidden bg-slate-50 flex justify-center items-center border-b border-slate-100 p-2">
-                            <img src="${imagen}" class="w-full h-full object-contain drop-shadow-sm" alt="${item.titulo}">
+                            <img src="${imagen}" class="w-full h-full object-contain drop-shadow-sm cursor-pointer hover:scale-105 transition-transform duration-300" alt="${item.titulo}" onclick="event.stopPropagation(); abrirModalImagen('${imagen}')">
                             <div class="absolute top-3 left-3 ${bgColor} w-10 h-10 rounded-xl flex items-center justify-center shadow-md border border-white/50">
                                 <i data-lucide="${iconName}" class="w-5 h-5"></i>
                             </div>
@@ -1439,6 +1449,39 @@
                 navigator.clipboard.writeText(`${texto} - ${url}`);
                 alert('¡Enlace copiado al portapapeles!');
             }
+        }
+
+        // ==========================================
+        // VISOR DE IMÁGENES (LIGHTBOX)
+        // ==========================================
+        function abrirModalImagen(url) {
+            const modal = document.getElementById('modal-visor-imagen');
+            const img = document.getElementById('visor-imagen-src');
+            img.src = url;
+            
+            modal.classList.remove('hidden');
+            // Pequeño delay para permitir que el CSS aplique la transición de opacidad y escala
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                img.classList.remove('scale-95');
+                img.classList.add('scale-100');
+            }, 10);
+            lucide.createIcons();
+        }
+
+        function cerrarModalImagen() {
+            const modal = document.getElementById('modal-visor-imagen');
+            const img = document.getElementById('visor-imagen-src');
+            
+            modal.classList.add('opacity-0');
+            img.classList.remove('scale-100');
+            img.classList.add('scale-95');
+            
+            // Esperar a que termine la transición antes de ocultarlo del todo
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                img.src = '';
+            }, 300);
         }
     </script>
 
