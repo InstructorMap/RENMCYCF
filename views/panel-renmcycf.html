@@ -270,11 +270,12 @@
 
             <!-- DASHBOARD -->
             <div id="view-dashboard" class="tab-content active space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="glass-card p-6"><p class="text-slate-400 text-xs font-bold uppercase">Matriculados</p><h3 class="text-3xl font-black text-white mt-2 font-mono" id="stat-matriculados">0</h3></div>
-                    <div class="glass-card p-6"><p class="text-slate-400 text-xs font-bold uppercase">Pendientes</p><h3 class="text-3xl font-black text-blue-400 mt-2 font-mono" id="stat-pendientes">0</h3></div>
-                    <div class="glass-card p-6"><p class="text-slate-400 text-xs font-bold uppercase">Arancel A1</p><h3 class="text-3xl font-black text-emerald-400 mt-2 font-mono" id="stat-arancel">$0</h3></div>
-                    <div class="glass-card p-6 border-yellow-500/30"><p class="text-yellow-500/80 text-xs font-bold uppercase">Ingresos Proyectados</p><h3 class="text-3xl font-black text-yellow-400 mt-2 font-mono" id="stat-caja">$0</h3></div>
+                <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
+                    <div class="glass-card p-4 md:p-6 col-span-1"><p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase">Matriculados</p><h3 class="text-2xl md:text-3xl font-black text-white mt-2 font-mono" id="stat-matriculados">0</h3></div>
+                    <div class="glass-card p-4 md:p-6 col-span-1"><p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase">Pendientes</p><h3 class="text-2xl md:text-3xl font-black text-blue-400 mt-2 font-mono" id="stat-pendientes">0</h3></div>
+                    <div class="glass-card p-4 md:p-6 col-span-1 border-purple-500/30"><p class="text-purple-400 text-[10px] md:text-xs font-bold uppercase">Visitas Web</p><h3 class="text-2xl md:text-3xl font-black text-purple-300 mt-2 font-mono" id="stat-visitas">0</h3></div>
+                    <div class="glass-card p-4 md:p-6 col-span-1"><p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase">Arancel A1</p><h3 class="text-2xl md:text-3xl font-black text-emerald-400 mt-2 font-mono" id="stat-arancel">$0</h3></div>
+                    <div class="glass-card p-4 md:p-6 col-span-2 lg:col-span-1 border-yellow-500/30"><p class="text-yellow-500/80 text-[10px] md:text-xs font-bold uppercase">Proyección Caja</p><h3 class="text-2xl md:text-3xl font-black text-yellow-400 mt-2 font-mono" id="stat-caja">$0</h3></div>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -879,7 +880,7 @@
             try {
                 const { count: activos } = await db.from('renmcycf_padron').select('*', { count: 'exact', head: true }).eq('estado_legal', 'ACTIVO');
                 const { count: pendientes } = await db.from('renmcycf_solicitudes').select('*', { count: 'exact', head: true }).in('estado', ['PENDIENTE', 'RENOVACION_PENDIENTE']);
-                const { data: conf } = await db.from('renmcycf_config').select('arancel_a1, arancel_a2, arancel_a3, arancel_a4').eq('id', 1).maybeSingle();
+                const { data: conf } = await db.from('renmcycf_config').select('arancel_a1, arancel_a2, arancel_a3, arancel_a4, visitas_totales').eq('id', 1).maybeSingle();
                 const { data: padronActivo } = await db.from('renmcycf_padron').select('categoria').eq('estado_legal', 'ACTIVO');
                 
                 const aranceles = {
@@ -904,6 +905,7 @@
 
                 document.getElementById('stat-matriculados').innerText = activos || 0;
                 document.getElementById('stat-pendientes').innerText = pendientes || 0;
+                document.getElementById('stat-visitas').innerText = conf?.visitas_totales || 0;
                 document.getElementById('stat-arancel').innerText = `$${new Intl.NumberFormat('es-AR').format(arancelRef)}`;
                 document.getElementById('stat-caja').innerText = `$${new Intl.NumberFormat('es-AR').format(ingresosTotales)}`;
                 
