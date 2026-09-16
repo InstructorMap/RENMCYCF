@@ -36,7 +36,7 @@
         .preview-img { max-width: 200px; max-height: 150px; border-radius: 8px; margin-top: 10px; }
         .editor-group { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
         .editor-group-title { font-size: 0.75rem; font-weight: 800; color: var(--neon-gold); text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-     #login-screen { position: fixed; inset: 0; z-index: 100; background: #030712; display: flex; align-items: center; justify-content: center; }
+        #login-screen { position: fixed; inset: 0; z-index: 100; background: #030712; display: flex; align-items: center; justify-content: center; }
         .login-box { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 40px; border-radius: 20px; text-align: center; width: 100%; max-width: 400px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
         @media print {
             body * { visibility: hidden; }
@@ -53,7 +53,7 @@
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
-    <!-- LOGIN CON SUPABASE AUTH -->
+    <!-- LOGIN -->
     <div id="login-screen">
         <div class="login-box">
             <div class="w-20 h-20 bg-blue-900/30 border border-blue-500/50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(59,130,246,0.3)]">
@@ -69,13 +69,13 @@
             </form>
         </div>
     </div>
-    <!-- MODAL EXPEDIENTE / DOSSIER DIGITAL -->
+
+    <!-- MODAL EXPEDIENTE -->
     <div id="modal-expediente" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto print:block print:bg-white print:p-0">
         <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col my-auto print-container" id="dossier-print-area">
             <div class="bg-[#0a1128] text-white p-6 border-b-8 border-[#d4af37] text-center relative rounded-t-2xl print:rounded-none overflow-hidden">
                 <img id="modal-dyn-bg" src="" alt="Fondo dinámico institucional" class="absolute inset-0 w-full h-full object-cover opacity-20 filter grayscale hidden">
                 <div class="absolute inset-0 bg-[#0a1128]/80 hidden" id="modal-dyn-overlay"></div>
-                
                 <button onclick="cerrarExpediente()" class="absolute top-4 right-4 text-slate-400 hover:text-white print:hidden z-20"><i data-lucide="x-circle" class="w-8 h-8"></i></button>
                 <div class="w-20 h-20 bg-white border-2 border-[#d4af37] rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg relative z-20 overflow-hidden" id="modal-logo-container">
                     <i data-lucide="fingerprint" class="w-10 h-10 text-[#0a1128]" id="modal-default-logo"></i>
@@ -84,7 +84,6 @@
                 <h2 class="text-3xl font-black font-title uppercase tracking-widest text-[#d4af37] relative z-20">Expediente de Inscripción</h2>
                 <p class="font-bold text-sm uppercase tracking-widest mt-1 text-slate-200 relative z-20">Registro Nacional RENMCYCF</p>
             </div>
-            
             <div class="p-8 text-slate-800 space-y-6">
                 <div class="flex justify-between items-center border-b-2 border-slate-200 pb-4">
                     <div><p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Matrícula</p><p class="text-3xl font-black font-mono text-[#0a1128]" id="dos-matricula">---</p></div>
@@ -101,7 +100,6 @@
                     <div><p class="text-xs text-slate-500 uppercase font-bold mb-1">Directorio Público</p><span class="badge-aceptado px-2 py-1 rounded font-black text-sm" id="dos-directorio">OFF</span></div>
                     <div class="col-span-2"><p class="text-xs text-slate-500 uppercase font-bold mb-1">Especialidades</p><div id="dos-especialidades" class="flex flex-wrap gap-2"></div></div>
                 </div>
-                
                 <div id="sello-ddjj" class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl flex items-center gap-3">
                     <i data-lucide="check-circle" class="w-6 h-6 text-emerald-600 flex-shrink-0"></i>
                     <div>
@@ -109,17 +107,14 @@
                         <p class="text-emerald-700 text-xs" id="txt-ddjj-fecha">El usuario aceptó los términos el ---</p>
                     </div>
                 </div>
-
                 <div>
                     <h3 class="text-lg font-black uppercase tracking-wider text-[#0a1128] mb-4 flex items-center gap-2 border-b-2 border-[#d4af37] pb-2"><i data-lucide="file-check" class="text-[#d4af37]"></i> Auditoría Documental</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="dos-imagenes"></div>
                 </div>
-
                 <div id="bloque-correccion" class="hidden">
                     <h3 class="text-lg font-black uppercase tracking-wider text-red-800 mb-4 flex items-center gap-2 border-b-2 border-red-200 pb-2"><i data-lucide="alert-triangle" class="text-red-600"></i> Corrección Adjunta</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="dos-correccion-img"></div>
                 </div>
-
             </div>
             <div class="bg-slate-100 p-6 rounded-b-2xl flex justify-between items-center print:hidden border-t border-slate-300">
                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest"><i data-lucide="shield-check" class="inline w-3 h-3 mb-0.5"></i> Control Interno</p>
@@ -134,7 +129,7 @@
         </div>
     </div>
 
-    <!-- MODAL GESTION PORTAL CIENTIFICO (Ex Campus) -->
+    <!-- MODAL CLASES -->
     <div id="modal-clases" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-[#0f172a] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
             <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40">
@@ -159,7 +154,7 @@
         </div>
     </div>
 
-    <!-- MODAL EDICIÓN RÁPIDA DE MATRICULADO -->
+    <!-- MODAL EDICIÓN MATRICULADO -->
     <div id="modal-editar-padron" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-[#0f172a] border border-white/10 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40 sticky top-0 z-10">
@@ -185,8 +180,6 @@
                     <div><label>Especialidades (Separar con comas)</label><input type="text" id="edit-especialidades"></div>
                 </div>
                 <div><label>Profesión / Título</label><input type="text" id="edit-profesion"></div>
-                
-                <!-- REDES SOCIALES EN EDICIÓN -->
                 <div class="bg-black/20 p-4 rounded-xl border border-white/5">
                     <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Redes Sociales del Profesional</h4>
                     <div class="grid grid-cols-1 gap-4">
@@ -195,12 +188,10 @@
                         <div><label>LinkedIn URL</label><input type="url" id="edit-linkedin" placeholder="https://linkedin.com/in/usuario"></div>
                     </div>
                 </div>
-
                 <div class="bg-black/30 p-4 rounded-xl border border-white/10 flex items-center gap-3">
                     <input type="checkbox" id="edit-directorio" class="w-5 h-5">
                     <label for="edit-directorio" class="text-sm font-bold text-white mb-0 cursor-pointer">Visible en el Directorio Público Nacional (Mapa)</label>
                 </div>
-
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label>Categoría Oficial</label>
@@ -244,12 +235,17 @@
 
                 <div class="px-2 py-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-6">Sistema</div>
                 <button onclick="showTab('aliados')" id="nav-aliados" class="sidebar-link w-full"><i data-lucide="award" class="w-4 h-4"></i> Gestión Aliados</button>
+                <button onclick="showTab('empresas')" id="nav-empresas" class="sidebar-link w-full"><i data-lucide="building-2" class="w-4 h-4"></i> Red de Empresas</button>
                 <button onclick="showTab('comite')" id="nav-comite" class="sidebar-link w-full"><i data-lucide="users-round" class="w-4 h-4"></i> Comité Evaluador</button>
                 <button onclick="showTab('masiva')" id="nav-masiva" class="sidebar-link w-full"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Carga Masiva</button>
                 <button onclick="showTab('diseno')" id="nav-diseno" class="sidebar-link w-full"><i data-lucide="layout-template" class="w-4 h-4"></i> Diseño Credencial</button>
                 <button onclick="showTab('configuracion')" id="nav-configuracion" class="sidebar-link w-full"><i data-lucide="settings" class="w-4 h-4"></i> Configuración Core</button>
                 <button onclick="showTab('contenido')" id="nav-contenido" class="sidebar-link w-full"><i data-lucide="palette" class="w-4 h-4"></i> Textos del Sitio</button>
                 <button onclick="showTab('usuarios')" id="nav-usuarios" class="sidebar-link w-full"><i data-lucide="users" class="w-4 h-4"></i> Usuarios y Roles</button>
+
+                <div class="px-2 py-2 text-[9px] font-bold text-purple-400 uppercase tracking-widest mt-6">Divulgación</div>
+                <button onclick="showTab('beneficios')" id="nav-beneficios" class="sidebar-link w-full"><i data-lucide="award" class="w-4 h-4"></i> Beneficios</button>
+                <button onclick="showTab('suscriptores')" id="nav-suscriptores" class="sidebar-link w-full"><i data-lucide="mail" class="w-4 h-4"></i> Suscriptores</button>
             </div>
         </nav>
     </aside>
@@ -277,7 +273,6 @@
                     <div class="glass-card p-4 md:p-6 col-span-1"><p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase">Arancel A1</p><h3 class="text-2xl md:text-3xl font-black text-emerald-400 mt-2 font-mono" id="stat-arancel">$0</h3></div>
                     <div class="glass-card p-4 md:p-6 col-span-2 lg:col-span-1 border-yellow-500/30"><p class="text-yellow-500/80 text-[10px] md:text-xs font-bold uppercase">Proyección Caja</p><h3 class="text-2xl md:text-3xl font-black text-yellow-400 mt-2 font-mono" id="stat-caja">$0</h3></div>
                 </div>
-                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="glass-card p-6">
                         <h3 class="font-bold text-lg text-white mb-4">Evolución de Altas</h3>
@@ -288,13 +283,12 @@
                         <canvas id="chart-categorias"></canvas>
                     </div>
                 </div>
-                
                 <div class="flex justify-end">
                     <button onclick="descargarReporteExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2"><i data-lucide="download" class="w-5 h-5"></i> DESCARGAR REPORTE EXCEL</button>
                 </div>
             </div>
 
-            <!-- CRM SOLICITUDES -->
+            <!-- CRM -->
             <div id="view-solicitudes" class="tab-content space-y-6">
                 <div class="glass-card p-6">
                     <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Bandeja de Adhesiones</h3><button onclick="cargarSolicitudes()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
@@ -302,7 +296,7 @@
                 </div>
             </div>
 
-            <!-- AUDITORÍA COMITÉ -->
+            <!-- AUDITORÍA -->
             <div id="view-auditoria" class="tab-content space-y-6">
                 <div class="glass-card p-6">
                     <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Auditoría Comité</h3><button onclick="cargarAuditoria()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
@@ -310,7 +304,7 @@
                 </div>
             </div>
 
-            <!-- PADRÓN OFICIAL -->
+            <!-- PADRÓN -->
             <div id="view-padron" class="tab-content space-y-6">
                 <div class="flex justify-between items-center bg-black/20 p-4 rounded-xl border border-white/5">
                     <div class="relative w-full max-w-md"><i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i><input type="text" id="search-padron" placeholder="Buscar por DNI o Nombre..." class="w-full pl-9 bg-black/50" onkeyup="if(event.key==='Enter')buscarPadron()"></div>
@@ -323,7 +317,7 @@
                 </div>
             </div>
 
-            <!-- ALIADOS / INSTITUCIONES -->
+            <!-- ALIADOS -->
             <div id="view-aliados" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
@@ -346,7 +340,35 @@
                 </div>
             </div>
 
-            <!-- COMITÉ EVALUADOR -->
+            <!-- RED DE EMPRESAS (NUEVO) -->
+            <div id="view-empresas" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 xl:col-span-1">
+                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nueva Empresa</h3>
+                        <form id="form-empresa" onsubmit="crearEmpresa(event)" class="space-y-4">
+                            <input type="hidden" id="empresa-id">
+                            <div><label>Nombre de la Empresa</label><input type="text" id="empresa-nombre" required></div>
+                            <div><label>Link a su Web</label><input type="url" id="empresa-web" placeholder="https://..." required></div>
+                            <div><label>Descripción Corta (opcional)</label><textarea id="empresa-desc" rows="2" placeholder="Rubro o servicio"></textarea></div>
+                            <div><label>Logo</label><input type="file" id="empresa-logo" accept="image/*" class="text-slate-400"></div>
+                            <div><label>Orden (menor = primero)</label><input type="number" id="empresa-orden" value="0"></div>
+                            <div class="bg-black/30 p-4 rounded-xl border border-white/10 flex items-center gap-3">
+                                <input type="checkbox" id="empresa-activo" checked class="w-5 h-5">
+                                <label for="empresa-activo" class="text-sm font-bold text-white mb-0 cursor-pointer">Visible en el Index Público</label>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">GUARDAR EMPRESA</button>
+                            <button type="button" onclick="resetFormEmpresa()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs">CANCELAR EDICIÓN</button>
+                        </form>
+                    </div>
+                    <div class="glass-card p-6 xl:col-span-2">
+                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Empresas Cargadas</h3><button onclick="cargarEmpresasPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
+                        <p class="text-xs text-slate-400 mb-4">Si no hay empresas activas, el bloque "Red de Empresas" se ocultará del index.</p>
+                        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Logo</th><th class="p-3">Empresa</th><th class="p-3">Orden</th><th class="p-3">Estado</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="empresas-body"></tbody></table></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMITÉ -->
             <div id="view-comite" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
@@ -383,7 +405,7 @@
                 </div>
             </div>
 
-            <!-- PORTAL CIENTIFICO (EX CAMPUS) -->
+            <!-- PORTAL CIENTÍFICO -->
             <div id="view-campus" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
@@ -455,7 +477,6 @@
                         <div id="editor-controles" class="space-y-4 flex-1 overflow-y-auto pr-2"></div>
                         <button onclick="guardarDiseno()" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl">GUARDAR DISEÑO</button>
                     </div>
-
                     <div class="glass-card p-6 xl:col-span-8 flex items-center justify-center bg-black/40 overflow-hidden relative" style="min-height: 500px;">
                         <div class="absolute top-4 right-4 bg-black/50 px-3 py-1 rounded text-xs font-mono text-slate-400" id="preview-indicator">VISTA: FRENTE</div>
                         <div id="preview-wrapper" style="transform: scale(0.65); transform-origin: center;">
@@ -484,8 +505,6 @@
                 <div class="glass-card p-8 border-yellow-500/30">
                     <h3 class="text-white font-bold mb-6 border-b border-white/10 pb-2">Parámetros del Sistema</h3>
                     <form id="form-config" class="space-y-6" onsubmit="guardarConfiguracion(event)">
-                        
-                        <!-- ARANCELES -->
                         <div class="bg-black/20 p-4 rounded-xl border border-white/5">
                             <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="dollar-sign" class="w-4 h-4"></i> Aranceles de Matriculación</h4>
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -495,11 +514,8 @@
                                 <div><label>Arancel A4 (ARS)</label><input type="number" id="conf-arancel-a4" required></div>
                             </div>
                         </div>
-
-                        <!-- PAGO Y CONTACTO -->
                         <div class="bg-black/20 p-4 rounded-xl border border-white/5">
                             <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="contact" class="w-4 h-4"></i> Pago y Contacto</h4>
-                            
                             <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2 mt-6 border-t border-white/10 pt-4"><i data-lucide="link" class="w-4 h-4"></i> Enlaces de Pago (Mercado Pago)</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div><label>Link Categoría A1 (y B1)</label><input type="url" id="conf-mp-a1" placeholder="https://mpago.la/..."></div>
@@ -507,14 +523,11 @@
                                 <div><label>Link Categoría A3 (B2 y B3)</label><input type="url" id="conf-mp-a3" placeholder="https://mpago.la/..."></div>
                                 <div><label>Link Categoría A4</label><input type="url" id="conf-mp-a4" placeholder="https://mpago.la/..."></div>
                             </div>
-                            
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                                 <div><label>WhatsApp del Registro</label><input type="text" id="conf-whatsapp" placeholder="549XXXXXXXXXX"></div>
                                 <div><label>Email de Contacto</label><input type="email" id="conf-email"></div>
                             </div>
                         </div>
-
-                        <!-- VISIBILIDAD DE BOTONES DE CONTACTO -->
                         <div class="bg-black/20 p-4 rounded-xl border border-white/5">
                             <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4"></i> Visibilidad de Botones de Contacto</h4>
                             <p class="text-xs text-slate-400 mb-4">Controla qué botones de contacto aparecen en el sitio público (menú flotante y secciones).</p>
@@ -545,8 +558,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- IDENTIDAD VISUAL -->
                         <div class="bg-black/20 p-4 rounded-xl border border-white/5">
                             <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="image" class="w-4 h-4"></i> Identidad Visual</h4>
                             <div>
@@ -570,8 +581,6 @@
                                 <input type="hidden" id="conf-logo-url">
                             </div>
                         </div>
-
-                        <!-- REDES SOCIALES -->
                         <div class="bg-black/20 p-4 rounded-xl border border-white/5">
                             <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Redes Sociales</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -581,7 +590,6 @@
                                 <div><label>LinkedIn URL</label><input type="url" id="conf-linkedin"></div>
                             </div>
                         </div>
-
                         <div class="flex justify-end pt-4">
                             <button type="submit" class="bg-yellow-600 hover:bg-yellow-500 text-black font-black px-6 py-3 rounded-xl">ACTUALIZAR CONFIGURACIÓN</button>
                         </div>
@@ -608,22 +616,106 @@
                         <div><label>Descripción Categoría A3</label><textarea id="cont-cat-a3-desc" rows="3"></textarea></div>
                         <div><label>Descripción Categoría A4</label><textarea id="cont-cat-a4-desc" rows="3"></textarea></div>
                         <div><label>Texto Footer</label><textarea id="cont-footer-texto" rows="2"></textarea></div>
+
+                        <!-- NUEVOS TEXTOS INSTITUCIONALES -->
+                        <div class="bg-black/20 p-4 rounded-xl border border-white/5 mt-4">
+                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="landmark" class="w-4 h-4"></i> Sección Institucional</h4>
+                            <div class="space-y-4">
+                                <div><label>Título "Nuestra Misión"</label><input type="text" id="cont-mision-titulo"></div>
+                                <div><label>Texto "Nuestra Misión"</label><textarea id="cont-mision-texto" rows="3"></textarea></div>
+                                <div><label>Título "ASARI Core"</label><input type="text" id="cont-asari-titulo"></div>
+                                <div><label>Texto "ASARI Core"</label><textarea id="cont-asari-texto" rows="3"></textarea></div>
+                                <div><label>Bullet 1 ASARI</label><input type="text" id="cont-asari-bullet-1"></div>
+                                <div><label>Bullet 2 ASARI</label><input type="text" id="cont-asari-bullet-2"></div>
+                                <div><label>Bullet 3 ASARI</label><input type="text" id="cont-asari-bullet-3"></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-black/20 p-4 rounded-xl border border-white/5 mt-4">
+                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4"></i> El Valor de la Confianza</h4>
+                            <div class="space-y-4">
+                                <div><label>Párrafo 1</label><textarea id="cont-inst-p1" rows="3"></textarea></div>
+                                <div><label>Párrafo 2</label><textarea id="cont-inst-p2" rows="3"></textarea></div>
+                                <div><label>Párrafo 3</label><textarea id="cont-inst-p3" rows="3"></textarea></div>
+                                <div><label>Frase de Cierre</label><input type="text" id="cont-inst-cierre"></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-black/20 p-4 rounded-xl border border-white/5 mt-4">
+                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="award" class="w-4 h-4"></i> Alianzas y Newsletter</h4>
+                            <div class="space-y-4">
+                                <div><label>Título "Alianzas Estratégicas"</label><input type="text" id="cont-alianzas-titulo"></div>
+                                <div><label>Subtítulo "Alianzas"</label><input type="text" id="cont-alianzas-subtitulo"></div>
+                                <div><label>Título "Red de Empresas"</label><input type="text" id="cont-empresas-titulo"></div>
+                                <div><label>Subtítulo "Red de Empresas"</label><input type="text" id="cont-empresas-subtitulo"></div>
+                                <div><label>Título Newsletter</label><input type="text" id="cont-newsletter-titulo"></div>
+                                <div><label>Subtítulo Newsletter</label><input type="text" id="cont-newsletter-subtitulo"></div>
+                            </div>
+                        </div>
+
                         <div class="flex justify-end pt-4">
                             <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-6 py-3 rounded-xl">ACTUALIZAR TEXTOS</button>
                         </div>
                     </form>
                 </div>
             </div>
-            
+
+            <!-- BENEFICIOS (NUEVO) -->
+            <div id="view-beneficios" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 xl:col-span-1">
+                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nuevo / Editar Beneficio</h3>
+                        <form id="form-beneficio" onsubmit="guardarBeneficio(event)" class="space-y-4">
+                            <input type="hidden" id="beneficio-id">
+                            <div><label>Título</label><input type="text" id="beneficio-titulo" required></div>
+                            <div><label>Descripción</label><textarea id="beneficio-desc" rows="3"></textarea></div>
+                            <div><label>Ícono (nombre Lucide)</label><input type="text" id="beneficio-icono" placeholder="Ej: shield-check, award, qr-code" value="check-circle"></div>
+                            <div><label>Orden</label><input type="number" id="beneficio-orden" value="0"></div>
+                            <div class="bg-black/30 p-4 rounded-xl border border-white/10 flex items-center gap-3">
+                                <input type="checkbox" id="beneficio-activo" checked class="w-5 h-5">
+                                <label for="beneficio-activo" class="text-sm font-bold text-white mb-0 cursor-pointer">Visible en el Index</label>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">GUARDAR BENEFICIO</button>
+                            <button type="button" onclick="resetFormBeneficio()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs">CANCELAR EDICIÓN</button>
+                        </form>
+                    </div>
+                    <div class="glass-card p-6 xl:col-span-2">
+                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Beneficios Cargados</h3><button onclick="cargarBeneficiosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
+                        <p class="text-xs text-slate-400 mb-4">Los 8 beneficios aparecen en la sección Institucional del index. Podés agregar más o reordenar.</p>
+                        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Ícono</th><th class="p-3">Título</th><th class="p-3">Orden</th><th class="p-3">Estado</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="beneficios-body"></tbody></table></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUSCRIPTORES (NUEVO) -->
+            <div id="view-suscriptores" class="tab-content space-y-6">
+                <div class="glass-card p-6">
+                    <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                        <div>
+                            <h3 class="font-bold text-lg text-white">Suscriptores del Newsletter</h3>
+                            <p class="text-xs text-slate-400">Personas que dejaron su email para recibir novedades del registro.</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="cargarSuscriptoresPanel()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2"><i data-lucide="refresh-cw" class="w-4 h-4"></i> REFRESCAR</button>
+                            <button onclick="exportarSuscriptores()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> EXPORTAR EXCEL</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="glass-card p-4"><p class="text-slate-400 text-[10px] font-bold uppercase">Total</p><h3 class="text-2xl font-black text-white mt-1 font-mono" id="stat-subs-total">0</h3></div>
+                        <div class="glass-card p-4"><p class="text-slate-400 text-[10px] font-bold uppercase">Confirmados</p><h3 class="text-2xl font-black text-emerald-400 mt-1 font-mono" id="stat-subs-confirmados">0</h3></div>
+                        <div class="glass-card p-4"><p class="text-slate-400 text-[10px] font-bold uppercase">Pendientes</p><h3 class="text-2xl font-black text-amber-400 mt-1 font-mono" id="stat-subs-pendientes">0</h3></div>
+                    </div>
+                    <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Email</th><th class="p-3">WhatsApp</th><th class="p-3">Estado</th><th class="p-3">Fecha</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="suscriptores-body"></tbody></table></div>
+                </div>
+            </div>
+
             <!-- USUARIOS Y ROLES -->
             <div id="view-usuarios" class="tab-content space-y-6">
                 <div class="glass-card p-8 border-emerald-500/30">
                     <h3 class="text-white font-bold mb-6"><i data-lucide="users" class="text-emerald-500 inline mr-2"></i> Gestión de Usuarios</h3>
                     
                     <form id="form-usuarios" class="space-y-6 mb-8" onsubmit="crearUsuario(event)">
-                        <!-- CAMPO OCULTO PARA ID DE BASE DE DATOS -->
                         <input type="hidden" id="usr-db-id">
-                        
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div><label>Email</label><input type="email" id="usr-email" required placeholder="usuario@ejemplo.com"></div>
                             <div><label>Rol Principal</label>
@@ -637,53 +729,24 @@
                             <div><label>Nombres</label><input type="text" id="usr-nombres" required></div>
                             <div><label>Apellidos</label><input type="text" id="usr-apellidos" required></div>
                         </div>
-                        
-                        <!-- CAMPO UID DE SUPABASE AUTH -->
                         <div class="md:col-span-2" id="box-uid">
                             <label>UID de Supabase Auth (Requerido al crear nuevo)</label>
                             <input type="text" id="usr-uid" placeholder="Ej: dd057f27-a081-4c3a-8810-10152c712f3a" class="font-mono text-sm text-blue-400">
                             <p class="text-[9px] text-slate-400 mt-1">Copia el User UID desde Supabase > Authentication > Users.</p>
                         </div>
-                        
-                        <!-- PERMISOS GRANULARES -->
                         <div class="border-t border-white/10 pt-4">
                             <label class="text-emerald-400 text-sm font-bold uppercase tracking-widest mb-3">Permisos de Acceso (Módulos)</label>
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                <div class="permission-checkbox">
-                                    <input type="checkbox" id="perm-dashboard" value="mod-dashboard" class="w-4 h-4">
-                                    <label for="perm-dashboard" class="text-sm mb-0">Dashboard</label>
-                                </div>
-                                <div class="permission-checkbox">
-                                    <input type="checkbox" id="perm-solicitudes" value="mod-solicitudes" class="w-4 h-4">
-                                    <label for="perm-solicitudes" class="text-sm mb-0">Solicitudes</label>
-                                </div>
-                                <div class="permission-checkbox">
-                                    <input type="checkbox" id="perm-auditoria" value="mod-auditoria" class="w-4 h-4">
-                                    <label for="perm-auditoria" class="text-sm mb-0">Auditoría</label>
-                                </div>
-                                <div class="permission-checkbox">
-                                    <input type="checkbox" id="perm-padron" value="mod-padron" class="w-4 h-4">
-                                    <label for="perm-padron" class="text-sm mb-0">Padrón</label>
-                                </div>
-                                <div class="permission-checkbox">
-                                    <input type="checkbox" id="perm-campus" value="mod-campus" class="w-4 h-4">
-                                    <label for="perm-campus" class="text-sm mb-0">Portal Científico</label>
-                                </div>
-                                <div class="permission-checkbox">
-                                    <input type="checkbox" id="perm-biblioteca" value="mod-biblioteca" class="w-4 h-4">
-                                    <label for="perm-biblioteca" class="text-sm mb-0">Biblioteca</label>
-                                </div>
-                                <div class="permission-checkbox">
-                                    <input type="checkbox" id="perm-tesis" value="mod-tesis" class="w-4 h-4">
-                                    <label for="perm-tesis" class="text-sm mb-0">Tesis</label>
-                                </div>
-                                <div class="permission-checkbox">
-                                    <input type="checkbox" id="perm-sistema" value="mod-sistema" class="w-4 h-4">
-                                    <label for="perm-sistema" class="text-sm mb-0">Sistema Completo</label>
-                                </div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-dashboard" value="mod-dashboard" class="w-4 h-4"><label for="perm-dashboard" class="text-sm mb-0">Dashboard</label></div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-solicitudes" value="mod-solicitudes" class="w-4 h-4"><label for="perm-solicitudes" class="text-sm mb-0">Solicitudes</label></div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-auditoria" value="mod-auditoria" class="w-4 h-4"><label for="perm-auditoria" class="text-sm mb-0">Auditoría</label></div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-padron" value="mod-padron" class="w-4 h-4"><label for="perm-padron" class="text-sm mb-0">Padrón</label></div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-campus" value="mod-campus" class="w-4 h-4"><label for="perm-campus" class="text-sm mb-0">Portal Científico</label></div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-biblioteca" value="mod-biblioteca" class="w-4 h-4"><label for="perm-biblioteca" class="text-sm mb-0">Biblioteca</label></div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-tesis" value="mod-tesis" class="w-4 h-4"><label for="perm-tesis" class="text-sm mb-0">Tesis</label></div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-sistema" value="mod-sistema" class="w-4 h-4"><label for="perm-sistema" class="text-sm mb-0">Sistema Completo</label></div>
                             </div>
                         </div>
-                        
                         <div class="flex justify-end">
                             <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition-transform active:scale-95">CREAR USUARIO</button>
                         </div>
@@ -700,8 +763,7 @@
 
         </div>
     </main>
-
-    <script>
+     <script>
         // ==========================================
         // CONFIGURACIÓN DE SUPABASE
         // ==========================================
@@ -774,7 +836,7 @@
                     const btn = document.getElementById(id);
                     if (btn) btn.style.display = 'flex';
                 });
-                ['nav-aliados', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios'].forEach(id => {
+                ['nav-aliados', 'nav-empresas', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'].forEach(id => {
                     const btn = document.getElementById(id);
                     if (btn) btn.style.display = 'flex';
                 });
@@ -786,7 +848,7 @@
                     if (navElement) navElement.style.display = permisos.includes(modulo) ? 'flex' : 'none';
                 });
                 
-                const sistemaButtons = ['nav-aliados', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios'];
+                const sistemaButtons = ['nav-aliados', 'nav-empresas', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'];
                 const tienePermisoSistema = permisos.includes('mod-sistema');
                 sistemaButtons.forEach(id => {
                     const el = document.getElementById(id);
@@ -858,7 +920,7 @@
             document.getElementById('view-' + id).classList.add('active');
             document.getElementById('nav-' + id)?.classList.add('active');
             
-            const titles = { 'dashboard':'Dashboard Estadístico', 'solicitudes':'Bandeja de CRM', 'auditoria':'Auditoría Comité', 'padron':'Padrón Nacional', 'aliados':'Gestión de Aliados', 'comite':'Comité Evaluador', 'campus':'Portal Científico', 'biblioteca':'Biblioteca', 'tesis':'Auditoría de Tesis', 'masiva':'Inyección Masiva', 'diseno':'Calibrador de Credenciales', 'configuracion':'Configuración', 'contenido':'Textos del Sitio', 'usuarios':'Usuarios y Roles' };
+            const titles = { 'dashboard':'Dashboard Estadístico', 'solicitudes':'Bandeja de CRM', 'auditoria':'Auditoría Comité', 'padron':'Padrón Nacional', 'aliados':'Gestión de Aliados', 'empresas':'Red de Empresas', 'comite':'Comité Evaluador', 'campus':'Portal Científico', 'biblioteca':'Biblioteca', 'tesis':'Auditoría de Tesis', 'masiva':'Inyección Masiva', 'diseno':'Calibrador de Credenciales', 'configuracion':'Configuración', 'contenido':'Textos del Sitio', 'beneficios':'Beneficios del Registro', 'suscriptores':'Suscriptores del Newsletter', 'usuarios':'Usuarios y Roles' };
             document.getElementById('page-title').textContent = titles[id] || id;
             
             if(id === 'dashboard') actualizarDashboard();
@@ -866,6 +928,7 @@
             if(id === 'auditoria') cargarAuditoria();
             if(id === 'padron') cargarPadron();
             if(id === 'aliados') cargarAliadosPanel();
+            if(id === 'empresas') cargarEmpresasPanel();
             if(id === 'comite') cargarComitePanel();
             if(id === 'campus') cargarNoticiasPanel();
             if(id === 'biblioteca') cargarBibliotecaPanel();
@@ -873,6 +936,8 @@
             if(id === 'diseno') cargarDisenoCredencial();
             if(id === 'configuracion') cargarConfiguracionForm();
             if(id === 'contenido') cargarContenidoForm();
+            if(id === 'beneficios') cargarBeneficiosPanel();
+            if(id === 'suscriptores') cargarSuscriptoresPanel();
             if(id === 'usuarios') cargarUsuarios();
         }
 
@@ -1482,7 +1547,7 @@
         }
 
         // ==========================================
-        // 5. ALIADOS (INSTITUCIONES) - NUEVO MÓDULO CMS
+        // 5. ALIADOS (INSTITUCIONES)
         // ==========================================
         async function cargarAliadosPanel() {
             const tbody = document.getElementById('aliados-body'); tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center">Cargando...</td></tr>';
@@ -1528,7 +1593,111 @@
         async function eliminarAliado(id) { if (!confirm("¿Eliminar aliado definitivamente?")) return; await db.from('renmcycf_aliados').delete().eq('id', id); cargarAliadosPanel(); }
 
         // ==========================================
-        // 13. COMITÉ EVALUADOR (CON EDICIÓN)
+        // 6. RED DE EMPRESAS (NUEVO)
+        // ==========================================
+        async function cargarEmpresasPanel() {
+            const tbody = document.getElementById('empresas-body');
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center">Cargando...</td></tr>';
+            try {
+                const { data, error } = await db.from('renmcycf_empresas').select('*').order('orden', { ascending: true }).order('created_at', { ascending: false });
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">No hay empresas cargadas.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.map(e => `
+                <tr class="border-b border-white/5 hover:bg-white/5">
+                    <td class="p-3"><img src="${e.logo_url}" class="w-16 h-12 object-contain bg-white rounded p-1"></td>
+                    <td class="p-3">
+                        <span class="text-white font-bold block">${e.nombre}</span>
+                        <span class="text-[10px] text-slate-400">${e.descripcion || 'Sin descripción'}</span>
+                        ${e.web_url ? `<a href="${e.web_url}" target="_blank" class="text-[10px] text-blue-400 hover:underline block mt-1">${e.web_url}</a>` : ''}
+                    </td>
+                    <td class="p-3 font-mono text-xs text-slate-400">${e.orden || 0}</td>
+                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${e.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">${e.activo?'ACTIVA':'INACTIVA'}</span></td>
+                    <td class="p-3 text-right">
+                        <button class="border border-blue-500/30 text-blue-400 px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-blue-500/10" onclick='editarEmpresa(${JSON.stringify(e).replace(/'/g, "&#39;")})'><i data-lucide="edit" class="w-3 h-3 inline"></i> EDITAR</button>
+                        <button class="border border-white/20 text-white px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-white/10" onclick="toggleEmpresa('${e.id}', ${!e.activo})">${e.activo?'Ocultar':'Mostrar'}</button>
+                        <button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40" onclick="eliminarEmpresa('${e.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>`).join('');
+                lucide.createIcons();
+            } catch (err) { tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
+        }
+
+        async function crearEmpresa(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const orig = btn.innerHTML;
+            btn.innerHTML = 'GUARDANDO...';
+            btn.disabled = true;
+            try {
+                const id = document.getElementById('empresa-id').value;
+                const nombre = document.getElementById('empresa-nombre').value.trim();
+                const webUrl = document.getElementById('empresa-web').value.trim();
+                const descripcion = document.getElementById('empresa-desc').value.trim();
+                const orden = parseInt(document.getElementById('empresa-orden').value) || 0;
+                const activo = document.getElementById('empresa-activo').checked;
+                const logoFile = document.getElementById('empresa-logo').files[0];
+
+                const payload = { nombre, web_url: webUrl, descripcion, orden, activo };
+
+                if (logoFile) {
+                    const fileName = `empresa_${Date.now()}.${logoFile.name.split('.').pop()}`;
+                    await db.storage.from('renmcycf-media').upload(fileName, logoFile, { cacheControl: '3600', upsert: true });
+                    payload.logo_url = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
+                } else if (!id) {
+                    throw new Error("Debe subir un logo para crear la empresa.");
+                }
+
+                if (id) {
+                    const { error } = await db.from('renmcycf_empresas').update(payload).eq('id', id);
+                    if (error) throw error;
+                    alert("✅ Empresa actualizada.");
+                } else {
+                    const { error } = await db.from('renmcycf_empresas').insert([payload]);
+                    if (error) throw error;
+                    alert("✅ Empresa creada.");
+                }
+                resetFormEmpresa();
+                cargarEmpresasPanel();
+            } catch (err) { alert("Error: " + err.message); }
+            finally { btn.innerHTML = orig; btn.disabled = false; }
+        }
+
+        function editarEmpresa(e) {
+            document.getElementById('empresa-id').value = e.id || '';
+            document.getElementById('empresa-nombre').value = e.nombre || '';
+            document.getElementById('empresa-web').value = e.web_url || '';
+            document.getElementById('empresa-desc').value = e.descripcion || '';
+            document.getElementById('empresa-orden').value = e.orden || 0;
+            document.getElementById('empresa-activo').checked = e.activo !== false;
+            document.getElementById('empresa-logo').removeAttribute('required');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('form-empresa').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function resetFormEmpresa() {
+            document.getElementById('form-empresa').reset();
+            document.getElementById('empresa-id').value = '';
+            document.getElementById('empresa-activo').checked = true;
+            document.getElementById('empresa-orden').value = 0;
+        }
+
+        async function toggleEmpresa(id, estado) {
+            await db.from('renmcycf_empresas').update({ activo: estado }).eq('id', id);
+            cargarEmpresasPanel();
+        }
+
+        async function eliminarEmpresa(id) {
+            if (!confirm("¿Eliminar empresa definitivamente?")) return;
+            await db.from('renmcycf_empresas').delete().eq('id', id);
+            cargarEmpresasPanel();
+        }
+
+        // ==========================================
+        // 7. COMITÉ EVALUADOR
         // ==========================================
         async function cargarComitePanel() {
             const tbody = document.getElementById('comite-body');
@@ -1648,7 +1817,7 @@
         }
 
         // ==========================================
-        // 6. PORTAL CIENTÍFICO Y DIVULGACIÓN (EX CAMPUS)
+        // 8. PORTAL CIENTÍFICO (EX CAMPUS)
         // ==========================================
         async function cargarNoticiasPanel() {
             const tbody = document.getElementById('campus-body'); tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center">Cargando...</td></tr>';
@@ -1718,7 +1887,7 @@
         async function eliminarClase(id, cursoId) { if (!confirm("¿Eliminar adjunto?")) return; await db.from('renmcycf_clases').delete().eq('id', id); cargarClasesList(cursoId); }
 
         // ==========================================
-        // 7. GESTIÓN BIBLIOTECA
+        // 9. GESTIÓN BIBLIOTECA
         // ==========================================
         async function cargarBibliotecaPanel() {
             const tbody = document.getElementById('biblioteca-body'); tbody.innerHTML = '<tr><td colspan="3" class="text-center">Cargando...</td></tr>';
@@ -1745,7 +1914,7 @@
         async function eliminarLibro(id) { if(!confirm("¿Eliminar archivo?")) return; await db.from('renmcycf_biblioteca').delete().eq('id', id); cargarBibliotecaPanel(); }
 
         // ==========================================
-        // 8. AUDITORÍA TESIS
+        // 10. AUDITORÍA TESIS
         // ==========================================
         async function cargarTesisPanel() {
             const tbody = document.getElementById('tesis-body'); tbody.innerHTML = '<tr><td colspan="4" class="text-center">Cargando...</td></tr>';
@@ -1759,7 +1928,7 @@
         async function auditarTesis(id, estado) { if(!confirm(`¿Marcar como ${estado}?`)) return; await db.from('renmcycf_publicaciones').update({ estado }).eq('id', id); cargarTesisPanel(); }
 
         // ==========================================
-        // 9. CARGA MASIVA 
+        // 11. CARGA MASIVA
         // ==========================================
         function procesarExcel() {
             const file = document.getElementById('input-excel').files[0]; if (!file) return;
@@ -1782,7 +1951,7 @@
         }
 
         // ==========================================
-        // 10. CONFIGURACIÓN CORE Y TEXTOS
+        // 12. CONFIGURACIÓN CORE Y TEXTOS
         // ==========================================
         async function cargarConfiguracionForm() {
             try {
@@ -1869,7 +2038,15 @@
                     'hero_cta_primary':'cont-hero-cta-primary','hero_cta_secondary':'cont-hero-cta-secondary',
                     'urgencia_titulo':'cont-urgencia-titulo','urgencia_texto':'cont-urgencia-texto',
                     'cat_a1_desc':'cont-cat-a1-desc','cat_a2_desc':'cont-cat-a2-desc','cat_a3_desc':'cont-cat-a3-desc','cat_a4_desc':'cont-cat-a4-desc',
-                    'footer_texto':'cont-footer-texto' 
+                    'footer_texto':'cont-footer-texto',
+                    'mision_titulo':'cont-mision-titulo', 'mision_texto':'cont-mision-texto',
+                    'asari_titulo':'cont-asari-titulo', 'asari_texto':'cont-asari-texto',
+                    'asari_bullet_1':'cont-asari-bullet-1', 'asari_bullet_2':'cont-asari-bullet-2', 'asari_bullet_3':'cont-asari-bullet-3',
+                    'institucional_intro_p1':'cont-inst-p1', 'institucional_intro_p2':'cont-inst-p2',
+                    'institucional_intro_p3':'cont-inst-p3', 'institucional_cierre':'cont-inst-cierre',
+                    'alianzas_titulo':'cont-alianzas-titulo', 'alianzas_subtitulo':'cont-alianzas-subtitulo',
+                    'empresas_titulo':'cont-empresas-titulo', 'empresas_subtitulo':'cont-empresas-subtitulo',
+                    'newsletter_titulo':'cont-newsletter-titulo', 'newsletter_subtitulo':'cont-newsletter-subtitulo'
                 };
                 data.forEach(item => { const id = map[item.clave]; if (id && document.getElementById(id)) document.getElementById(id).value = item.valor || ''; });
             } catch (err) { console.error("Error:", err); }
@@ -1885,9 +2062,20 @@
                 'hero_cta_primary':'cont-hero-cta-primary','hero_cta_secondary':'cont-hero-cta-secondary',
                 'urgencia_titulo':'cont-urgencia-titulo','urgencia_texto':'cont-urgencia-texto',
                 'cat_a1_desc':'cont-cat-a1-desc','cat_a2_desc':'cont-cat-a2-desc','cat_a3_desc':'cont-cat-a3-desc','cat_a4_desc':'cont-cat-a4-desc',
-                'footer_texto':'cont-footer-texto' 
+                'footer_texto':'cont-footer-texto',
+                'mision_titulo':'cont-mision-titulo', 'mision_texto':'cont-mision-texto',
+                'asari_titulo':'cont-asari-titulo', 'asari_texto':'cont-asari-texto',
+                'asari_bullet_1':'cont-asari-bullet-1', 'asari_bullet_2':'cont-asari-bullet-2', 'asari_bullet_3':'cont-asari-bullet-3',
+                'institucional_intro_p1':'cont-inst-p1', 'institucional_intro_p2':'cont-inst-p2',
+                'institucional_intro_p3':'cont-inst-p3', 'institucional_cierre':'cont-inst-cierre',
+                'alianzas_titulo':'cont-alianzas-titulo', 'alianzas_subtitulo':'cont-alianzas-subtitulo',
+                'empresas_titulo':'cont-empresas-titulo', 'empresas_subtitulo':'cont-empresas-subtitulo',
+                'newsletter_titulo':'cont-newsletter-titulo', 'newsletter_subtitulo':'cont-newsletter-subtitulo'
             };
-            const payload = Object.keys(map).map(k => ({ clave: k, valor: document.getElementById(map[k]).value, tipo: 'texto' }));
+            const payload = Object.keys(map).map(k => {
+                const el = document.getElementById(map[k]);
+                return { clave: k, valor: el ? el.value : '', tipo: 'texto' };
+            });
             
             try { 
                 await db.from('renmcycf_contenido').upsert(payload, { onConflict: 'clave' }); 
@@ -1897,7 +2085,177 @@
         }
 
         // ==========================================
-        // 11. GESTIÓN DE USUARIOS
+        // 13. BENEFICIOS (NUEVO)
+        // ==========================================
+        async function cargarBeneficiosPanel() {
+            const tbody = document.getElementById('beneficios-body');
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center">Cargando...</td></tr>';
+            try {
+                const { data, error } = await db.from('renmcycf_beneficios').select('*').order('orden', { ascending: true });
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">No hay beneficios cargados.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.map(b => `
+                <tr class="border-b border-white/5 hover:bg-white/5">
+                    <td class="p-3 text-center"><i data-lucide="${b.icono || 'check-circle'}" class="w-5 h-5 text-yellow-400 inline"></i></td>
+                    <td class="p-3">
+                        <span class="text-white font-bold block">${b.titulo}</span>
+                        <span class="text-[10px] text-slate-400">${b.descripcion || 'Sin descripción'}</span>
+                    </td>
+                    <td class="p-3 font-mono text-xs text-slate-400">${b.orden || 0}</td>
+                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${b.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">${b.activo?'ACTIVO':'INACTIVO'}</span></td>
+                    <td class="p-3 text-right">
+                        <button class="border border-blue-500/30 text-blue-400 px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-blue-500/10" onclick='editarBeneficio(${JSON.stringify(b).replace(/'/g, "&#39;")})'><i data-lucide="edit" class="w-3 h-3 inline"></i> EDITAR</button>
+                        <button class="border border-white/20 text-white px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-white/10" onclick="toggleBeneficio('${b.id}', ${!b.activo})">${b.activo?'Ocultar':'Mostrar'}</button>
+                        <button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40" onclick="eliminarBeneficio('${b.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>`).join('');
+                lucide.createIcons();
+            } catch (err) { tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
+        }
+
+        async function guardarBeneficio(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const orig = btn.innerHTML;
+            btn.innerHTML = 'GUARDANDO...';
+            btn.disabled = true;
+            try {
+                const id = document.getElementById('beneficio-id').value;
+                const payload = {
+                    titulo: document.getElementById('beneficio-titulo').value.trim(),
+                    descripcion: document.getElementById('beneficio-desc').value.trim(),
+                    icono: document.getElementById('beneficio-icono').value.trim() || 'check-circle',
+                    orden: parseInt(document.getElementById('beneficio-orden').value) || 0,
+                    activo: document.getElementById('beneficio-activo').checked
+                };
+                if (id) {
+                    const { error } = await db.from('renmcycf_beneficios').update(payload).eq('id', id);
+                    if (error) throw error;
+                    alert("✅ Beneficio actualizado.");
+                } else {
+                    const { error } = await db.from('renmcycf_beneficios').insert([payload]);
+                    if (error) throw error;
+                    alert("✅ Beneficio creado.");
+                }
+                resetFormBeneficio();
+                cargarBeneficiosPanel();
+            } catch (err) { alert("Error: " + err.message); }
+            finally { btn.innerHTML = orig; btn.disabled = false; }
+        }
+
+        function editarBeneficio(b) {
+            document.getElementById('beneficio-id').value = b.id || '';
+            document.getElementById('beneficio-titulo').value = b.titulo || '';
+            document.getElementById('beneficio-desc').value = b.descripcion || '';
+            document.getElementById('beneficio-icono').value = b.icono || 'check-circle';
+            document.getElementById('beneficio-orden').value = b.orden || 0;
+            document.getElementById('beneficio-activo').checked = b.activo !== false;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('form-beneficio').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function resetFormBeneficio() {
+            document.getElementById('form-beneficio').reset();
+            document.getElementById('beneficio-id').value = '';
+            document.getElementById('beneficio-icono').value = 'check-circle';
+            document.getElementById('beneficio-activo').checked = true;
+            document.getElementById('beneficio-orden').value = 0;
+        }
+
+        async function toggleBeneficio(id, estado) {
+            await db.from('renmcycf_beneficios').update({ activo: estado }).eq('id', id);
+            cargarBeneficiosPanel();
+        }
+
+        async function eliminarBeneficio(id) {
+            if (!confirm("¿Eliminar beneficio definitivamente?")) return;
+            await db.from('renmcycf_beneficios').delete().eq('id', id);
+            cargarBeneficiosPanel();
+        }
+
+        // ==========================================
+        // 14. SUSCRIPTORES NEWSLETTER (NUEVO)
+        // ==========================================
+        let suscriptoresCache = [];
+
+        async function cargarSuscriptoresPanel() {
+            const tbody = document.getElementById('suscriptores-body');
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center">Cargando...</td></tr>';
+            try {
+                const { data, error } = await db.from('renmcycf_suscriptores').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+                suscriptoresCache = data || [];
+                const total = suscriptoresCache.length;
+                const confirmados = suscriptoresCache.filter(s => s.confirmado).length;
+                const pendientes = total - confirmados;
+                const statTotal = document.getElementById('stat-subs-total');
+                const statConf = document.getElementById('stat-subs-confirmados');
+                const statPend = document.getElementById('stat-subs-pendientes');
+                if (statTotal) statTotal.innerText = total;
+                if (statConf) statConf.innerText = confirmados;
+                if (statPend) statPend.innerText = pendientes;
+
+                if (total === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">Todavía no hay suscriptores.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = suscriptoresCache.map(s => `
+                <tr class="border-b border-white/5 hover:bg-white/5">
+                    <td class="p-3 text-white font-mono text-xs">${s.email}</td>
+                    <td class="p-3 text-slate-400 text-xs font-mono">${s.telefono || '—'}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${s.confirmado ? 'bg-emerald-900/30 text-emerald-400' : 'bg-amber-900/30 text-amber-400'}">
+                            ${s.confirmado ? 'CONFIRMADO' : 'PENDIENTE'}
+                        </span>
+                    </td>
+                    <td class="p-3 text-slate-400 text-[10px]">${new Date(s.created_at).toLocaleDateString('es-AR')}</td>
+                    <td class="p-3 text-right">
+                        <button class="border border-white/20 text-white px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-white/10" onclick="toggleSuscriptor('${s.id}', ${!s.activo})">${s.activo?'Suspender':'Activar'}</button>
+                        <button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40" onclick="eliminarSuscriptor('${s.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>`).join('');
+                lucide.createIcons();
+            } catch (err) { tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
+        }
+
+        async function toggleSuscriptor(id, estado) {
+            await db.from('renmcycf_suscriptores').update({ activo: estado }).eq('id', id);
+            cargarSuscriptoresPanel();
+        }
+
+        async function eliminarSuscriptor(id) {
+            if (!confirm("¿Eliminar suscriptor definitivamente?")) return;
+            await db.from('renmcycf_suscriptores').delete().eq('id', id);
+            cargarSuscriptoresPanel();
+        }
+
+        function exportarSuscriptores() {
+            if (!suscriptoresCache || suscriptoresCache.length === 0) {
+                alert("No hay suscriptores para exportar.");
+                return;
+            }
+            const data = suscriptoresCache.map(s => ({
+                'Email': s.email,
+                'WhatsApp': s.telefono || '',
+                'Nombre': s.nombre || '',
+                'Confirmado': s.confirmado ? 'SÍ' : 'NO',
+                'Activo': s.activo ? 'SÍ' : 'NO',
+                'Fecha Suscripción': s.created_at ? new Date(s.created_at).toLocaleString('es-AR') : '',
+                'Fecha Confirmación': s.fecha_confirmacion ? new Date(s.fecha_confirmacion).toLocaleString('es-AR') : ''
+            }));
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Suscriptores');
+            XLSX.writeFile(wb, `suscriptores_${new Date().toISOString().split('T')[0]}.xlsx`);
+        }
+
+        // ==========================================
+        // 15. GESTIÓN DE USUARIOS
         // ==========================================
         async function cargarUsuarios() {
             const tbody = document.getElementById('usuarios-body');
@@ -2044,7 +2402,7 @@
         }
 
         // ==========================================
-        // 12. DISEÑO CREDENCIAL
+        // 16. DISEÑO CREDENCIAL
         // ==========================================
         const defaultStyle = {
             foto: { top: 325, left: 185, width: 230, height: 230, align: 'center', lado: 'frente' },
