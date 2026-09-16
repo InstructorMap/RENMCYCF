@@ -113,7 +113,6 @@
     </script>
     <style>
         * { scroll-behavior: smooth; }
-        /* CAMBIO: fondo del body blanco puro para que se funda con el footer */
         body { background-color: #ffffff; color: #334155; overflow-x: hidden; }
         
         .hero-pattern { position: relative; overflow: hidden; background-color: #0a1128; }
@@ -249,11 +248,12 @@
         <button onclick="switchSection('seccion-inscripcion'); toggleMobileMenu();" class="bg-forenseGold text-forenseNavy text-center py-4 rounded-xl font-black uppercase tracking-widest mt-4 shadow-lg">Iniciar Trámite</button>
     </div>
 
-    <!-- CONTENEDOR DE SECCIONES - CAMBIO: bg-white para eliminar la franja -->
+    <!-- CONTENEDOR DE SECCIONES - TAREA 1: bg-white -->
     <main class="bg-white">
 
         <!-- 1. INICIO -->
         <section id="seccion-inicio" class="page-section active-section">
+            <!-- TAREA 1: header sin min-h y con padding natural -->
             <header class="hero-pattern py-16 md:py-20 px-4 relative flex items-center border-b-4 border-forenseGold">
                 <img id="dyn-hero-bg" 
                      src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80" 
@@ -1136,7 +1136,7 @@
         }
 
         // ==========================================
-        // RED DE EMPRESAS - CAMBIO: logo centrado con object-center mx-auto
+        // RED DE EMPRESAS - TAREA 2: logo centrado con object-center mx-auto
         // ==========================================
         async function cargarEmpresasPublicas() {
             const container = document.getElementById('contenedor-empresas-publicas');
