@@ -113,7 +113,8 @@
     </script>
     <style>
         * { scroll-behavior: smooth; }
-        body { background-color: #f8fafc; color: #334155; overflow-x: hidden; }
+        /* CAMBIO: fondo del body blanco puro para que se funda con el footer */
+        body { background-color: #ffffff; color: #334155; overflow-x: hidden; }
         
         .hero-pattern { position: relative; overflow: hidden; background-color: #0a1128; }
         .hero-bg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; filter: brightness(0.6) saturate(1.2); transition: all 0.5s; }
@@ -248,8 +249,8 @@
         <button onclick="switchSection('seccion-inscripcion'); toggleMobileMenu();" class="bg-forenseGold text-forenseNavy text-center py-4 rounded-xl font-black uppercase tracking-widest mt-4 shadow-lg">Iniciar Trámite</button>
     </div>
 
-    <!-- CONTENEDOR DE SECCIONES -->
-    <main>
+    <!-- CONTENEDOR DE SECCIONES - CAMBIO: bg-white para eliminar la franja -->
+    <main class="bg-white">
 
         <!-- 1. INICIO -->
         <section id="seccion-inicio" class="page-section active-section">
@@ -1135,7 +1136,7 @@
         }
 
         // ==========================================
-        // RED DE EMPRESAS
+        // RED DE EMPRESAS - CAMBIO: logo centrado con object-center mx-auto
         // ==========================================
         async function cargarEmpresasPublicas() {
             const container = document.getElementById('contenedor-empresas-publicas');
@@ -1167,7 +1168,7 @@
                             <div class="w-full aspect-square flex items-center justify-center mb-4 bg-white rounded-lg p-4 cursor-pointer overflow-hidden"
                                  onclick="abrirModalImagen('${imagen}')">
                                 <img src="${imagen}" alt="${e.nombre}"
-                                     class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
+                                     class="max-w-full max-h-full object-contain object-center mx-auto group-hover:scale-105 transition-transform duration-300">
                             </div>
                             <h4 class="text-forenseGold font-bold text-sm uppercase tracking-wider mb-1">${e.nombre}</h4>
                             ${desc ? `<p class="text-slate-400 text-[10px] leading-relaxed line-clamp-2 mb-2">${desc}</p>` : ''}
