@@ -113,7 +113,8 @@
     </script>
     <style>
         * { scroll-behavior: smooth; }
-        body { background-color: #f8fafc; color: #334155; overflow-x: hidden; }
+        /* CAMBIO 1: fondo del body oscuro para eliminar la franja blanca */
+        body { background-color: #0a1128; color: #334155; overflow-x: hidden; }
         
         .hero-pattern { position: relative; overflow: hidden; background-color: #0a1128; }
         .hero-bg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; filter: brightness(0.6) saturate(1.2); transition: all 0.5s; }
@@ -253,7 +254,8 @@
 
         <!-- 1. INICIO -->
         <section id="seccion-inicio" class="page-section active-section">
-            <header class="hero-pattern pt-24 pb-24 md:pt-32 md:pb-36 px-4 relative flex items-center min-h-[85vh] border-b-4 border-forenseGold">
+            <!-- CAMBIO 1: hero más compacto, sin min-h-[85vh] -->
+            <header class="hero-pattern pt-20 pb-16 md:pt-28 md:pb-24 px-4 relative flex items-center border-b-4 border-forenseGold">
                 <img id="dyn-hero-bg" 
                      src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80" 
                      class="hero-bg-img" 
@@ -283,7 +285,6 @@
                             <button id="hero-cta-secondary" onclick="switchSection('seccion-verificacion')" class="bg-white/15 backdrop-blur-sm text-white border border-white/25 font-bold uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl hover:bg-white/25 transition-all text-center">Verificar Profesional</button>
                         </div>
 
-                        <!-- Link sutil a Institucional -->
                         <button onclick="switchSection('seccion-institucional')" class="mt-6 inline-flex items-center gap-2 text-forenseGold hover:text-white text-xs font-bold uppercase tracking-widest transition-colors group">
                             <span class="border-b border-forenseGold/40 group-hover:border-white pb-0.5">Conocé cómo auditamos a los profesionales</span>
                             <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
@@ -937,7 +938,6 @@
     <footer class="bg-forenseNavy text-white py-12 border-t-4 border-forenseGold mt-auto relative z-20">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                <!-- Columna 1: Info -->
                 <div class="text-center md:text-left">
                     <h3 class="font-title text-2xl font-black text-forenseGold mb-2">RENMCYCF</h3>
                     <p class="text-xs text-slate-400 uppercase tracking-widest mb-4">Registro Nacional de Matriculados en Criminalística y Ciencias Forenses</p>
@@ -951,7 +951,6 @@
                     </div>
                 </div>
 
-                <!-- Columna 2: Newsletter -->
                 <div class="md:col-span-2">
                     <h4 id="newsletter-titulo-footer" class="font-title text-base font-black text-forenseGold mb-2 uppercase tracking-widest">Recibí las novedades del registro</h4>
                     <p id="newsletter-subtitulo-footer" class="text-xs text-slate-400 mb-4">Noticias, publicaciones científicas y actualizaciones institucionales. Sin spam.</p>
@@ -1090,7 +1089,7 @@
         }
 
         // ==========================================
-        // CONFIGURACIÓN DINÁMICA (con fix de visibilidad de botones)
+        // CONFIGURACIÓN DINÁMICA
         // ==========================================
         async function cargarConfiguracionPublica() {
             try {
@@ -1109,7 +1108,6 @@
                         document.getElementById('dyn-hero-bg').src = conf.hero_image_url;
                     }
 
-                    // Fix de visibilidad de botones flotantes
                     const setDisplay = (id, mostrar) => {
                         const el = document.getElementById(id);
                         if (el) el.style.display = (mostrar === false) ? 'none' : '';
@@ -1139,7 +1137,7 @@
         }
 
         // ==========================================
-        // RED DE EMPRESAS (NUEVO)
+        // RED DE EMPRESAS - CAMBIO 2: logos grandes + clickeables
         // ==========================================
         async function cargarEmpresasPublicas() {
             const container = document.getElementById('contenedor-empresas-publicas');
@@ -1163,21 +1161,23 @@
                 bloque.classList.remove('hidden');
 
                 container.innerHTML = data.map(e => {
-                    const imagen = e.logo_url || 'https://placehold.co/300x200/0f172a/d4af37?text=Empresa';
+                    const imagen = e.logo_url || 'https://placehold.co/600x400/0f172a/d4af37?text=Empresa';
                     const desc = e.descripcion || '';
                     const url = e.web_url || '#';
                     return `
-                        <a href="${url}" target="_blank" rel="noopener" 
-                           class="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col items-center text-center hover:border-forenseGold hover:bg-white/10 transition-all duration-300 group">
-                            <div class="w-full h-24 flex items-center justify-center mb-4 bg-white rounded-lg p-3">
-                                <img src="${imagen}" alt="${e.nombre}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center text-center hover:border-forenseGold hover:bg-white/10 transition-all duration-300 group">
+                            <div class="w-full aspect-square flex items-center justify-center mb-4 bg-white rounded-lg p-4 cursor-pointer overflow-hidden"
+                                 onclick="abrirModalImagen('${imagen}')">
+                                <img src="${imagen}" alt="${e.nombre}"
+                                     class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
                             </div>
                             <h4 class="text-forenseGold font-bold text-sm uppercase tracking-wider mb-1">${e.nombre}</h4>
-                            ${desc ? `<p class="text-slate-400 text-[10px] leading-relaxed line-clamp-2">${desc}</p>` : ''}
-                            <span class="mt-3 text-[10px] text-slate-500 group-hover:text-forenseGold transition-colors flex items-center gap-1 font-bold uppercase tracking-widest">
+                            ${desc ? `<p class="text-slate-400 text-[10px] leading-relaxed line-clamp-2 mb-2">${desc}</p>` : ''}
+                            <a href="${url}" target="_blank" rel="noopener"
+                               class="mt-auto text-[10px] text-slate-400 hover:text-forenseGold transition-colors flex items-center gap-1 font-bold uppercase tracking-widest">
                                 Visitar web <i data-lucide="external-link" class="w-3 h-3"></i>
-                            </span>
-                        </a>`;
+                            </a>
+                        </div>`;
                 }).join('');
 
                 lucide.createIcons();
@@ -1188,7 +1188,7 @@
         }
 
         // ==========================================
-        // BENEFICIOS (NUEVO)
+        // BENEFICIOS
         // ==========================================
         async function cargarBeneficiosPublicos() {
             const container = document.getElementById('contenedor-beneficios');
@@ -1227,7 +1227,7 @@
         }
 
         // ==========================================
-        // NEWSLETTER (NUEVO)
+        // NEWSLETTER
         // ==========================================
         async function suscribirNewsletter(e, origen) {
             e.preventDefault();
@@ -1247,7 +1247,6 @@
             lucide.createIcons();
 
             try {
-                // Verificar si ya existe
                 const { data: existe } = await db.from('renmcycf_suscriptores')
                     .select('id, confirmado')
                     .eq('email', email)
@@ -1265,10 +1264,8 @@
                     return;
                 }
 
-                // Generar token de confirmación
                 const token = 'nl_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
 
-                // Insertar
                 const { error: insErr } = await db.from('renmcycf_suscriptores').insert([{
                     email: email,
                     telefono: telefono,
@@ -1278,9 +1275,6 @@
                 }]);
 
                 if (insErr) throw insErr;
-
-                // TODO: enviar email de confirmación vía Brevo
-                // await enviarConfirmacionBrevo(email, token);
 
                 emailInput.value = '';
                 if (telInput) telInput.value = '';
