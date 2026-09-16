@@ -190,7 +190,7 @@
         .faq-summary::-webkit-details-marker { display: none; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col font-sans">
+<body class="font-sans">
 
     <!-- TOP BAR -->
     <div class="bg-forenseNavy text-white text-[9px] md:text-[11px] py-3 px-4 text-center font-black tracking-[0.18em] md:tracking-[0.25em] uppercase z-50 shadow-lg relative overflow-hidden">
@@ -249,12 +249,11 @@
     </div>
 
     <!-- CONTENEDOR DE SECCIONES -->
-    <main class="flex-grow">
+    <main>
 
         <!-- 1. INICIO -->
         <section id="seccion-inicio" class="page-section active-section">
-            <!-- CAMBIO SOLICITADO: min-h-[calc(100vh-6rem)] -->
-            <header class="hero-pattern pt-24 pb-24 md:pt-32 md:pb-36 px-4 relative flex items-center min-h-[calc(100vh-6rem)] border-b-4 border-forenseGold">
+            <header class="hero-pattern py-16 md:py-20 px-4 relative flex items-center border-b-4 border-forenseGold">
                 <img id="dyn-hero-bg" 
                      src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80" 
                      class="hero-bg-img" 
@@ -342,7 +341,7 @@
         </section>
 
         <!-- SECCIÓN INSTITUCIONAL -->
-        <section id="seccion-institucional" class="page-section py-16 md:py-24 bg-white min-h-[70vh]">
+        <section id="seccion-institucional" class="page-section py-16 md:py-24 bg-white">
             <div class="max-w-7xl mx-auto px-4">
                 
                 <div class="text-center mb-16">
@@ -587,7 +586,7 @@
         </section>
 
         <!-- 2. VERIFICACIÓN PÚBLICA -->
-        <section id="seccion-verificacion" class="page-section py-16 md:py-24 bg-white min-h-[70vh]">
+        <section id="seccion-verificacion" class="page-section py-16 md:py-24 bg-white">
             <div class="max-w-4xl mx-auto px-4">
                 <div class="text-center mb-10">
                     <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase"><i data-lucide="search" class="inline w-6 h-6 text-forenseGold mr-2"></i>Verificación Pública</h2>
@@ -640,7 +639,7 @@
         </section>
 
         <!-- 3. SEGUIMIENTO DE TRÁMITE -->
-        <section id="seccion-tracking" class="page-section py-16 md:py-24 bg-slate-50 min-h-[70vh]">
+        <section id="seccion-tracking" class="page-section py-16 md:py-24 bg-slate-50">
             <div class="max-w-3xl mx-auto px-4">
                 <div class="text-center mb-10">
                     <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase"><i data-lucide="package-search" class="inline w-6 h-6 text-forenseGold mr-2"></i>Seguimiento de Trámite</h2>
@@ -663,7 +662,7 @@
         </section>
 
         <!-- 4. MAPA INTELIGENTE -->
-        <section id="seccion-mapa" class="page-section py-16 bg-forenseNavy text-white relative min-h-[70vh]">
+        <section id="seccion-mapa" class="page-section py-16 bg-forenseNavy text-white relative">
             <div class="max-w-7xl mx-auto px-4 relative z-10">
                 <div class="text-center mb-8">
                     <h2 class="font-title text-2xl md:text-3xl font-black mb-3 uppercase text-white"><i data-lucide="map-pin" class="inline w-6 h-6 text-forenseGold mr-2"></i>Directorio Nacional de Peritos</h2>
@@ -701,7 +700,7 @@
         </section>
 
         <!-- 5. CATEGORÍAS -->
-        <section id="seccion-categorias" class="page-section py-16 bg-white min-h-[70vh]">
+        <section id="seccion-categorias" class="page-section py-16 bg-white">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-14">
                     <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase"><i data-lucide="layers" class="inline w-6 h-6 text-forenseGold mr-2"></i>Estructura del Padrón</h2>
@@ -747,7 +746,7 @@
         </section>
 
         <!-- COMITÉ EVALUADOR -->
-        <section id="seccion-comite" class="page-section py-16 md:py-24 bg-slate-50 min-h-[70vh]" style="display: none;">
+        <section id="seccion-comite" class="page-section py-16 md:py-24 bg-slate-50" style="display: none;">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-14">
                     <h2 class="font-title text-2xl md:text-4xl font-black text-forenseNavy mb-3 uppercase">
@@ -763,7 +762,7 @@
         </section>
 
         <!-- 6. PORTAL DE DIVULGACIÓN CIENTÍFICA -->
-        <section id="seccion-portal-divulgacion" class="page-section py-16 md:py-24 bg-slate-50 min-h-[70vh]">
+        <section id="seccion-portal-divulgacion" class="page-section py-16 md:py-24 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-14">
                     <h2 class="font-title text-2xl md:text-4xl font-black text-forenseNavy mb-3 uppercase">
@@ -778,7 +777,7 @@
         </section>
 
         <!-- 7. BIBLIOTECA VIRTUAL -->
-        <section id="seccion-biblioteca" class="page-section py-16 md:py-24 bg-white min-h-[70vh]">
+        <section id="seccion-biblioteca" class="page-section py-16 md:py-24 bg-white">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
                     <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase"><i data-lucide="library" class="inline w-6 h-6 text-forenseGold mr-2"></i>Biblioteca Virtual e Investigaciones</h2>
@@ -798,7 +797,7 @@
         </section>
 
         <!-- 8. LEGAJO DIGITAL -->
-        <section id="seccion-portafolio" class="page-section py-16 md:py-24 bg-slate-100 min-h-[70vh]">
+        <section id="seccion-portafolio" class="page-section py-16 md:py-24 bg-slate-100">
             <div class="max-w-4xl mx-auto px-4 text-center">
                 <i data-lucide="folder-check" class="w-20 h-20 text-forenseGold mx-auto mb-6"></i>
                 <h2 class="font-title text-3xl font-black text-forenseNavy mb-4 uppercase">Ingresar a Mi Legajo Digital</h2>
@@ -808,7 +807,7 @@
         </section>
 
         <!-- 9. INSCRIPCIÓN WIZARD -->
-        <section id="seccion-inscripcion" class="page-section py-16 bg-white min-h-[70vh]">
+        <section id="seccion-inscripcion" class="page-section py-16 bg-white">
             <div class="max-w-4xl mx-auto px-4">
                 <div class="text-center mb-10">
                     <h2 class="font-title text-2xl md:text-3xl font-black text-forenseNavy mb-3 uppercase"><i data-lucide="file-text" class="inline w-6 h-6 text-forenseGold mr-2"></i>Trámite de Matriculación</h2>
@@ -934,7 +933,7 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-white text-slate-700 py-10 border-t-4 border-forenseGold mt-0 relative z-20">
+    <footer class="bg-white text-slate-700 py-10 border-t-4 border-forenseGold relative z-20">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                 <div class="text-center md:text-left">
