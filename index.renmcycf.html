@@ -113,7 +113,6 @@
     </script>
     <style>
         * { scroll-behavior: smooth; }
-        /* CAMBIO 1: fondo del body gris claro */
         body { background-color: #f8fafc; color: #334155; overflow-x: hidden; }
         
         .hero-pattern { position: relative; overflow: hidden; background-color: #0a1128; }
@@ -254,7 +253,8 @@
 
         <!-- 1. INICIO -->
         <section id="seccion-inicio" class="page-section active-section">
-            <header class="hero-pattern pt-20 pb-16 md:pt-28 md:pb-24 px-4 relative flex items-center border-b-4 border-forenseGold">
+            <!-- CAMBIO SOLICITADO: min-h-[calc(100vh-6rem)] -->
+            <header class="hero-pattern pt-24 pb-24 md:pt-32 md:pb-36 px-4 relative flex items-center min-h-[calc(100vh-6rem)] border-b-4 border-forenseGold">
                 <img id="dyn-hero-bg" 
                      src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80" 
                      class="hero-bg-img" 
@@ -308,7 +308,7 @@
                 </div>
             </header>
 
-            <!-- ALIANZAS ESTRATÉGICAS DEL RENMCYCF - CAMBIO 2: sección más compacta -->
+            <!-- ALIANZAS ESTRATÉGICAS DEL RENMCYCF -->
             <section id="alianzas-estrategicas" class="pt-12 pb-8 bg-slate-900 border-b border-slate-800 overflow-hidden">
                 <div class="max-w-7xl mx-auto px-4">
                     <div class="text-center mb-8">
@@ -933,7 +933,7 @@
 
     </main>
 
-    <!-- FOOTER - CAMBIO 3: fondo blanco con textos oscuros -->
+    <!-- FOOTER -->
     <footer class="bg-white text-slate-700 py-10 border-t-4 border-forenseGold mt-0 relative z-20">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
@@ -1136,7 +1136,7 @@
         }
 
         // ==========================================
-        // RED DE EMPRESAS - logos grandes + clickeables
+        // RED DE EMPRESAS
         // ==========================================
         async function cargarEmpresasPublicas() {
             const container = document.getElementById('contenedor-empresas-publicas');
@@ -2010,7 +2010,8 @@
                 const likesActuales = Number(data.likes) || 0;
                 const nuevosLikes = likesActuales + 1;
                 
-                const { error: errUpdate } = await db                    .from('renmcycf_noticias')
+                const { error: errUpdate } = await db
+                    .from('renmcycf_noticias')
                     .update({ likes: nuevosLikes })
                     .eq('id', noticiaId);
                 
