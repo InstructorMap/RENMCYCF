@@ -186,6 +186,7 @@
         .form-step.active { display: block; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes heroFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         .faq-summary::-webkit-details-marker { display: none; }
     </style>
@@ -297,10 +298,18 @@
                             </button>
                         </div>
                         
-                        <div id="hero-noticia-container" class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden hover:border-forenseGold/50 transition-all group cursor-pointer shadow-2xl" onclick="switchSection('seccion-portal-divulgacion')">
-                            <div class="p-10 text-center text-slate-400">
-                                <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> 
-                                <span class="text-xs font-bold uppercase">Cargando publicación...</span>
+                        <div class="relative">
+                            <!-- INDICADORES DE SLIDE -->
+                            <div id="hero-carousel-dots" class="flex justify-center gap-2 mb-3"></div>
+                            
+                            <!-- CONTENEDOR DEL CARRUSEL -->
+                            <div id="hero-carousel" class="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden shadow-2xl transition-all" style="min-height: 420px;">
+                                <div class="p-10 text-center text-slate-400 flex items-center justify-center h-full">
+                                    <div>
+                                        <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> 
+                                        <span class="text-xs font-bold uppercase">Cargando contenido...</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -327,14 +336,14 @@
                     </div>
                 </div>
 
-                <!-- Bloque 2: Red de Empresas (Grilla) -->
+                <!-- Bloque 2: Red de Empresas (Grilla centrada con tarjetas grandes) -->
                 <div id="bloque-red-empresas" class="pt-4 hidden">
                     <div class="max-w-7xl mx-auto px-4 mb-6 text-center">
                         <h3 id="empresas-titulo" class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.25em] mb-1">Red de Empresas</h3>
                         <p id="empresas-subtitulo" class="text-[10px] text-slate-500 italic">Alianzas estratégicas del sector privado</p>
                     </div>
-                    <div class="max-w-7xl mx-auto px-4">
-                        <div id="contenedor-empresas-publicas" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"></div>
+                    <div class="max-w-7xl mx-auto px-4 flex justify-center">
+                        <div id="contenedor-empresas-publicas" class="flex flex-wrap justify-center gap-6 md:gap-8"></div>
                     </div>
                 </div>
             </section>
@@ -1135,7 +1144,7 @@
         }
 
         // ==========================================
-        // RED DE EMPRESAS - CAMBIO 3 APLICADO: centrado absoluto infalible
+        // RED DE EMPRESAS - OPCIÓN B: Tarjetas GRANDES de ancho fijo + centrado
         // ==========================================
         async function cargarEmpresasPublicas() {
             const container = document.getElementById('contenedor-empresas-publicas');
@@ -1163,14 +1172,14 @@
                     const desc = e.descripcion || '';
                     const url = e.web_url || '#';
                     return `
-                        <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center text-center hover:border-forenseGold hover:bg-white/10 transition-all duration-300 group">
-                            <div class="w-full aspect-square relative mb-4 bg-white rounded-lg cursor-pointer overflow-hidden"
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col items-center text-center hover:border-forenseGold hover:bg-white/10 transition-all duration-300 group w-full sm:w-[300px] md:w-[340px]">
+                            <div class="w-full aspect-square relative mb-4 bg-white rounded-xl cursor-pointer overflow-hidden"
                                  onclick="abrirModalImagen('${imagen}')">
                                 <img src="${imagen}" alt="${e.nombre}"
-                                     class="absolute inset-0 w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300">
+                                     class="absolute inset-0 w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-300">
                             </div>
-                            <h4 class="text-forenseGold font-bold text-sm uppercase tracking-wider mb-1">${e.nombre}</h4>
-                            ${desc ? `<p class="text-slate-400 text-[10px] leading-relaxed line-clamp-2 mb-2">${desc}</p>` : ''}
+                            <h4 class="text-forenseGold font-bold text-base uppercase tracking-wider mb-2">${e.nombre}</h4>
+                            ${desc ? `<p class="text-slate-400 text-xs leading-relaxed line-clamp-3 mb-3">${desc}</p>` : ''}
                             <a href="${url}" target="_blank" rel="noopener"
                                class="mt-auto text-[10px] text-slate-400 hover:text-forenseGold transition-colors flex items-center gap-1 font-bold uppercase tracking-widest">
                                 Visitar web <i data-lucide="external-link" class="w-3 h-3"></i>
@@ -1289,77 +1298,255 @@
         }
 
         // ==========================================
-        // NOTICIA DESTACADA DEL HERO
+        // HERO CARRUSEL ROTATIVO (Noticias + Empresas + Aliados)
         // ==========================================
+        let heroCarouselData = [];
+        let heroCarouselIndex = 0;
+        let heroCarouselInterval = null;
+        const HERO_CAROUSEL_DELAY = 6000; // 6 segundos por slide
+
         async function cargarNoticiaHero() {
-            const container = document.getElementById('hero-noticia-container');
+            const container = document.getElementById('hero-carousel');
+            const dotsContainer = document.getElementById('hero-carousel-dots');
             if (!container) return;
-            
+
+            heroCarouselData = [];
+
             try {
-                const { data, error } = await db.from('renmcycf_noticias')
-                                              .select('*')
-                                              .order('created_at', { ascending: false })
-                                              .limit(1)
-                                              .maybeSingle();
-                
-                if (error) throw error;
-                
-                if (!data) {
+                // 1. Cargar noticias (novedad oficial)
+                try {
+                    const { data: noticias } = await db.from('renmcycf_noticias')
+                        .select('*')
+                        .order('created_at', { ascending: false })
+                        .limit(5);
+                    if (noticias && noticias.length > 0) {
+                        noticias.forEach(n => {
+                            heroCarouselData.push({
+                                tipo: 'noticia',
+                                titulo: n.titulo,
+                                descripcion: n.descripcion || 'Publicación oficial del Registro Nacional.',
+                                imagen: n.portada_url || 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=600',
+                                categoria: n.categoria_requerida || 'GENERAL',
+                                likes: n.likes || 0,
+                                id: n.id,
+                                fecha: n.created_at
+                            });
+                        });
+                    }
+                } catch(e) { console.warn('Error noticias hero:', e); }
+
+                // 2. Cargar empresas activas
+                try {
+                    const { data: empresas } = await db.from('renmcycf_empresas')
+                        .select('*')
+                        .eq('activo', true)
+                        .order('orden', { ascending: true })
+                        .limit(10);
+                    if (empresas && empresas.length > 0) {
+                        empresas.forEach(e => {
+                            heroCarouselData.push({
+                                tipo: 'empresa',
+                                titulo: e.nombre,
+                                descripcion: e.descripcion || 'Empresa aliada del RENMCYCF.',
+                                imagen: e.logo_url || 'https://placehold.co/600x400/0f172a/d4af37?text=Empresa',
+                                categoria: 'EMPRESA ALIADA',
+                                url: e.web_url || '#',
+                                id: e.id
+                            });
+                        });
+                    }
+                } catch(e) { console.warn('Error empresas hero:', e); }
+
+                // 3. Cargar instituciones aliadas
+                try {
+                    const { data: aliados } = await db.from('renmcycf_aliados')
+                        .select('*')
+                        .eq('activo', true)
+                        .limit(10);
+                    if (aliados && aliados.length > 0) {
+                        aliados.forEach(a => {
+                            heroCarouselData.push({
+                                tipo: 'aliado',
+                                titulo: a.nombre,
+                                descripcion: a.descripcion || 'Institución aliada del RENMCYCF.',
+                                imagen: a.logo_url || 'https://placehold.co/600x400/0f172a/d4af37?text=Institución',
+                                categoria: 'INSTITUCIÓN ALIADA',
+                                url: a.web_url || '#',
+                                id: a.id
+                            });
+                        });
+                    }
+                } catch(e) { console.warn('Error aliados hero:', e); }
+
+                // Si no hay nada, mostrar vacío
+                if (heroCarouselData.length === 0) {
                     container.innerHTML = `
-                        <div class="p-8 text-center text-slate-400">
-                            <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-3 opacity-50"></i>
-                            <p class="text-xs font-bold uppercase">Sin publicaciones aún</p>
+                        <div class="p-10 text-center text-slate-400 flex items-center justify-center h-full">
+                            <div>
+                                <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-3 opacity-50"></i>
+                                <p class="text-xs font-bold uppercase">Sin publicaciones aún</p>
+                            </div>
                         </div>`;
+                    if (dotsContainer) dotsContainer.innerHTML = '';
                     lucide.createIcons();
                     return;
                 }
-                
-                let iconName = 'newspaper';
-                let bgColor = 'bg-amber-500/20 text-amber-400';
-                if (data.categoria_requerida === 'CIENCIA') { iconName = 'flask-conical'; bgColor = 'bg-blue-500/20 text-blue-400'; }
-                if (data.categoria_requerida === 'TECNOLOGIA') { iconName = 'cpu'; bgColor = 'bg-emerald-500/20 text-emerald-400'; }
-                
-                const imagen = data.portada_url || 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=600';
-                const descripcion = data.descripcion || 'Publicación oficial del Registro Nacional.';
-                
+
+                // Renderizar dots
+                if (dotsContainer) {
+                    dotsContainer.innerHTML = heroCarouselData.map((_, i) => 
+                        `<button onclick="irASlideHero(${i})" class="hero-dot w-2 h-2 rounded-full transition-all ${i === 0 ? 'bg-forenseGold w-6' : 'bg-white/30 hover:bg-white/50'}" aria-label="Slide ${i+1}"></button>`
+                    ).join('');
+                }
+
+                // Renderizar primer slide
+                heroCarouselIndex = 0;
+                renderizarSlideHero();
+                iniciarAutoPlayHero();
+
+                // Pausar al hover
+                container.addEventListener('mouseenter', () => {
+                    if (heroCarouselInterval) clearInterval(heroCarouselInterval);
+                });
+                container.addEventListener('mouseleave', () => {
+                    iniciarAutoPlayHero();
+                });
+
+            } catch (err) {
+                console.error("Error cargando carrusel hero:", err);
                 container.innerHTML = `
-                    <div class="relative aspect-[4/5] sm:aspect-square overflow-hidden bg-slate-50 w-full flex justify-center items-center border-b border-slate-100">
-                        <img src="${imagen}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-md cursor-pointer" alt="${data.titulo}" onclick="event.stopPropagation(); abrirModalImagen('${imagen}')">
+                    <div class="p-10 text-center text-slate-400 flex items-center justify-center h-full">
+                        <div>
+                            <i data-lucide="alert-circle" class="w-10 h-10 mx-auto mb-3 opacity-50"></i>
+                            <p class="text-xs font-bold uppercase">No se pudo cargar</p>
+                        </div>
+                    </div>`;
+                lucide.createIcons();
+            }
+        }
+
+        function renderizarSlideHero() {
+            const container = document.getElementById('hero-carousel');
+            const dotsContainer = document.getElementById('hero-carousel-dots');
+            if (!container || heroCarouselData.length === 0) return;
+
+            const slide = heroCarouselData[heroCarouselIndex];
+
+            // Colores e íconos según tipo
+            let bgColor = 'bg-amber-500/20 text-amber-400';
+            let iconName = 'newspaper';
+            let ctaText = 'Ver publicación';
+            let onClickAction = `switchSection('seccion-portal-divulgacion')`;
+
+            if (slide.tipo === 'empresa') {
+                bgColor = 'bg-sky-500/20 text-sky-400';
+                iconName = 'building-2';
+                ctaText = 'Visitar web';
+                onClickAction = `window.open('${slide.url}', '_blank')`;
+            } else if (slide.tipo === 'aliado') {
+                bgColor = 'bg-emerald-500/20 text-emerald-400';
+                iconName = 'handshake';
+                ctaText = 'Conocer más';
+                onClickAction = slide.url && slide.url !== '#' ? `window.open('${slide.url}', '_blank')` : `switchSection('seccion-institucional')`;
+            } else if (slide.categoria === 'CIENCIA') {
+                iconName = 'flask-conical';
+                bgColor = 'bg-blue-500/20 text-blue-400';
+            } else if (slide.categoria === 'TECNOLOGIA') {
+                iconName = 'cpu';
+                bgColor = 'bg-emerald-500/20 text-emerald-400';
+            }
+
+            // Para empresas/aliados, mostramos el logo centrado y más grande
+            const esLogo = slide.tipo === 'empresa' || slide.tipo === 'aliado';
+            const fechaHTML = slide.fecha 
+                ? `<span class="text-[10px] text-slate-400 flex items-center gap-1.5">
+                     <i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${new Date(slide.fecha).toLocaleDateString('es-AR')}
+                   </span>` 
+                : `<span class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">${slide.categoria}</span>`;
+
+            const likesHTML = slide.tipo === 'noticia' 
+                ? `<button onclick="event.stopPropagation(); darMeGusta('${slide.id}', this, ${slide.likes})" class="text-slate-400 hover:text-red-400 transition-colors flex items-center gap-1.5 text-[11px] font-bold z-20">
+                     <i data-lucide="heart" class="w-4 h-4 heart-icon transition-transform"></i> <span class="likes-count">${slide.likes}</span>
+                   </button>` 
+                : '';
+
+            const compartirHTML = slide.tipo === 'noticia'
+                ? `<button onclick="event.stopPropagation(); compartirNoticia('${slide.titulo.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-1.5 text-[11px] font-bold z-20">
+                     <i data-lucide="share-2" class="w-4 h-4 hover:scale-110 transition-transform"></i>
+                   </button>`
+                : '';
+
+            // Estructura del slide con transición fade
+            container.innerHTML = `
+                <div class="hero-slide-fade" style="animation: heroFadeIn 0.6s ease forwards;">
+                    <!-- IMAGEN / LOGO -->
+                    <div class="relative ${esLogo ? 'h-56' : 'aspect-square'} overflow-hidden ${esLogo ? 'bg-white' : 'bg-slate-50'} w-full flex justify-center items-center border-b border-slate-100">
+                        <img src="${slide.imagen}" 
+                             class="${esLogo ? 'max-w-[70%] max-h-[80%] object-contain p-4' : 'w-full h-full object-contain'} cursor-pointer hover:scale-105 transition-transform duration-500 drop-shadow-md" 
+                             alt="${slide.titulo}" 
+                             onclick="event.stopPropagation(); abrirModalImagen('${slide.imagen}')">
                         <div class="absolute top-3 left-3 ${bgColor} w-10 h-10 rounded-xl flex items-center justify-center shadow-lg border border-white/30 backdrop-blur-sm">
                             <i data-lucide="${iconName}" class="w-5 h-5"></i>
                         </div>
                         <div class="absolute bottom-3 left-3 right-3">
-                            <span class="text-[9px] font-bold uppercase tracking-widest text-forenseGold">${data.categoria_requerida || 'GENERAL'}</span>
+                            <span class="text-[9px] font-bold uppercase tracking-widest text-forenseGold">${slide.categoria}</span>
                         </div>
                     </div>
+                    
+                    <!-- TEXTO -->
                     <div class="p-5">
-                        <h4 class="font-title font-black text-white text-base leading-snug mb-2 group-hover:text-forenseGold transition-colors">${data.titulo}</h4>
-                        <p class="text-xs text-slate-300 leading-relaxed line-clamp-2">${descripcion}</p>
-                        <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
-                            <span class="text-[10px] text-slate-400 flex items-center gap-1.5">
-                                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${new Date(data.created_at).toLocaleDateString('es-AR')}
-                            </span>
+                        <h4 class="font-title font-black text-white text-base leading-snug mb-2">${slide.titulo}</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed line-clamp-2 mb-3">${slide.descripcion}</p>
+                        
+                        <!-- CTA -->
+                        <button onclick="event.stopPropagation(); ${onClickAction}" 
+                                class="w-full bg-forenseGold/10 hover:bg-forenseGold/20 border border-forenseGold/40 text-forenseGold text-[11px] font-black uppercase tracking-widest py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 mb-3">
+                            ${ctaText} <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </button>
+                        
+                        <!-- META -->
+                        <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+                            ${fechaHTML}
                             <div class="flex items-center gap-4">
-                                <button onclick="event.stopPropagation(); darMeGusta('${data.id}', this, ${data.likes || 0})" class="text-slate-400 hover:text-red-400 transition-colors flex items-center gap-1.5 text-[11px] font-bold z-20">
-                                    <i data-lucide="heart" class="w-4 h-4 heart-icon transition-transform"></i> <span class="likes-count">${data.likes || 0}</span>
-                                </button>
-                                <button onclick="event.stopPropagation(); compartirNoticia('${data.titulo.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-1.5 text-[11px] font-bold z-20">
-                                    <i data-lucide="share-2" class="w-4 h-4 hover:scale-110 transition-transform"></i>
-                                </button>
+                                ${likesHTML}
+                                ${compartirHTML}
                             </div>
                         </div>
-                    </div>`;
-                
-                lucide.createIcons();
-            } catch (err) {
-                console.error("Error cargando noticia hero:", err);
-                container.innerHTML = `
-                    <div class="p-8 text-center text-slate-400">
-                        <i data-lucide="alert-circle" class="w-10 h-10 mx-auto mb-3 opacity-50"></i>
-                        <p class="text-xs font-bold uppercase">No se pudo cargar</p>
-                    </div>`;
-                lucide.createIcons();
+                    </div>
+                </div>
+            `;
+
+            lucide.createIcons();
+
+            // Actualizar dots
+            if (dotsContainer) {
+                const dots = dotsContainer.querySelectorAll('.hero-dot');
+                dots.forEach((dot, i) => {
+                    if (i === heroCarouselIndex) {
+                        dot.className = 'hero-dot w-6 h-2 rounded-full transition-all bg-forenseGold';
+                    } else {
+                        dot.className = 'hero-dot w-2 h-2 rounded-full transition-all bg-white/30 hover:bg-white/50';
+                    }
+                });
             }
+        }
+
+        function irASlideHero(index) {
+            heroCarouselIndex = index;
+            renderizarSlideHero();
+            // Reiniciar autoplay
+            if (heroCarouselInterval) clearInterval(heroCarouselInterval);
+            iniciarAutoPlayHero();
+        }
+
+        function iniciarAutoPlayHero() {
+            if (heroCarouselInterval) clearInterval(heroCarouselInterval);
+            if (heroCarouselData.length <= 1) return;
+            
+            heroCarouselInterval = setInterval(() => {
+                heroCarouselIndex = (heroCarouselIndex + 1) % heroCarouselData.length;
+                renderizarSlideHero();
+            }, HERO_CAROUSEL_DELAY);
         }
 
         // ==========================================
