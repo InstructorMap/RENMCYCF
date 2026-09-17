@@ -303,7 +303,7 @@
                             <div id="hero-carousel-dots" class="flex justify-center gap-2 mb-3"></div>
                             
                             <!-- CONTENEDOR DEL CARRUSEL -->
-                            <div id="hero-carousel" class="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden shadow-2xl transition-all" style="min-height: 420px;">
+                            <div id="hero-carousel" class="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden shadow-2xl transition-all" style="min-height: 480px;">
                                 <div class="p-10 text-center text-slate-400 flex items-center justify-center h-full">
                                     <div>
                                         <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> 
@@ -1144,7 +1144,7 @@
         }
 
         // ==========================================
-        // RED DE EMPRESAS - OPCIÓN B: Tarjetas GRANDES de ancho fijo + centrado
+        // RED DE EMPRESAS - Tarjetas GRANDES de ancho fijo + centrado
         // ==========================================
         async function cargarEmpresasPublicas() {
             const container = document.getElementById('contenedor-empresas-publicas');
@@ -1299,6 +1299,7 @@
 
         // ==========================================
         // HERO CARRUSEL ROTATIVO (Noticias + Empresas + Aliados)
+        // TODAS las imágenes con el MISMO tamaño cuadrado
         // ==========================================
         let heroCarouselData = [];
         let heroCarouselIndex = 0;
@@ -1456,8 +1457,6 @@
                 bgColor = 'bg-emerald-500/20 text-emerald-400';
             }
 
-            // Para empresas/aliados, mostramos el logo centrado y más grande
-            const esLogo = slide.tipo === 'empresa' || slide.tipo === 'aliado';
             const fechaHTML = slide.fecha 
                 ? `<span class="text-[10px] text-slate-400 flex items-center gap-1.5">
                      <i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${new Date(slide.fecha).toLocaleDateString('es-AR')}
@@ -1476,19 +1475,19 @@
                    </button>`
                 : '';
 
-            // Estructura del slide con transición fade
+            // TODAS las imágenes usan el MISMO contenedor cuadrado con el MISMO padding
             container.innerHTML = `
                 <div class="hero-slide-fade" style="animation: heroFadeIn 0.6s ease forwards;">
-                    <!-- IMAGEN / LOGO -->
-                    <div class="relative ${esLogo ? 'h-56' : 'aspect-square'} overflow-hidden ${esLogo ? 'bg-white' : 'bg-slate-50'} w-full flex justify-center items-center border-b border-slate-100">
+                    <!-- IMAGEN - MISMO TAMAÑO PARA TODOS LOS TIPOS -->
+                    <div class="relative aspect-square overflow-hidden bg-white w-full flex justify-center items-center border-b border-slate-100">
                         <img src="${slide.imagen}" 
-                             class="${esLogo ? 'max-w-[70%] max-h-[80%] object-contain p-4' : 'w-full h-full object-contain'} cursor-pointer hover:scale-105 transition-transform duration-500 drop-shadow-md" 
+                             class="absolute inset-0 w-full h-full object-contain p-6 cursor-pointer hover:scale-105 transition-transform duration-500 drop-shadow-md" 
                              alt="${slide.titulo}" 
                              onclick="event.stopPropagation(); abrirModalImagen('${slide.imagen}')">
-                        <div class="absolute top-3 left-3 ${bgColor} w-10 h-10 rounded-xl flex items-center justify-center shadow-lg border border-white/30 backdrop-blur-sm">
+                        <div class="absolute top-3 left-3 ${bgColor} w-10 h-10 rounded-xl flex items-center justify-center shadow-lg border border-white/30 backdrop-blur-sm z-10">
                             <i data-lucide="${iconName}" class="w-5 h-5"></i>
                         </div>
-                        <div class="absolute bottom-3 left-3 right-3">
+                        <div class="absolute bottom-3 left-3 right-3 z-10">
                             <span class="text-[9px] font-bold uppercase tracking-widest text-forenseGold">${slide.categoria}</span>
                         </div>
                     </div>
@@ -1534,7 +1533,6 @@
         function irASlideHero(index) {
             heroCarouselIndex = index;
             renderizarSlideHero();
-            // Reiniciar autoplay
             if (heroCarouselInterval) clearInterval(heroCarouselInterval);
             iniciarAutoPlayHero();
         }
