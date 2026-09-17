@@ -249,11 +249,11 @@
     </div>
 
     <!-- CONTENEDOR DE SECCIONES -->
-    <main class="flex-grow">
+    <main class="flex-grow w-full flex flex-col bg-slate-900">
 
         <!-- 1. INICIO -->
         <section id="seccion-inicio" class="page-section active-section bg-white">
-            <header class="hero-pattern py-16 md:py-20 px-4 relative flex items-center border-b-4 border-forenseGold">
+            <header class="hero-pattern py-16 md:py-20 px-4 relative flex items-center min-h-[calc(100vh-6rem)] border-b-4 border-forenseGold">
                 <img id="dyn-hero-bg" 
                      src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80" 
                      class="hero-bg-img" 
@@ -1135,7 +1135,7 @@
         }
 
         // ==========================================
-        // RED DE EMPRESAS - TAREA 2: logo centrado con grid place-items-center
+        // RED DE EMPRESAS - CAMBIO 3 APLICADO: centrado absoluto infalible
         // ==========================================
         async function cargarEmpresasPublicas() {
             const container = document.getElementById('contenedor-empresas-publicas');
@@ -1164,10 +1164,10 @@
                     const url = e.web_url || '#';
                     return `
                         <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center text-center hover:border-forenseGold hover:bg-white/10 transition-all duration-300 group">
-                            <div class="w-full aspect-square grid place-items-center mb-4 bg-white rounded-lg p-4 cursor-pointer overflow-hidden"
+                            <div class="w-full aspect-square relative mb-4 bg-white rounded-lg cursor-pointer overflow-hidden"
                                  onclick="abrirModalImagen('${imagen}')">
                                 <img src="${imagen}" alt="${e.nombre}"
-                                     class="max-w-full max-h-full object-contain object-center group-hover:scale-105 transition-transform duration-300">
+                                     class="absolute inset-0 w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300">
                             </div>
                             <h4 class="text-forenseGold font-bold text-sm uppercase tracking-wider mb-1">${e.nombre}</h4>
                             ${desc ? `<p class="text-slate-400 text-[10px] leading-relaxed line-clamp-2 mb-2">${desc}</p>` : ''}
@@ -1828,7 +1828,7 @@
                         <p style="font-size: 11px; color: #334155; font-weight:700; margin-bottom:4px;">${p.profesion || 'Profesional Titulado'}</p>
                         <p style="font-size: 10px; color: #64748b; margin-bottom:8px;">📍 ${p.provincia_laboral || 'Argentina'}</p>
                         <div style="margin-bottom:12px;">${espBadges}</div>
-                        <div style="display:flex; gap:6px; margin-bottom:${socialButtons ? '8px' : '0'};">
+                        <div style="display:flex; gap:6px; margin-bottom:${socialButtons ? '8px' : '0'}">
                             <a href="https://wa.me/${p.telefono || ''}" target="_blank" rel="noopener" style="flex:1; font-size:10px; background:#25d366; color:white; padding:6px 0; border-radius:6px; text-decoration:none; display:flex; align-items:center; justify-content:center; font-weight:bold;">WhatsApp</a>
                             ${p.email ? `<a href="mailto:${p.email}" target="_blank" style="flex:1; font-size:10px; background:#0ea5e9; color:white; padding:6px 0; border-radius:6px; text-decoration:none; display:flex; align-items:center; justify-content:center; font-weight:bold;">Correo</a>` : ''}
                         </div>
