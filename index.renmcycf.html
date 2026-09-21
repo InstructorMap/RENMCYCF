@@ -914,6 +914,21 @@
                                 <div><label class="form-label">Correo Electrónico</label><input type="email" id="ins-email" required class="form-input"></div>
                                 <div><label class="form-label">Teléfono / WhatsApp</label><input type="tel" id="ins-tel" required class="form-input font-mono" placeholder="Ej: 549351..."></div>
                                 <div class="md:col-span-2"><label class="form-label">Provincia / Ciudad Laboral</label><input type="text" id="ins-prov" required class="form-input" placeholder="Ej: Córdoba Capital"></div>
+                                
+                                <!-- NUEVO CAMPO: ¿Cómo nos conociste? -->
+                                <div class="md:col-span-2">
+                                    <label class="form-label">¿Cómo nos conociste?</label>
+                                    <select id="ins-como-nos-conocio" required class="form-input font-bold text-forenseNavy bg-slate-50">
+                                        <option value="" disabled selected>Seleccione una opción...</option>
+                                        <option value="INSTITUTO">Instituto / Academia</option>
+                                        <option value="EMPRESA">Empresa / Organización</option>
+                                        <option value="REDES SOCIALES">Redes Sociales (Instagram / Facebook / LinkedIn)</option>
+                                        <option value="PROFESIONAL CONOCIDO">Profesional conocido / Colega</option>
+                                        <option value="BUSQUEDA WEB">Búsqueda en Google / Navegador</option>
+                                        <option value="EVENTO O CAPACITACION">Evento / Capacitación / Congreso</option>
+                                        <option value="OTRO">Otro</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="text-right pt-4"><button type="button" onclick="siguientePaso(2)" class="bg-forenseNavy text-white px-8 py-3 rounded-xl font-bold uppercase text-sm shadow hover:bg-slate-800 transition">Siguiente Paso &rarr;</button></div>
                         </div>
@@ -1962,6 +1977,7 @@
                     email: document.getElementById('ins-email').value,
                     telefono: document.getElementById('ins-tel').value,
                     provincia_laboral: document.getElementById('ins-prov').value.toUpperCase(),
+                    como_nos_conocio: document.getElementById('ins-como-nos-conocio').value,
                     profesion: document.getElementById('ins-profesion').value.toUpperCase(),
                     categoria: document.getElementById('ins-categoria').value,
                     especialidades: JSON.stringify(especialidades),
