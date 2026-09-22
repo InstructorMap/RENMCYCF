@@ -1228,7 +1228,16 @@
                 if (data && data.length > 0) {
                     let html = '';
                     data.forEach(a => {
-                        html += `<div class="flex items-center gap-3 bg-slate-800/80 px-6 py-3 rounded-xl border border-slate-700 shrink-0"><img src="${a.logo_url}" class="w-8 h-8 object-contain bg-white rounded-full p-0.5"><span>${a.nombre}</span></div>`;
+                        const urlClick = a.web_url && a.web_url !== '#' && a.web_url !== '' ? `window.open('${a.web_url}', '_blank')` : '';
+                        const cursorClass = urlClick ? 'cursor-pointer hover:border-forenseGold hover:bg-slate-800' : '';
+                        
+                        html += `
+                        <div onclick="${urlClick}" class="flex items-center gap-4 bg-slate-800/50 px-6 py-4 rounded-2xl border border-slate-700 shrink-0 transition-all ${cursorClass}">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center p-1 shrink-0 shadow-md">
+                                <img src="${a.logo_url}" alt="${a.nombre}" class="max-w-full max-h-full object-contain rounded-full">
+                            </div>
+                            <span class="text-sm font-black text-slate-300 uppercase tracking-wider">${a.nombre}</span>
+                        </div>`;
                     });
                     marquesina.innerHTML = html;
                     seccion.classList.remove('hidden');
