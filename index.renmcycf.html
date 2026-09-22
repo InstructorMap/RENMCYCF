@@ -1233,8 +1233,8 @@
                         
                         html += `
                         <div onclick="${urlClick}" class="flex items-center gap-4 bg-slate-800/50 px-6 py-4 rounded-2xl border border-slate-700 shrink-0 transition-all ${cursorClass}">
-                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center p-1 shrink-0 shadow-md">
-                                <img src="${a.logo_url}" alt="${a.nombre}" class="max-w-full max-h-full object-contain rounded-full">
+                            <div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center shrink-0 p-1.5 shadow-md">
+                                <img src="${a.logo_url}" alt="${a.nombre}" class="max-w-full max-h-full object-contain">
                             </div>
                             <span class="text-sm font-black text-slate-300 uppercase tracking-wider">${a.nombre}</span>
                         </div>`;
@@ -1432,7 +1432,8 @@
                                 categoria: n.categoria_requerida || 'GENERAL',
                                 likes: n.likes || 0,
                                 id: n.id,
-                                fecha: n.created_at
+                                fecha: n.created_at,
+                                link_contacto: n.link_contacto || null
                             });
                         });
                     }
@@ -1551,6 +1552,14 @@
                 iconName = 'handshake';
                 ctaText = 'Conocer más';
                 onClickAction = slide.url && slide.url !== '#' ? `window.open('${slide.url}', '_blank')` : `switchSection('seccion-institucional')`;
+            } else if (slide.tipo === 'noticia') {
+                if (slide.link_contacto) {
+                    ctaText = 'Ingresar al Link';
+                    onClickAction = `window.open('${slide.link_contacto}', '_blank')`;
+                } else {
+                    ctaText = 'Ver publicación';
+                    onClickAction = `switchSection('seccion-portal-divulgacion')`;
+                }
             } else if (slide.categoria === 'CIENCIA') {
                 iconName = 'flask-conical';
                 bgColor = 'bg-blue-500/20 text-blue-400';
@@ -2209,6 +2218,13 @@
                     const imagen = item.portada_url || 'https://via.placeholder.com/400x200/0f172a/d4af37?text=RENMCYCF';
                     const descripcion = item.descripcion || 'Publicación oficial del Registro Nacional.';
                     
+                    // BOTÓN DINÁMICO DE ENLACE
+                    const botonLink = item.link_contacto 
+                        ? `<button onclick="event.stopPropagation(); window.open('${item.link_contacto}', '_blank')" class="w-full mb-4 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-black uppercase tracking-widest py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg">
+                             <i data-lucide="external-link" class="w-4 h-4"></i> Acceder al Enlace
+                           </button>` 
+                        : '';
+                    
                     return `
                     <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col hover:border-forenseGold hover:shadow-2xl transition-all duration-300">
                         <div class="aspect-square relative overflow-hidden bg-slate-50 flex justify-center items-center border-b border-slate-100 p-2">
@@ -2216,12 +2232,17 @@
                             <div class="absolute top-3 left-3 ${bgColor} w-10 h-10 rounded-xl flex items-center justify-center shadow-md border border-white/50">
                                 <i data-lucide="${iconName}" class="w-5 h-5"></i>
                             </div>
+                            <div class="absolute bottom-3 left-3 right-3">
+                                <span class="text-[9px] font-bold uppercase tracking-widest text-forenseGold">${item.categoria_requerida || 'GENERAL'}</span>
+                            </div>
                         </div>
                         <div class="p-6 flex flex-col flex-1">
-                            <span class="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-2">${item.categoria_requerida || 'GENERAL'}</span>
                             <h3 class="font-title font-black text-lg text-forenseNavy mb-2 leading-snug">${item.titulo}</h3>
-                            <p class="text-sm text-slate-600 leading-relaxed flex-1">${descripcion}</p>
-                            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <p class="text-sm text-slate-600 leading-relaxed flex-1 mb-4">${descripcion}</p>
+                            
+                            ${botonLink}
+
+                            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
                                 <span class="text-xs font-bold text-slate-400 flex items-center gap-2">
                                     <i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${new Date(item.created_at).toLocaleDateString('es-AR')}
                                 </span>
