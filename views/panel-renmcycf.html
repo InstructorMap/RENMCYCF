@@ -325,20 +325,37 @@
                         <form id="form-aliado" onsubmit="crearAliado(event)" class="space-y-4">
                             <input type="hidden" id="aliado-id">
                             <div><label>Nombre de la Institución</label><input type="text" id="aliado-nombre" required></div>
-                            <div><label>Enlace Web / Red Social (Opcional)</label><input type="url" id="aliado-web" placeholder="https://..." class="text-slate-400"></div>
-                            <div><label>Logo (PNG Transparente ideal)</label><input type="file" id="aliado-logo" accept="image/*" class="text-slate-400" required></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label>Provincia Sede Central</label>
+                                    <input type="text" id="aliado-prov" placeholder="Ej: Córdoba, CABA, Nacional..." required>
+                                </div>
+                                <div>
+                                    <label>Tipo de Formación</label>
+                                    <input type="text" id="aliado-tipo" placeholder="Ej: Tecnicaturas, Cursos Cortos..." required>
+                                </div>
+                            </div>
+                            <div>
+                                <label>Estado de Auditoría</label>
+                                <select id="aliado-estado" class="form-input font-bold" required>
+                                    <option value="PENDIENTE" class="text-amber-600">PENDIENTE (Perfil en Gris)</option>
+                                    <option value="AUDITADO" class="text-emerald-600">AUDITADO (Perfil Activo y Sello ASARI)</option>
+                                </select>
+                            </div>
+                            <div><label>Enlace Web Oficial</label><input type="url" id="aliado-web" placeholder="https://..." class="text-slate-400"></div>
+                            <div><label>Logo de la Institución</label><input type="file" id="aliado-logo" accept="image/*" class="text-slate-400"></div>
                             <div class="bg-black/30 p-4 rounded-xl border border-white/10 flex items-center gap-3">
                                 <input type="checkbox" id="aliado-activo" checked class="w-5 h-5">
-                                <label for="aliado-activo" class="text-sm font-bold text-white mb-0 cursor-pointer">Visible en el Index Público</label>
+                                <label for="aliado-activo" class="text-sm font-bold text-white mb-0 cursor-pointer">Visible en el Directorio Público</label>
                             </div>
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">GUARDAR ALIADO</button>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">GUARDAR INSTITUCIÓN</button>
                             <button type="button" onclick="resetFormAliado()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs">CANCELAR EDICIÓN</button>
                         </form>
                     </div>
                     <div class="glass-card p-6 xl:col-span-2">
-                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Instituciones Aliadas</h3><button onclick="cargarAliadosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
+                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Directorio Nacional de Aliados</h3><button onclick="cargarAliadosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
                         <p class="text-xs text-slate-400 mb-4">Si no hay aliados activos, el carrusel se ocultará automáticamente de la página pública.</p>
-                        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Logo</th><th class="p-3">Institución</th><th class="p-3">Estado</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="aliados-body"></tbody></table></div>
+                        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Logo</th><th class="p-3">Institución</th><th class="p-3">Provincia / Formación</th><th class="p-3">Estado Auditoría</th><th class="p-3">Visibilidad</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="aliados-body"></tbody></table></div>
                     </div>
                 </div>
             </div>
@@ -1557,12 +1574,12 @@
         async function cargarAliadosPanel() {
             const tbody = document.getElementById('aliados-body'); 
             if (!tbody) return;
-            tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center">Cargando...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="p-3 text-center">Cargando...</td></tr>';
             try {
                 const { data, error } = await db.from('renmcycf_aliados').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
                 if (!data || data.length === 0) { 
-                    tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">No hay instituciones cargadas.</td></tr>'; 
+                    tbody.innerHTML = '<tr><td colspan="6" class="p-3 text-center text-slate-400">No hay instituciones cargadas.</td></tr>'; 
                     return; 
                 }
                 
@@ -1573,7 +1590,20 @@
                         <span class="text-white font-bold block">${a.nombre}</span>
                         ${a.web_url ? `<a href="${a.web_url}" target="_blank" class="text-[10px] text-blue-400 hover:underline block mt-1">${a.web_url}</a>` : '<span class="text-[10px] text-slate-500">Sin enlace web</span>'}
                     </td>
-                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${a.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">${a.activo?'ACTIVO':'INACTIVO'}</span></td>
+                    <td class="p-3">
+                        <span class="text-white font-bold block text-xs">${a.provincia || 'S/D'}</span>
+                        <span class="text-[10px] text-slate-400 block">${a.tipo_formacion || 'S/D'}</span>
+                    </td>
+                    <td class="p-3">
+                        <span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${a.estado_auditoria==='AUDITADO'?'bg-emerald-900/30 text-emerald-400':'bg-amber-900/30 text-amber-400'}">
+                            ${a.estado_auditoria || 'PENDIENTE'}
+                        </span>
+                    </td>
+                    <td class="p-3">
+                        <span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${a.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">
+                            ${a.activo?'VISIBLE':'OCULTO'}
+                        </span>
+                    </td>
                     <td class="p-3 text-right">
                         <button class="border border-blue-500/30 text-blue-400 px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-blue-500/10" onclick='editarAliado(${JSON.stringify(a).replace(/'/g, "&#39;")})'><i data-lucide="edit" class="w-3 h-3 inline"></i> EDITAR</button>
                         <button class="border border-white/20 text-white px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-white/10" onclick="toggleAliado('${a.id}', ${!a.activo})">${a.activo?'Ocultar':'Mostrar'}</button>
@@ -1581,7 +1611,7 @@
                     </td>
                 </tr>`).join('');
                 lucide.createIcons();
-            } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
+            } catch (err) { tbody.innerHTML = `<tr><td colspan="6" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
         }
 
         async function crearAliado(e) {
@@ -1593,11 +1623,21 @@
             try {
                 const id = document.getElementById('aliado-id').value;
                 const nombre = document.getElementById('aliado-nombre').value.trim();
+                const provincia = document.getElementById('aliado-prov').value.trim();
+                const tipo_formacion = document.getElementById('aliado-tipo').value.trim();
+                const estado_auditoria = document.getElementById('aliado-estado').value;
                 const webUrl = document.getElementById('aliado-web').value.trim();
                 const activo = document.getElementById('aliado-activo').checked;
                 const imgFile = document.getElementById('aliado-logo').files[0];
                 
-                const payload = { nombre, web_url: webUrl, activo };
+                const payload = { 
+                    nombre, 
+                    provincia, 
+                    tipo_formacion, 
+                    estado_auditoria, 
+                    web_url: webUrl, 
+                    activo 
+                };
 
                 if (imgFile) {
                     const fileName = `aliado_${Date.now()}.${imgFile.name.split('.').pop()}`;
@@ -1625,6 +1665,9 @@
         function editarAliado(a) {
             document.getElementById('aliado-id').value = a.id || '';
             document.getElementById('aliado-nombre').value = a.nombre || '';
+            document.getElementById('aliado-prov').value = a.provincia || '';
+            document.getElementById('aliado-tipo').value = a.tipo_formacion || '';
+            document.getElementById('aliado-estado').value = a.estado_auditoria || 'PENDIENTE';
             document.getElementById('aliado-web').value = a.web_url || '';
             document.getElementById('aliado-activo').checked = a.activo !== false;
             document.getElementById('aliado-logo').removeAttribute('required');
@@ -1636,6 +1679,7 @@
         function resetFormAliado() {
             document.getElementById('form-aliado').reset();
             document.getElementById('aliado-id').value = '';
+            document.getElementById('aliado-estado').value = 'PENDIENTE'; // Valor por defecto
             document.getElementById('aliado-activo').checked = true;
             document.getElementById('aliado-logo').setAttribute('required', 'true');
         }
