@@ -1767,8 +1767,6 @@
                     return;
                 }
                 
-                seccion.style.display = 'block';
-                
                 container.innerHTML = data.map(m => {
                     const fotoUrl = m.foto_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nombre)}&background=0a1128&color=d4af37&size=200`;
                     
@@ -1797,8 +1795,8 @@
             document.querySelectorAll('.page-section').forEach(sec => { sec.classList.remove('active-section'); sec.style.display = 'none'; });
             const target = document.getElementById(sectionId);
             if (target) {
+                target.classList.add('active-section');
                 target.style.display = 'block';
-                setTimeout(() => target.classList.add('active-section'), 10);
                 if (sectionId === 'seccion-mapa' && mapInstance) setTimeout(() => mapInstance.invalidateSize(), 200);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
