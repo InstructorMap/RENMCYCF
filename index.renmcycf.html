@@ -326,14 +326,38 @@
                     </div>
                 </div>
 
-                <!-- Bloque 1: Instituciones Aliadas (Grilla de Honor) -->
-                <div id="carrusel-institucional" class="pb-12 hidden">
-                    <div class="max-w-7xl mx-auto px-4 mb-8 text-center">
-                        <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.25em] mb-1">Instituciones Aliadas</h3>
-                        <p class="text-[10px] text-slate-500 italic">Entidades educativas con validación tecnológica activa</p>
-                    </div>
-                    <div class="max-w-7xl mx-auto px-4 flex justify-center">
-                        <div id="aliados-grid" class="flex flex-wrap justify-center gap-6 md:gap-8 w-full"></div>
+                <!-- DIRECTORIO NACIONAL DE INSTITUCIONES -->
+                <div id="directorio-institucional" class="pb-16 pt-8">
+                    <div class="max-w-7xl mx-auto px-4 mb-10">
+                        <div class="text-center mb-8">
+                            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800 text-slate-300 text-[10px] font-bold uppercase tracking-[0.2em] mb-4 border border-slate-700">
+                                <i data-lucide="search" class="w-3 h-3"></i> Buscador Nacional
+                            </div>
+                            <h3 class="text-2xl md:text-4xl font-black text-white uppercase tracking-tight mb-2">Entidades Capacitadoras</h3>
+                            <p class="text-slate-400 text-sm max-w-2xl mx-auto">Verifique el estado de auditoría tecnológica y validez de las instituciones que imparten Ciencias Forenses en Argentina.</p>
+                        </div>
+                        
+                        <!-- Barra de Búsqueda -->
+                        <div class="max-w-3xl mx-auto bg-slate-800/80 backdrop-blur-md rounded-2xl p-2 border border-slate-700 shadow-xl flex flex-col md:flex-row gap-2 mb-12">
+                            <div class="relative flex-1">
+                                <i data-lucide="building" class="absolute left-4 top-3.5 w-5 h-5 text-slate-500"></i>
+                                <input type="text" id="dir-search-input" placeholder="Nombre del Instituto o Provincia..." class="w-full bg-transparent border-none text-white px-12 py-3 focus:ring-0 outline-none placeholder-slate-500" onkeyup="filtrarDirectorio()">
+                            </div>
+                            <button class="bg-forenseGold hover:bg-yellow-500 text-forenseNavy font-black uppercase tracking-widest text-xs px-8 py-3 rounded-xl transition-all shadow-md md:w-auto w-full">Buscar</button>
+                        </div>
+
+                        <!-- Grilla de Resultados -->
+                        <div id="directorio-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Los resultados se inyectan aquí -->
+                        </div>
+                        
+                        <!-- Paginación / Call to Action -->
+                        <div class="mt-12 text-center border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-center gap-6">
+                            <p class="text-sm text-slate-400 font-medium">¿Su institución no figura o aparece como Pendiente?</p>
+                            <a href="#" id="btn-reclamar-perfil" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-forenseGold border border-forenseGold/30 px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow flex items-center gap-2">
+                                <i data-lucide="shield-check" class="w-4 h-4"></i> Reclamar Perfil Oficial
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -1217,45 +1241,98 @@
                     setDisplay('float-mail', conf.mostrar_email);
                     setDisplay('float-fb', conf.mostrar_facebook);
                     setDisplay('float-ig', conf.mostrar_instagram);
+
+                    // TAREA 3: Conectar el botón de WhatsApp (Reclamar Perfil)
+                    const wppDirectorio = `https://wa.me/${conf.whatsapp || ''}?text=Hola%20RENMCYCF.%20Soy%20Director%2Fa%20y%20vi%20mi%20institución%20en%20el%20Directorio%20como%20PENDIENTE.%20Quisiera%20reclamar%20el%20perfil%20oficial%20e%20informarme%20sobre%20la%20auditoría.`;
+                    setHref('btn-reclamar-perfil', wppDirectorio);
                 }
             } catch (err) { console.error("Error al cargar config:", err); }
         }
 
+        // ==========================================
+        // DIRECTORIO NACIONAL DE INSTITUCIONES
+        // ==========================================
+        let directorioData = [];
+
         async function cargarAliadosPublicos() {
+            const gridContainer = document.getElementById('directorio-grid');
+            if (!gridContainer) return;
+            
+            gridContainer.innerHTML = '<div class="col-span-full text-center py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto text-slate-500 mb-2"></i><p class="text-xs text-slate-500 uppercase tracking-widest font-bold">Cargando base de datos...</p></div>';
+            lucide.createIcons();
+
             try {
-                const { data, error } = await db.from('renmcycf_aliados').select('*').eq('activo', true);
-                const seccion = document.getElementById('carrusel-institucional');
-                const gridContainer = document.getElementById('aliados-grid');
+                const { data, error } = await db.from('renmcycf_aliados').select('*').eq('activo', true).order('estado_auditoria', { ascending: true });
+                if (error) throw error;
                 
                 if (data && data.length > 0) {
-                    let html = '';
-                    data.forEach(a => {
-                        const urlClick = a.web_url && a.web_url !== '#' && a.web_url !== '' ? `window.open('${a.web_url}', '_blank')` : '';
-                        const cursorClass = urlClick ? 'cursor-pointer' : '';
-                        const actionBtn = urlClick 
-                            ? `<a href="${a.web_url}" target="_blank" rel="noopener" class="mt-auto text-[10px] text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-1 font-bold uppercase tracking-widest">Visitar web <i data-lucide="external-link" class="w-3 h-3"></i></a>` 
-                            : `<span class="mt-auto text-[10px] text-emerald-500/50 font-bold uppercase tracking-widest"><i data-lucide="shield-check" class="inline w-3 h-3 mr-1"></i> Entidad Avalada</span>`;
-
-                        html += `
-                        <div class="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col items-center text-center hover:border-emerald-500/50 hover:bg-white/10 transition-all duration-300 group w-full sm:w-[300px] md:w-[340px]">
-                            <div class="w-full aspect-square relative mb-6 bg-white rounded-xl overflow-hidden ${cursorClass}" onclick="${urlClick}">
-                                <img src="${a.logo_url}" alt="${a.nombre}" class="absolute inset-0 w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-300">
-                            </div>
-                            <h4 class="text-white font-bold text-base uppercase tracking-wider mb-4">${a.nombre}</h4>
-                            ${actionBtn}
-                        </div>`;
-                    });
-                    gridContainer.innerHTML = html;
-                    seccion.classList.remove('hidden');
-                    
-                    // Asegurar que los íconos inyectados se rendericen
-                    if (typeof lucide !== 'undefined') {
-                        lucide.createIcons();
-                    }
+                    directorioData = data;
+                    renderizarDirectorio(data);
                 } else { 
-                    seccion.classList.add('hidden'); 
+                    gridContainer.innerHTML = '<div class="col-span-full text-center py-10 bg-slate-800/50 rounded-2xl border border-slate-700"><p class="text-sm text-slate-400">El directorio se está actualizando.</p></div>';
                 }
-            } catch (err) { console.error("Error aliados:", err); }
+            } catch (err) { console.error("Error directorio:", err); }
+        }
+
+        function renderizarDirectorio(instituciones) {
+            const gridContainer = document.getElementById('directorio-grid');
+            if (!gridContainer) return;
+
+            if (instituciones.length === 0) {
+                gridContainer.innerHTML = '<div class="col-span-full text-center py-10"><p class="text-sm text-slate-400">No se encontraron instituciones con esos parámetros.</p></div>';
+                return;
+            }
+
+            let html = '';
+            instituciones.forEach(inst => {
+                const isAuditado = inst.estado_auditoria === 'AUDITADO';
+                const bgCard = isAuditado ? 'bg-gradient-to-br from-white/10 to-white/5 border-forenseGold/40 shadow-[0_0_15px_rgba(212,175,55,0.1)]' : 'bg-slate-800/40 border-slate-700/50 grayscale-[40%] hover:grayscale-0';
+                const textColor = isAuditado ? 'text-white' : 'text-slate-300';
+                const badgeStyle = isAuditado 
+                    ? '<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 w-max"><i data-lucide="check-circle-2" class="w-3 h-3"></i> Auditado por RENMCYCF</span>'
+                    : '<span class="bg-amber-500/10 text-amber-500/70 border border-amber-500/20 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest flex items-center gap-1.5 w-max"><i data-lucide="clock" class="w-3 h-3"></i> Auditoría Pendiente</span>';
+                
+                const logoRender = (inst.logo_url && isAuditado) 
+                    ? `<img src="${inst.logo_url}" alt="${inst.nombre}" class="w-full h-full object-contain p-2">`
+                    : `<i data-lucide="landmark" class="w-10 h-10 text-slate-600 opacity-50"></i>`;
+
+                const btnAccion = isAuditado && inst.web_url
+                    ? `<a href="${inst.web_url}" target="_blank" rel="noopener" class="mt-4 w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">Visitar Entidad <i data-lucide="external-link" class="w-3 h-3"></i></a>`
+                    : (!isAuditado ? `<a href="#seccion-convenios-b2b" class="mt-4 w-full bg-forenseGold/10 hover:bg-forenseGold/20 border border-forenseGold/30 text-forenseGold py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">Solicitar Auditoría ASARI</a>` : '<div class="mt-4 h-[34px]"></div>');
+
+                html += `
+                <div class="rounded-2xl border p-6 flex flex-col transition-all duration-300 ${bgCard}">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center shrink-0 shadow-inner">
+                            ${logoRender}
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-black text-sm md:text-base uppercase leading-tight mb-1 ${textColor}">${inst.nombre}</h4>
+                            <p class="text-[10px] text-slate-400 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> ${inst.provincia || 'Sede Central'}</p>
+                            <p class="text-[10px] text-slate-500 mt-0.5">${inst.tipo_formacion || 'Formación Técnica / Académica'}</p>
+                        </div>
+                    </div>
+                    <div class="mt-auto">
+                        ${badgeStyle}
+                        ${btnAccion}
+                    </div>
+                </div>`;
+            });
+            gridContainer.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function filtrarDirectorio() {
+            const query = document.getElementById('dir-search-input').value.toLowerCase().trim();
+            if (!query) {
+                renderizarDirectorio(directorioData);
+                return;
+            }
+            const filtrados = directorioData.filter(inst => 
+                (inst.nombre && inst.nombre.toLowerCase().includes(query)) ||
+                (inst.provincia && inst.provincia.toLowerCase().includes(query))
+            );
+            renderizarDirectorio(filtrados);
         }
 
         // ==========================================
