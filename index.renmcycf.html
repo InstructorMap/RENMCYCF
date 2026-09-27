@@ -196,6 +196,10 @@
             50% { box-shadow: 0 0 0 12px rgba(212, 175, 55, 0), 0 10px 30px -5px rgba(0,0,0,0.3); }
         }
         .promo-b2c-banner { animation: bannerPulse 2.5s infinite; }
+
+        /* Scroll horizontal sin barra visible (para tabs en móviles) */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans bg-white">
@@ -1143,10 +1147,10 @@
         let peritosMapaDB = [];
         let markersLayerGroup = null;
 
-        // ⭐ TAREA 3: Variable global para el descuento B2C
+        // ⭐ Variable global para el descuento B2C
         let descuentoB2CActivo = false;
 
-        // ⭐ TAREA 1: Función global para descarga de Biblioteca
+        // ⭐ Función global para descarga de Biblioteca
         window.descargarBiblioteca = function(url, isPremium) {
             if(isPremium) {
                 alert("Material de acceso restringido para profesionales empadronados. Por favor, ingrese desde su Legajo Digital.");
@@ -1172,12 +1176,12 @@
             try { initMap(); } catch(e) { console.warn(e); }
             try { await cargarContadorMatriculados(); } catch(e) { console.warn(e); }
 
-            // ⭐ TAREA 3: Verificar promo B2C después de cargar config
+            // ⭐ Verificar promo B2C después de cargar config
             try { await verificarPromoHashB2C(); } catch(e) { console.warn('Error promo B2C:', e); }
         });
 
         // ==========================================
-        // ⭐ TAREA 3: VERIFICADOR DE PROMO B2C (Descuento Egresados)
+        // ⭐ VERIFICADOR DE PROMO B2C (Descuento Egresados)
         // ==========================================
         async function verificarPromoHashB2C() {
             const params = new URLSearchParams(window.location.search);
@@ -1186,7 +1190,6 @@
             if (!promoHash || promoHash.trim() === '') return;
 
             try {
-                // Consultar el certificado B2B con ese hash
                 const { data: cert, error } = await db
                     .from('renmcycf_certificados_b2b')
                     .select('*')
@@ -1198,13 +1201,10 @@
                     return;
                 }
 
-                // Activar descuento global
                 descuentoB2CActivo = true;
 
-                // 1. Abrir la sección de inscripción
                 switchSection('seccion-inscripcion');
 
-                // 2. Autocompletar datos del alumno
                 const setVal = (id, val) => {
                     const el = document.getElementById(id);
                     if (el && val) el.value = val;
@@ -1213,17 +1213,14 @@
                 setVal('ins-apellidos', cert.alumno_apellidos || '');
                 setVal('ins-dni', cert.alumno_dni || '');
 
-                // 3. Autoseleccionar categoría A3 y origen CONVENIO
                 const selectCat = document.getElementById('ins-categoria');
                 const selectComo = document.getElementById('ins-como-nos-conocio');
                 if (selectCat) selectCat.value = 'A3';
                 if (selectComo) {
                     selectComo.value = 'CONVENIO';
-                    // Disparar el toggle de entidad B2B
                     toggleReferenteB2B();
                 }
 
-                // 4. Inyectar Banner Dorado Gigante arriba del step-1
                 const bannerContainer = document.getElementById('promo-b2c-banner');
                 if (bannerContainer) {
                     bannerContainer.innerHTML = `
@@ -1250,7 +1247,6 @@
                     lucide.createIcons();
                 }
 
-                // 5. Scroll suave a la sección
                 setTimeout(() => {
                     const seccion = document.getElementById('seccion-inscripcion');
                     if (seccion) seccion.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1361,10 +1357,28 @@
         }
 
         // ==========================================
-        // ⭐ TAREA 2: DIRECTORIO CON VIDRIERA PREMIUM B2B
+        // ⭐ DIRECTORIO CON VIDRIERA PREMIUM B2B (Full-Width + Tabs)
         // ==========================================
         let directorioData = [];
         let cursosAprobadosPorAliado = {}; // Mapa: aliado_id -> [cursos aprobados]
+
+        // ⭐ CONTROL DE PESTAÑAS (TABS) POR INSTITUTO
+        window.switchInstTab = function(instId, tabId) {
+            // Ocultar todos los contenidos de este instituto
+            document.querySelectorAll('.inst-content-' + instId).forEach(el => el.classList.add('hidden'));
+            // Desmarcar todos los botones de este instituto
+            document.querySelectorAll('.inst-tabbtn-' + instId).forEach(el => {
+                el.classList.remove('text-forenseNavy', 'border-forenseGold', 'bg-slate-50');
+                el.classList.add('text-slate-400', 'border-transparent');
+            });
+            
+            // Mostrar el contenido seleccionado
+            document.getElementById(`tab-${tabId}-${instId}`).classList.remove('hidden');
+            // Marcar el botón seleccionado
+            const btn = document.getElementById(`btn-tab-${tabId}-${instId}`);
+            btn.classList.remove('text-slate-400', 'border-transparent');
+            btn.classList.add('text-forenseNavy', 'border-forenseGold', 'bg-slate-50');
+        };
 
         async function cargarAliadosPublicos() {
             const gridContainer = document.getElementById('directorio-grid');
@@ -1415,73 +1429,126 @@
             let html = '';
             instituciones.forEach(inst => {
                 const isAuditado = inst.estado_auditoria === 'AUDITADO';
-                const bgCard = isAuditado ? 'bg-gradient-to-br from-white/10 to-white/5 border-forenseGold/40 shadow-[0_0_15px_rgba(212,175,55,0.1)]' : 'bg-slate-800/40 border-slate-700/50 grayscale-[40%] hover:grayscale-0';
-                const textColor = isAuditado ? 'text-white' : 'text-slate-300';
-                const badgeStyle = isAuditado 
-                    ? '<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 w-max"><i data-lucide="check-circle-2" class="w-3 h-3"></i> Auditado por RENMCYCF</span>'
-                    : '<span class="bg-amber-500/10 text-amber-500/70 border border-amber-500/20 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest flex items-center gap-1.5 w-max"><i data-lucide="clock" class="w-3 h-3"></i> Auditoría Pendiente</span>';
                 
-                const logoRender = (inst.logo_url && isAuditado) 
-                    ? `<img src="${inst.logo_url}" alt="${inst.nombre}" class="w-full h-full object-contain mix-blend-multiply p-1">`
-                    : `<i data-lucide="landmark" class="w-10 h-10 text-slate-300 opacity-50"></i>`;
-
-                const btnAccion = isAuditado && inst.web_url
-                    ? `<a href="${inst.web_url}" target="_blank" rel="noopener" class="mt-4 w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">Visitar Entidad <i data-lucide="external-link" class="w-3 h-3"></i></a>`
-                    : (!isAuditado ? `<a href="#seccion-convenios-b2b" class="mt-4 w-full bg-forenseGold/10 hover:bg-forenseGold/20 border border-forenseGold/30 text-forenseGold py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">Solicitar Perfil y Auditoría</a>` : '<div class="mt-4 h-[34px]"></div>');
-
-                // ⭐ TAREA 2: Bloque de Oferta Académica (solo Auditados con cursos)
-                let bloqueCursos = '';
-                if (isAuditado) {
-                    const cursosInst = cursosAprobadosPorAliado[inst.id] || [];
-                    if (cursosInst.length > 0) {
-                        const chips = cursosInst.map(c => 
-                            `<span class="text-[9px] bg-blue-50 text-blue-600 border border-blue-200 px-2 py-1 rounded font-bold uppercase tracking-wider inline-block">${c.nombre_curso}</span>`
-                        ).join('');
-                        bloqueCursos = `
-                            <div class="mt-4 pt-4 border-t border-white/10">
-                                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-2 flex items-center gap-1">
-                                    <i data-lucide="graduation-cap" class="w-3 h-3"></i> Oferta Académica Aprobada
-                                </p>
-                                <div class="flex flex-wrap gap-1.5">
-                                    ${chips}
-                                </div>
-                            </div>`;
-                    }
+                // Si NO está auditado, mantenemos la tarjeta pequeña clásica
+                if (!isAuditado) {
+                    html += `
+                    <div class="col-span-1 rounded-2xl border p-6 flex flex-col transition-all duration-300 bg-slate-800/40 border-slate-700/50 grayscale-[40%] hover:grayscale-0">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-inner overflow-hidden">
+                                <i data-lucide="landmark" class="w-8 h-8 text-slate-300 opacity-50"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-black text-sm md:text-base uppercase leading-tight mb-1 text-slate-300">${inst.nombre}</h4>
+                                <p class="text-[10px] text-slate-400 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> ${inst.provincia || 'Sede Central'}</p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">${inst.tipo_formacion || 'Formación Técnica / Académica'}</p>
+                            </div>
+                        </div>
+                        <div class="mt-auto">
+                            <span class="bg-amber-500/10 text-amber-500/70 border border-amber-500/20 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest flex items-center gap-1.5 w-max mb-4"><i data-lucide="clock" class="w-3 h-3"></i> Auditoría Pendiente</span>
+                            <a href="#seccion-convenios-b2b" class="w-full bg-forenseGold/10 hover:bg-forenseGold/20 border border-forenseGold/30 text-forenseGold py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">Solicitar Perfil y Auditoría</a>
+                        </div>
+                    </div>`;
+                    return;
                 }
 
-                // ⭐ TAREA 2: Mini-Verificador Institucional (solo Auditados)
-                let miniVerificador = '';
-                if (isAuditado) {
-                    miniVerificador = `
-                        <div class="mt-4 pt-4 border-t border-slate-100/10">
-                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-2">Validar Diploma de esta Entidad</p>
-                            <div class="flex gap-2">
-                                <input type="text" id="hash-inst-${inst.id}" placeholder="Pegue el TxID o Hash..." class="flex-1 bg-white/5 border border-white/10 rounded px-2 py-1.5 text-xs text-white outline-none focus:border-forenseGold">
-                                <button onclick="window.location.href='certificado.html?hash=' + encodeURIComponent(document.getElementById('hash-inst-${inst.id}').value)" class="bg-forenseGold text-forenseNavy font-bold uppercase text-[9px] px-3 py-1.5 rounded hover:bg-yellow-500 transition">Verificar</button>
+                // SI ESTÁ AUDITADO: Diseño Premium Full-Width con Tabs
+                const logoRender = inst.logo_url 
+                    ? `<img src="${inst.logo_url}" alt="${inst.nombre}" class="w-full h-full object-contain p-2">`
+                    : `<i data-lucide="landmark" class="w-12 h-12 text-slate-300"></i>`;
+
+                const btnContacto = inst.web_url
+                    ? `<a href="${inst.web_url}" target="_blank" rel="noopener" class="mt-4 bg-forenseNavy hover:bg-slate-800 text-white py-3 px-6 rounded-lg text-xs font-bold uppercase tracking-widest transition-all inline-flex items-center justify-center gap-2 shadow-md">Visitar Sitio Web <i data-lucide="external-link" class="w-4 h-4"></i></a>`
+                    : `<p class="mt-4 text-xs text-slate-500 italic">Contacto directo a través de la entidad.</p>`;
+
+                // Lista de cursos para la pestaña
+                const cursosInst = cursosAprobadosPorAliado[inst.id] || [];
+                let htmlCursos = '<p class="text-sm text-slate-500 italic">El instituto se encuentra en proceso de carga de sus programas avalados.</p>';
+                if (cursosInst.length > 0) {
+                    const lista = cursosInst.map(c => `
+                        <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-lg mb-2">
+                            <div>
+                                <h5 class="text-forenseNavy font-bold text-sm uppercase">${c.nombre_curso}</h5>
+                                <p class="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5"><i data-lucide="clock" class="w-3 h-3 inline"></i> ${c.carga_horaria || 'Carga no especificada'}</p>
                             </div>
-                        </div>`;
+                            <span class="bg-emerald-100 text-emerald-700 border border-emerald-200 px-2 py-1 rounded text-[9px] font-black uppercase tracking-widest hidden sm:block">Doble Titulación Aprobada</span>
+                        </div>
+                    `).join('');
+                    htmlCursos = `<p class="text-sm text-slate-600 mb-4">Los siguientes programas han superado la auditoría técnica del RENMCYCF:</p>${lista}`;
                 }
 
                 html += `
-                <div class="rounded-2xl border p-6 flex flex-col transition-all duration-300 ${bgCard}">
-                    <div class="flex items-start gap-4 mb-4">
-                        <div class="w-24 h-24 bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-inner overflow-hidden">
+                <div class="col-span-full bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden flex flex-col md:flex-row mb-2 transition-all hover:border-forenseGold/50">
+                    
+                    <!-- IZQUIERDA: Identidad Institucional -->
+                    <div class="md:w-1/3 bg-gradient-to-b from-slate-50 to-white p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-200 relative">
+                        <div class="absolute top-4 left-4 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
+                            <i data-lucide="shield-check" class="w-3 h-3"></i> Entidad Auditada
+                        </div>
+                        
+                        <div class="w-32 h-32 bg-white rounded-full border-4 border-forenseGold flex items-center justify-center p-1 shadow-lg mb-5 overflow-hidden mt-6">
                             ${logoRender}
                         </div>
-                        <div class="flex-1">
-                            <h4 class="font-black text-sm md:text-base uppercase leading-tight mb-1 ${textColor}">${inst.nombre}</h4>
-                            <p class="text-[10px] text-slate-400 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> ${inst.provincia || 'Sede Central'}</p>
-                            <p class="text-[10px] text-slate-500 mt-0.5">${inst.tipo_formacion || 'Formación Técnica / Académica'}</p>
-                        </div>
+                        <h3 class="font-title font-black text-xl text-forenseNavy text-center uppercase leading-tight mb-2">${inst.nombre}</h3>
+                        <p class="text-xs text-slate-500 flex items-center gap-1 font-medium"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-forenseGold"></i> ${inst.provincia || 'Sede Central'}</p>
                     </div>
-                    ${bloqueCursos}
-                    <div class="mt-auto">
-                        ${badgeStyle}
-                        ${btnAccion}
-                        ${miniVerificador}
+
+                    <!-- DERECHA: Pestañas de Navegación -->
+                    <div class="md:w-2/3 flex flex-col bg-white">
+                        
+                        <!-- Botones Tabs -->
+                        <div class="flex border-b border-slate-200 overflow-x-auto hide-scrollbar bg-white">
+                            <button onclick="switchInstTab('${inst.id}', 'contacto')" id="btn-tab-contacto-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] md:text-xs font-black uppercase tracking-widest text-forenseNavy border-b-2 border-forenseGold bg-slate-50 transition-colors whitespace-nowrap">
+                                Datos de Contacto
+                            </button>
+                            <button onclick="switchInstTab('${inst.id}', 'verificador')" id="btn-tab-verificador-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent hover:text-forenseNavy hover:bg-slate-50 transition-colors whitespace-nowrap">
+                                Registro de Egresados
+                            </button>
+                            <button onclick="switchInstTab('${inst.id}', 'cursos')" id="btn-tab-cursos-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent hover:text-forenseNavy hover:bg-slate-50 transition-colors whitespace-nowrap">
+                                Cursos Avalados
+                            </button>
+                        </div>
+
+                        <!-- Contenido Tabs -->
+                        <div class="p-6 md:p-8 flex-1">
+                            
+                            <!-- TAB 1: Contacto -->
+                            <div id="tab-contacto-${inst.id}" class="inst-content-${inst.id} block animate-fade-up">
+                                <h4 class="text-lg font-black text-slate-800 mb-3 uppercase">Información Institucional</h4>
+                                <p class="text-sm text-slate-600 mb-6">Comuníquese directamente con <strong>${inst.nombre}</strong> para conocer fechas de inscripción, aranceles y modalidad de cursado de los programas acreditados.</p>
+                                <div class="space-y-2 mb-6">
+                                    <p class="text-sm text-slate-700 flex items-center gap-2"><i data-lucide="building-2" class="w-4 h-4 text-forenseGold"></i> <strong class="uppercase text-[10px] tracking-widest text-slate-400">Tipo:</strong> ${inst.tipo_formacion || 'Academia'}</p>
+                                </div>
+                                ${btnContacto}
+                            </div>
+
+                            <!-- TAB 2: Verificador -->
+                            <div id="tab-verificador-${inst.id}" class="inst-content-${inst.id} hidden animate-fade-up">
+                                <h4 class="text-lg font-black text-slate-800 mb-3 uppercase">Validación de Certificados B2B</h4>
+                                <p class="text-sm text-slate-600 mb-6">Si realizó una capacitación en esta institución adherida, valide la autenticidad de su certificado ASARI o descargue una copia digital ingresando el <strong>Código Hash Inmutable (TxID)</strong> impreso en su diploma:</p>
+                                
+                                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Hash Criptográfico del Documento</label>
+                                    <div class="flex flex-col sm:flex-row gap-3">
+                                        <input type="text" id="hash-inst-${inst.id}" placeholder="Ej: ASARI-XXXXXX-XXXX" class="flex-1 bg-white border border-slate-300 rounded-lg px-4 py-3 text-sm text-slate-800 outline-none focus:border-forenseGold focus:ring-1 focus:ring-forenseGold shadow-inner font-mono uppercase">
+                                        <button onclick="window.location.href='certificado.html?hash=' + encodeURIComponent(document.getElementById('hash-inst-${inst.id}').value.trim())" class="bg-forenseGold hover:bg-yellow-500 text-forenseNavy font-black uppercase text-xs px-8 py-3 rounded-lg transition-all shadow-md whitespace-nowrap flex items-center justify-center gap-2">
+                                            <i data-lucide="search" class="w-4 h-4"></i> Validar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TAB 3: Cursos -->
+                            <div id="tab-cursos-${inst.id}" class="inst-content-${inst.id} hidden animate-fade-up">
+                                <h4 class="text-lg font-black text-slate-800 mb-3 uppercase">Oferta Académica Auditada</h4>
+                                ${htmlCursos}
+                            </div>
+
+                        </div>
                     </div>
                 </div>`;
             });
+            
             gridContainer.innerHTML = html;
             lucide.createIcons();
         }
@@ -2201,7 +2268,7 @@
             }
         }
 
-        // ⭐ TAREA 3: MODIFICADA para aplicar descuento B2C
+        // ⭐ MODIFICADA para aplicar descuento B2C
         function actualizarLinkYPrecio() {
             const cat = document.getElementById('ins-categoria').value;
             const btnPago = document.getElementById('btn-mercadopago');
@@ -2516,7 +2583,7 @@
             }
         }
 
-        // ⭐ TAREA 1: FIX del botón de descarga
+        // ⭐ FIX del botón de descarga
         async function cargarBibliotecaPublica() {
             const container = document.getElementById('contenedor-biblioteca-ordenada');
             if (!container) return;
@@ -2526,7 +2593,7 @@
                 let html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">';
                 data.forEach(doc => {
                     const isPremium = doc.tipo_acceso === 'PREMIUM';
-                    // ⭐ TAREA 1: Usamos window.descargarBiblioteca con url e isPremium
+                    // ⭐ Usamos window.descargarBiblioteca con url e isPremium
                     html += `
                         <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-md flex flex-col justify-between hover:shadow-lg transition text-left hover:border-[#d4af37]">
                             <div>
