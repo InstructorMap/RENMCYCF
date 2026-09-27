@@ -235,6 +235,7 @@
 
                 <div class="px-2 py-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-6">Sistema</div>
                 <button onclick="showTab('aliados')" id="nav-aliados" class="sidebar-link w-full"><i data-lucide="award" class="w-4 h-4"></i> Gestión Aliados</button>
+                <button onclick="showTab('cursos-b2b')" id="nav-cursos-b2b" class="sidebar-link w-full"><i data-lucide="book-check" class="w-4 h-4"></i> Cursos Institutos</button>
                 <button onclick="showTab('empresas')" id="nav-empresas" class="sidebar-link w-full"><i data-lucide="building-2" class="w-4 h-4"></i> Red de Empresas</button>
                 <button onclick="showTab('comite')" id="nav-comite" class="sidebar-link w-full"><i data-lucide="users-round" class="w-4 h-4"></i> Comité Evaluador</button>
                 <button onclick="showTab('masiva')" id="nav-masiva" class="sidebar-link w-full"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Carga Masiva</button>
@@ -355,7 +356,26 @@
                     <div class="glass-card p-6 xl:col-span-2">
                         <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Directorio Nacional de Aliados</h3><button onclick="cargarAliadosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
                         <p class="text-xs text-slate-400 mb-4">Si no hay aliados activos, el carrusel se ocultará automáticamente de la página pública.</p>
-                        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Logo</th><th class="p-3">Institución</th><th class="p-3">Provincia / Formación</th><th class="p-3">Estado Auditoría</th><th class="p-3">Visibilidad</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="aliados-body"></tbody></table></div>
+                        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Logo</th><th class="p-3">Institución</th><th class="p-3">Provincia / Formación</th><th class="p-3">Estado Auditoría</th><th class="p-3 text-center">Timbres</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="aliados-body"></tbody></table></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CURSOS B2B -->
+            <div id="view-cursos-b2b" class="tab-content space-y-6">
+                <div class="glass-card p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="font-bold text-lg text-white">Auditoría de Programas y Cursos</h3>
+                            <p class="text-xs text-slate-400">Aprueba los temarios para que las instituciones puedan emitir Doble Certificación.</p>
+                        </div>
+                        <button onclick="cargarCursosB2BPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead><tr><th class="p-3">Instituto</th><th class="p-3">Curso y Docentes</th><th class="p-3">Temario</th><th class="p-3">Estado</th><th class="p-3 text-right">Auditar</th></tr></thead>
+                            <tbody id="cursos-b2b-body"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -858,7 +878,7 @@
                     const btn = document.getElementById(id);
                     if (btn) btn.style.display = 'flex';
                 });
-                ['nav-aliados', 'nav-empresas', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'].forEach(id => {
+                ['nav-aliados', 'nav-cursos-b2b', 'nav-empresas', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'].forEach(id => {
                     const btn = document.getElementById(id);
                     if (btn) btn.style.display = 'flex';
                 });
@@ -870,7 +890,7 @@
                     if (navElement) navElement.style.display = permisos.includes(modulo) ? 'flex' : 'none';
                 });
                 
-                const sistemaButtons = ['nav-aliados', 'nav-empresas', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'];
+                const sistemaButtons = ['nav-aliados', 'nav-cursos-b2b', 'nav-empresas', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'];
                 const tienePermisoSistema = permisos.includes('mod-sistema');
                 sistemaButtons.forEach(id => {
                     const el = document.getElementById(id);
@@ -942,7 +962,26 @@
             document.getElementById('view-' + id).classList.add('active');
             document.getElementById('nav-' + id)?.classList.add('active');
             
-            const titles = { 'dashboard':'Dashboard Estadístico', 'solicitudes':'Bandeja de CRM', 'auditoria':'Auditoría Comité', 'padron':'Padrón Nacional', 'aliados':'Gestión de Aliados', 'empresas':'Red de Empresas', 'comite':'Comité Evaluador', 'campus':'Portal Científico', 'biblioteca':'Biblioteca', 'tesis':'Auditoría de Tesis', 'masiva':'Inyección Masiva', 'diseno':'Calibrador de Credenciales', 'configuracion':'Configuración', 'contenido':'Textos del Sitio', 'beneficios':'Beneficios del Registro', 'suscriptores':'Suscriptores del Newsletter', 'usuarios':'Usuarios y Roles' };
+            const titles = { 
+                'dashboard':'Dashboard Estadístico', 
+                'solicitudes':'Bandeja de CRM', 
+                'auditoria':'Auditoría Comité', 
+                'padron':'Padrón Nacional', 
+                'aliados':'Gestión de Aliados', 
+                'cursos-b2b':'Auditoría de Cursos B2B',
+                'empresas':'Red de Empresas', 
+                'comite':'Comité Evaluador', 
+                'campus':'Portal Científico', 
+                'biblioteca':'Biblioteca', 
+                'tesis':'Auditoría de Tesis', 
+                'masiva':'Inyección Masiva', 
+                'diseno':'Calibrador de Credenciales', 
+                'configuracion':'Configuración', 
+                'contenido':'Textos del Sitio', 
+                'beneficios':'Beneficios del Registro', 
+                'suscriptores':'Suscriptores del Newsletter', 
+                'usuarios':'Usuarios y Roles' 
+            };
             document.getElementById('page-title').textContent = titles[id] || id;
             
             if(id === 'dashboard') actualizarDashboard();
@@ -950,6 +989,7 @@
             if(id === 'auditoria') cargarAuditoria();
             if(id === 'padron') cargarPadron();
             if(id === 'aliados') cargarAliadosPanel();
+            if(id === 'cursos-b2b') cargarCursosB2BPanel();
             if(id === 'empresas') cargarEmpresasPanel();
             if(id === 'comite') cargarComitePanel();
             if(id === 'campus') cargarNoticiasPanel();
@@ -1569,17 +1609,17 @@
         }
 
         // ==========================================
-        // 5. ALIADOS (INSTITUCIONES)
+        // 5. ALIADOS (INSTITUCIONES) - CON TIMBRES
         // ==========================================
         async function cargarAliadosPanel() {
             const tbody = document.getElementById('aliados-body'); 
             if (!tbody) return;
-            tbody.innerHTML = '<tr><td colspan="6" class="p-3 text-center">Cargando...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center">Cargando...</td></tr>';
             try {
                 const { data, error } = await db.from('renmcycf_aliados').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
                 if (!data || data.length === 0) { 
-                    tbody.innerHTML = '<tr><td colspan="6" class="p-3 text-center text-slate-400">No hay instituciones cargadas.</td></tr>'; 
+                    tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center text-slate-400">No hay instituciones cargadas.</td></tr>'; 
                     return; 
                 }
                 
@@ -1604,6 +1644,15 @@
                             ${a.activo?'VISIBLE':'OCULTO'}
                         </span>
                     </td>
+                    <td class="p-3 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="text-lg font-mono font-black text-forenseGold">${a.saldo_timbres || 0}</span>
+                            <div class="flex flex-col gap-1">
+                                <button onclick="modificarTimbres('${a.id}', 10, '${a.nombre.replace(/'/g, "\\'")}')" class="bg-emerald-500/20 text-emerald-400 p-1 rounded hover:bg-emerald-500/40" title="Cargar 10 Timbres"><i data-lucide="plus" class="w-3 h-3"></i></button>
+                                <button onclick="modificarTimbres('${a.id}', -1, '${a.nombre.replace(/'/g, "\\'")}')" class="bg-red-500/20 text-red-400 p-1 rounded hover:bg-red-500/40" title="Restar 1 Timbre"><i data-lucide="minus" class="w-3 h-3"></i></button>
+                            </div>
+                        </div>
+                    </td>
                     <td class="p-3 text-right">
                         <button class="border border-blue-500/30 text-blue-400 px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-blue-500/10" onclick='editarAliado(${JSON.stringify(a).replace(/'/g, "&#39;")})'><i data-lucide="edit" class="w-3 h-3 inline"></i> EDITAR</button>
                         <button class="border border-white/20 text-white px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-white/10" onclick="toggleAliado('${a.id}', ${!a.activo})">${a.activo?'Ocultar':'Mostrar'}</button>
@@ -1611,7 +1660,7 @@
                     </td>
                 </tr>`).join('');
                 lucide.createIcons();
-            } catch (err) { tbody.innerHTML = `<tr><td colspan="6" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
+            } catch (err) { tbody.innerHTML = `<tr><td colspan="7" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
         }
 
         async function crearAliado(e) {
@@ -1679,7 +1728,7 @@
         function resetFormAliado() {
             document.getElementById('form-aliado').reset();
             document.getElementById('aliado-id').value = '';
-            document.getElementById('aliado-estado').value = 'PENDIENTE'; // Valor por defecto
+            document.getElementById('aliado-estado').value = 'PENDIENTE';
             document.getElementById('aliado-activo').checked = true;
             document.getElementById('aliado-logo').setAttribute('required', 'true');
         }
@@ -2641,6 +2690,74 @@
                 if (rosetaUrl) await db.from('renmcycf_contenido').upsert({ clave: 'credencial_roseta', valor: rosetaUrl, tipo: 'texto' });
                 alert("✅ Diseño guardado exitosamente.");
             } catch(e) { alert("Error: " + e.message); }
+        }
+
+        // ==========================================
+        // 17. NUEVAS FUNCIONES B2B (TIMBRES Y CURSOS)
+        // ==========================================
+        async function modificarTimbres(id, cantidad, nombre) {
+            if(!confirm(`¿Seguro que deseas sumar/restar ${cantidad} timbres a ${nombre}?`)) return;
+            try {
+                const { data } = await db.from('renmcycf_aliados').select('saldo_timbres').eq('id', id).single();
+                let nuevoSaldo = (data.saldo_timbres || 0) + cantidad;
+                if (nuevoSaldo < 0) nuevoSaldo = 0;
+                
+                await db.from('renmcycf_aliados').update({ saldo_timbres: nuevoSaldo }).eq('id', id);
+                cargarAliadosPanel();
+            } catch(err) { alert("Error al modificar timbres: " + err.message); }
+        }
+
+        async function cargarCursosB2BPanel() {
+            const tbody = document.getElementById('cursos-b2b-body'); 
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center">Cargando...</td></tr>';
+            try {
+                const { data: cursos, error: errCursos } = await db.from('renmcycf_aliados_cursos').select('*').order('created_at', { ascending: false });
+                const { data: aliados, error: errAliados } = await db.from('renmcycf_aliados').select('id, nombre');
+                if (errCursos) throw errCursos;
+                
+                if (!cursos || cursos.length === 0) { 
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">No hay cursos propuestos.</td></tr>'; return; 
+                }
+
+                const aliadosMap = {};
+                if(aliados) aliados.forEach(a => aliadosMap[a.id] = a.nombre);
+
+                tbody.innerHTML = cursos.map(c => `
+                <tr class="border-b border-white/5 hover:bg-white/5">
+                    <td class="p-3 font-bold text-white text-xs">${aliadosMap[c.aliado_id] || 'S/D'}</td>
+                    <td class="p-3">
+                        <span class="text-white font-bold block text-sm">${c.nombre_curso}</span>
+                        <span class="text-[10px] text-slate-400 block"><i data-lucide="clock" class="inline w-3 h-3"></i> Carga: ${c.carga_horaria || 'S/D'}</span>
+                        <span class="text-[10px] text-blue-400 block mt-1"><i data-lucide="users" class="inline w-3 h-3"></i> Docentes: ${c.cuerpo_docente || 'S/D'}</span>
+                    </td>
+                    <td class="p-3 text-xs">
+                        ${c.programa_url ? `<a href="${c.programa_url}" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1"><i data-lucide="file-text" class="w-4 h-4"></i> Ver PDF</a>` : '<span class="text-slate-500">Sin archivo</span>'}
+                    </td>
+                    <td class="p-3">
+                        <span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${c.estado==='APROBADO'?'bg-emerald-900/30 text-emerald-400':(c.estado==='RECHAZADO'?'bg-red-900/30 text-red-400':'bg-amber-900/30 text-amber-400')}">
+                            ${c.estado || 'PENDIENTE'}
+                        </span>
+                    </td>
+                    <td class="p-3 text-right">
+                        ${c.estado === 'PENDIENTE' ? `
+                            <button onclick="auditarCursoB2B('${c.id}', 'APROBADO')" class="bg-emerald-500/20 text-emerald-400 p-1.5 rounded hover:bg-emerald-500/40 mx-1" title="Aprobar"><i data-lucide="check" class="w-4 h-4"></i></button>
+                            <button onclick="auditarCursoB2B('${c.id}', 'RECHAZADO')" class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40" title="Rechazar"><i data-lucide="x" class="w-4 h-4"></i></button>
+                        ` : `
+                            <button onclick="auditarCursoB2B('${c.id}', 'PENDIENTE')" class="border border-white/20 text-slate-400 px-2 py-1 rounded text-[9px] hover:text-white transition-colors" title="Revertir a Pendiente"><i data-lucide="rotate-ccw" class="w-3 h-3 inline mr-1"></i> Revocar</button>
+                        `}
+                    </td>
+                </tr>`).join('');
+                lucide.createIcons();
+            } catch (err) { tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
+        }
+
+        async function auditarCursoB2B(id, estado) {
+            if(!confirm(`¿Marcar este curso como ${estado}?`)) return;
+            try {
+                await db.from('renmcycf_aliados_cursos').update({ estado: estado }).eq('id', id);
+                cargarCursosB2BPanel();
+            } catch(err) { alert("Error: " + err.message); }
         }
 
         // ==========================================
