@@ -382,7 +382,7 @@
                     <div class="text-right">
                         <p class="text-[10px] font-black uppercase text-blue-600">Escanear para verificar</p>
                         <p class="text-[9px] font-bold text-slate-500">Validez Internacional ASARI</p>
-                        <p class="text-[9px] font-bold text-slate-500 mt-1">renmcycf.com.ar/verificar</p>
+                        <p class="text-[9px] font-bold text-slate-500 mt-1">renmcycf.com.ar/certificado.html</p>
                     </div>
                     <div id="pdf-qr-container" class="w-20 h-20 bg-white border border-slate-300 p-1 flex-shrink-0"></div>
                 </div>
@@ -827,7 +827,11 @@
                 
                 // 2. Generar Identificadores Únicos
                 const hashCert = `ASARI-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-                const urlVerificacion = `https://renmcycf.com.ar/verificar.html?hash=${hashCert}`;
+
+                // ✅ QR apuntando a certificado.html (verificador público)
+                // Usa ruta relativa dinámica: funciona en cualquier dominio/subcarpeta
+                const urlVerificacion = `${window.location.origin}${window.location.pathname.replace('instituto.html', '')}certificado.html?hash=${hashCert}`;
+
                 const fechaEmision = new Date().toLocaleDateString('es-AR');
 
                 // 3. Preparar DOM de la Plantilla PDF
@@ -854,7 +858,6 @@
                 await new Promise(resolve => setTimeout(resolve, 500));
                 
                 const renderZone = document.getElementById('cert-template');
-                // Forzar a renderZone a ser visible para html2canvas si es necesario, aunque sacarlo de la pantalla suele bastar.
                 const canvas = await html2canvas(renderZone, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
                 
                 // 5. Crear PDF
