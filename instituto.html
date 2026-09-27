@@ -8,6 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --neon-blue: #3b82f6; --neon-gold: #fbbf24; --glass-bg: rgba(15, 23, 42, 0.6); --glass-border: rgba(255, 255, 255, 0.08); }
@@ -325,6 +328,67 @@
 
         </div>
     </main>
+
+    <!-- PLANTILLA OCULTA PARA PDF (Formato A4 Horizontal: ~1123x794 px) -->
+    <div id="cert-render-zone" style="position: absolute; left: -9999px; top: -9999px; width: 1123px; height: 794px; background: white;">
+        <div id="cert-template" class="w-full h-full relative overflow-hidden bg-slate-50 flex flex-col p-12 shadow-2xl" style="font-family: 'Outfit', sans-serif;">
+            
+            <!-- Fondos y Bordes Decorativos -->
+            <div class="absolute inset-0 border-[16px] border-slate-900 z-0"></div>
+            <div class="absolute inset-6 border-[3px] border-[#d4af37] z-0"></div>
+            <!-- Marca de agua gigante -->
+            <i data-lucide="shield-check" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] text-slate-200 opacity-30 z-0"></i>
+
+            <!-- HEADER -->
+            <div class="flex justify-between items-start z-10 border-b-2 border-slate-200 pb-6 mb-8">
+                <div class="flex items-center gap-4">
+                    <div class="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center border-4 border-[#d4af37]">
+                        <i data-lucide="shield-check" class="w-10 h-10 text-[#d4af37]"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-black text-slate-900 tracking-tighter">RENMCYCF</h1>
+                        <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">República Argentina</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Entidad Capacitadora Auditada</p>
+                    <div class="flex items-center gap-3 justify-end">
+                        <h2 class="text-xl font-black text-slate-800 uppercase" id="pdf-instituto">Nombre del Instituto</h2>
+                        <img id="pdf-logo-instituto" src="" class="w-12 h-12 object-contain hidden">
+                    </div>
+                </div>
+            </div>
+
+            <!-- CUERPO CENTRAL -->
+            <div class="flex-1 flex flex-col items-center justify-center text-center z-10">
+                <p class="text-sm font-bold text-[#d4af37] uppercase tracking-[0.3em] mb-4">Certificado Oficial de Trazabilidad y Doble Acreditación</p>
+                <p class="text-lg text-slate-600 mb-6">El Comité Evaluador del Sistema ASARI certifica que:</p>
+                <h1 class="text-6xl font-black text-slate-900 uppercase tracking-wide mb-4 font-serif" id="pdf-alumno">JUAN PÉREZ</h1>
+                <p class="text-xl font-bold text-slate-500 mb-8 font-mono">DNI: <span id="pdf-dni">12.345.678</span></p>
+                
+                <p class="text-lg text-slate-600 mb-4 max-w-3xl">Ha cumplimentado satisfactoriamente los requisitos del programa de formación profesional auditado tecnológicamente, denominado:</p>
+                <h2 class="text-3xl font-black text-blue-900 uppercase tracking-wider mb-4 border-b border-blue-200 pb-2 inline-block" id="pdf-curso">CRIMINALÍSTICA AVANZADA</h2>
+                <p class="text-sm font-bold text-slate-500 uppercase mb-8" id="pdf-carga">Carga Horaria: 120 Horas Cátedra</p>
+            </div>
+
+            <!-- FOOTER CON QR -->
+            <div class="flex justify-between items-end z-10 mt-auto pt-6 border-t-2 border-slate-200">
+                <div class="space-y-1">
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Validación Inmutable Blockchain</p>
+                    <p class="text-[10px] font-mono text-slate-400">HASH: <span id="pdf-hash" class="font-bold text-slate-600">ASARI-000000</span></p>
+                    <p class="text-[10px] font-mono text-slate-400">EMISIÓN: <span id="pdf-fecha" class="font-bold text-slate-600">01/01/2026</span></p>
+                </div>
+                <div class="flex items-center gap-4 bg-slate-100 p-3 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="text-right">
+                        <p class="text-[10px] font-black uppercase text-blue-600">Escanear para verificar</p>
+                        <p class="text-[9px] font-bold text-slate-500">Validez Internacional ASARI</p>
+                        <p class="text-[9px] font-bold text-slate-500 mt-1">renmcycf.com.ar/verificar</p>
+                    </div>
+                    <div id="pdf-qr-container" class="w-20 h-20 bg-white border border-slate-300 p-1 flex-shrink-0"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // ==========================================
@@ -714,7 +778,7 @@
                 } else {
                     tbody.innerHTML = certificados.map(cert => `
                     <tr class="border-b border-white/5 hover:bg-white/5">
-                        <td class="p-3 text-white font-bold text-xs">${cert.alumno_nombre} ${cert.alumno_apellidos}</td>
+                        <td class="p-3 text-white font-bold text-xs">${cert.alumno_nombres || cert.alumno_nombre || ''} ${cert.alumno_apellidos || ''}</td>
                         <td class="p-3 font-mono text-xs text-slate-300">${cert.alumno_dni}</td>
                         <td class="p-3 text-xs text-slate-400">${cert.curso_nombre || 'S/D'}</td>
                         <td class="p-3 text-[10px] text-slate-400">${cert.created_at ? new Date(cert.created_at).toLocaleDateString('es-AR') : 'S/D'}</td>
@@ -732,29 +796,115 @@
 
         async function emitirCertificado(e) {
             e.preventDefault();
+            if (!aliadoId || !institutoActual) return alert("Error: Sesión de instituto no válida.");
+
+            const selectCurso = document.getElementById('cert-curso');
+            const cursoId = selectCurso.value;
+            const cursoNombre = selectCurso.options[selectCurso.selectedIndex].text;
+            const cursoCarga = selectCurso.options[selectCurso.selectedIndex].dataset.carga;
             
-            // FUNCIÓN VACÍA POR AHORA - SE PROGRAMARÁ EN EL SIGUIENTE PASO
-            // Aquí irá:
-            // 1. Validación de saldo de timbres
-            // 2. Generación del PDF con la credencial
-            // 3. Descuento de 1 timbre del saldo
-            // 4. Inserción en renmcycf_certificados_b2b
-            // 5. Envío por email/descarga
-            
-            alert("🚧 Función en desarrollo.\n\nEn el próximo paso se implementará:\n• Validación de saldo\n• Generación de PDF\n• Descuento de timbre\n• Registro en base de datos");
-            
-            // Placeholder temporal para que no quede a medias visualmente
+            const nombres = document.getElementById('cert-nombre').value.trim();
+            const apellidos = document.getElementById('cert-apellidos').value.trim();
+            const dni = document.getElementById('cert-dni').value.trim();
+
+            if (!cursoId) return alert("Debe seleccionar un curso válido.");
+
+            // 1. Validar Saldo de Timbres en Base de Datos (Seguridad Real)
             const btn = document.getElementById('btn-emitir');
-            const orig = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> PROCESANDO...';
+            const origHTML = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> VALIDANDO SALDO...';
             btn.disabled = true;
             lucide.createIcons();
-            
-            setTimeout(() => {
-                btn.innerHTML = orig;
+
+            try {
+                const { data: aliadoDB, error: errAliado } = await db.from('renmcycf_aliados').select('saldo_timbres').eq('id', aliadoId).single();
+                if (errAliado) throw new Error("Error al consultar saldo.");
+                if (!aliadoDB.saldo_timbres || aliadoDB.saldo_timbres <= 0) {
+                    throw new Error("Saldo Insuficiente. Adquiera más Timbres Digitales para continuar emitiendo.");
+                }
+
+                btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> GENERANDO CERTIFICADO...';
+                
+                // 2. Generar Identificadores Únicos
+                const hashCert = `ASARI-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+                const urlVerificacion = `https://renmcycf.com.ar/verificar.html?hash=${hashCert}`;
+                const fechaEmision = new Date().toLocaleDateString('es-AR');
+
+                // 3. Preparar DOM de la Plantilla PDF
+                document.getElementById('pdf-instituto').textContent = institutoActual.nombre;
+                const logoInst = document.getElementById('pdf-logo-instituto');
+                if (institutoActual.logo_url) {
+                    logoInst.src = institutoActual.logo_url;
+                    logoInst.classList.remove('hidden');
+                }
+                
+                document.getElementById('pdf-alumno').textContent = `${nombres} ${apellidos}`;
+                document.getElementById('pdf-dni').textContent = dni;
+                document.getElementById('pdf-curso').textContent = cursoNombre;
+                document.getElementById('pdf-carga').textContent = `Carga Horaria: ${cursoCarga || 'No especificada'}`;
+                document.getElementById('pdf-hash').textContent = hashCert;
+                document.getElementById('pdf-fecha').textContent = fechaEmision;
+
+                // Generar QR
+                const qrContainer = document.getElementById('pdf-qr-container');
+                qrContainer.innerHTML = '';
+                new QRCode(qrContainer, { text: urlVerificacion, width: 72, height: 72, colorDark: "#0f172a", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+
+                // 4. Esperar a que el QR se dibuje y renderizar Canvas
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                const renderZone = document.getElementById('cert-template');
+                // Forzar a renderZone a ser visible para html2canvas si es necesario, aunque sacarlo de la pantalla suele bastar.
+                const canvas = await html2canvas(renderZone, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+                
+                // 5. Crear PDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                pdf.addImage(imgData, 'JPEG', 0, 0, 297, 210);
+                
+                // 6. Subir PDF a Supabase Storage
+                btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> ENCRIPTANDO Y SUBIENDO...';
+                const pdfBlob = pdf.output('blob');
+                const pdfFileName = `B2B_${hashCert}.pdf`;
+                const { error: uploadError } = await db.storage.from('renmcycf-pdfs').upload(pdfFileName, pdfBlob, { cacheControl: '3600', upsert: true });
+                if (uploadError) throw new Error("Error al guardar el documento en la nube.");
+                const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${pdfFileName}`;
+
+                // 7. Transacción en Base de Datos (Insertar Emisión y Restar Timbre)
+                btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> REGISTRANDO TRAZABILIDAD...';
+                
+                const { error: insertError } = await db.from('renmcycf_certificados_b2b').insert([{
+                    aliado_id: aliadoId,
+                    curso_id: cursoId,
+                    alumno_nombres: nombres,
+                    alumno_apellidos: apellidos,
+                    alumno_dni: dni,
+                    hash_cert: hashCert,
+                    pdf_url: pdfUrl
+                }]);
+                if (insertError) throw new Error("Error al registrar en blockchain/base de datos.");
+
+                const { error: updateError } = await db.from('renmcycf_aliados').update({ saldo_timbres: aliadoDB.saldo_timbres - 1 }).eq('id', aliadoId);
+                if (updateError) throw new Error("Emisión registrada, pero hubo error al descontar timbre.");
+
+                // 8. Éxito
+                alert(`✅ CERTIFICADO EMITIDO EXITOSAMENTE\nHash: ${hashCert}\nSaldo actualizado.`);
+                
+                // Descargar automáticamente al usuario
+                pdf.save(`Certificado_ASARI_${dni}.pdf`);
+                
+                document.getElementById('form-certificado').reset();
+                await cargarDashboardInstituto(); // Refresca Timbres en header y cards
+                cargarCertificadosInstituto(); // Refresca tabla
+
+            } catch (err) {
+                alert(err.message);
+            } finally {
+                btn.innerHTML = origHTML;
                 btn.disabled = false;
                 lucide.createIcons();
-            }, 1500);
+            }
         }
 
         // ==========================================
