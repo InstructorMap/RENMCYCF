@@ -33,6 +33,89 @@
         .btn-gold { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #030712; font-weight: 900; transition: all 0.3s; }
         .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3); }
         .stat-number { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+
+        /* ========================================== */
+        /* MODO CLARO */
+        /* ========================================== */
+        body.light-theme {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(217, 119, 6, 0.06) 0%, transparent 50%);
+        }
+        body.light-theme .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        body.light-theme .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+        body.light-theme .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        body.light-theme input[type="text"], 
+        body.light-theme input[type="number"], 
+        body.light-theme input[type="email"], 
+        body.light-theme input[type="url"], 
+        body.light-theme input[type="password"], 
+        body.light-theme select, 
+        body.light-theme textarea {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+        body.light-theme input:focus, 
+        body.light-theme select:focus, 
+        body.light-theme textarea:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        }
+        body.light-theme th {
+            background: rgba(241, 245, 249, 0.9);
+            color: #475569;
+        }
+        body.light-theme tr {
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+        body.light-theme .sidebar-link {
+            color: #64748b;
+        }
+        body.light-theme .sidebar-link:hover {
+            color: #0f172a;
+            background: rgba(0, 0, 0, 0.04);
+        }
+        body.light-theme .sidebar-link.active {
+            color: #b45309;
+            background: rgba(217, 119, 6, 0.1);
+        }
+        body.light-theme .text-white {
+            color: #0f172a !important;
+        }
+        body.light-theme .text-slate-400 {
+            color: #64748b !important;
+        }
+        body.light-theme header {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+        body.light-theme .login-box {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+        body.light-theme #login-screen {
+            background: #f1f5f9;
+        }
+        body.light-theme .border-white\/5 {
+            border-color: rgba(0, 0, 0, 0.06) !important;
+        }
+        body.light-theme .bg-black\/20 {
+            background: rgba(0, 0, 0, 0.03) !important;
+        }
+        body.light-theme .text-transparent.bg-clip-text {
+            background-image: linear-gradient(to right, #0f172a, #475569) !important;
+        }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -55,10 +138,16 @@
 
     <!-- SIDEBAR -->
     <aside class="w-64 glass-panel m-4 mr-0 flex flex-col z-20 hidden md:flex border-r border-white/5">
-        <div class="h-28 flex flex-col justify-center px-6 border-b border-white/5 relative overflow-hidden">
+        <div class="h-28 flex items-center px-6 border-b border-white/5 relative overflow-hidden gap-3">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-blue-500"></div>
-            <div class="flex items-center gap-2 text-white font-black tracking-widest text-xl"><i data-lucide="building-2" class="text-yellow-500"></i> ASARI</div>
-            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">Portal Institucional</span>
+            <div class="w-12 h-12 rounded-xl bg-white/10 p-1 flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
+                <img id="sidebar-logo-img" src="" class="w-full h-full object-contain hidden">
+                <i data-lucide="building-2" id="sidebar-logo-icon" class="text-yellow-500 w-6 h-6"></i>
+            </div>
+            <div class="min-w-0">
+                <h3 class="text-white font-black tracking-wider text-sm truncate" id="sidebar-instituto-nombre">ASARI Core</h3>
+                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">Panel Institucional</span>
+            </div>
         </div>
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
             <div class="px-2 py-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-2">Gestión Institucional</div>
@@ -80,12 +169,20 @@
                 <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mt-0.5">ASARI CORE | PORTAL INSTITUCIONAL</p>
             </div>
             <div class="flex items-center gap-4">
+                <!-- Botón Selector Tema -->
+                <button onclick="toggleTema()" id="btn-theme-toggle" class="p-2.5 rounded-xl border border-white/10 hover:bg-white/10 text-slate-300 transition-colors" title="Cambiar tema">
+                    <i data-lucide="sun" id="theme-icon" class="w-4 h-4"></i>
+                </button>
+
                 <div class="text-right">
                     <p class="text-xs font-bold text-white" id="header-instituto">Cargando...</p>
                     <p class="text-[10px] text-yellow-500 font-mono font-bold" id="header-timbres">Saldo: 0 Timbres</p>
                 </div>
-                <div class="w-10 h-10 rounded-full bg-yellow-500/20 border border-yellow-500/40 flex items-center justify-center">
-                    <i data-lucide="building" class="w-5 h-5 text-yellow-400"></i>
+
+                <!-- Avatar con Logo -->
+                <div class="w-11 h-11 rounded-xl bg-white p-1 border border-yellow-500/40 flex items-center justify-center overflow-hidden shadow-sm shrink-0">
+                    <img id="header-logo-img" src="" class="w-full h-full object-contain hidden">
+                    <i data-lucide="building" id="header-logo-icon" class="w-5 h-5 text-slate-700"></i>
                 </div>
             </div>
         </header>
@@ -242,6 +339,32 @@
         let aliadoId = null;
 
         // ==========================================
+        // TEMA CLARO / OSCURO
+        // ==========================================
+        function aplicarTemaGuardado() {
+            const tema = localStorage.getItem('asari_instituto_theme') || 'dark';
+            const icon = document.getElementById('theme-icon');
+            if (tema === 'light') {
+                document.body.classList.add('light-theme');
+                if (icon) icon.setAttribute('data-lucide', 'moon');
+            } else {
+                document.body.classList.remove('light-theme');
+                if (icon) icon.setAttribute('data-lucide', 'sun');
+            }
+            lucide.createIcons();
+        }
+
+        function toggleTema() {
+            const isLight = document.body.classList.toggle('light-theme');
+            localStorage.setItem('asari_instituto_theme', isLight ? 'light' : 'dark');
+            const icon = document.getElementById('theme-icon');
+            if (icon) {
+                icon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
+                lucide.createIcons();
+            }
+        }
+
+        // ==========================================
         // 1. AUTENTICACIÓN DE ALTA SEGURIDAD
         // ==========================================
         async function iniciarSesion(e) {
@@ -316,6 +439,28 @@
 
             institutoActual = aliado;
 
+            // Inyectar Logo Institucional
+            if (aliado.logo_url) {
+                const headerImg = document.getElementById('header-logo-img');
+                const headerIcon = document.getElementById('header-logo-icon');
+                if (headerImg && headerIcon) {
+                    headerImg.src = aliado.logo_url;
+                    headerImg.classList.remove('hidden');
+                    headerIcon.classList.add('hidden');
+                }
+
+                const sideImg = document.getElementById('sidebar-logo-img');
+                const sideIcon = document.getElementById('sidebar-logo-icon');
+                if (sideImg && sideIcon) {
+                    sideImg.src = aliado.logo_url;
+                    sideImg.classList.remove('hidden');
+                    sideIcon.classList.add('hidden');
+                }
+            }
+
+            const sideName = document.getElementById('sidebar-instituto-nombre');
+            if (sideName) sideName.textContent = aliado.nombre || 'Mi Instituto';
+
             // Actualizar header
             document.getElementById('header-instituto').textContent = aliado.nombre || 'Instituto';
             document.getElementById('header-timbres').textContent = `Saldo: ${aliado.saldo_timbres || 0} Timbres`;
@@ -324,6 +469,7 @@
             // Cargar dashboard inicial
             await cargarDashboardInstituto();
             showTab('dashboard');
+            lucide.createIcons();
         }
 
         function mostrarErrorLogin(mensaje) {
@@ -346,6 +492,25 @@
             document.getElementById('btn-login').innerHTML = 'INGRESAR';
             document.getElementById('btn-login').disabled = false;
             document.getElementById('login-screen').style.display = 'flex';
+            
+            // Restaurar logos por defecto
+            const headerImg = document.getElementById('header-logo-img');
+            const headerIcon = document.getElementById('header-logo-icon');
+            if (headerImg && headerIcon) {
+                headerImg.classList.add('hidden');
+                headerImg.src = '';
+                headerIcon.classList.remove('hidden');
+            }
+            const sideImg = document.getElementById('sidebar-logo-img');
+            const sideIcon = document.getElementById('sidebar-logo-icon');
+            if (sideImg && sideIcon) {
+                sideImg.classList.add('hidden');
+                sideImg.src = '';
+                sideIcon.classList.remove('hidden');
+            }
+            const sideName = document.getElementById('sidebar-instituto-nombre');
+            if (sideName) sideName.textContent = 'ASARI Core';
+            
             lucide.createIcons();
         }
 
@@ -596,6 +761,7 @@
         // INIT
         // ==========================================
         window.addEventListener('DOMContentLoaded', async () => {
+            aplicarTemaGuardado();
             await verificarSesion();
             lucide.createIcons();
         });
