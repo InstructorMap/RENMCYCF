@@ -829,17 +829,31 @@
                 const hashCert = `ASARI-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
                 // ✅ QR apuntando a certificado.html (verificador público)
-                // Usa ruta relativa dinámica: funciona en cualquier dominio/subcarpeta
                 const urlVerificacion = `${window.location.origin}${window.location.pathname.replace('instituto.html', '')}certificado.html?hash=${hashCert}`;
 
                 const fechaEmision = new Date().toLocaleDateString('es-AR');
 
                 // 3. Preparar DOM de la Plantilla PDF
+                // Logo Institución B2B
                 document.getElementById('pdf-instituto').textContent = institutoActual.nombre;
                 const logoInst = document.getElementById('pdf-logo-instituto');
                 if (institutoActual.logo_url) {
                     logoInst.src = institutoActual.logo_url;
                     logoInst.classList.remove('hidden');
+                }
+                
+                // Traer Logo Oficial RENMCYCF (Consulta rápida)
+                const { data: configRenm } = await db.from('renmcycf_config').select('logo_url').eq('id', 1).maybeSingle();
+                const iconRenm = document.querySelector('#cert-template .lucide-shield-check.text-\\[\\#d4af37\\]');
+                if (configRenm && configRenm.logo_url) {
+                    // Creamos el img dinámicamente y ocultamos el icono por defecto
+                    if(iconRenm) {
+                        const imgOficial = document.createElement('img');
+                        imgOficial.src = configRenm.logo_url;
+                        imgOficial.className = 'w-16 h-16 object-contain';
+                        iconRenm.parentNode.appendChild(imgOficial);
+                        iconRenm.classList.add('hidden');
+                    }
                 }
                 
                 document.getElementById('pdf-alumno').textContent = `${nombres} ${apellidos}`;
@@ -849,16 +863,31 @@
                 document.getElementById('pdf-hash').textContent = hashCert;
                 document.getElementById('pdf-fecha').textContent = fechaEmision;
 
-                // Generar QR
+                // Generar QR de ALTA RESOLUCIÓN Y ALTA CORRECCIÓN (Nivel H)
                 const qrContainer = document.getElementById('pdf-qr-container');
                 qrContainer.innerHTML = '';
-                new QRCode(qrContainer, { text: urlVerificacion, width: 72, height: 72, colorDark: "#0f172a", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+                // Agrandamos el contenedor temporalmente
+                qrContainer.className = "w-32 h-32 bg-white border border-slate-300 p-2 flex-shrink-0 flex items-center justify-center";
+                
+                new QRCode(qrContainer, { 
+                    text: urlVerificacion, 
+                    width: 110, 
+                    height: 110, 
+                    colorDark: "#030712", 
+                    colorLight: "#ffffff", 
+                    correctLevel: QRCode.CorrectLevel.H // Máxima corrección de errores para cámaras difíciles
+                });
 
-                // 4. Esperar a que el QR se dibuje y renderizar Canvas
-                await new Promise(resolve => setTimeout(resolve, 500));
+                // 4. Esperar a que el QR se dibuje bien y renderizar Canvas
+                await new Promise(resolve => setTimeout(resolve, 800)); // Damos un poco más de tiempo al render
                 
                 const renderZone = document.getElementById('cert-template');
-                const canvas = await html2canvas(renderZone, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+                const canvas = await html2canvas(renderZone, { 
+                    scale: 3, // Mayor calidad (de 2 a 3)
+                    useCORS: true, 
+                    backgroundColor: '#ffffff',
+                    logging: false
+                });
                 
                 // 5. Crear PDF
                 const { jsPDF } = window.jspdf;
