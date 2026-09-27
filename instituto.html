@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASARI Core · Portal Institucional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon-blue: #3b82f6; --neon-gold: #fbbf24; --glass-bg: rgba(15, 23, 42, 0.6); --glass-border: rgba(255, 255, 255, 0.08); }
+        body { font-family: 'Outfit', sans-serif; background-color: #030712; color: #e2e8f0; background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.10) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(217, 119, 6, 0.05) 0%, transparent 50%); background-attachment: fixed; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 16px; }
+        .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 12px; transition: all 0.3s ease; }
+        .glass-card:hover { border-color: rgba(255,255,255,0.15); }
+        .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; transition: all 0.3s; color: #94a3b8; cursor: pointer; }
+        .sidebar-link:hover { color: white; background: rgba(255,255,255,0.05); }
+        .sidebar-link.active { color: var(--neon-gold); background: rgba(217, 119, 6, 0.1); border-left: 3px solid var(--neon-gold); }
+        input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="password"], select, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; padding: 10px 12px; color: white; outline: none; transition: all 0.3s; font-size: 0.85rem; }
+        input:focus, select:focus, textarea:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
+        label { display: block; font-size: 0.65rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        th { background: rgba(0,0,0,0.4); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
+        tr { border-bottom: 1px solid var(--glass-border); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #020617; } ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        #login-screen { position: fixed; inset: 0; z-index: 100; background: #030712; display: flex; align-items: center; justify-content: center; }
+        .login-box { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 40px; border-radius: 20px; text-align: center; width: 100%; max-width: 400px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .btn-gold { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #030712; font-weight: 900; transition: all 0.3s; }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3); }
+        .stat-number { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+    <!-- LOGIN -->
+    <div id="login-screen">
+        <div class="login-box">
+            <div class="w-20 h-20 bg-yellow-900/30 border border-yellow-500/50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(251,191,36,0.3)]">
+                <i data-lucide="building-2" class="w-10 h-10 text-yellow-400"></i>
+            </div>
+            <h1 class="text-2xl font-black text-white mb-2 tracking-widest uppercase">ASARI Core</h1>
+            <p class="text-xs text-slate-400 mb-8 uppercase font-bold">Portal Institucional B2B</p>
+            <form onsubmit="iniciarSesion(event)" class="space-y-4">
+                <div><input type="email" id="login-email" placeholder="Correo Institucional" required class="text-center"></div>
+                <div><input type="password" id="login-password" placeholder="Clave de Seguridad" required class="text-center"></div>
+                <div id="login-error" class="text-red-400 text-xs font-bold hidden bg-red-900/20 p-2 rounded border border-red-500/30"></div>
+                <button type="submit" id="btn-login" class="btn-gold w-full uppercase tracking-widest py-3 rounded-lg">INGRESAR</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 glass-panel m-4 mr-0 flex flex-col z-20 hidden md:flex border-r border-white/5">
+        <div class="h-28 flex flex-col justify-center px-6 border-b border-white/5 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-blue-500"></div>
+            <div class="flex items-center gap-2 text-white font-black tracking-widest text-xl"><i data-lucide="building-2" class="text-yellow-500"></i> ASARI</div>
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">Portal Institucional</span>
+        </div>
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+            <div class="px-2 py-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-2">Gestión Institucional</div>
+            <button onclick="showTab('dashboard')" id="nav-dashboard" class="sidebar-link active w-full"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</button>
+            <button onclick="showTab('cursos')" id="nav-cursos" class="sidebar-link w-full"><i data-lucide="book-open-check" class="w-4 h-4"></i> Gestión de Cursos</button>
+            <button onclick="showTab('certificados')" id="nav-certificados" class="sidebar-link w-full"><i data-lucide="award" class="w-4 h-4"></i> Emisión de Certificados</button>
+        </nav>
+        <div class="p-4 border-t border-white/5">
+            <button onclick="cerrarSesion()" class="w-full text-slate-400 hover:text-red-400 transition-colors flex items-center justify-center gap-2 border border-slate-700/50 hover:border-red-500/50 px-3 py-2 rounded-lg text-xs font-bold uppercase">
+                <i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesión
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 relative">
+        <header class="h-20 flex justify-between items-center px-8 z-10 border-b border-white/5 bg-black/20">
+            <div>
+                <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400" id="page-title">Dashboard</h2>
+                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mt-0.5">ASARI CORE | PORTAL INSTITUCIONAL</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-xs font-bold text-white" id="header-instituto">Cargando...</p>
+                    <p class="text-[10px] text-yellow-500 font-mono font-bold" id="header-timbres">Saldo: 0 Timbres</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-yellow-500/20 border border-yellow-500/40 flex items-center justify-center">
+                    <i data-lucide="building" class="w-5 h-5 text-yellow-400"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 z-10">
+
+            <!-- DASHBOARD -->
+            <div id="view-dashboard" class="tab-content active space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 border-yellow-500/30">
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-yellow-500/80 text-xs font-bold uppercase tracking-wider">Saldo de Timbres</p>
+                            <i data-lucide="stamp" class="w-6 h-6 text-yellow-400"></i>
+                        </div>
+                        <h3 class="text-4xl font-black text-yellow-400 stat-number" id="stat-timbres">0</h3>
+                        <p class="text-[10px] text-slate-500 mt-2">Cada certificado emitido consume 1 timbre.</p>
+                    </div>
+                    <div class="glass-card p-6 border-emerald-500/30">
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-emerald-400/80 text-xs font-bold uppercase tracking-wider">Certificados Emitidos</p>
+                            <i data-lucide="award" class="w-6 h-6 text-emerald-400"></i>
+                        </div>
+                        <h3 class="text-4xl font-black text-emerald-400 stat-number" id="stat-certificados">0</h3>
+                        <p class="text-[10px] text-slate-500 mt-2">Total histórico de emisiones.</p>
+                    </div>
+                    <div class="glass-card p-6 border-blue-500/30">
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-blue-400/80 text-xs font-bold uppercase tracking-wider">Cursos Aprobados</p>
+                            <i data-lucide="book-check" class="w-6 h-6 text-blue-400"></i>
+                        </div>
+                        <h3 class="text-4xl font-black text-blue-400 stat-number" id="stat-cursos">0</h3>
+                        <p class="text-[10px] text-slate-500 mt-2">Programas habilitados para certificar.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 border-yellow-500/40 text-center">
+                    <div class="w-20 h-20 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="shopping-cart" class="w-10 h-10 text-yellow-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-2">¿Necesitás más Timbres?</h3>
+                    <p class="text-sm text-slate-400 mb-6 max-w-md mx-auto">Adquirí paquetes de timbres digitales para seguir emitiendo certificaciones con Doble Sello ASARI.</p>
+                    <button onclick="contactarSoporte()" class="btn-gold px-10 py-4 rounded-xl text-lg uppercase tracking-widest inline-flex items-center gap-3">
+                        <i data-lucide="message-circle" class="w-6 h-6"></i> Comprar Timbres (Contactar Soporte)
+                    </button>
+                </div>
+            </div>
+
+            <!-- GESTIÓN DE CURSOS -->
+            <div id="view-cursos" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 xl:col-span-1">
+                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2 flex items-center gap-2">
+                            <i data-lucide="plus-circle" class="w-5 h-5 text-yellow-400"></i> Proponer Nuevo Curso
+                        </h3>
+                        <form id="form-curso-b2b" onsubmit="proponerCurso(event)" class="space-y-4">
+                            <div><label>Nombre del Curso</label><input type="text" id="curso-nombre" required placeholder="Ej: Criminalística Forense Avanzada"></div>
+                            <div><label>Carga Horaria</label><input type="text" id="curso-carga" required placeholder="Ej: 120 horas"></div>
+                            <div><label>Cuerpo Docente</label><textarea id="curso-docentes" rows="2" required placeholder="Ej: Lic. Juan Pérez, Dr. María González"></textarea></div>
+                            <div><label>Link al Programa (PDF)</label><input type="url" id="curso-pdf" required placeholder="https://drive.google.com/..."></div>
+                            <button type="submit" id="btn-proponer-curso" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+                                <i data-lucide="send" class="w-4 h-4"></i> ENVIAR A AUDITORÍA
+                            </button>
+                        </form>
+                    </div>
+                    <div class="glass-card p-6 xl:col-span-2">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-white font-bold">Mis Cursos Propuestos</h3>
+                            <button onclick="cargarCursosInstituto()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="p-3">Curso</th>
+                                        <th class="p-3">Docentes</th>
+                                        <th class="p-3">Temario</th>
+                                        <th class="p-3">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cursos-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EMISIÓN DE CERTIFICADOS -->
+            <div id="view-certificados" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 xl:col-span-1 border-yellow-500/30">
+                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2 flex items-center gap-2">
+                            <i data-lucide="file-badge" class="w-5 h-5 text-yellow-400"></i> Emitir Certificado
+                        </h3>
+                        <div id="aviso-sin-cursos" class="hidden bg-amber-900/20 border border-amber-500/30 rounded-xl p-4 mb-4 text-center">
+                            <i data-lucide="alert-triangle" class="w-8 h-8 text-amber-400 mx-auto mb-2"></i>
+                            <p class="text-amber-300 text-xs font-bold">Debe aprobar un curso primero</p>
+                            <p class="text-amber-400/70 text-[10px] mt-1">Solo podés emitir certificados de cursos aprobados.</p>
+                        </div>
+                        <form id="form-certificado" onsubmit="emitirCertificado(event)" class="space-y-4">
+                            <div>
+                                <label>Curso Aprobado</label>
+                                <select id="cert-curso" required>
+                                    <option value="">-- Seleccionar Curso --</option>
+                                </select>
+                            </div>
+                            <div><label>Nombre del Alumno</label><input type="text" id="cert-nombre" required placeholder="Ej: Juan"></div>
+                            <div><label>Apellidos del Alumno</label><input type="text" id="cert-apellidos" required placeholder="Ej: Pérez"></div>
+                            <div><label>DNI del Alumno</label><input type="text" id="cert-dni" required placeholder="Ej: 30123456"></div>
+                            <div class="bg-black/30 p-3 rounded-lg border border-yellow-500/20 flex items-center gap-3">
+                                <i data-lucide="info" class="w-5 h-5 text-yellow-400 flex-shrink-0"></i>
+                                <p class="text-[10px] text-slate-300">Cada emisión consume <strong class="text-yellow-400">1 Timbre</strong> de su saldo institucional.</p>
+                            </div>
+                            <button type="submit" id="btn-emitir" class="btn-gold w-full py-3 rounded-xl uppercase tracking-widest flex items-center justify-center gap-2">
+                                <i data-lucide="award" class="w-5 h-5"></i> Emitir Certificado (Costo: 1 Timbre)
+                            </button>
+                        </form>
+                    </div>
+                    <div class="glass-card p-6 xl:col-span-2">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-white font-bold">Historial de Certificados Emitidos</h3>
+                            <button onclick="cargarCertificadosInstituto()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="p-3">Alumno</th>
+                                        <th class="p-3">DNI</th>
+                                        <th class="p-3">Curso</th>
+                                        <th class="p-3">Fecha</th>
+                                        <th class="p-3 text-right">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="certificados-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // ==========================================
+        // CONFIGURACIÓN DE SUPABASE
+        // ==========================================
+        lucide.createIcons();
+        const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
+        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
+        const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
+
+        let institutoActual = null;
+        let aliadoId = null;
+
+        // ==========================================
+        // 1. AUTENTICACIÓN DE ALTA SEGURIDAD
+        // ==========================================
+        async function iniciarSesion(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-password').value.trim();
+            const btn = document.getElementById('btn-login');
+            const errorDiv = document.getElementById('login-error');
+            
+            errorDiv.classList.add('hidden');
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin mx-auto"></i>'; 
+            btn.disabled = true;
+
+            try {
+                const { error } = await db.auth.signInWithPassword({ email, password: pass });
+                if (error) throw error;
+                await verificarSesion();
+            } catch (err) {
+                errorDiv.innerText = "Credenciales incorrectas.";
+                errorDiv.classList.remove('hidden');
+                btn.innerHTML = 'INGRESAR'; 
+                btn.disabled = false;
+            }
+            lucide.createIcons();
+        }
+
+        async function verificarSesion() {
+            const { data: { session }, error } = await db.auth.getSession();
+            if (error || !session) { 
+                document.getElementById('login-screen').style.display = 'flex'; 
+                return; 
+            }
+            
+            // Consulta de rol con filtro estricto
+            const { data: rolData, error: rolError } = await db.from('renmcycf_roles')
+                .select('rol, activo, nombres, apellidos, aliado_id')
+                .eq('user_id', session.user.id)
+                .single();
+            
+            if (rolError || !rolData || !rolData.activo) {
+                await db.auth.signOut();
+                mostrarErrorLogin("Acceso denegado. Cuenta inactiva o inexistente.");
+                return;
+            }
+
+            // FILTRO ESTRICTO: Solo directores
+            if (rolData.rol !== 'director') {
+                await db.auth.signOut();
+                mostrarErrorLogin("Acceso denegado. Esta cuenta no tiene privilegios institucionales.");
+                return;
+            }
+
+            if (!rolData.aliado_id) {
+                await db.auth.signOut();
+                mostrarErrorLogin("Acceso denegado. Su cuenta no está vinculada a ninguna institución.");
+                return;
+            }
+
+            aliadoId = rolData.aliado_id;
+
+            // Cargar datos del instituto
+            const { data: aliado, error: aliadoError } = await db.from('renmcycf_aliados')
+                .select('*')
+                .eq('id', aliadoId)
+                .single();
+
+            if (aliadoError || !aliado) {
+                await db.auth.signOut();
+                mostrarErrorLogin("Error: No se encontró la institución asociada.");
+                return;
+            }
+
+            institutoActual = aliado;
+
+            // Actualizar header
+            document.getElementById('header-instituto').textContent = aliado.nombre || 'Instituto';
+            document.getElementById('header-timbres').textContent = `Saldo: ${aliado.saldo_timbres || 0} Timbres`;
+            document.getElementById('login-screen').style.display = 'none';
+
+            // Cargar dashboard inicial
+            await cargarDashboardInstituto();
+            showTab('dashboard');
+        }
+
+        function mostrarErrorLogin(mensaje) {
+            const errorDiv = document.getElementById('login-error');
+            errorDiv.innerText = mensaje;
+            errorDiv.classList.remove('hidden');
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('btn-login').innerHTML = 'INGRESAR';
+            document.getElementById('btn-login').disabled = false;
+            lucide.createIcons();
+        }
+
+        async function cerrarSesion() {
+            await db.auth.signOut();
+            institutoActual = null;
+            aliadoId = null;
+            document.getElementById('login-email').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-error').classList.add('hidden');
+            document.getElementById('btn-login').innerHTML = 'INGRESAR';
+            document.getElementById('btn-login').disabled = false;
+            document.getElementById('login-screen').style.display = 'flex';
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // 2. NAVEGACIÓN
+        // ==========================================
+        function showTab(id) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById('view-' + id).classList.add('active');
+            document.getElementById('nav-' + id)?.classList.add('active');
+            
+            const titles = { 
+                'dashboard': 'Dashboard Institucional', 
+                'cursos': 'Gestión de Cursos', 
+                'certificados': 'Emisión de Certificados' 
+            };
+            document.getElementById('page-title').textContent = titles[id] || id;
+            
+            if (id === 'dashboard') cargarDashboardInstituto();
+            if (id === 'cursos') cargarCursosInstituto();
+            if (id === 'certificados') cargarCertificadosInstituto();
+        }
+
+        // ==========================================
+        // 3. DASHBOARD INSTITUCIONAL
+        // ==========================================
+        async function cargarDashboardInstituto() {
+            if (!aliadoId) return;
+
+            try {
+                // Refrescar datos del aliado (por si cambió el saldo)
+                const { data: aliado } = await db.from('renmcycf_aliados')
+                    .select('saldo_timbres')
+                    .eq('id', aliadoId)
+                    .single();
+
+                if (aliado) {
+                    document.getElementById('stat-timbres').textContent = aliado.saldo_timbres || 0;
+                    document.getElementById('header-timbres').textContent = `Saldo: ${aliado.saldo_timbres || 0} Timbres`;
+                }
+
+                // Contar certificados emitidos
+                const { count: certCount } = await db.from('renmcycf_certificados_b2b')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('aliado_id', aliadoId);
+                document.getElementById('stat-certificados').textContent = certCount || 0;
+
+                // Contar cursos aprobados
+                const { count: cursosCount } = await db.from('renmcycf_aliados_cursos')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('aliado_id', aliadoId)
+                    .eq('estado', 'APROBADO');
+                document.getElementById('stat-cursos').textContent = cursosCount || 0;
+
+            } catch (err) { 
+                console.error("Error Dashboard:", err); 
+            }
+        }
+
+        function contactarSoporte() {
+            const mensaje = encodeURIComponent(`Hola, soy del instituto "${institutoActual?.nombre || ''}". Necesito adquirir más timbres digitales para emitir certificados B2B. Mi saldo actual es de ${institutoActual?.saldo_timbres || 0} timbres.`);
+            // Número de soporte - ajustar según configuración
+            window.open(`https://wa.me/5490000000000?text=${mensaje}`, '_blank');
+        }
+
+        // ==========================================
+        // 4. GESTIÓN DE CURSOS
+        // ==========================================
+        async function cargarCursosInstituto() {
+            const tbody = document.getElementById('cursos-body');
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">Cargando...</td></tr>';
+
+            try {
+                const { data: cursos, error } = await db.from('renmcycf_aliados_cursos')
+                    .select('*')
+                    .eq('aliado_id', aliadoId)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!cursos || cursos.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">No hay cursos propuestos aún.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = cursos.map(c => `
+                <tr class="border-b border-white/5 hover:bg-white/5">
+                    <td class="p-3">
+                        <span class="text-white font-bold block text-sm">${c.nombre_curso}</span>
+                        <span class="text-[10px] text-slate-400 block"><i data-lucide="clock" class="inline w-3 h-3"></i> ${c.carga_horaria || 'S/D'}</span>
+                    </td>
+                    <td class="p-3 text-[10px] text-blue-400">
+                        <i data-lucide="users" class="inline w-3 h-3"></i> ${c.cuerpo_docente || 'S/D'}
+                    </td>
+                    <td class="p-3 text-xs">
+                        ${c.programa_url ? `<a href="${c.programa_url}" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1"><i data-lucide="file-text" class="w-4 h-4"></i> Ver PDF</a>` : '<span class="text-slate-500">Sin archivo</span>'}
+                    </td>
+                    <td class="p-3">
+                        <span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${c.estado==='APROBADO'?'bg-emerald-900/30 text-emerald-400':(c.estado==='RECHAZADO'?'bg-red-900/30 text-red-400':'bg-amber-900/30 text-amber-400')}">
+                            ${c.estado || 'PENDIENTE'}
+                        </span>
+                    </td>
+                </tr>`).join('');
+                lucide.createIcons();
+
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`;
+            }
+        }
+
+        async function proponerCurso(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-proponer-curso');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> ENVIANDO...';
+            btn.disabled = true;
+            lucide.createIcons();
+
+            try {
+                const payload = {
+                    aliado_id: aliadoId,
+                    nombre_curso: document.getElementById('curso-nombre').value.trim(),
+                    carga_horaria: document.getElementById('curso-carga').value.trim(),
+                    cuerpo_docente: document.getElementById('curso-docentes').value.trim(),
+                    programa_url: document.getElementById('curso-pdf').value.trim(),
+                    estado: 'PENDIENTE'
+                };
+
+                const { error } = await db.from('renmcycf_aliados_cursos').insert([payload]);
+                if (error) throw error;
+
+                alert("✅ Curso propuesto. Queda pendiente de auditoría por el Comité ASARI.");
+                document.getElementById('form-curso-b2b').reset();
+                cargarCursosInstituto();
+
+            } catch (err) {
+                alert("Error al proponer curso: " + err.message);
+            } finally {
+                btn.innerHTML = orig;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        // ==========================================
+        // 5. EMISIÓN DE CERTIFICADOS
+        // ==========================================
+        async function cargarCertificadosInstituto() {
+            const tbody = document.getElementById('certificados-body');
+            const selectCurso = document.getElementById('cert-curso');
+            const aviso = document.getElementById('aviso-sin-cursos');
+            const btnEmitir = document.getElementById('btn-emitir');
+
+            if (!tbody || !selectCurso) return;
+
+            tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">Cargando...</td></tr>';
+            selectCurso.innerHTML = '<option value="">-- Seleccionar Curso --</option>';
+
+            try {
+                // Cargar cursos APROBADOS para el select
+                const { data: cursosAprobados, error: errCursos } = await db.from('renmcycf_aliados_cursos')
+                    .select('id, nombre_curso, carga_horaria')
+                    .eq('aliado_id', aliadoId)
+                    .eq('estado', 'APROBADO');
+
+                if (errCursos) throw errCursos;
+
+                if (!cursosAprobados || cursosAprobados.length === 0) {
+                    aviso.classList.remove('hidden');
+                    selectCurso.disabled = true;
+                    btnEmitir.disabled = true;
+                    btnEmitir.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    aviso.classList.add('hidden');
+                    selectCurso.disabled = false;
+                    btnEmitir.disabled = false;
+                    btnEmitir.classList.remove('opacity-50', 'cursor-not-allowed');
+                    
+                    cursosAprobados.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id;
+                        opt.textContent = c.nombre_curso;
+                        opt.dataset.carga = c.carga_horaria || '';
+                        selectCurso.appendChild(opt);
+                    });
+                }
+
+                // Cargar historial de certificados
+                const { data: certificados, error: errCert } = await db.from('renmcycf_certificados_b2b')
+                    .select('*')
+                    .eq('aliado_id', aliadoId)
+                    .order('created_at', { ascending: false });
+
+                if (errCert) throw errCert;
+
+                if (!certificados || certificados.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">Aún no se emitieron certificados.</td></tr>';
+                } else {
+                    tbody.innerHTML = certificados.map(cert => `
+                    <tr class="border-b border-white/5 hover:bg-white/5">
+                        <td class="p-3 text-white font-bold text-xs">${cert.alumno_nombre} ${cert.alumno_apellidos}</td>
+                        <td class="p-3 font-mono text-xs text-slate-300">${cert.alumno_dni}</td>
+                        <td class="p-3 text-xs text-slate-400">${cert.curso_nombre || 'S/D'}</td>
+                        <td class="p-3 text-[10px] text-slate-400">${cert.created_at ? new Date(cert.created_at).toLocaleDateString('es-AR') : 'S/D'}</td>
+                        <td class="p-3 text-right">
+                            ${cert.pdf_url ? `<a href="${cert.pdf_url}" target="_blank" class="bg-blue-500/20 text-blue-400 p-1.5 rounded hover:bg-blue-500/40 inline-block" title="Descargar PDF"><i data-lucide="download" class="w-4 h-4"></i></a>` : '<span class="text-slate-500 text-[10px]">Sin PDF</span>'}
+                        </td>
+                    </tr>`).join('');
+                    lucide.createIcons();
+                }
+
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`;
+            }
+        }
+
+        async function emitirCertificado(e) {
+            e.preventDefault();
+            
+            // FUNCIÓN VACÍA POR AHORA - SE PROGRAMARÁ EN EL SIGUIENTE PASO
+            // Aquí irá:
+            // 1. Validación de saldo de timbres
+            // 2. Generación del PDF con la credencial
+            // 3. Descuento de 1 timbre del saldo
+            // 4. Inserción en renmcycf_certificados_b2b
+            // 5. Envío por email/descarga
+            
+            alert("🚧 Función en desarrollo.\n\nEn el próximo paso se implementará:\n• Validación de saldo\n• Generación de PDF\n• Descuento de timbre\n• Registro en base de datos");
+            
+            // Placeholder temporal para que no quede a medias visualmente
+            const btn = document.getElementById('btn-emitir');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> PROCESANDO...';
+            btn.disabled = true;
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                btn.innerHTML = orig;
+                btn.disabled = false;
+                lucide.createIcons();
+            }, 1500);
+        }
+
+        // ==========================================
+        // INIT
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', async () => {
+            await verificarSesion();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
