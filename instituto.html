@@ -11,6 +11,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --neon-blue: #3b82f6; --neon-gold: #fbbf24; --glass-bg: rgba(15, 23, 42, 0.6); --glass-border: rgba(255, 255, 255, 0.08); }
@@ -275,34 +278,72 @@
             <!-- EMISIÓN DE CERTIFICADOS -->
             <div id="view-certificados" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                    <div class="glass-card p-6 xl:col-span-1 border-yellow-500/30">
-                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2 flex items-center gap-2">
-                            <i data-lucide="file-badge" class="w-5 h-5 text-yellow-400"></i> Emitir Certificado
-                        </h3>
-                        <div id="aviso-sin-cursos" class="hidden bg-amber-900/20 border border-amber-500/30 rounded-xl p-4 mb-4 text-center">
-                            <i data-lucide="alert-triangle" class="w-8 h-8 text-amber-400 mx-auto mb-2"></i>
-                            <p class="text-amber-300 text-xs font-bold">Debe aprobar un curso primero</p>
-                            <p class="text-amber-400/70 text-[10px] mt-1">Solo podés emitir certificados de cursos aprobados.</p>
+                    <div class="xl:col-span-1 space-y-6">
+                        <!-- EMISIÓN INDIVIDUAL -->
+                        <div class="glass-card p-6 border-yellow-500/30">
+                            <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2 flex items-center gap-2">
+                                <i data-lucide="user" class="w-5 h-5 text-yellow-400"></i> Emisión Individual
+                            </h3>
+                            <div id="aviso-sin-cursos" class="hidden bg-amber-900/20 border border-amber-500/30 rounded-xl p-4 mb-4 text-center">
+                                <i data-lucide="alert-triangle" class="w-8 h-8 text-amber-400 mx-auto mb-2"></i>
+                                <p class="text-amber-300 text-xs font-bold">Debe aprobar un curso primero</p>
+                                <p class="text-amber-400/70 text-[10px] mt-1">Solo podés emitir certificados de cursos aprobados.</p>
+                            </div>
+                            <form id="form-certificado" onsubmit="emitirCertificado(event)" class="space-y-4">
+                                <div>
+                                    <label>Curso Aprobado</label>
+                                    <select id="cert-curso" required>
+                                        <option value="">-- Seleccionar Curso --</option>
+                                    </select>
+                                </div>
+                                <div><label>Nombre del Alumno</label><input type="text" id="cert-nombre" required placeholder="Ej: Juan"></div>
+                                <div><label>Apellidos del Alumno</label><input type="text" id="cert-apellidos" required placeholder="Ej: Pérez"></div>
+                                <div><label>DNI del Alumno</label><input type="text" id="cert-dni" required placeholder="Ej: 30123456"></div>
+                                <div class="bg-black/30 p-3 rounded-lg border border-yellow-500/20 flex items-center gap-3">
+                                    <i data-lucide="info" class="w-5 h-5 text-yellow-400 flex-shrink-0"></i>
+                                    <p class="text-[10px] text-slate-300">Cada emisión consume <strong class="text-yellow-400">1 Timbre</strong> de su saldo institucional.</p>
+                                </div>
+                                <button type="submit" id="btn-emitir" class="btn-gold w-full py-3 rounded-xl uppercase tracking-widest flex items-center justify-center gap-2">
+                                    <i data-lucide="award" class="w-5 h-5"></i> Emitir Certificado (Costo: 1 Timbre)
+                                </button>
+                            </form>
                         </div>
-                        <form id="form-certificado" onsubmit="emitirCertificado(event)" class="space-y-4">
-                            <div>
-                                <label>Curso Aprobado</label>
-                                <select id="cert-curso" required>
-                                    <option value="">-- Seleccionar Curso --</option>
-                                </select>
+
+                        <!-- EMISIÓN MASIVA -->
+                        <div class="glass-card p-6 border-emerald-500/30 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><i data-lucide="users" class="w-20 h-20 text-emerald-500"></i></div>
+                            <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2 flex items-center gap-2 relative z-10">
+                                <i data-lucide="file-spreadsheet" class="w-5 h-5 text-emerald-400"></i> Emisión Masiva (Excel)
+                            </h3>
+                            
+                            <div class="space-y-4 relative z-10">
+                                <button type="button" onclick="descargarPlantillaExcel()" class="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-emerald-400 text-xs font-bold py-2 rounded-lg flex justify-center items-center gap-2 transition-colors">
+                                    <i data-lucide="download" class="w-4 h-4"></i> 1. Descargar Plantilla Modelo
+                                </button>
+
+                                <div class="bg-black/30 p-4 rounded-xl border border-white/5">
+                                    <label class="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-2">2. Subir Archivo Completo</label>
+                                    <input type="file" id="file-excel-masivo" accept=".xlsx, .xls" class="w-full text-xs text-slate-300 file:bg-emerald-600 file:text-white file:border-0 file:rounded file:px-3 file:py-1 file:font-bold file:mr-3 hover:file:bg-emerald-500 cursor-pointer">
+                                </div>
+
+                                <button type="button" onclick="procesarEmisionMasiva()" id="btn-emitir-masivo" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-black uppercase tracking-widest py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                                    <i data-lucide="zap" class="w-5 h-5"></i> Procesar Lote
+                                </button>
+
+                                <!-- Barra de progreso oculta por defecto -->
+                                <div id="progreso-masivo" class="hidden">
+                                    <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
+                                        <span id="progreso-texto">Procesando...</span>
+                                        <span id="progreso-porcentaje">0%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                                        <div id="progreso-barra" class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div><label>Nombre del Alumno</label><input type="text" id="cert-nombre" required placeholder="Ej: Juan"></div>
-                            <div><label>Apellidos del Alumno</label><input type="text" id="cert-apellidos" required placeholder="Ej: Pérez"></div>
-                            <div><label>DNI del Alumno</label><input type="text" id="cert-dni" required placeholder="Ej: 30123456"></div>
-                            <div class="bg-black/30 p-3 rounded-lg border border-yellow-500/20 flex items-center gap-3">
-                                <i data-lucide="info" class="w-5 h-5 text-yellow-400 flex-shrink-0"></i>
-                                <p class="text-[10px] text-slate-300">Cada emisión consume <strong class="text-yellow-400">1 Timbre</strong> de su saldo institucional.</p>
-                            </div>
-                            <button type="submit" id="btn-emitir" class="btn-gold w-full py-3 rounded-xl uppercase tracking-widest flex items-center justify-center gap-2">
-                                <i data-lucide="award" class="w-5 h-5"></i> Emitir Certificado (Costo: 1 Timbre)
-                            </button>
-                        </form>
+                        </div>
                     </div>
+
                     <div class="glass-card p-6 xl:col-span-2">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-white font-bold">Historial de Certificados Emitidos</h3>
@@ -937,6 +978,208 @@
                 btn.disabled = false;
                 lucide.createIcons();
             }
+        }
+
+        // ==========================================
+        // 6. EMISIÓN MASIVA POR EXCEL
+        // ==========================================
+        function descargarPlantillaExcel() {
+            const ws_data = [
+                ['NOMBRES', 'APELLIDOS', 'DNI'],
+                ['Juan Carlos', 'Pérez', '35123456'],
+                ['María Belén', 'Gómez', '38987654']
+            ];
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            
+            // Ajustar ancho de columnas
+            ws['!cols'] = [{ wch: 25 }, { wch: 25 }, { wch: 15 }];
+            
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Alumnos");
+            XLSX.writeFile(wb, "Plantilla_Alumnos_RENMCYCF.xlsx");
+        }
+
+        async function procesarEmisionMasiva() {
+            if (!aliadoId || !institutoActual) return alert("Error: Sesión no válida.");
+
+            const selectCurso = document.getElementById('cert-curso');
+            const cursoId = selectCurso.value;
+            const cursoNombre = selectCurso.options[selectCurso.selectedIndex]?.text;
+            const cursoCarga = selectCurso.options[selectCurso.selectedIndex]?.dataset.carga;
+
+            if (!cursoId) return alert("Por favor, seleccione un curso aprobado en la tarjeta de Emisión Individual.");
+
+            const fileInput = document.getElementById('file-excel-masivo');
+            if (!fileInput.files.length) return alert("Debe seleccionar un archivo Excel.");
+
+            const file = fileInput.files[0];
+            const btn = document.getElementById('btn-emitir-masivo');
+            const progresoDiv = document.getElementById('progreso-masivo');
+            const progresoTexto = document.getElementById('progreso-texto');
+            const progresoBarra = document.getElementById('progreso-barra');
+            const progresoPorcentaje = document.getElementById('progreso-porcentaje');
+
+            // Leer Excel
+            btn.disabled = true;
+            progresoDiv.classList.remove('hidden');
+            progresoTexto.innerText = "Leyendo archivo Excel...";
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const rows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+
+                    // Filtrar filas vacías
+                    const alumnosValidos = rows.filter(r => r.NOMBRES && r.APELLIDOS && r.DNI);
+                    const total = alumnosValidos.length;
+
+                    if (total === 0) throw new Error("No se encontraron alumnos válidos en el archivo. Revise los encabezados.");
+
+                    // 1. Validar Saldo
+                    progresoTexto.innerText = "Validando saldo de Timbres...";
+                    const { data: aliadoDB, error: errAliado } = await db.from('renmcycf_aliados').select('saldo_timbres').eq('id', aliadoId).single();
+                    if (errAliado || !aliadoDB) throw new Error("Error al consultar saldo.");
+                    
+                    let saldoRestante = aliadoDB.saldo_timbres || 0;
+                    if (saldoRestante < total) {
+                        throw new Error(`Saldo Insuficiente. Intentas emitir ${total} certificados, pero solo tienes ${saldoRestante} Timbres.`);
+                    }
+
+                    if(!confirm(`Se procesarán ${total} certificados y se consumirán ${total} Timbres.\n¿Desea continuar?`)) {
+                        throw new Error("Proceso cancelado por el usuario.");
+                    }
+
+                    // 2. Preparar ZIP
+                    const zip = new JSZip();
+                    const fechaEmision = new Date().toLocaleDateString('es-AR');
+
+                    let exitosos = 0;
+                    const registrosInsert = [];
+
+                    // 3. Loop de Renderizado y Subida
+                    for (let i = 0; i < total; i++) {
+                        const alumno = alumnosValidos[i];
+                        const nombres = alumno.NOMBRES.toString().trim();
+                        const apellidos = alumno.APELLIDOS.toString().trim();
+                        const dni = alumno.DNI.toString().trim();
+
+                        progresoTexto.innerText = `Generando PDF ${i + 1} de ${total}...`;
+                        const porcentaje = Math.round(((i) / total) * 100);
+                        progresoBarra.style.width = `${porcentaje}%`;
+                        progresoPorcentaje.innerText = `${porcentaje}%`;
+
+                        // Generar Hash y URL
+                        const hashCert = `ASARI-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+                        const urlVerificacion = `https://renmcycf.com.ar/certificado.html?hash=${hashCert}`;
+
+                        // Preparar Plantilla (Reutilizamos la de emisión individual)
+                        document.getElementById('pdf-instituto').textContent = institutoActual.nombre;
+                        const logoInst = document.getElementById('pdf-logo-instituto');
+                        if (institutoActual.logo_url) {
+                            logoInst.src = institutoActual.logo_url;
+                            logoInst.classList.remove('hidden');
+                        }
+                        
+                        // Logo Oficial
+                        const { data: configRenm } = await db.from('renmcycf_config').select('logo_url').eq('id', 1).maybeSingle();
+                        const iconRenm = document.querySelector('#cert-template .lucide-shield-check.text-\\[\\#d4af37\\]');
+                        if (configRenm && configRenm.logo_url && iconRenm) {
+                            let imgOficial = document.getElementById('img-oficial-temp');
+                            if (!imgOficial) {
+                                imgOficial = document.createElement('img');
+                                imgOficial.id = 'img-oficial-temp';
+                                imgOficial.className = 'w-16 h-16 object-contain';
+                                iconRenm.parentNode.appendChild(imgOficial);
+                            }
+                            imgOficial.src = configRenm.logo_url;
+                            iconRenm.classList.add('hidden');
+                        }
+
+                        document.getElementById('pdf-alumno').textContent = `${nombres} ${apellidos}`;
+                        document.getElementById('pdf-dni').textContent = dni;
+                        document.getElementById('pdf-curso').textContent = cursoNombre;
+                        document.getElementById('pdf-carga').textContent = `Carga Horaria: ${cursoCarga || 'No especificada'}`;
+                        document.getElementById('pdf-hash').textContent = hashCert;
+                        document.getElementById('pdf-fecha').textContent = fechaEmision;
+
+                        const qrContainer = document.getElementById('pdf-qr-container');
+                        qrContainer.innerHTML = '';
+                        qrContainer.className = "w-32 h-32 bg-white border border-slate-300 p-2 flex-shrink-0 flex items-center justify-center";
+                        new QRCode(qrContainer, { text: urlVerificacion, width: 110, height: 110, colorDark: "#030712", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
+
+                        // Render Canvas
+                        await new Promise(resolve => setTimeout(resolve, 800)); // Esperar QR
+                        const renderZone = document.getElementById('cert-template');
+                        const canvas = await html2canvas(renderZone, { scale: 3, useCORS: true, backgroundColor: '#ffffff', logging: false });
+                        
+                        const { jsPDF } = window.jspdf;
+                        const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+                        pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 297, 210);
+
+                        // Subir a Storage
+                        progresoTexto.innerText = `Subiendo a la nube ${i + 1} de ${total}...`;
+                        const pdfBlob = pdf.output('blob');
+                        const pdfFileName = `B2B_${hashCert}.pdf`;
+                        const { error: uploadError } = await db.storage.from('renmcycf-pdfs').upload(pdfFileName, pdfBlob, { cacheControl: '3600', upsert: true });
+                        if (uploadError) throw new Error("Error al guardar en la nube.");
+                        const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${pdfFileName}`;
+
+                        // Agregar al ZIP
+                        const arrayBuffer = await pdfBlob.arrayBuffer();
+                        zip.file(`Certificado_${dni}_${nombres.split(' ')[0]}.pdf`, arrayBuffer);
+
+                        // Guardar en array para DB
+                        registrosInsert.push({
+                            aliado_id: aliadoId,
+                            curso_id: cursoId,
+                            alumno_nombres: nombres,
+                            alumno_apellidos: apellidos,
+                            alumno_dni: dni,
+                            hash_cert: hashCert,
+                            pdf_url: pdfUrl
+                        });
+
+                        exitosos++;
+                        saldoRestante--; // Actualizar tracking local
+                    }
+
+                    // 4. Inserción Masiva en BD
+                    progresoTexto.innerText = "Registrando en Blockchain...";
+                    const { error: insertError } = await db.from('renmcycf_certificados_b2b').insert(registrosInsert);
+                    if (insertError) throw new Error("Error al registrar emisiones en la base de datos.");
+
+                    // 5. Descontar Timbres Totales
+                    const { error: updateError } = await db.from('renmcycf_aliados').update({ saldo_timbres: saldoRestante }).eq('id', aliadoId);
+                    if (updateError) console.error("Error descontando timbres, pero los certificados se emitieron.");
+
+                    // 6. Descargar ZIP
+                    progresoTexto.innerText = "Comprimiendo archivo ZIP...";
+                    progresoBarra.style.width = "100%";
+                    progresoPorcentaje.innerText = "100%";
+                    
+                    const content = await zip.generateAsync({ type: "blob" });
+                    saveAs(content, `Certificados_Masivos_${cursoNombre.replace(/[^a-z0-9]/gi, '_')}.zip`);
+
+                    alert(`✅ Proceso finalizado. Se generaron ${exitosos} certificados con éxito.\nEl archivo ZIP ha sido descargado.`);
+                    
+                    fileInput.value = "";
+                    await cargarDashboardInstituto();
+                    cargarCertificadosInstituto();
+
+                } catch (err) {
+                    alert("Se detuvo el proceso: " + err.message);
+                } finally {
+                    btn.disabled = false;
+                    progresoDiv.classList.add('hidden');
+                    progresoBarra.style.width = "0%";
+                }
+            };
+
+            reader.readAsArrayBuffer(file);
         }
 
         // ==========================================
