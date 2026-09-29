@@ -218,6 +218,9 @@
             border: 2px solid #d4af37;
             box-shadow: inset 0 2px 8px rgba(0,0,0,0.05), 0 4px 15px rgba(212, 175, 55, 0.15);
         }
+
+        /* TAREA 4: Filtro oscuro para el mapa gratuito de OpenStreetMap (sin API KEY) */
+        .mapa-oscuro-free { filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(85%); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans bg-white">
@@ -2425,16 +2428,19 @@
         }
 
         // ==========================================
-        // MAPA - TAREA 4: URL de tiles sin API KEY (CartoDB dark)
+        // MAPA - 100% GRATUITO CON OPENSTREETMAP (Sin API KEY) + Filtro Oscuro CSS
         // ==========================================
         async function initMap() {
             if (mapInstance) return;
             mapInstance = L.map('mapa-profesionales', { scrollWheelZoom: false }).setView([-38.4161, -63.6167], 4);
-            // TAREA 4: URL de tiles gratuita y oscura sin API KEY
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { 
+            
+            // MAPA 100% GRATUITO CON OPENSTREETMAP (Sin API KEY) + Filtro Oscuro
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { 
                 maxZoom: 19,
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                className: 'mapa-oscuro-free' // Le pone el filtro oscuro por CSS
             }).addTo(mapInstance);
+            
             markersLayerGroup = L.layerGroup().addTo(mapInstance);
             
             try {
