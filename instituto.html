@@ -157,7 +157,7 @@
             color: #64748b;
         }
 
-        /* TAREA 1: Estilo para sliders */
+        /* Estilo para sliders */
         input[type="range"] {
             -webkit-appearance: none;
             appearance: none;
@@ -190,6 +190,11 @@
         body.light-theme input[type="range"] {
             background: rgba(0,0,0,0.15);
         }
+
+        /* TAREA 3: Asegurar que el logo oficial en el faldón se mezcle bien con fondo blanco */
+        #faldon-trazabilidad .logo-oficial-wrapper {
+            background: #ffffff !important;
+        }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -212,15 +217,21 @@
 
     <!-- SIDEBAR -->
     <aside class="w-64 glass-panel m-4 mr-0 flex flex-col z-20 hidden md:flex border-r border-white/5">
-        <div class="h-28 flex items-center px-6 border-b border-white/5 relative overflow-hidden gap-3">
+        <!-- ============================================ -->
+        <!-- TAREA 1: Rediseño Premium del Sidebar         -->
+        <!-- ============================================ -->
+        <div class="pt-8 pb-6 px-6 border-b border-white/5 relative flex flex-col items-center text-center gap-3">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-blue-500"></div>
-            <div class="w-12 h-12 rounded-xl bg-white/10 p-1 flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
-                <img id="sidebar-logo-img" src="" class="w-full h-full object-contain hidden">
-                <i data-lucide="building-2" id="sidebar-logo-icon" class="text-yellow-500 w-6 h-6"></i>
+            
+            <!-- Contenedor del Logo Gigante -->
+            <div class="w-24 h-24 rounded-full bg-white p-2 flex items-center justify-center overflow-hidden border-2 border-yellow-500/50 shadow-[0_0_20px_rgba(234,179,8,0.15)] shrink-0">
+                <img id="sidebar-logo-img" src="" class="w-full h-full object-contain mix-blend-multiply hidden transition-transform duration-500 hover:scale-110">
+                <i data-lucide="building-2" id="sidebar-logo-icon" class="text-yellow-500 w-10 h-10"></i>
             </div>
-            <div class="min-w-0">
-                <h3 class="text-white font-black tracking-wider text-sm truncate" id="sidebar-instituto-nombre">ASARI Core</h3>
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">Panel Institucional</span>
+            
+            <div class="min-w-0 w-full mt-2">
+                <h3 class="text-white font-black tracking-wider text-base truncate" id="sidebar-instituto-nombre">ASARI Core</h3>
+                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block mt-1">Panel Institucional</span>
             </div>
         </div>
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
@@ -252,8 +263,11 @@
                     <p class="text-[10px] text-yellow-500 font-mono font-bold" id="header-timbres">Derechos: 0</p>
                 </div>
 
-                <div class="w-11 h-11 rounded-xl bg-white p-1 border border-yellow-500/40 flex items-center justify-center overflow-hidden shadow-sm shrink-0">
-                    <img id="header-logo-img" src="" class="w-full h-full object-contain hidden">
+                <!-- ============================================ -->
+                <!-- TAREA 2: Logo del Header agrandado y circular -->
+                <!-- ============================================ -->
+                <div class="w-12 h-12 rounded-full bg-white p-1 border border-yellow-500/40 flex items-center justify-center overflow-hidden shadow-sm shrink-0">
+                    <img id="header-logo-img" src="" class="w-full h-full object-contain mix-blend-multiply hidden">
                     <i data-lucide="building" id="header-logo-icon" class="w-5 h-5 text-slate-700"></i>
                 </div>
             </div>
@@ -330,21 +344,17 @@
                                 <p class="text-[9px] text-slate-500 mt-1 italic">Diseño base del diploma institucional (JPG/PNG).</p>
                             </div>
 
-                            <!-- ============================================ -->
-                            <!-- TAREA 1: Constructor Visual de Diplomas      -->
-                            <!-- ============================================ -->
+                            <!-- Constructor Visual de Diplomas -->
                             <div id="constructor-diploma" class="hidden bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 space-y-4">
                                 <div class="flex items-center gap-2 border-b border-blue-500/30 pb-2">
                                     <i data-lucide="move" class="w-4 h-4 text-blue-400"></i>
                                     <p class="text-xs font-bold text-blue-300 uppercase tracking-widest">Vista Previa y Posicionamiento</p>
                                 </div>
 
-                                <!-- Vista previa con fondo del diploma -->
                                 <div id="preview-diploma-container"
                                      class="aspect-[1.414/1] w-full relative bg-slate-800 rounded-lg overflow-hidden border-2 border-blue-500/30"
                                      style="background-size: contain; background-position: center; background-repeat: no-repeat;">
                                     
-                                    <!-- Placeholder cuando no hay imagen -->
                                     <div id="preview-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
                                         <div class="text-center">
                                             <i data-lucide="image" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
@@ -352,7 +362,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Div flotante con datos del alumno -->
                                     <div id="preview-texto-alumno"
                                          class="absolute bg-white/80 backdrop-blur-sm text-slate-900 px-4 py-2 rounded-lg shadow-lg border-2 border-yellow-400/60 pointer-events-none"
                                          style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; text-align: center;">
@@ -362,7 +371,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Sliders de posición -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     <div>
                                         <label class="text-[10px] text-slate-400 flex justify-between mb-1">
@@ -380,7 +388,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Inputs ocultos para guardar valores -->
                                 <input type="hidden" id="pos-x" value="50">
                                 <input type="hidden" id="pos-y" value="50">
 
@@ -511,20 +518,15 @@
         </div>
     </main>
 
-    <!-- ============================================================ -->
-    <!-- TAREA 2: PLANTILLA HÍBRIDA DEL PDF (A4 Apaisado 1123x794px)  -->
-    <!-- ============================================================ -->
+    <!-- PLANTILLA HÍBRIDA DEL PDF (A4 Apaisado 1123x794px) -->
     <div id="cert-render-zone" style="position: absolute; left: -9999px; top: -9999px; width: 1123px; height: 794px; background: white;">
         <div id="cert-template" class="w-full h-full relative overflow-hidden flex flex-col" style="font-family: 'Outfit', sans-serif; background: #ffffff;">
             
-            <!-- ============================================ -->
-            <!-- ÁREA DIPLOMA BASE (82% del alto = ~650px)    -->
-            <!-- ============================================ -->
+            <!-- ÁREA DIPLOMA BASE (82% del alto = ~650px) -->
             <div id="area-diploma-base" 
                  class="relative w-full" 
                  style="height: 650px; background-size: contain; background-position: center; background-repeat: no-repeat; background-color: #ffffff;">
                 
-                <!-- Datos flotantes del alumno (posicionados con top/left) -->
                 <div id="datos-alumno-flotante"
                      class="absolute"
                      style="top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; max-width: 80%;">
@@ -535,16 +537,16 @@
                 </div>
             </div>
 
-            <!-- ============================================ -->
-            <!-- FALDÓN TRAZABILIDAD RENMCYCF (18% = ~144px)  -->
-            <!-- ============================================ -->
+            <!-- FALDÓN TRAZABILIDAD RENMCYCF (18% = ~144px) -->
             <div id="faldon-trazabilidad" 
                  class="relative w-full flex items-center justify-between px-8 py-4" 
                  style="height: 144px; background: #0f172a; color: #ffffff;">
 
                 <!-- IZQUIERDA: Logo RENMCYCF + Claim -->
                 <div class="flex items-center gap-3" style="width: 30%;">
-                    <div class="rounded-full flex items-center justify-center shrink-0" style="width: 56px; height: 56px; background: #0a1128; border: 3px solid #d4af37;">
+                    <!-- TAREA 3: Fondo blanco en el contenedor del logo oficial -->
+                    <div class="logo-oficial-wrapper rounded-full flex items-center justify-center shrink-0" 
+                         style="width: 56px; height: 56px; background: #ffffff; border: 3px solid #d4af37; overflow: hidden;">
                         <i data-lucide="shield-check" style="width: 30px; height: 30px; color: #d4af37;"></i>
                     </div>
                     <div>
@@ -591,7 +593,7 @@
 
         let institutoActual = null;
         let aliadoId = null;
-        let cursosCargados = []; // Cache de cursos con todos sus datos
+        let cursosCargados = [];
 
         // ==========================================
         // TEMA CLARO / OSCURO
@@ -620,7 +622,7 @@
         }
 
         // ==========================================
-        // TAREA 1: CONSTRUCTOR VISUAL DE DIPLOMAS
+        // CONSTRUCTOR VISUAL DE DIPLOMAS
         // ==========================================
         (function initConstructorVisual() {
             const inputDiploma = document.getElementById('curso-file-diploma');
@@ -637,7 +639,6 @@
                     return;
                 }
 
-                // Validar que sea imagen
                 if (!file.type.startsWith('image/')) {
                     alert('Por favor, seleccione un archivo de imagen válido (JPG, PNG, etc.)');
                     inputDiploma.value = '';
@@ -646,23 +647,16 @@
 
                 const reader = new FileReader();
                 reader.onload = function(evt) {
-                    // Mostrar constructor
                     if (container) container.classList.remove('hidden');
-                    
-                    // Aplicar la imagen como background
                     if (previewContainer) {
                         previewContainer.style.backgroundImage = `url('${evt.target.result}')`;
                     }
-                    
-                    // Ocultar placeholder
                     if (placeholder) placeholder.classList.add('hidden');
-                    
                     lucide.createIcons();
                 };
                 reader.readAsDataURL(file);
             });
 
-            // Sincronizar sliders con el div flotante y los inputs ocultos
             const sliderY = document.getElementById('slider-pos-y');
             const sliderX = document.getElementById('slider-pos-x');
             const labelY = document.getElementById('label-pos-y');
@@ -675,15 +669,11 @@
                 const y = parseInt(sliderY?.value || 50);
                 const x = parseInt(sliderX?.value || 50);
 
-                // Actualizar labels
                 if (labelY) labelY.textContent = `${y}%`;
                 if (labelX) labelX.textContent = `${x}%`;
-
-                // Actualizar inputs ocultos
                 if (inputPosY) inputPosY.value = y;
                 if (inputPosX) inputPosX.value = x;
 
-                // Mover el div flotante en la vista previa
                 if (textoFlotante) {
                     textoFlotante.style.top = `${y}%`;
                     textoFlotante.style.left = `${x}%`;
@@ -693,13 +683,11 @@
 
             if (sliderY) sliderY.addEventListener('input', actualizarPosicion);
             if (sliderX) sliderX.addEventListener('input', actualizarPosicion);
-            
-            // Inicializar
             actualizarPosicion();
         })();
 
         // ==========================================
-        // 1. AUTENTICACIÓN DE ALTA SEGURIDAD
+        // 1. AUTENTICACIÓN
         // ==========================================
         async function iniciarSesion(e) {
             e.preventDefault();
@@ -865,7 +853,7 @@
         }
 
         // ==========================================
-        // 3. DASHBOARD INSTITUCIONAL
+        // 3. DASHBOARD
         // ==========================================
         async function cargarDashboardInstituto() {
             if (!aliadoId) return;
@@ -977,9 +965,6 @@
             }
         }
 
-        // ==========================================
-        // proponerCurso con subida de 3 archivos + pos_x/pos_y
-        // ==========================================
         async function proponerCurso(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-proponer-curso');
@@ -992,7 +977,6 @@
             const fileAnalitico = document.getElementById('curso-file-analitico').files[0];
             const fileDiploma = document.getElementById('curso-file-diploma').files[0];
             
-            // TAREA 1: Capturar posiciones
             const posX = parseInt(document.getElementById('pos-x')?.value || 50);
             const posY = parseInt(document.getElementById('pos-y')?.value || 50);
 
@@ -1030,7 +1014,6 @@
 
                 console.log('✅ Archivos subidos. Insertando curso con pos_x/pos_y:', posX, posY);
 
-                // TAREA 1: Payload con pos_x y pos_y
                 const payload = {
                     aliado_id: aliadoId,
                     nombre_curso: nombre,
@@ -1049,10 +1032,7 @@
 
                 alert("✅ Curso propuesto. Los 3 archivos fueron subidos y quedan pendientes de auditoría por el Comité ASARI.");
                 
-                // Reset completo del formulario
                 document.getElementById('form-curso-b2b').reset();
-                
-                // Reset del constructor visual
                 document.getElementById('constructor-diploma')?.classList.add('hidden');
                 document.getElementById('preview-diploma-container').style.backgroundImage = '';
                 document.getElementById('preview-placeholder')?.classList.remove('hidden');
@@ -1090,7 +1070,6 @@
             selectCurso.innerHTML = '<option value="">-- Seleccionar Curso --</option>';
 
             try {
-                // TAREA 3: Incluir diploma_base_url, pos_x, pos_y en el select
                 const { data: cursosAprobados, error: errCursos } = await db.from('renmcycf_aliados_cursos')
                     .select('id, nombre_curso, carga_horaria, diploma_base_url, pos_x, pos_y')
                     .eq('aliado_id', aliadoId)
@@ -1157,7 +1136,6 @@
         async function prepararPlantillaPDF(cursoData, alumno) {
             const { nombres, apellidos, dni, hashCert, fechaEmision, urlVerificacion } = alumno;
             
-            // 1. Aplicar imagen de fondo del diploma al área superior
             const areaDiploma = document.getElementById('area-diploma-base');
             if (cursoData.diploma_base_url) {
                 areaDiploma.style.backgroundImage = `url('${cursoData.diploma_base_url}')`;
@@ -1166,7 +1144,6 @@
                 areaDiploma.style.backgroundRepeat = 'no-repeat';
             }
 
-            // 2. Posicionar los datos del alumno con pos_x/pos_y
             const datosFlotantes = document.getElementById('datos-alumno-flotante');
             const posY = cursoData.pos_y || 50;
             const posX = cursoData.pos_x || 50;
@@ -1174,7 +1151,6 @@
             datosFlotantes.style.left = `${posX}%`;
             datosFlotantes.style.transform = 'translate(-50%, -50%)';
 
-            // 3. Cargar textos
             document.getElementById('pdf-alumno').textContent = `${nombres} ${apellidos}`;
             document.getElementById('pdf-dni').textContent = `DNI: ${dni}`;
             document.getElementById('pdf-curso').textContent = cursoData.nombre_curso || '';
@@ -1182,7 +1158,6 @@
             document.getElementById('pdf-hash').textContent = hashCert;
             document.getElementById('pdf-fecha').textContent = fechaEmision;
 
-            // 4. Generar QR
             const qrContainer = document.getElementById('pdf-qr-container');
             qrContainer.innerHTML = '';
             new QRCode(qrContainer, {
@@ -1194,8 +1169,37 @@
                 correctLevel: QRCode.CorrectLevel.H
             });
 
-            // 5. Esperar al render del QR
+            // TAREA 3: Inyectar logo oficial en el faldón (si está configurado)
+            await inyectarLogoOficialFaldon();
+
             await new Promise(resolve => setTimeout(resolve, 500));
+        }
+
+        // TAREA 3: Inyectar logo oficial RENMCYCF en el faldón con mix-blend-multiply
+        async function inyectarLogoOficialFaldon() {
+            try {
+                const { data: configRenm } = await db.from('renmcycf_config').select('logo_url').eq('id', 1).maybeSingle();
+                const wrapper = document.querySelector('#faldon-trazabilidad .logo-oficial-wrapper');
+                if (!wrapper) return;
+
+                // Limpiar wrapper (remover icono previo o img previa)
+                wrapper.innerHTML = '';
+
+                if (configRenm && configRenm.logo_url) {
+                    const imgOficial = document.createElement('img');
+                    imgOficial.src = configRenm.logo_url;
+                    // TAREA 3: Clase con mix-blend-multiply para eliminar fondo blanco
+                    imgOficial.className = 'w-full h-full object-contain mix-blend-multiply p-1';
+                    imgOficial.crossOrigin = 'anonymous';
+                    wrapper.appendChild(imgOficial);
+                } else {
+                    // Fallback: icono dorado por defecto
+                    wrapper.innerHTML = '<i data-lucide="shield-check" style="width: 30px; height: 30px; color: #d4af37;"></i>';
+                    lucide.createIcons();
+                }
+            } catch (e) {
+                console.warn('No se pudo inyectar logo oficial en el faldón:', e);
+            }
         }
 
         async function emitirCertificado(e) {
@@ -1236,7 +1240,6 @@
                 const urlVerificacion = `${window.location.origin}${window.location.pathname.replace('instituto.html', '')}certificado.html?hash=${hashCert}`;
                 const fechaEmision = new Date().toLocaleDateString('es-AR');
 
-                // TAREA 3: Preparar plantilla con datos del curso desde Supabase
                 await prepararPlantillaPDF(
                     { 
                         nombre_curso: cursoNombre, 
@@ -1248,7 +1251,6 @@
                     { nombres, apellidos, dni, hashCert, fechaEmision, urlVerificacion }
                 );
 
-                // Capturar Canvas
                 const renderZone = document.getElementById('cert-template');
                 const canvas = await html2canvas(renderZone, { 
                     scale: 3,
@@ -1326,7 +1328,6 @@
             const optSeleccionada = selectCurso.options[selectCurso.selectedIndex];
             const cursoNombre = optSeleccionada?.text;
             const cursoCarga = optSeleccionada?.dataset.carga;
-            // TAREA 3: Obtener datos del diploma desde el select
             const diplomaUrl = optSeleccionada?.dataset.diplomaUrl;
             const posX = parseInt(optSeleccionada?.dataset.posX) || 50;
             const posY = parseInt(optSeleccionada?.dataset.posY) || 50;
@@ -1393,7 +1394,6 @@
                         const hashCert = `ASARI-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
                         const urlVerificacion = `https://renmcycf.com.ar/certificado.html?hash=${hashCert}`;
 
-                        // TAREA 3: Preparar plantilla con datos del curso
                         await prepararPlantillaPDF(
                             { 
                                 nombre_curso: cursoNombre, 
