@@ -122,6 +122,74 @@
         body.light-theme .text-transparent.bg-clip-text {
             background-image: linear-gradient(to right, #0f172a, #475569) !important;
         }
+
+        /* Estilo para inputs de archivo */
+        input[type="file"] {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #94a3b8;
+            outline: none;
+            transition: all 0.3s;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        input[type="file"]::file-selector-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: 0;
+            border-radius: 6px;
+            padding: 5px 12px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        input[type="file"]::file-selector-button:hover {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+        }
+        body.light-theme input[type="file"] {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            color: #64748b;
+        }
+
+        /* TAREA 1: Estilo para sliders */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(0,0,0,0.4);
+            outline: none;
+            padding: 0;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+        body.light-theme input[type="range"] {
+            background: rgba(0,0,0,0.15);
+        }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -175,17 +243,15 @@
                 <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mt-0.5">ASARI CORE | PORTAL INSTITUCIONAL</p>
             </div>
             <div class="flex items-center gap-4">
-                <!-- Botón Selector Tema -->
                 <button onclick="toggleTema()" id="btn-theme-toggle" class="p-2.5 rounded-xl border border-white/10 hover:bg-white/10 text-slate-300 transition-colors" title="Cambiar tema">
                     <i data-lucide="sun" id="theme-icon" class="w-4 h-4"></i>
                 </button>
 
                 <div class="text-right">
                     <p class="text-xs font-bold text-white" id="header-instituto">Cargando...</p>
-                    <p class="text-[10px] text-yellow-500 font-mono font-bold" id="header-timbres">Saldo: 0 Timbres</p>
+                    <p class="text-[10px] text-yellow-500 font-mono font-bold" id="header-timbres">Derechos: 0</p>
                 </div>
 
-                <!-- Avatar con Logo -->
                 <div class="w-11 h-11 rounded-xl bg-white p-1 border border-yellow-500/40 flex items-center justify-center overflow-hidden shadow-sm shrink-0">
                     <img id="header-logo-img" src="" class="w-full h-full object-contain hidden">
                     <i data-lucide="building" id="header-logo-icon" class="w-5 h-5 text-slate-700"></i>
@@ -200,11 +266,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="glass-card p-6 border-yellow-500/30">
                         <div class="flex items-center justify-between mb-4">
-                            <p class="text-yellow-500/80 text-xs font-bold uppercase tracking-wider">Saldo de Timbres</p>
+                            <p class="text-yellow-500/80 text-xs font-bold uppercase tracking-wider">Saldo de Derechos de Emisión</p>
                             <i data-lucide="stamp" class="w-6 h-6 text-yellow-400"></i>
                         </div>
                         <h3 class="text-4xl font-black text-yellow-400 stat-number" id="stat-timbres">0</h3>
-                        <p class="text-[10px] text-slate-500 mt-2">Cada certificado emitido consume 1 timbre.</p>
+                        <p class="text-[10px] text-slate-500 mt-2">Cada certificado emitido consume 1 Derecho de Emisión.</p>
                     </div>
                     <div class="glass-card p-6 border-emerald-500/30">
                         <div class="flex items-center justify-between mb-4">
@@ -228,10 +294,10 @@
                     <div class="w-20 h-20 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i data-lucide="shopping-cart" class="w-10 h-10 text-yellow-400"></i>
                     </div>
-                    <h3 class="text-2xl font-black text-white mb-2">¿Necesitás más Timbres?</h3>
-                    <p class="text-sm text-slate-400 mb-6 max-w-md mx-auto">Adquirí paquetes de timbres digitales para seguir emitiendo certificaciones con Doble Sello ASARI.</p>
+                    <h3 class="text-2xl font-black text-white mb-2">¿Necesitás más Derechos de Emisión?</h3>
+                    <p class="text-sm text-slate-400 mb-6 max-w-md mx-auto">Adquirí paquetes de derechos de emisión digitales para seguir emitiendo certificaciones con Doble Sello ASARI.</p>
                     <button onclick="contactarSoporte()" class="btn-gold px-10 py-4 rounded-xl text-lg uppercase tracking-widest inline-flex items-center gap-3">
-                        <i data-lucide="message-circle" class="w-6 h-6"></i> Comprar Timbres (Contactar Soporte)
+                        <i data-lucide="message-circle" class="w-6 h-6"></i> Comprar Derechos de Emisión (Contactar Soporte)
                     </button>
                 </div>
             </div>
@@ -247,7 +313,83 @@
                             <div><label>Nombre del Curso</label><input type="text" id="curso-nombre" required placeholder="Ej: Criminalística Forense Avanzada"></div>
                             <div><label>Carga Horaria</label><input type="text" id="curso-carga" required placeholder="Ej: 120 horas"></div>
                             <div><label>Cuerpo Docente</label><textarea id="curso-docentes" rows="2" required placeholder="Ej: Lic. Juan Pérez, Dr. María González"></textarea></div>
-                            <div><label>Link al Programa (PDF)</label><input type="url" id="curso-pdf" required placeholder="https://drive.google.com/..."></div>
+                            
+                            <div>
+                                <label class="text-blue-400">Programa de Estudio (PDF)</label>
+                                <input type="file" id="curso-file-programa" accept="application/pdf" required class="form-input">
+                                <p class="text-[9px] text-slate-500 mt-1 italic">Documento con el plan de estudios completo.</p>
+                            </div>
+                            <div>
+                                <label class="text-blue-400">Modelo de Analítico (PDF)</label>
+                                <input type="file" id="curso-file-analitico" accept="application/pdf" required class="form-input">
+                                <p class="text-[9px] text-slate-500 mt-1 italic">Modelo del certificado analítico que se entregará.</p>
+                            </div>
+                            <div>
+                                <label class="text-blue-400">Imagen Base del Diploma (Imagen)</label>
+                                <input type="file" id="curso-file-diploma" accept="image/*" required class="form-input">
+                                <p class="text-[9px] text-slate-500 mt-1 italic">Diseño base del diploma institucional (JPG/PNG).</p>
+                            </div>
+
+                            <!-- ============================================ -->
+                            <!-- TAREA 1: Constructor Visual de Diplomas      -->
+                            <!-- ============================================ -->
+                            <div id="constructor-diploma" class="hidden bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 space-y-4">
+                                <div class="flex items-center gap-2 border-b border-blue-500/30 pb-2">
+                                    <i data-lucide="move" class="w-4 h-4 text-blue-400"></i>
+                                    <p class="text-xs font-bold text-blue-300 uppercase tracking-widest">Vista Previa y Posicionamiento</p>
+                                </div>
+
+                                <!-- Vista previa con fondo del diploma -->
+                                <div id="preview-diploma-container"
+                                     class="aspect-[1.414/1] w-full relative bg-slate-800 rounded-lg overflow-hidden border-2 border-blue-500/30"
+                                     style="background-size: contain; background-position: center; background-repeat: no-repeat;">
+                                    
+                                    <!-- Placeholder cuando no hay imagen -->
+                                    <div id="preview-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
+                                        <div class="text-center">
+                                            <i data-lucide="image" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                                            <p>Seleccione la imagen base del diploma</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Div flotante con datos del alumno -->
+                                    <div id="preview-texto-alumno"
+                                         class="absolute bg-white/80 backdrop-blur-sm text-slate-900 px-4 py-2 rounded-lg shadow-lg border-2 border-yellow-400/60 pointer-events-none"
+                                         style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; text-align: center;">
+                                        <p class="font-black text-sm md:text-base leading-tight">NOMBRE DEL ALUMNO</p>
+                                        <p class="font-mono text-[10px] md:text-xs font-bold text-slate-600">DNI: 12.345.678</p>
+                                        <p class="font-bold text-[9px] md:text-[10px] text-blue-800 uppercase mt-1">CRIMINALÍSTICA FORENSE AVANZADA</p>
+                                    </div>
+                                </div>
+
+                                <!-- Sliders de posición -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="text-[10px] text-slate-400 flex justify-between mb-1">
+                                            <span>Eje Y (Vertical)</span>
+                                            <span id="label-pos-y" class="font-mono text-blue-400">50%</span>
+                                        </label>
+                                        <input type="range" id="slider-pos-y" min="0" max="100" value="50" class="w-full">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] text-slate-400 flex justify-between mb-1">
+                                            <span>Eje X (Horizontal)</span>
+                                            <span id="label-pos-x" class="font-mono text-blue-400">50%</span>
+                                        </label>
+                                        <input type="range" id="slider-pos-x" min="0" max="100" value="50" class="w-full">
+                                    </div>
+                                </div>
+
+                                <!-- Inputs ocultos para guardar valores -->
+                                <input type="hidden" id="pos-x" value="50">
+                                <input type="hidden" id="pos-y" value="50">
+
+                                <p class="text-[9px] text-blue-300/70 italic text-center">
+                                    <i data-lucide="info" class="inline w-3 h-3"></i>
+                                    Mueva los deslizadores para posicionar los datos del alumno sobre el diploma.
+                                </p>
+                            </div>
+
                             <button type="submit" id="btn-proponer-curso" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
                                 <i data-lucide="send" class="w-4 h-4"></i> ENVIAR A AUDITORÍA
                             </button>
@@ -264,7 +406,7 @@
                                     <tr>
                                         <th class="p-3">Curso</th>
                                         <th class="p-3">Docentes</th>
-                                        <th class="p-3">Temario</th>
+                                        <th class="p-3">Documentación</th>
                                         <th class="p-3">Estado</th>
                                     </tr>
                                 </thead>
@@ -301,10 +443,10 @@
                                 <div><label>DNI del Alumno</label><input type="text" id="cert-dni" required placeholder="Ej: 30123456"></div>
                                 <div class="bg-black/30 p-3 rounded-lg border border-yellow-500/20 flex items-center gap-3">
                                     <i data-lucide="info" class="w-5 h-5 text-yellow-400 flex-shrink-0"></i>
-                                    <p class="text-[10px] text-slate-300">Cada emisión consume <strong class="text-yellow-400">1 Timbre</strong> de su saldo institucional.</p>
+                                    <p class="text-[10px] text-slate-300">Cada emisión consume <strong class="text-yellow-400">1 Derecho de Emisión</strong> de su saldo institucional.</p>
                                 </div>
                                 <button type="submit" id="btn-emitir" class="btn-gold w-full py-3 rounded-xl uppercase tracking-widest flex items-center justify-center gap-2">
-                                    <i data-lucide="award" class="w-5 h-5"></i> Emitir Certificado (Costo: 1 Timbre)
+                                    <i data-lucide="award" class="w-5 h-5"></i> Emitir Certificado (Costo: 1 Derecho de Emisión)
                                 </button>
                             </form>
                         </div>
@@ -330,7 +472,6 @@
                                     <i data-lucide="zap" class="w-5 h-5"></i> Procesar Lote
                                 </button>
 
-                                <!-- Barra de progreso oculta por defecto -->
                                 <div id="progreso-masivo" class="hidden">
                                     <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
                                         <span id="progreso-texto">Procesando...</span>
@@ -370,62 +511,70 @@
         </div>
     </main>
 
-    <!-- PLANTILLA OCULTA PARA PDF (Formato A4 Horizontal: ~1123x794 px) -->
+    <!-- ============================================================ -->
+    <!-- TAREA 2: PLANTILLA HÍBRIDA DEL PDF (A4 Apaisado 1123x794px)  -->
+    <!-- ============================================================ -->
     <div id="cert-render-zone" style="position: absolute; left: -9999px; top: -9999px; width: 1123px; height: 794px; background: white;">
-        <div id="cert-template" class="w-full h-full relative overflow-hidden bg-slate-50 flex flex-col p-12 shadow-2xl" style="font-family: 'Outfit', sans-serif;">
+        <div id="cert-template" class="w-full h-full relative overflow-hidden flex flex-col" style="font-family: 'Outfit', sans-serif; background: #ffffff;">
             
-            <!-- Fondos y Bordes Decorativos -->
-            <div class="absolute inset-0 border-[16px] border-slate-900 z-0"></div>
-            <div class="absolute inset-6 border-[3px] border-[#d4af37] z-0"></div>
-            <!-- Marca de agua gigante -->
-            <i data-lucide="shield-check" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] text-slate-200 opacity-30 z-0"></i>
+            <!-- ============================================ -->
+            <!-- ÁREA DIPLOMA BASE (82% del alto = ~650px)    -->
+            <!-- ============================================ -->
+            <div id="area-diploma-base" 
+                 class="relative w-full" 
+                 style="height: 650px; background-size: contain; background-position: center; background-repeat: no-repeat; background-color: #ffffff;">
+                
+                <!-- Datos flotantes del alumno (posicionados con top/left) -->
+                <div id="datos-alumno-flotante"
+                     class="absolute"
+                     style="top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; max-width: 80%;">
+                    <h1 id="pdf-alumno" class="font-black uppercase tracking-wide" style="font-size: 42px; color: #0f172a; line-height: 1.1; margin-bottom: 6px; font-family: 'Outfit', sans-serif;">JUAN PÉREZ</h1>
+                    <p id="pdf-dni" class="font-mono font-bold" style="font-size: 18px; color: #334155; margin-bottom: 12px;">DNI: 12.345.678</p>
+                    <p id="pdf-curso" class="font-black uppercase tracking-wider" style="font-size: 22px; color: #1e3a8a; margin-bottom: 4px;">CRIMINALÍSTICA FORENSE AVANZADA</p>
+                    <p id="pdf-carga" class="font-bold uppercase" style="font-size: 12px; color: #64748b; letter-spacing: 1px;">Carga Horaria: 120 Horas Cátedra</p>
+                </div>
+            </div>
 
-            <!-- HEADER -->
-            <div class="flex justify-between items-start z-10 border-b-2 border-slate-200 pb-6 mb-8">
-                <div class="flex items-center gap-4">
-                    <div class="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center border-4 border-[#d4af37]">
-                        <i data-lucide="shield-check" class="w-10 h-10 text-[#d4af37]"></i>
+            <!-- ============================================ -->
+            <!-- FALDÓN TRAZABILIDAD RENMCYCF (18% = ~144px)  -->
+            <!-- ============================================ -->
+            <div id="faldon-trazabilidad" 
+                 class="relative w-full flex items-center justify-between px-8 py-4" 
+                 style="height: 144px; background: #0f172a; color: #ffffff;">
+
+                <!-- IZQUIERDA: Logo RENMCYCF + Claim -->
+                <div class="flex items-center gap-3" style="width: 30%;">
+                    <div class="rounded-full flex items-center justify-center shrink-0" style="width: 56px; height: 56px; background: #0a1128; border: 3px solid #d4af37;">
+                        <i data-lucide="shield-check" style="width: 30px; height: 30px; color: #d4af37;"></i>
                     </div>
                     <div>
-                        <h1 class="text-3xl font-black text-slate-900 tracking-tighter">RENMCYCF</h1>
-                        <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">República Argentina</p>
+                        <h3 style="font-size: 14px; font-weight: 900; color: #d4af37; letter-spacing: 1px; margin-bottom: 2px;">RENMCYCF</h3>
+                        <p style="font-size: 9px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.3;">Verificación Tecnológica<br>Inmutable</p>
                     </div>
                 </div>
-                <div class="text-right">
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Entidad Capacitadora Auditada</p>
-                    <div class="flex items-center gap-3 justify-end">
-                        <h2 class="text-xl font-black text-slate-800 uppercase" id="pdf-instituto">Nombre del Instituto</h2>
-                        <img id="pdf-logo-instituto" src="" class="w-12 h-12 object-contain hidden">
-                    </div>
-                </div>
-            </div>
 
-            <!-- CUERPO CENTRAL -->
-            <div class="flex-1 flex flex-col items-center justify-center text-center z-10">
-                <p class="text-sm font-bold text-[#d4af37] uppercase tracking-[0.3em] mb-4">Certificado Oficial de Trazabilidad y Doble Acreditación</p>
-                <p class="text-lg text-slate-600 mb-6">El Comité Evaluador del Sistema ASARI certifica que:</p>
-                <h1 class="text-6xl font-black text-slate-900 uppercase tracking-wide mb-4 font-serif" id="pdf-alumno">JUAN PÉREZ</h1>
-                <p class="text-xl font-bold text-slate-500 mb-8 font-mono">DNI: <span id="pdf-dni">12.345.678</span></p>
-                
-                <p class="text-lg text-slate-600 mb-4 max-w-3xl">Ha cumplimentado satisfactoriamente los requisitos del programa de formación profesional auditado tecnológicamente, denominado:</p>
-                <h2 class="text-3xl font-black text-blue-900 uppercase tracking-wider mb-4 border-b border-blue-200 pb-2 inline-block" id="pdf-curso">CRIMINALÍSTICA AVANZADA</h2>
-                <p class="text-sm font-bold text-slate-500 uppercase mb-8" id="pdf-carga">Carga Horaria: 120 Horas Cátedra</p>
-            </div>
-
-            <!-- FOOTER CON QR -->
-            <div class="flex justify-between items-end z-10 mt-auto pt-6 border-t-2 border-slate-200">
-                <div class="space-y-1">
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Validación Inmutable Blockchain</p>
-                    <p class="text-[10px] font-mono text-slate-400">HASH: <span id="pdf-hash" class="font-bold text-slate-600">ASARI-000000</span></p>
-                    <p class="text-[10px] font-mono text-slate-400">EMISIÓN: <span id="pdf-fecha" class="font-bold text-slate-600">01/01/2026</span></p>
+                <!-- CENTRO: HASH + FECHA -->
+                <div class="text-center" style="width: 40%;">
+                    <p style="font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">Certificado con Trazabilidad Blockchain</p>
+                    <p style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #e2e8f0; margin-bottom: 3px;">
+                        HASH: <span id="pdf-hash" style="color: #d4af37;">ASARI-000000</span>
+                    </p>
+                    <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #94a3b8;">
+                        EMISIÓN: <span id="pdf-fecha">01/01/2026</span>
+                    </p>
                 </div>
-                <div class="flex items-center gap-4 bg-slate-100 p-3 rounded-xl border border-slate-200 shadow-sm">
+
+                <!-- DERECHA: QR en recuadro blanco -->
+                <div class="flex items-center justify-end gap-3" style="width: 30%;">
                     <div class="text-right">
-                        <p class="text-[10px] font-black uppercase text-blue-600">Escanear para verificar</p>
-                        <p class="text-[9px] font-bold text-slate-500">Validez Internacional ASARI</p>
-                        <p class="text-[9px] font-bold text-slate-500 mt-1">renmcycf.com.ar/certificado.html</p>
+                        <p style="font-size: 9px; font-weight: 900; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Escanear</p>
+                        <p style="font-size: 7px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Verificar autenticidad</p>
+                        <p style="font-size: 7px; font-weight: 700; color: #64748b; font-family: 'JetBrains Mono', monospace; margin-top: 2px;">renmcycf.com.ar</p>
                     </div>
-                    <div id="pdf-qr-container" class="w-20 h-20 bg-white border border-slate-300 p-1 flex-shrink-0"></div>
+                    <div id="pdf-qr-container" 
+                         class="flex items-center justify-center shrink-0"
+                         style="width: 100px; height: 100px; background: #ffffff; border: 2px solid #d4af37; padding: 4px; border-radius: 4px;">
+                    </div>
                 </div>
             </div>
         </div>
@@ -442,6 +591,7 @@
 
         let institutoActual = null;
         let aliadoId = null;
+        let cursosCargados = []; // Cache de cursos con todos sus datos
 
         // ==========================================
         // TEMA CLARO / OSCURO
@@ -468,6 +618,85 @@
                 lucide.createIcons();
             }
         }
+
+        // ==========================================
+        // TAREA 1: CONSTRUCTOR VISUAL DE DIPLOMAS
+        // ==========================================
+        (function initConstructorVisual() {
+            const inputDiploma = document.getElementById('curso-file-diploma');
+            if (!inputDiploma) return;
+
+            inputDiploma.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const container = document.getElementById('constructor-diploma');
+                const previewContainer = document.getElementById('preview-diploma-container');
+                const placeholder = document.getElementById('preview-placeholder');
+                
+                if (!file) {
+                    if (container) container.classList.add('hidden');
+                    return;
+                }
+
+                // Validar que sea imagen
+                if (!file.type.startsWith('image/')) {
+                    alert('Por favor, seleccione un archivo de imagen válido (JPG, PNG, etc.)');
+                    inputDiploma.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    // Mostrar constructor
+                    if (container) container.classList.remove('hidden');
+                    
+                    // Aplicar la imagen como background
+                    if (previewContainer) {
+                        previewContainer.style.backgroundImage = `url('${evt.target.result}')`;
+                    }
+                    
+                    // Ocultar placeholder
+                    if (placeholder) placeholder.classList.add('hidden');
+                    
+                    lucide.createIcons();
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Sincronizar sliders con el div flotante y los inputs ocultos
+            const sliderY = document.getElementById('slider-pos-y');
+            const sliderX = document.getElementById('slider-pos-x');
+            const labelY = document.getElementById('label-pos-y');
+            const labelX = document.getElementById('label-pos-x');
+            const inputPosY = document.getElementById('pos-y');
+            const inputPosX = document.getElementById('pos-x');
+            const textoFlotante = document.getElementById('preview-texto-alumno');
+
+            function actualizarPosicion() {
+                const y = parseInt(sliderY?.value || 50);
+                const x = parseInt(sliderX?.value || 50);
+
+                // Actualizar labels
+                if (labelY) labelY.textContent = `${y}%`;
+                if (labelX) labelX.textContent = `${x}%`;
+
+                // Actualizar inputs ocultos
+                if (inputPosY) inputPosY.value = y;
+                if (inputPosX) inputPosX.value = x;
+
+                // Mover el div flotante en la vista previa
+                if (textoFlotante) {
+                    textoFlotante.style.top = `${y}%`;
+                    textoFlotante.style.left = `${x}%`;
+                    textoFlotante.style.transform = 'translate(-50%, -50%)';
+                }
+            }
+
+            if (sliderY) sliderY.addEventListener('input', actualizarPosicion);
+            if (sliderX) sliderX.addEventListener('input', actualizarPosicion);
+            
+            // Inicializar
+            actualizarPosicion();
+        })();
 
         // ==========================================
         // 1. AUTENTICACIÓN DE ALTA SEGURIDAD
@@ -503,7 +732,6 @@
                 return; 
             }
             
-            // Consulta de rol con filtro estricto
             const { data: rolData, error: rolError } = await db.from('renmcycf_roles')
                 .select('rol, activo, nombres, apellidos, aliado_id')
                 .eq('user_id', session.user.id)
@@ -515,7 +743,6 @@
                 return;
             }
 
-            // FILTRO ESTRICTO: Solo directores
             if (rolData.rol !== 'director') {
                 await db.auth.signOut();
                 mostrarErrorLogin("Acceso denegado. Esta cuenta no tiene privilegios institucionales.");
@@ -530,7 +757,6 @@
 
             aliadoId = rolData.aliado_id;
 
-            // Cargar datos del instituto
             const { data: aliado, error: aliadoError } = await db.from('renmcycf_aliados')
                 .select('*')
                 .eq('id', aliadoId)
@@ -544,7 +770,6 @@
 
             institutoActual = aliado;
 
-            // Inyectar Logo Institucional
             if (aliado.logo_url) {
                 const headerImg = document.getElementById('header-logo-img');
                 const headerIcon = document.getElementById('header-logo-icon');
@@ -566,12 +791,10 @@
             const sideName = document.getElementById('sidebar-instituto-nombre');
             if (sideName) sideName.textContent = aliado.nombre || 'Mi Instituto';
 
-            // Actualizar header
             document.getElementById('header-instituto').textContent = aliado.nombre || 'Instituto';
-            document.getElementById('header-timbres').textContent = `Saldo: ${aliado.saldo_timbres || 0} Timbres`;
+            document.getElementById('header-timbres').textContent = `Derechos: ${aliado.saldo_timbres || 0}`;
             document.getElementById('login-screen').style.display = 'none';
 
-            // Cargar dashboard inicial
             await cargarDashboardInstituto();
             showTab('dashboard');
             lucide.createIcons();
@@ -591,6 +814,7 @@
             await db.auth.signOut();
             institutoActual = null;
             aliadoId = null;
+            cursosCargados = [];
             document.getElementById('login-email').value = '';
             document.getElementById('login-password').value = '';
             document.getElementById('login-error').classList.add('hidden');
@@ -598,7 +822,6 @@
             document.getElementById('btn-login').disabled = false;
             document.getElementById('login-screen').style.display = 'flex';
             
-            // Restaurar logos por defecto
             const headerImg = document.getElementById('header-logo-img');
             const headerIcon = document.getElementById('header-logo-icon');
             if (headerImg && headerIcon) {
@@ -648,7 +871,6 @@
             if (!aliadoId) return;
 
             try {
-                // Refrescar datos del aliado (por si cambió el saldo)
                 const { data: aliado } = await db.from('renmcycf_aliados')
                     .select('saldo_timbres')
                     .eq('id', aliadoId)
@@ -656,16 +878,14 @@
 
                 if (aliado) {
                     document.getElementById('stat-timbres').textContent = aliado.saldo_timbres || 0;
-                    document.getElementById('header-timbres').textContent = `Saldo: ${aliado.saldo_timbres || 0} Timbres`;
+                    document.getElementById('header-timbres').textContent = `Derechos: ${aliado.saldo_timbres || 0}`;
                 }
 
-                // Contar certificados emitidos
                 const { count: certCount } = await db.from('renmcycf_certificados_b2b')
                     .select('*', { count: 'exact', head: true })
                     .eq('aliado_id', aliadoId);
                 document.getElementById('stat-certificados').textContent = certCount || 0;
 
-                // Contar cursos aprobados
                 const { count: cursosCount } = await db.from('renmcycf_aliados_cursos')
                     .select('*', { count: 'exact', head: true })
                     .eq('aliado_id', aliadoId)
@@ -678,8 +898,7 @@
         }
 
         function contactarSoporte() {
-            const mensaje = encodeURIComponent(`Hola, soy del instituto "${institutoActual?.nombre || ''}". Necesito adquirir más timbres digitales para emitir certificados B2B. Mi saldo actual es de ${institutoActual?.saldo_timbres || 0} timbres.`);
-            // Número de soporte - ajustar según configuración
+            const mensaje = encodeURIComponent(`Hola, soy del instituto "${institutoActual?.nombre || ''}". Necesito adquirir más Derechos de Emisión digitales para emitir certificados B2B. Mi saldo actual es de ${institutoActual?.saldo_timbres || 0} Derechos de Emisión.`);
             window.open(`https://wa.me/5490000000000?text=${mensaje}`, '_blank');
         }
 
@@ -699,29 +918,58 @@
 
                 if (error) throw error;
 
+                cursosCargados = cursos || [];
+
                 if (!cursos || cursos.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">No hay cursos propuestos aún.</td></tr>';
                     return;
                 }
 
-                tbody.innerHTML = cursos.map(c => `
-                <tr class="border-b border-white/5 hover:bg-white/5">
-                    <td class="p-3">
-                        <span class="text-white font-bold block text-sm">${c.nombre_curso}</span>
-                        <span class="text-[10px] text-slate-400 block"><i data-lucide="clock" class="inline w-3 h-3"></i> ${c.carga_horaria || 'S/D'}</span>
-                    </td>
-                    <td class="p-3 text-[10px] text-blue-400">
-                        <i data-lucide="users" class="inline w-3 h-3"></i> ${c.cuerpo_docente || 'S/D'}
-                    </td>
-                    <td class="p-3 text-xs">
-                        ${c.programa_url ? `<a href="${c.programa_url}" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1"><i data-lucide="file-text" class="w-4 h-4"></i> Ver PDF</a>` : '<span class="text-slate-500">Sin archivo</span>'}
-                    </td>
-                    <td class="p-3">
-                        <span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${c.estado==='APROBADO'?'bg-emerald-900/30 text-emerald-400':(c.estado==='RECHAZADO'?'bg-red-900/30 text-red-400':'bg-amber-900/30 text-amber-400')}">
-                            ${c.estado || 'PENDIENTE'}
-                        </span>
-                    </td>
-                </tr>`).join('');
+                tbody.innerHTML = cursos.map(c => {
+                    const tieneDocumentacion = c.programa_url && c.analitico_url && c.diploma_base_url;
+                    
+                    let celdaDocumentacion = '';
+                    if (tieneDocumentacion) {
+                        celdaDocumentacion = `
+                            <div class="flex flex-col gap-1">
+                                <span class="inline-flex items-center gap-1.5 bg-emerald-900/30 text-emerald-400 border border-emerald-500/40 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider w-max">
+                                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Documentación Adjuntada
+                                </span>
+                                <span class="text-[9px] text-slate-500 italic">Enviados a Comité</span>
+                            </div>`;
+                    } else {
+                        const faltantes = [];
+                        if (!c.programa_url) faltantes.push('Programa');
+                        if (!c.analitico_url) faltantes.push('Analítico');
+                        if (!c.diploma_base_url) faltantes.push('Diploma');
+                        celdaDocumentacion = `
+                            <div class="flex flex-col gap-1">
+                                <span class="inline-flex items-center gap-1.5 bg-amber-900/30 text-amber-400 border border-amber-500/40 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider w-max">
+                                    <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Incompleto
+                                </span>
+                                <span class="text-[9px] text-slate-500 italic">Falta: ${faltantes.join(', ')}</span>
+                            </div>`;
+                    }
+
+                    return `
+                    <tr class="border-b border-white/5 hover:bg-white/5">
+                        <td class="p-3">
+                            <span class="text-white font-bold block text-sm">${c.nombre_curso}</span>
+                            <span class="text-[10px] text-slate-400 block"><i data-lucide="clock" class="inline w-3 h-3"></i> ${c.carga_horaria || 'S/D'}</span>
+                        </td>
+                        <td class="p-3 text-[10px] text-blue-400">
+                            <i data-lucide="users" class="inline w-3 h-3"></i> ${c.cuerpo_docente || 'S/D'}
+                        </td>
+                        <td class="p-3">
+                            ${celdaDocumentacion}
+                        </td>
+                        <td class="p-3">
+                            <span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${c.estado==='APROBADO'?'bg-emerald-900/30 text-emerald-400':(c.estado==='RECHAZADO'?'bg-red-900/30 text-red-400':'bg-amber-900/30 text-amber-400')}">
+                                ${c.estado || 'PENDIENTE'}
+                            </span>
+                        </td>
+                    </tr>`;
+                }).join('');
                 lucide.createIcons();
 
             } catch (err) {
@@ -729,32 +977,96 @@
             }
         }
 
+        // ==========================================
+        // proponerCurso con subida de 3 archivos + pos_x/pos_y
+        // ==========================================
         async function proponerCurso(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-proponer-curso');
             const orig = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> ENVIANDO...';
+
+            const nombre = document.getElementById('curso-nombre').value.trim();
+            const carga = document.getElementById('curso-carga').value.trim();
+            const docentes = document.getElementById('curso-docentes').value.trim();
+            const filePrograma = document.getElementById('curso-file-programa').files[0];
+            const fileAnalitico = document.getElementById('curso-file-analitico').files[0];
+            const fileDiploma = document.getElementById('curso-file-diploma').files[0];
+            
+            // TAREA 1: Capturar posiciones
+            const posX = parseInt(document.getElementById('pos-x')?.value || 50);
+            const posY = parseInt(document.getElementById('pos-y')?.value || 50);
+
+            if (!filePrograma || !fileAnalitico || !fileDiploma) {
+                return alert("Debe adjuntar los 3 archivos respaldatorios: Programa, Analítico y Diploma.");
+            }
+
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Subiendo archivos... Esto puede demorar';
             btn.disabled = true;
             lucide.createIcons();
 
             try {
+                const ts = Date.now();
+                const bucket = 'renmcycf-documentos';
+
+                const subirArchivo = async (file, prefijo) => {
+                    const ext = file.name.split('.').pop();
+                    const fileName = `${aliadoId}_${prefijo}_${ts}_${Math.floor(Math.random()*1000)}.${ext}`;
+                    console.log(`Subiendo a Supabase Storage: ${fileName} (${file.name})`);
+                    const { error: upErr } = await db.storage.from(bucket).upload(fileName, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+                    if (upErr) throw new Error(`Error subiendo ${prefijo}: ${upErr.message}`);
+                    const publicUrl = `${PROJECT_URL}/storage/v1/object/public/${bucket}/${fileName}`;
+                    console.log(`URL pública generada: ${publicUrl}`);
+                    return publicUrl;
+                };
+
+                const [programaUrl, analiticoUrl, diplomaBaseUrl] = await Promise.all([
+                    subirArchivo(filePrograma, 'programa'),
+                    subirArchivo(fileAnalitico, 'analitico'),
+                    subirArchivo(fileDiploma, 'diploma_base')
+                ]);
+
+                console.log('✅ Archivos subidos. Insertando curso con pos_x/pos_y:', posX, posY);
+
+                // TAREA 1: Payload con pos_x y pos_y
                 const payload = {
                     aliado_id: aliadoId,
-                    nombre_curso: document.getElementById('curso-nombre').value.trim(),
-                    carga_horaria: document.getElementById('curso-carga').value.trim(),
-                    cuerpo_docente: document.getElementById('curso-docentes').value.trim(),
-                    programa_url: document.getElementById('curso-pdf').value.trim(),
+                    nombre_curso: nombre,
+                    carga_horaria: carga,
+                    cuerpo_docente: docentes,
+                    programa_url: programaUrl,
+                    analitico_url: analiticoUrl,
+                    diploma_base_url: diplomaBaseUrl,
+                    pos_x: posX,
+                    pos_y: posY,
                     estado: 'PENDIENTE'
                 };
 
-                const { error } = await db.from('renmcycf_aliados_cursos').insert([payload]);
-                if (error) throw error;
+                const { error: dbError } = await db.from('renmcycf_aliados_cursos').insert([payload]);
+                if (dbError) throw dbError;
 
-                alert("✅ Curso propuesto. Queda pendiente de auditoría por el Comité ASARI.");
+                alert("✅ Curso propuesto. Los 3 archivos fueron subidos y quedan pendientes de auditoría por el Comité ASARI.");
+                
+                // Reset completo del formulario
                 document.getElementById('form-curso-b2b').reset();
+                
+                // Reset del constructor visual
+                document.getElementById('constructor-diploma')?.classList.add('hidden');
+                document.getElementById('preview-diploma-container').style.backgroundImage = '';
+                document.getElementById('preview-placeholder')?.classList.remove('hidden');
+                document.getElementById('slider-pos-x').value = 50;
+                document.getElementById('slider-pos-y').value = 50;
+                document.getElementById('pos-x').value = 50;
+                document.getElementById('pos-y').value = 50;
+                document.getElementById('label-pos-x').textContent = '50%';
+                document.getElementById('label-pos-y').textContent = '50%';
+                
                 cargarCursosInstituto();
 
             } catch (err) {
+                console.error("Error al proponer curso:", err);
                 alert("Error al proponer curso: " + err.message);
             } finally {
                 btn.innerHTML = orig;
@@ -778,13 +1090,15 @@
             selectCurso.innerHTML = '<option value="">-- Seleccionar Curso --</option>';
 
             try {
-                // Cargar cursos APROBADOS para el select
+                // TAREA 3: Incluir diploma_base_url, pos_x, pos_y en el select
                 const { data: cursosAprobados, error: errCursos } = await db.from('renmcycf_aliados_cursos')
-                    .select('id, nombre_curso, carga_horaria')
+                    .select('id, nombre_curso, carga_horaria, diploma_base_url, pos_x, pos_y')
                     .eq('aliado_id', aliadoId)
                     .eq('estado', 'APROBADO');
 
                 if (errCursos) throw errCursos;
+
+                cursosCargados = cursosAprobados || [];
 
                 if (!cursosAprobados || cursosAprobados.length === 0) {
                     aviso.classList.remove('hidden');
@@ -802,11 +1116,13 @@
                         opt.value = c.id;
                         opt.textContent = c.nombre_curso;
                         opt.dataset.carga = c.carga_horaria || '';
+                        opt.dataset.diplomaUrl = c.diploma_base_url || '';
+                        opt.dataset.posX = c.pos_x || 50;
+                        opt.dataset.posY = c.pos_y || 50;
                         selectCurso.appendChild(opt);
                     });
                 }
 
-                // Cargar historial de certificados
                 const { data: certificados, error: errCert } = await db.from('renmcycf_certificados_b2b')
                     .select('*')
                     .eq('aliado_id', aliadoId)
@@ -835,14 +1151,65 @@
             }
         }
 
+        // ==========================================
+        // Helper: Preparar plantilla del PDF con datos del curso
+        // ==========================================
+        async function prepararPlantillaPDF(cursoData, alumno) {
+            const { nombres, apellidos, dni, hashCert, fechaEmision, urlVerificacion } = alumno;
+            
+            // 1. Aplicar imagen de fondo del diploma al área superior
+            const areaDiploma = document.getElementById('area-diploma-base');
+            if (cursoData.diploma_base_url) {
+                areaDiploma.style.backgroundImage = `url('${cursoData.diploma_base_url}')`;
+                areaDiploma.style.backgroundSize = 'contain';
+                areaDiploma.style.backgroundPosition = 'center';
+                areaDiploma.style.backgroundRepeat = 'no-repeat';
+            }
+
+            // 2. Posicionar los datos del alumno con pos_x/pos_y
+            const datosFlotantes = document.getElementById('datos-alumno-flotante');
+            const posY = cursoData.pos_y || 50;
+            const posX = cursoData.pos_x || 50;
+            datosFlotantes.style.top = `${posY}%`;
+            datosFlotantes.style.left = `${posX}%`;
+            datosFlotantes.style.transform = 'translate(-50%, -50%)';
+
+            // 3. Cargar textos
+            document.getElementById('pdf-alumno').textContent = `${nombres} ${apellidos}`;
+            document.getElementById('pdf-dni').textContent = `DNI: ${dni}`;
+            document.getElementById('pdf-curso').textContent = cursoData.nombre_curso || '';
+            document.getElementById('pdf-carga').textContent = `Carga Horaria: ${cursoData.carga_horaria || 'No especificada'}`;
+            document.getElementById('pdf-hash').textContent = hashCert;
+            document.getElementById('pdf-fecha').textContent = fechaEmision;
+
+            // 4. Generar QR
+            const qrContainer = document.getElementById('pdf-qr-container');
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+                text: urlVerificacion,
+                width: 90,
+                height: 90,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // 5. Esperar al render del QR
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+
         async function emitirCertificado(e) {
             e.preventDefault();
             if (!aliadoId || !institutoActual) return alert("Error: Sesión de instituto no válida.");
 
             const selectCurso = document.getElementById('cert-curso');
             const cursoId = selectCurso.value;
-            const cursoNombre = selectCurso.options[selectCurso.selectedIndex].text;
-            const cursoCarga = selectCurso.options[selectCurso.selectedIndex].dataset.carga;
+            const optSeleccionada = selectCurso.options[selectCurso.selectedIndex];
+            const cursoNombre = optSeleccionada.text;
+            const cursoCarga = optSeleccionada.dataset.carga;
+            const diplomaUrl = optSeleccionada.dataset.diplomaUrl;
+            const posX = parseInt(optSeleccionada.dataset.posX) || 50;
+            const posY = parseInt(optSeleccionada.dataset.posY) || 50;
             
             const nombres = document.getElementById('cert-nombre').value.trim();
             const apellidos = document.getElementById('cert-apellidos').value.trim();
@@ -850,7 +1217,6 @@
 
             if (!cursoId) return alert("Debe seleccionar un curso válido.");
 
-            // 1. Validar Saldo de Timbres en Base de Datos (Seguridad Real)
             const btn = document.getElementById('btn-emitir');
             const origHTML = btn.innerHTML;
             btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> VALIDANDO SALDO...';
@@ -861,82 +1227,41 @@
                 const { data: aliadoDB, error: errAliado } = await db.from('renmcycf_aliados').select('saldo_timbres').eq('id', aliadoId).single();
                 if (errAliado) throw new Error("Error al consultar saldo.");
                 if (!aliadoDB.saldo_timbres || aliadoDB.saldo_timbres <= 0) {
-                    throw new Error("Saldo Insuficiente. Adquiera más Timbres Digitales para continuar emitiendo.");
+                    throw new Error("Saldo Insuficiente. Adquiera más Derechos de Emisión para continuar emitiendo.");
                 }
 
                 btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> GENERANDO CERTIFICADO...';
                 
-                // 2. Generar Identificadores Únicos
                 const hashCert = `ASARI-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-
-                // ✅ QR apuntando a certificado.html (verificador público)
                 const urlVerificacion = `${window.location.origin}${window.location.pathname.replace('instituto.html', '')}certificado.html?hash=${hashCert}`;
-
                 const fechaEmision = new Date().toLocaleDateString('es-AR');
 
-                // 3. Preparar DOM de la Plantilla PDF
-                // Logo Institución B2B
-                document.getElementById('pdf-instituto').textContent = institutoActual.nombre;
-                const logoInst = document.getElementById('pdf-logo-instituto');
-                if (institutoActual.logo_url) {
-                    logoInst.src = institutoActual.logo_url;
-                    logoInst.classList.remove('hidden');
-                }
-                
-                // Traer Logo Oficial RENMCYCF (Consulta rápida)
-                const { data: configRenm } = await db.from('renmcycf_config').select('logo_url').eq('id', 1).maybeSingle();
-                const iconRenm = document.querySelector('#cert-template .lucide-shield-check.text-\\[\\#d4af37\\]');
-                if (configRenm && configRenm.logo_url) {
-                    // Creamos el img dinámicamente y ocultamos el icono por defecto
-                    if(iconRenm) {
-                        const imgOficial = document.createElement('img');
-                        imgOficial.src = configRenm.logo_url;
-                        imgOficial.className = 'w-16 h-16 object-contain';
-                        iconRenm.parentNode.appendChild(imgOficial);
-                        iconRenm.classList.add('hidden');
-                    }
-                }
-                
-                document.getElementById('pdf-alumno').textContent = `${nombres} ${apellidos}`;
-                document.getElementById('pdf-dni').textContent = dni;
-                document.getElementById('pdf-curso').textContent = cursoNombre;
-                document.getElementById('pdf-carga').textContent = `Carga Horaria: ${cursoCarga || 'No especificada'}`;
-                document.getElementById('pdf-hash').textContent = hashCert;
-                document.getElementById('pdf-fecha').textContent = fechaEmision;
+                // TAREA 3: Preparar plantilla con datos del curso desde Supabase
+                await prepararPlantillaPDF(
+                    { 
+                        nombre_curso: cursoNombre, 
+                        carga_horaria: cursoCarga,
+                        diploma_base_url: diplomaUrl,
+                        pos_x: posX,
+                        pos_y: posY
+                    },
+                    { nombres, apellidos, dni, hashCert, fechaEmision, urlVerificacion }
+                );
 
-                // Generar QR de ALTA RESOLUCIÓN Y ALTA CORRECCIÓN (Nivel H)
-                const qrContainer = document.getElementById('pdf-qr-container');
-                qrContainer.innerHTML = '';
-                // Agrandamos el contenedor temporalmente
-                qrContainer.className = "w-32 h-32 bg-white border border-slate-300 p-2 flex-shrink-0 flex items-center justify-center";
-                
-                new QRCode(qrContainer, { 
-                    text: urlVerificacion, 
-                    width: 110, 
-                    height: 110, 
-                    colorDark: "#030712", 
-                    colorLight: "#ffffff", 
-                    correctLevel: QRCode.CorrectLevel.H // Máxima corrección de errores para cámaras difíciles
-                });
-
-                // 4. Esperar a que el QR se dibuje bien y renderizar Canvas
-                await new Promise(resolve => setTimeout(resolve, 800)); // Damos un poco más de tiempo al render
-                
+                // Capturar Canvas
                 const renderZone = document.getElementById('cert-template');
                 const canvas = await html2canvas(renderZone, { 
-                    scale: 3, // Mayor calidad (de 2 a 3)
+                    scale: 3,
                     useCORS: true, 
                     backgroundColor: '#ffffff',
                     logging: false
                 });
                 
-                // 5. Crear PDF
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
                 const imgData = canvas.toDataURL('image/jpeg', 0.95);
                 pdf.addImage(imgData, 'JPEG', 0, 0, 297, 210);
                 
-                // 6. Subir PDF a Supabase Storage
                 btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> ENCRIPTANDO Y SUBIENDO...';
                 const pdfBlob = pdf.output('blob');
                 const pdfFileName = `B2B_${hashCert}.pdf`;
@@ -944,7 +1269,6 @@
                 if (uploadError) throw new Error("Error al guardar el documento en la nube.");
                 const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${pdfFileName}`;
 
-                // 7. Transacción en Base de Datos (Insertar Emisión y Restar Timbre)
                 btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> REGISTRANDO TRAZABILIDAD...';
                 
                 const { error: insertError } = await db.from('renmcycf_certificados_b2b').insert([{
@@ -959,17 +1283,15 @@
                 if (insertError) throw new Error("Error al registrar en blockchain/base de datos.");
 
                 const { error: updateError } = await db.from('renmcycf_aliados').update({ saldo_timbres: aliadoDB.saldo_timbres - 1 }).eq('id', aliadoId);
-                if (updateError) throw new Error("Emisión registrada, pero hubo error al descontar timbre.");
+                if (updateError) throw new Error("Emisión registrada, pero hubo error al descontar el Derecho de Emisión.");
 
-                // 8. Éxito
                 alert(`✅ CERTIFICADO EMITIDO EXITOSAMENTE\nHash: ${hashCert}\nSaldo actualizado.`);
                 
-                // Descargar automáticamente al usuario
                 pdf.save(`Certificado_ASARI_${dni}.pdf`);
                 
                 document.getElementById('form-certificado').reset();
-                await cargarDashboardInstituto(); // Refresca Timbres en header y cards
-                cargarCertificadosInstituto(); // Refresca tabla
+                await cargarDashboardInstituto();
+                cargarCertificadosInstituto();
 
             } catch (err) {
                 alert(err.message);
@@ -990,10 +1312,7 @@
                 ['María Belén', 'Gómez', '38987654']
             ];
             const ws = XLSX.utils.aoa_to_sheet(ws_data);
-            
-            // Ajustar ancho de columnas
             ws['!cols'] = [{ wch: 25 }, { wch: 25 }, { wch: 15 }];
-            
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Alumnos");
             XLSX.writeFile(wb, "Plantilla_Alumnos_RENMCYCF.xlsx");
@@ -1004,8 +1323,13 @@
 
             const selectCurso = document.getElementById('cert-curso');
             const cursoId = selectCurso.value;
-            const cursoNombre = selectCurso.options[selectCurso.selectedIndex]?.text;
-            const cursoCarga = selectCurso.options[selectCurso.selectedIndex]?.dataset.carga;
+            const optSeleccionada = selectCurso.options[selectCurso.selectedIndex];
+            const cursoNombre = optSeleccionada?.text;
+            const cursoCarga = optSeleccionada?.dataset.carga;
+            // TAREA 3: Obtener datos del diploma desde el select
+            const diplomaUrl = optSeleccionada?.dataset.diplomaUrl;
+            const posX = parseInt(optSeleccionada?.dataset.posX) || 50;
+            const posY = parseInt(optSeleccionada?.dataset.posY) || 50;
 
             if (!cursoId) return alert("Por favor, seleccione un curso aprobado en la tarjeta de Emisión Individual.");
 
@@ -1019,7 +1343,6 @@
             const progresoBarra = document.getElementById('progreso-barra');
             const progresoPorcentaje = document.getElementById('progreso-porcentaje');
 
-            // Leer Excel
             btn.disabled = true;
             progresoDiv.classList.remove('hidden');
             progresoTexto.innerText = "Leyendo archivo Excel...";
@@ -1033,34 +1356,29 @@
                     const worksheet = workbook.Sheets[firstSheetName];
                     const rows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
 
-                    // Filtrar filas vacías
                     const alumnosValidos = rows.filter(r => r.NOMBRES && r.APELLIDOS && r.DNI);
                     const total = alumnosValidos.length;
 
                     if (total === 0) throw new Error("No se encontraron alumnos válidos en el archivo. Revise los encabezados.");
 
-                    // 1. Validar Saldo
-                    progresoTexto.innerText = "Validando saldo de Timbres...";
+                    progresoTexto.innerText = "Validando saldo de Derechos de Emisión...";
                     const { data: aliadoDB, error: errAliado } = await db.from('renmcycf_aliados').select('saldo_timbres').eq('id', aliadoId).single();
                     if (errAliado || !aliadoDB) throw new Error("Error al consultar saldo.");
                     
                     let saldoRestante = aliadoDB.saldo_timbres || 0;
                     if (saldoRestante < total) {
-                        throw new Error(`Saldo Insuficiente. Intentas emitir ${total} certificados, pero solo tienes ${saldoRestante} Timbres.`);
+                        throw new Error(`Saldo Insuficiente. Intentas emitir ${total} certificados, pero solo tienes ${saldoRestante} Derechos de Emisión.`);
                     }
 
-                    if(!confirm(`Se procesarán ${total} certificados y se consumirán ${total} Timbres.\n¿Desea continuar?`)) {
+                    if(!confirm(`Se procesarán ${total} certificados y se consumirán ${total} Derechos de Emisión.\n¿Desea continuar?`)) {
                         throw new Error("Proceso cancelado por el usuario.");
                     }
 
-                    // 2. Preparar ZIP
                     const zip = new JSZip();
                     const fechaEmision = new Date().toLocaleDateString('es-AR');
-
                     let exitosos = 0;
                     const registrosInsert = [];
 
-                    // 3. Loop de Renderizado y Subida
                     for (let i = 0; i < total; i++) {
                         const alumno = alumnosValidos[i];
                         const nombres = alumno.NOMBRES.toString().trim();
@@ -1072,47 +1390,21 @@
                         progresoBarra.style.width = `${porcentaje}%`;
                         progresoPorcentaje.innerText = `${porcentaje}%`;
 
-                        // Generar Hash y URL
                         const hashCert = `ASARI-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
                         const urlVerificacion = `https://renmcycf.com.ar/certificado.html?hash=${hashCert}`;
 
-                        // Preparar Plantilla (Reutilizamos la de emisión individual)
-                        document.getElementById('pdf-instituto').textContent = institutoActual.nombre;
-                        const logoInst = document.getElementById('pdf-logo-instituto');
-                        if (institutoActual.logo_url) {
-                            logoInst.src = institutoActual.logo_url;
-                            logoInst.classList.remove('hidden');
-                        }
-                        
-                        // Logo Oficial
-                        const { data: configRenm } = await db.from('renmcycf_config').select('logo_url').eq('id', 1).maybeSingle();
-                        const iconRenm = document.querySelector('#cert-template .lucide-shield-check.text-\\[\\#d4af37\\]');
-                        if (configRenm && configRenm.logo_url && iconRenm) {
-                            let imgOficial = document.getElementById('img-oficial-temp');
-                            if (!imgOficial) {
-                                imgOficial = document.createElement('img');
-                                imgOficial.id = 'img-oficial-temp';
-                                imgOficial.className = 'w-16 h-16 object-contain';
-                                iconRenm.parentNode.appendChild(imgOficial);
-                            }
-                            imgOficial.src = configRenm.logo_url;
-                            iconRenm.classList.add('hidden');
-                        }
+                        // TAREA 3: Preparar plantilla con datos del curso
+                        await prepararPlantillaPDF(
+                            { 
+                                nombre_curso: cursoNombre, 
+                                carga_horaria: cursoCarga,
+                                diploma_base_url: diplomaUrl,
+                                pos_x: posX,
+                                pos_y: posY
+                            },
+                            { nombres, apellidos, dni, hashCert, fechaEmision, urlVerificacion }
+                        );
 
-                        document.getElementById('pdf-alumno').textContent = `${nombres} ${apellidos}`;
-                        document.getElementById('pdf-dni').textContent = dni;
-                        document.getElementById('pdf-curso').textContent = cursoNombre;
-                        document.getElementById('pdf-carga').textContent = `Carga Horaria: ${cursoCarga || 'No especificada'}`;
-                        document.getElementById('pdf-hash').textContent = hashCert;
-                        document.getElementById('pdf-fecha').textContent = fechaEmision;
-
-                        const qrContainer = document.getElementById('pdf-qr-container');
-                        qrContainer.innerHTML = '';
-                        qrContainer.className = "w-32 h-32 bg-white border border-slate-300 p-2 flex-shrink-0 flex items-center justify-center";
-                        new QRCode(qrContainer, { text: urlVerificacion, width: 110, height: 110, colorDark: "#030712", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
-
-                        // Render Canvas
-                        await new Promise(resolve => setTimeout(resolve, 800)); // Esperar QR
                         const renderZone = document.getElementById('cert-template');
                         const canvas = await html2canvas(renderZone, { scale: 3, useCORS: true, backgroundColor: '#ffffff', logging: false });
                         
@@ -1120,7 +1412,6 @@
                         const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
                         pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 297, 210);
 
-                        // Subir a Storage
                         progresoTexto.innerText = `Subiendo a la nube ${i + 1} de ${total}...`;
                         const pdfBlob = pdf.output('blob');
                         const pdfFileName = `B2B_${hashCert}.pdf`;
@@ -1128,11 +1419,9 @@
                         if (uploadError) throw new Error("Error al guardar en la nube.");
                         const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${pdfFileName}`;
 
-                        // Agregar al ZIP
                         const arrayBuffer = await pdfBlob.arrayBuffer();
                         zip.file(`Certificado_${dni}_${nombres.split(' ')[0]}.pdf`, arrayBuffer);
 
-                        // Guardar en array para DB
                         registrosInsert.push({
                             aliado_id: aliadoId,
                             curso_id: cursoId,
@@ -1144,19 +1433,16 @@
                         });
 
                         exitosos++;
-                        saldoRestante--; // Actualizar tracking local
+                        saldoRestante--;
                     }
 
-                    // 4. Inserción Masiva en BD
                     progresoTexto.innerText = "Registrando en Blockchain...";
                     const { error: insertError } = await db.from('renmcycf_certificados_b2b').insert(registrosInsert);
                     if (insertError) throw new Error("Error al registrar emisiones en la base de datos.");
 
-                    // 5. Descontar Timbres Totales
                     const { error: updateError } = await db.from('renmcycf_aliados').update({ saldo_timbres: saldoRestante }).eq('id', aliadoId);
-                    if (updateError) console.error("Error descontando timbres, pero los certificados se emitieron.");
+                    if (updateError) console.error("Error descontando Derechos de Emisión, pero los certificados se emitieron.");
 
-                    // 6. Descargar ZIP
                     progresoTexto.innerText = "Comprimiendo archivo ZIP...";
                     progresoBarra.style.width = "100%";
                     progresoPorcentaje.innerText = "100%";
