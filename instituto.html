@@ -40,161 +40,50 @@
         .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3); }
         .stat-number { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
 
-        /* ========================================== */
+        /* MODALES */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 100%; max-width: 780px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.6); animation: modalIn 0.3s ease-out; }
+        @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
         /* MODO CLARO */
-        /* ========================================== */
         body.light-theme {
             background-color: #f1f5f9;
             color: #0f172a;
             background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(217, 119, 6, 0.06) 0%, transparent 50%);
         }
-        body.light-theme .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            border-color: rgba(0, 0, 0, 0.08);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        }
-        body.light-theme .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            border-color: rgba(0, 0, 0, 0.08);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-        }
-        body.light-theme .glass-card:hover {
-            border-color: rgba(59, 130, 246, 0.3);
-        }
-        body.light-theme input[type="text"], 
-        body.light-theme input[type="number"], 
-        body.light-theme input[type="email"], 
-        body.light-theme input[type="url"], 
-        body.light-theme input[type="password"], 
-        body.light-theme select, 
-        body.light-theme textarea {
-            background: #ffffff;
-            border-color: #cbd5e1;
-            color: #0f172a;
-        }
-        body.light-theme input:focus, 
-        body.light-theme select:focus, 
-        body.light-theme textarea:focus {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
-        }
-        body.light-theme th {
-            background: rgba(241, 245, 249, 0.9);
-            color: #475569;
-        }
-        body.light-theme tr {
-            border-color: rgba(0, 0, 0, 0.06);
-        }
-        body.light-theme .sidebar-link {
-            color: #64748b;
-        }
-        body.light-theme .sidebar-link:hover {
-            color: #0f172a;
-            background: rgba(0, 0, 0, 0.04);
-        }
-        body.light-theme .sidebar-link.active {
-            color: #b45309;
-            background: rgba(217, 119, 6, 0.1);
-        }
-        body.light-theme .text-white {
-            color: #0f172a !important;
-        }
-        body.light-theme .text-slate-400 {
-            color: #64748b !important;
-        }
-        body.light-theme header {
-            background: rgba(255, 255, 255, 0.5);
-            border-color: rgba(0, 0, 0, 0.06);
-        }
-        body.light-theme .login-box {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(0, 0, 0, 0.08);
-        }
-        body.light-theme #login-screen {
-            background: #f1f5f9;
-        }
-        body.light-theme .border-white\/5 {
-            border-color: rgba(0, 0, 0, 0.06) !important;
-        }
-        body.light-theme .bg-black\/20 {
-            background: rgba(0, 0, 0, 0.03) !important;
-        }
-        body.light-theme .text-transparent.bg-clip-text {
-            background-image: linear-gradient(to right, #0f172a, #475569) !important;
-        }
+        body.light-theme .glass-panel { background: rgba(255, 255, 255, 0.85); border-color: rgba(0, 0, 0, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); }
+        body.light-theme .glass-card { background: rgba(255, 255, 255, 0.7); border-color: rgba(0, 0, 0, 0.08); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03); }
+        body.light-theme .glass-card:hover { border-color: rgba(59, 130, 246, 0.3); }
+        body.light-theme input[type="text"], body.light-theme input[type="number"], body.light-theme input[type="email"], body.light-theme input[type="url"], body.light-theme input[type="password"], body.light-theme select, body.light-theme textarea { background: #ffffff; border-color: #cbd5e1; color: #0f172a; }
+        body.light-theme input:focus, body.light-theme select:focus, body.light-theme textarea:focus { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
+        body.light-theme th { background: rgba(241, 245, 249, 0.9); color: #475569; }
+        body.light-theme tr { border-color: rgba(0, 0, 0, 0.06); }
+        body.light-theme .sidebar-link { color: #64748b; }
+        body.light-theme .sidebar-link:hover { color: #0f172a; background: rgba(0, 0, 0, 0.04); }
+        body.light-theme .sidebar-link.active { color: #b45309; background: rgba(217, 119, 6, 0.1); }
+        body.light-theme .text-white { color: #0f172a !important; }
+        body.light-theme .text-slate-400 { color: #64748b !important; }
+        body.light-theme header { background: rgba(255, 255, 255, 0.5); border-color: rgba(0, 0, 0, 0.06); }
+        body.light-theme .login-box { background: rgba(255, 255, 255, 0.9); border-color: rgba(0, 0, 0, 0.08); }
+        body.light-theme #login-screen { background: #f1f5f9; }
+        body.light-theme .border-white\/5 { border-color: rgba(0, 0, 0, 0.06) !important; }
+        body.light-theme .bg-black\/20 { background: rgba(0, 0, 0, 0.03) !important; }
+        body.light-theme .text-transparent.bg-clip-text { background-image: linear-gradient(to right, #0f172a, #475569) !important; }
+        body.light-theme .modal-content { background: #ffffff; border-color: rgba(0, 0, 0, 0.08); }
+        body.light-theme .modal-content .text-white { color: #0f172a !important; }
 
-        /* Estilo para inputs de archivo */
-        input[type="file"] {
-            width: 100%;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            padding: 8px 12px;
-            color: #94a3b8;
-            outline: none;
-            transition: all 0.3s;
-            font-size: 0.75rem;
-            cursor: pointer;
-        }
-        input[type="file"]::file-selector-button {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            color: white;
-            border: 0;
-            border-radius: 6px;
-            padding: 5px 12px;
-            font-weight: 700;
-            font-size: 0.7rem;
-            margin-right: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        input[type="file"]::file-selector-button:hover {
-            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-        }
-        body.light-theme input[type="file"] {
-            background: #ffffff;
-            border-color: #cbd5e1;
-            color: #64748b;
-        }
+        input[type="file"] { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; padding: 8px 12px; color: #94a3b8; outline: none; transition: all 0.3s; font-size: 0.75rem; cursor: pointer; }
+        input[type="file"]::file-selector-button { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: 0; border-radius: 6px; padding: 5px 12px; font-weight: 700; font-size: 0.7rem; margin-right: 10px; cursor: pointer; transition: all 0.3s; }
+        input[type="file"]::file-selector-button:hover { background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); }
+        body.light-theme input[type="file"] { background: #ffffff; border-color: #cbd5e1; color: #64748b; }
 
-        /* Estilo para sliders */
-        input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: rgba(0,0,0,0.4);
-            outline: none;
-            padding: 0;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-        }
-        input[type="range"]::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-        }
-        body.light-theme input[type="range"] {
-            background: rgba(0,0,0,0.15);
-        }
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.4); outline: none; padding: 0; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); cursor: pointer; box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); cursor: pointer; border: none; box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        body.light-theme input[type="range"] { background: rgba(0,0,0,0.15); }
 
-        /* TAREA 3: Asegurar que el logo oficial en el faldón se mezcle bien con fondo blanco */
-        #faldon-trazabilidad .logo-oficial-wrapper {
-            background: #ffffff !important;
-        }
+        #faldon-trazabilidad .logo-oficial-wrapper { background: #ffffff !important; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -217,13 +106,9 @@
 
     <!-- SIDEBAR -->
     <aside class="w-64 glass-panel m-4 mr-0 flex flex-col z-20 hidden md:flex border-r border-white/5">
-        <!-- ============================================ -->
-        <!-- TAREA 1: Rediseño Premium del Sidebar         -->
-        <!-- ============================================ -->
         <div class="pt-8 pb-6 px-6 border-b border-white/5 relative flex flex-col items-center text-center gap-3">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-blue-500"></div>
             
-            <!-- Contenedor del Logo Gigante -->
             <div class="w-24 h-24 rounded-full bg-white p-2 flex items-center justify-center overflow-hidden border-2 border-yellow-500/50 shadow-[0_0_20px_rgba(234,179,8,0.15)] shrink-0">
                 <img id="sidebar-logo-img" src="" class="w-full h-full object-contain mix-blend-multiply hidden transition-transform duration-500 hover:scale-110">
                 <i data-lucide="building-2" id="sidebar-logo-icon" class="text-yellow-500 w-10 h-10"></i>
@@ -263,9 +148,6 @@
                     <p class="text-[10px] text-yellow-500 font-mono font-bold" id="header-timbres">Derechos: 0</p>
                 </div>
 
-                <!-- ============================================ -->
-                <!-- TAREA 2: Logo del Header agrandado y circular -->
-                <!-- ============================================ -->
                 <div class="w-12 h-12 rounded-full bg-white p-1 border border-yellow-500/40 flex items-center justify-center overflow-hidden shadow-sm shrink-0">
                     <img id="header-logo-img" src="" class="w-full h-full object-contain mix-blend-multiply hidden">
                     <i data-lucide="building" id="header-logo-icon" class="w-5 h-5 text-slate-700"></i>
@@ -344,7 +226,6 @@
                                 <p class="text-[9px] text-slate-500 mt-1 italic">Diseño base del diploma institucional (JPG/PNG).</p>
                             </div>
 
-                            <!-- Constructor Visual de Diplomas -->
                             <div id="constructor-diploma" class="hidden bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 space-y-4">
                                 <div class="flex items-center gap-2 border-b border-blue-500/30 pb-2">
                                     <i data-lucide="move" class="w-4 h-4 text-blue-400"></i>
@@ -415,6 +296,7 @@
                                         <th class="p-3">Docentes</th>
                                         <th class="p-3">Documentación</th>
                                         <th class="p-3">Estado</th>
+                                        <th class="p-3 text-right">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="cursos-body"></tbody>
@@ -428,7 +310,6 @@
             <div id="view-certificados" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="xl:col-span-1 space-y-6">
-                        <!-- EMISIÓN INDIVIDUAL -->
                         <div class="glass-card p-6 border-yellow-500/30">
                             <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2 flex items-center gap-2">
                                 <i data-lucide="user" class="w-5 h-5 text-yellow-400"></i> Emisión Individual
@@ -458,7 +339,6 @@
                             </form>
                         </div>
 
-                        <!-- EMISIÓN MASIVA -->
                         <div class="glass-card p-6 border-emerald-500/30 relative overflow-hidden">
                             <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><i data-lucide="users" class="w-20 h-20 text-emerald-500"></i></div>
                             <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2 flex items-center gap-2 relative z-10">
@@ -518,11 +398,160 @@
         </div>
     </main>
 
-    <!-- PLANTILLA HÍBRIDA DEL PDF (A4 Apaisado 1123x794px) -->
+    <!-- ============================================================ -->
+    <!-- MODAL DE EDICIÓN DE CURSO                                    -->
+    <!-- ============================================================ -->
+    <div id="modal-editar-curso" class="modal-overlay" onclick="if(event.target===this) cerrarModalEdicion()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <!-- Header del Modal -->
+            <div class="flex items-center justify-between p-6 border-b border-white/10 sticky top-0 bg-[#0f172a] z-10" style="background: inherit;">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/40 flex items-center justify-center">
+                        <i data-lucide="edit-3" class="w-5 h-5 text-blue-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-black text-lg">Editar Curso</h3>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-widest">Modificar datos y/o archivos respaldatorios</p>
+                    </div>
+                </div>
+                <button onclick="cerrarModalEdicion()" class="p-2 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Body del Modal -->
+            <form id="form-editar-curso" onsubmit="guardarEdicionCurso(event)" class="p-6 space-y-5">
+                <input type="hidden" id="edit-curso-id">
+
+                <div class="bg-blue-900/20 border border-blue-500/30 rounded-xl p-3 flex items-start gap-3">
+                    <i data-lucide="info" class="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5"></i>
+                    <p class="text-[11px] text-blue-200 leading-relaxed">
+                        Podés corregir el nombre, la carga horaria y los docentes. Para los archivos, <strong class="text-white">dejá el campo vacío si querés mantener el actual</strong> o seleccioná uno nuevo para reemplazarlo.
+                    </p>
+                </div>
+
+                <!-- Datos de texto -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label>Nombre del Curso</label>
+                        <input type="text" id="edit-curso-nombre" required>
+                    </div>
+                    <div>
+                        <label>Carga Horaria</label>
+                        <input type="text" id="edit-curso-carga" required>
+                    </div>
+                    <div>
+                        <label>Estado Actual</label>
+                        <input type="text" id="edit-curso-estado" disabled class="opacity-60 cursor-not-allowed">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label>Cuerpo Docente</label>
+                        <textarea id="edit-curso-docentes" rows="2" required></textarea>
+                    </div>
+                </div>
+
+                <!-- Archivos actuales + nuevos -->
+                <div class="border-t border-white/10 pt-5 space-y-4">
+                    <h4 class="text-white font-bold text-sm uppercase tracking-widest flex items-center gap-2">
+                        <i data-lucide="paperclip" class="w-4 h-4 text-yellow-400"></i> Archivos Respaldatorios
+                    </h4>
+
+                    <!-- Programa -->
+                    <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-blue-400 mb-0">Programa de Estudio (PDF)</label>
+                            <span id="edit-estado-programa" class="text-[9px] font-bold uppercase tracking-widest"></span>
+                        </div>
+                        <input type="file" id="edit-curso-file-programa" accept="application/pdf" class="form-input">
+                        <p class="text-[9px] text-slate-500 mt-1 italic">Dejar vacío para mantener el archivo actual.</p>
+                    </div>
+
+                    <!-- Analítico -->
+                    <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-blue-400 mb-0">Modelo de Analítico (PDF)</label>
+                            <span id="edit-estado-analitico" class="text-[9px] font-bold uppercase tracking-widest"></span>
+                        </div>
+                        <input type="file" id="edit-curso-file-analitico" accept="application/pdf" class="form-input">
+                        <p class="text-[9px] text-slate-500 mt-1 italic">Dejar vacío para mantener el archivo actual.</p>
+                    </div>
+
+                    <!-- Diploma -->
+                    <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-blue-400 mb-0">Imagen Base del Diploma</label>
+                            <span id="edit-estado-diploma" class="text-[9px] font-bold uppercase tracking-widest"></span>
+                        </div>
+                        <input type="file" id="edit-curso-file-diploma" accept="image/*" class="form-input">
+                        <p class="text-[9px] text-slate-500 mt-1 italic">Dejar vacío para mantener el archivo actual.</p>
+                    </div>
+                </div>
+
+                <!-- Constructor visual (precargado con el diploma actual) -->
+                <div id="edit-constructor-diploma" class="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 space-y-4">
+                    <div class="flex items-center gap-2 border-b border-blue-500/30 pb-2">
+                        <i data-lucide="move" class="w-4 h-4 text-blue-400"></i>
+                        <p class="text-xs font-bold text-blue-300 uppercase tracking-widest">Ajustar Posición de los Datos</p>
+                    </div>
+
+                    <div id="edit-preview-diploma-container"
+                         class="aspect-[1.414/1] w-full relative bg-slate-800 rounded-lg overflow-hidden border-2 border-blue-500/30"
+                         style="background-size: contain; background-position: center; background-repeat: no-repeat;">
+                        
+                        <div id="edit-preview-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
+                            <div class="text-center">
+                                <i data-lucide="image" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                                <p>Sin imagen base disponible</p>
+                            </div>
+                        </div>
+
+                        <div id="edit-preview-texto-alumno"
+                             class="absolute bg-white/80 backdrop-blur-sm text-slate-900 px-4 py-2 rounded-lg shadow-lg border-2 border-yellow-400/60 pointer-events-none"
+                             style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; text-align: center;">
+                            <p class="font-black text-sm md:text-base leading-tight">NOMBRE DEL ALUMNO</p>
+                            <p class="font-mono text-[10px] md:text-xs font-bold text-slate-600">DNI: 12.345.678</p>
+                            <p class="font-bold text-[9px] md:text-[10px] text-blue-800 uppercase mt-1">NOMBRE DEL CURSO</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[10px] text-slate-400 flex justify-between mb-1">
+                                <span>Eje Y (Vertical)</span>
+                                <span id="edit-label-pos-y" class="font-mono text-blue-400">50%</span>
+                            </label>
+                            <input type="range" id="edit-slider-pos-y" min="0" max="100" value="50" class="w-full">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-slate-400 flex justify-between mb-1">
+                                <span>Eje X (Horizontal)</span>
+                                <span id="edit-label-pos-x" class="font-mono text-blue-400">50%</span>
+                            </label>
+                            <input type="range" id="edit-slider-pos-x" min="0" max="100" value="50" class="w-full">
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="edit-pos-x" value="50">
+                    <input type="hidden" id="edit-pos-y" value="50">
+                </div>
+
+                <!-- Botones -->
+                <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
+                    <button type="button" onclick="cerrarModalEdicion()" class="px-6 py-3 rounded-xl border border-white/10 text-slate-300 font-bold uppercase tracking-wider text-xs hover:bg-white/5 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-guardar-edicion" class="btn-gold px-8 py-3 rounded-xl font-black uppercase tracking-wider text-xs flex items-center gap-2">
+                        <i data-lucide="save" class="w-4 h-4"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- PLANTILLA HÍBRIDA DEL PDF -->
     <div id="cert-render-zone" style="position: absolute; left: -9999px; top: -9999px; width: 1123px; height: 794px; background: white;">
         <div id="cert-template" class="w-full h-full relative overflow-hidden flex flex-col" style="font-family: 'Outfit', sans-serif; background: #ffffff;">
             
-            <!-- ÁREA DIPLOMA BASE (82% del alto = ~650px) -->
             <div id="area-diploma-base" 
                  class="relative w-full" 
                  style="height: 650px; background-size: contain; background-position: center; background-repeat: no-repeat; background-color: #ffffff;">
@@ -537,14 +566,11 @@
                 </div>
             </div>
 
-            <!-- FALDÓN TRAZABILIDAD RENMCYCF (18% = ~144px) -->
             <div id="faldon-trazabilidad" 
                  class="relative w-full flex items-center justify-between px-8 py-4" 
                  style="height: 144px; background: #0f172a; color: #ffffff;">
 
-                <!-- IZQUIERDA: Logo RENMCYCF + Claim -->
                 <div class="flex items-center gap-3" style="width: 30%;">
-                    <!-- TAREA 3: Fondo blanco en el contenedor del logo oficial -->
                     <div class="logo-oficial-wrapper rounded-full flex items-center justify-center shrink-0" 
                          style="width: 56px; height: 56px; background: #ffffff; border: 3px solid #d4af37; overflow: hidden;">
                         <i data-lucide="shield-check" style="width: 30px; height: 30px; color: #d4af37;"></i>
@@ -555,7 +581,6 @@
                     </div>
                 </div>
 
-                <!-- CENTRO: HASH + FECHA -->
                 <div class="text-center" style="width: 40%;">
                     <p style="font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">Certificado con Trazabilidad Blockchain</p>
                     <p style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #e2e8f0; margin-bottom: 3px;">
@@ -566,7 +591,6 @@
                     </p>
                 </div>
 
-                <!-- DERECHA: QR en recuadro blanco -->
                 <div class="flex items-center justify-end gap-3" style="width: 30%;">
                     <div class="text-right">
                         <p style="font-size: 9px; font-weight: 900; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Escanear</p>
@@ -588,7 +612,7 @@
         // ==========================================
         lucide.createIcons();
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
-        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
+        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5ODc2NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
         const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
 
         let institutoActual = null;
@@ -622,22 +646,35 @@
         }
 
         // ==========================================
-        // CONSTRUCTOR VISUAL DE DIPLOMAS
+        // HELPER GENÉRICO: Constructor Visual de Diplomas
         // ==========================================
-        (function initConstructorVisual() {
-            const inputDiploma = document.getElementById('curso-file-diploma');
+        // Se reutiliza tanto en el form de alta como en el modal de edición.
+        // Recibe los IDs de los elementos del DOM para no duplicar código.
+        function initConstructorVisual(config) {
+            const {
+                inputDiplomaId,
+                containerId,
+                previewContainerId,
+                placeholderId,
+                sliderYId,
+                sliderXId,
+                labelYId,
+                labelXId,
+                posYInputId,
+                posXInputId,
+                textoFlotanteId
+            } = config;
+
+            const inputDiploma = document.getElementById(inputDiplomaId);
             if (!inputDiploma) return;
 
             inputDiploma.addEventListener('change', function(e) {
                 const file = e.target.files[0];
-                const container = document.getElementById('constructor-diploma');
-                const previewContainer = document.getElementById('preview-diploma-container');
-                const placeholder = document.getElementById('preview-placeholder');
+                const container = document.getElementById(containerId);
+                const previewContainer = document.getElementById(previewContainerId);
+                const placeholder = document.getElementById(placeholderId);
                 
-                if (!file) {
-                    if (container) container.classList.add('hidden');
-                    return;
-                }
+                if (!file) return;
 
                 if (!file.type.startsWith('image/')) {
                     alert('Por favor, seleccione un archivo de imagen válido (JPG, PNG, etc.)');
@@ -648,22 +685,20 @@
                 const reader = new FileReader();
                 reader.onload = function(evt) {
                     if (container) container.classList.remove('hidden');
-                    if (previewContainer) {
-                        previewContainer.style.backgroundImage = `url('${evt.target.result}')`;
-                    }
+                    if (previewContainer) previewContainer.style.backgroundImage = `url('${evt.target.result}')`;
                     if (placeholder) placeholder.classList.add('hidden');
                     lucide.createIcons();
                 };
                 reader.readAsDataURL(file);
             });
 
-            const sliderY = document.getElementById('slider-pos-y');
-            const sliderX = document.getElementById('slider-pos-x');
-            const labelY = document.getElementById('label-pos-y');
-            const labelX = document.getElementById('label-pos-x');
-            const inputPosY = document.getElementById('pos-y');
-            const inputPosX = document.getElementById('pos-x');
-            const textoFlotante = document.getElementById('preview-texto-alumno');
+            const sliderY = document.getElementById(sliderYId);
+            const sliderX = document.getElementById(sliderXId);
+            const labelY = document.getElementById(labelYId);
+            const labelX = document.getElementById(labelXId);
+            const inputPosY = document.getElementById(posYInputId);
+            const inputPosX = document.getElementById(posXInputId);
+            const textoFlotante = document.getElementById(textoFlotanteId);
 
             function actualizarPosicion() {
                 const y = parseInt(sliderY?.value || 50);
@@ -684,7 +719,39 @@
             if (sliderY) sliderY.addEventListener('input', actualizarPosicion);
             if (sliderX) sliderX.addEventListener('input', actualizarPosicion);
             actualizarPosicion();
-        })();
+
+            // Exponer función para setear la imagen y posición desde fuera
+            return {
+                setPreview: (imageUrl) => {
+                    const previewContainer = document.getElementById(previewContainerId);
+                    const placeholder = document.getElementById(placeholderId);
+                    const container = document.getElementById(containerId);
+                    if (imageUrl && previewContainer) {
+                        previewContainer.style.backgroundImage = `url('${imageUrl}')`;
+                        if (placeholder) placeholder.classList.add('hidden');
+                        if (container) container.classList.remove('hidden');
+                    }
+                },
+                setPosition: (x, y) => {
+                    if (sliderX) sliderX.value = x;
+                    if (sliderY) sliderY.value = y;
+                    actualizarPosicion();
+                },
+                setTexts: ({ nombre, curso }) => {
+                    const texto = document.getElementById(textoFlotanteId);
+                    if (!texto) return;
+                    const pNombre = texto.children[0];
+                    const pCurso = texto.children[2];
+                    if (pNombre && nombre) pNombre.textContent = nombre;
+                    if (pCurso && curso) pCurso.textContent = curso;
+                }
+            };
+        }
+
+        // Instanciar el constructor para el form de alta
+        let constructorAlta = null;
+        // Instanciar el constructor para el modal de edición
+        let constructorEdicion = null;
 
         // ==========================================
         // 1. AUTENTICACIÓN
@@ -896,7 +963,7 @@
         async function cargarCursosInstituto() {
             const tbody = document.getElementById('cursos-body');
             if (!tbody) return;
-            tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">Cargando...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">Cargando...</td></tr>';
 
             try {
                 const { data: cursos, error } = await db.from('renmcycf_aliados_cursos')
@@ -909,7 +976,7 @@
                 cursosCargados = cursos || [];
 
                 if (!cursos || cursos.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">No hay cursos propuestos aún.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">No hay cursos propuestos aún.</td></tr>';
                     return;
                 }
 
@@ -939,6 +1006,12 @@
                             </div>`;
                     }
 
+                    // Botón de edición: permitido siempre, pero con avisos según estado
+                    const esEditable = c.estado === 'PENDIENTE' || c.estado === 'RECHAZADO';
+                    const editTooltip = esEditable 
+                        ? 'Editar curso' 
+                        : 'Editar (ya aprobado — los cambios reinician la auditoría)';
+
                     return `
                     <tr class="border-b border-white/5 hover:bg-white/5">
                         <td class="p-3">
@@ -956,15 +1029,188 @@
                                 ${c.estado || 'PENDIENTE'}
                             </span>
                         </td>
+                        <td class="p-3 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <button onclick="abrirModalEdicion('${c.id}')" 
+                                        class="p-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/40 text-blue-400 transition-colors"
+                                        title="${editTooltip}">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="eliminarCurso('${c.id}', '${(c.nombre_curso || '').replace(/'/g, "\\'")}')" 
+                                        class="p-2 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-400 transition-colors"
+                                        title="Eliminar curso">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </td>
                     </tr>`;
                 }).join('');
                 lucide.createIcons();
 
             } catch (err) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`;
             }
         }
 
+        // ==========================================
+        // NUEVO: MODAL DE EDICIÓN DE CURSO
+        // ==========================================
+        function abrirModalEdicion(cursoId) {
+            const curso = cursosCargados.find(c => c.id === cursoId);
+            if (!curso) return alert('No se encontró el curso.');
+
+            // Rellenar campos de texto
+            document.getElementById('edit-curso-id').value = curso.id;
+            document.getElementById('edit-curso-nombre').value = curso.nombre_curso || '';
+            document.getElementById('edit-curso-carga').value = curso.carga_horaria || '';
+            document.getElementById('edit-curso-docentes').value = curso.cuerpo_docente || '';
+            document.getElementById('edit-curso-estado').value = curso.estado || 'PENDIENTE';
+
+            // Limpiar inputs de archivo (el usuario decide si reemplaza)
+            document.getElementById('edit-curso-file-programa').value = '';
+            document.getElementById('edit-curso-file-analitico').value = '';
+            document.getElementById('edit-curso-file-diploma').value = '';
+
+            // Indicadores de archivos existentes
+            const setEstado = (id, url) => {
+                const el = document.getElementById(id);
+                if (url) {
+                    el.textContent = '✓ Ya cargado';
+                    el.className = 'text-[9px] font-bold uppercase tracking-widest text-emerald-400';
+                } else {
+                    el.textContent = '⚠ Faltante';
+                    el.className = 'text-[9px] font-bold uppercase tracking-widest text-amber-400';
+                }
+            };
+            setEstado('edit-estado-programa', curso.programa_url);
+            setEstado('edit-estado-analitico', curso.analitico_url);
+            setEstado('edit-estado-diploma', curso.diploma_base_url);
+
+            // Precargar constructor visual de edición con el diploma actual
+            if (constructorEdicion) {
+                constructorEdicion.setTexts({
+                    nombre: 'NOMBRE DEL ALUMNO',
+                    curso: curso.nombre_curso || 'NOMBRE DEL CURSO'
+                });
+                if (curso.diploma_base_url) {
+                    constructorEdicion.setPreview(curso.diploma_base_url);
+                }
+                constructorEdicion.setPosition(curso.pos_x || 50, curso.pos_y || 50);
+            }
+
+            // Abrir modal
+            const modal = document.getElementById('modal-editar-curso');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        function cerrarModalEdicion() {
+            const modal = document.getElementById('modal-editar-curso');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        async function guardarEdicionCurso(e) {
+            e.preventDefault();
+            const cursoId = document.getElementById('edit-curso-id').value;
+            if (!cursoId) return;
+
+            const btn = document.getElementById('btn-guardar-edicion');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Guardando...';
+            btn.disabled = true;
+            lucide.createIcons();
+
+            try {
+                // 1. Capturar datos de texto
+                const nombre = document.getElementById('edit-curso-nombre').value.trim();
+                const carga = document.getElementById('edit-curso-carga').value.trim();
+                const docentes = document.getElementById('edit-curso-docentes').value.trim();
+                const posX = parseInt(document.getElementById('edit-pos-x').value || 50);
+                const posY = parseInt(document.getElementById('edit-pos-y').value || 50);
+
+                // 2. Capturar archivos nuevos (si los hay)
+                const filePrograma = document.getElementById('edit-curso-file-programa').files[0];
+                const fileAnalitico = document.getElementById('edit-curso-file-analitico').files[0];
+                const fileDiploma = document.getElementById('edit-curso-file-diploma').files[0];
+
+                const ts = Date.now();
+                const bucket = 'renmcycf-documentos';
+
+                const subirArchivo = async (file, prefijo) => {
+                    const ext = file.name.split('.').pop();
+                    const fileName = `${aliadoId}_${prefijo}_${ts}_${Math.floor(Math.random()*1000)}.${ext}`;
+                    console.log(`[EDIT] Subiendo: ${fileName}`);
+                    const { error: upErr } = await db.storage.from(bucket).upload(fileName, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+                    if (upErr) throw new Error(`Error subiendo ${prefijo}: ${upErr.message}`);
+                    return `${PROJECT_URL}/storage/v1/object/public/${bucket}/${fileName}`;
+                };
+
+                // 3. Subir solo los archivos que el usuario seleccionó
+                const updates = {
+                    nombre_curso: nombre,
+                    carga_horaria: carga,
+                    cuerpo_docente: docentes,
+                    pos_x: posX,
+                    pos_y: posY
+                };
+
+                if (filePrograma) updates.programa_url = await subirArchivo(filePrograma, 'programa');
+                if (fileAnalitico) updates.analitico_url = await subirArchivo(fileAnalitico, 'analitico');
+                if (fileDiploma) updates.diploma_base_url = await subirArchivo(fileDiploma, 'diploma_base');
+
+                console.log('✅ Updates a aplicar:', updates);
+
+                // 4. UPDATE en Supabase
+                const { error: updErr } = await db.from('renmcycf_aliados_cursos')
+                    .update(updates)
+                    .eq('id', cursoId)
+                    .eq('aliado_id', aliadoId); // Seguridad: solo el dueño puede editar
+                if (updErr) throw updErr;
+
+                alert('✅ Curso actualizado correctamente.');
+                cerrarModalEdicion();
+                cargarCursosInstituto();
+
+            } catch (err) {
+                console.error('Error al editar curso:', err);
+                alert('Error al guardar los cambios: ' + err.message);
+            } finally {
+                btn.innerHTML = orig;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        async function eliminarCurso(cursoId, nombreCurso) {
+            const confirm1 = confirm(`⚠️ ¿Estás seguro de que querés ELIMINAR el curso "${nombreCurso}"?\n\nEsta acción no se puede deshacer.`);
+            if (!confirm1) return;
+
+            const confirm2 = confirm(`¿Confirmás definitivamente la eliminación?`);
+            if (!confirm2) return;
+
+            try {
+                const { error } = await db.from('renmcycf_aliados_cursos')
+                    .delete()
+                    .eq('id', cursoId)
+                    .eq('aliado_id', aliadoId);
+                if (error) throw error;
+
+                alert('✅ Curso eliminado correctamente.');
+                cargarCursosInstituto();
+            } catch (err) {
+                console.error('Error al eliminar curso:', err);
+                alert('Error al eliminar: ' + err.message);
+            }
+        }
+
+        // ==========================================
+        // proponerCurso (ALTA — sin cambios funcionales)
+        // ==========================================
         async function proponerCurso(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-proponer-curso');
@@ -995,15 +1241,12 @@
                 const subirArchivo = async (file, prefijo) => {
                     const ext = file.name.split('.').pop();
                     const fileName = `${aliadoId}_${prefijo}_${ts}_${Math.floor(Math.random()*1000)}.${ext}`;
-                    console.log(`Subiendo a Supabase Storage: ${fileName} (${file.name})`);
                     const { error: upErr } = await db.storage.from(bucket).upload(fileName, file, {
                         cacheControl: '3600',
                         upsert: false
                     });
                     if (upErr) throw new Error(`Error subiendo ${prefijo}: ${upErr.message}`);
-                    const publicUrl = `${PROJECT_URL}/storage/v1/object/public/${bucket}/${fileName}`;
-                    console.log(`URL pública generada: ${publicUrl}`);
-                    return publicUrl;
+                    return `${PROJECT_URL}/storage/v1/object/public/${bucket}/${fileName}`;
                 };
 
                 const [programaUrl, analiticoUrl, diplomaBaseUrl] = await Promise.all([
@@ -1011,8 +1254,6 @@
                     subirArchivo(fileAnalitico, 'analitico'),
                     subirArchivo(fileDiploma, 'diploma_base')
                 ]);
-
-                console.log('✅ Archivos subidos. Insertando curso con pos_x/pos_y:', posX, posY);
 
                 const payload = {
                     aliado_id: aliadoId,
@@ -1131,7 +1372,7 @@
         }
 
         // ==========================================
-        // Helper: Preparar plantilla del PDF con datos del curso
+        // Helper: Preparar plantilla del PDF
         // ==========================================
         async function prepararPlantillaPDF(cursoData, alumno) {
             const { nombres, apellidos, dni, hashCert, fechaEmision, urlVerificacion } = alumno;
@@ -1169,36 +1410,30 @@
                 correctLevel: QRCode.CorrectLevel.H
             });
 
-            // TAREA 3: Inyectar logo oficial en el faldón (si está configurado)
             await inyectarLogoOficialFaldon();
-
             await new Promise(resolve => setTimeout(resolve, 500));
         }
 
-        // TAREA 3: Inyectar logo oficial RENMCYCF en el faldón con mix-blend-multiply
         async function inyectarLogoOficialFaldon() {
             try {
                 const { data: configRenm } = await db.from('renmcycf_config').select('logo_url').eq('id', 1).maybeSingle();
                 const wrapper = document.querySelector('#faldon-trazabilidad .logo-oficial-wrapper');
                 if (!wrapper) return;
 
-                // Limpiar wrapper (remover icono previo o img previa)
                 wrapper.innerHTML = '';
 
                 if (configRenm && configRenm.logo_url) {
                     const imgOficial = document.createElement('img');
                     imgOficial.src = configRenm.logo_url;
-                    // TAREA 3: Clase con mix-blend-multiply para eliminar fondo blanco
                     imgOficial.className = 'w-full h-full object-contain mix-blend-multiply p-1';
                     imgOficial.crossOrigin = 'anonymous';
                     wrapper.appendChild(imgOficial);
                 } else {
-                    // Fallback: icono dorado por defecto
                     wrapper.innerHTML = '<i data-lucide="shield-check" style="width: 30px; height: 30px; color: #d4af37;"></i>';
                     lucide.createIcons();
                 }
             } catch (e) {
-                console.warn('No se pudo inyectar logo oficial en el faldón:', e);
+                console.warn('No se pudo inyectar logo oficial:', e);
             }
         }
 
@@ -1241,23 +1476,12 @@
                 const fechaEmision = new Date().toLocaleDateString('es-AR');
 
                 await prepararPlantillaPDF(
-                    { 
-                        nombre_curso: cursoNombre, 
-                        carga_horaria: cursoCarga,
-                        diploma_base_url: diplomaUrl,
-                        pos_x: posX,
-                        pos_y: posY
-                    },
+                    { nombre_curso: cursoNombre, carga_horaria: cursoCarga, diploma_base_url: diplomaUrl, pos_x: posX, pos_y: posY },
                     { nombres, apellidos, dni, hashCert, fechaEmision, urlVerificacion }
                 );
 
                 const renderZone = document.getElementById('cert-template');
-                const canvas = await html2canvas(renderZone, { 
-                    scale: 3,
-                    useCORS: true, 
-                    backgroundColor: '#ffffff',
-                    logging: false
-                });
+                const canvas = await html2canvas(renderZone, { scale: 3, useCORS: true, backgroundColor: '#ffffff', logging: false });
                 
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
@@ -1288,7 +1512,6 @@
                 if (updateError) throw new Error("Emisión registrada, pero hubo error al descontar el Derecho de Emisión.");
 
                 alert(`✅ CERTIFICADO EMITIDO EXITOSAMENTE\nHash: ${hashCert}\nSaldo actualizado.`);
-                
                 pdf.save(`Certificado_ASARI_${dni}.pdf`);
                 
                 document.getElementById('form-certificado').reset();
@@ -1395,13 +1618,7 @@
                         const urlVerificacion = `https://renmcycf.com.ar/certificado.html?hash=${hashCert}`;
 
                         await prepararPlantillaPDF(
-                            { 
-                                nombre_curso: cursoNombre, 
-                                carga_horaria: cursoCarga,
-                                diploma_base_url: diplomaUrl,
-                                pos_x: posX,
-                                pos_y: posY
-                            },
+                            { nombre_curso: cursoNombre, carga_horaria: cursoCarga, diploma_base_url: diplomaUrl, pos_x: posX, pos_y: posY },
                             { nombres, apellidos, dni, hashCert, fechaEmision, urlVerificacion }
                         );
 
@@ -1473,6 +1690,36 @@
         // ==========================================
         window.addEventListener('DOMContentLoaded', async () => {
             aplicarTemaGuardado();
+
+            // Instanciar los DOS constructores visuales (alta y edición)
+            constructorAlta = initConstructorVisual({
+                inputDiplomaId: 'curso-file-diploma',
+                containerId: 'constructor-diploma',
+                previewContainerId: 'preview-diploma-container',
+                placeholderId: 'preview-placeholder',
+                sliderYId: 'slider-pos-y',
+                sliderXId: 'slider-pos-x',
+                labelYId: 'label-pos-y',
+                labelXId: 'label-pos-x',
+                posYInputId: 'pos-y',
+                posXInputId: 'pos-x',
+                textoFlotanteId: 'preview-texto-alumno'
+            });
+
+            constructorEdicion = initConstructorVisual({
+                inputDiplomaId: 'edit-curso-file-diploma',
+                containerId: 'edit-constructor-diploma',
+                previewContainerId: 'edit-preview-diploma-container',
+                placeholderId: 'edit-preview-placeholder',
+                sliderYId: 'edit-slider-pos-y',
+                sliderXId: 'edit-slider-pos-x',
+                labelYId: 'edit-label-pos-y',
+                labelXId: 'edit-label-pos-x',
+                posYInputId: 'edit-pos-y',
+                posXInputId: 'edit-pos-x',
+                textoFlotanteId: 'edit-preview-texto-alumno'
+            });
+
             await verificarSesion();
             lucide.createIcons();
         });
