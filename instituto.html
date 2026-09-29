@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASARI Core · Portal Institucional</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Silenciar el warning de Tailwind CDN en producción (solo cosmético)
+        (function() {
+            const originalWarn = console.warn;
+            console.warn = function(...args) {
+                if (args[0] && typeof args[0] === 'string' && args[0].includes('tailwindcss.com should not be used in production')) return;
+                originalWarn.apply(console, args);
+            };
+        })();
+    </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -398,12 +408,9 @@
         </div>
     </main>
 
-    <!-- ============================================================ -->
-    <!-- MODAL DE EDICIÓN DE CURSO                                    -->
-    <!-- ============================================================ -->
+    <!-- MODAL DE EDICIÓN DE CURSO -->
     <div id="modal-editar-curso" class="modal-overlay" onclick="if(event.target===this) cerrarModalEdicion()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <!-- Header del Modal -->
             <div class="flex items-center justify-between p-6 border-b border-white/10 sticky top-0 bg-[#0f172a] z-10" style="background: inherit;">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/40 flex items-center justify-center">
@@ -419,7 +426,6 @@
                 </button>
             </div>
 
-            <!-- Body del Modal -->
             <form id="form-editar-curso" onsubmit="guardarEdicionCurso(event)" class="p-6 space-y-5">
                 <input type="hidden" id="edit-curso-id">
 
@@ -430,7 +436,6 @@
                     </p>
                 </div>
 
-                <!-- Datos de texto -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
                         <label>Nombre del Curso</label>
@@ -450,13 +455,11 @@
                     </div>
                 </div>
 
-                <!-- Archivos actuales + nuevos -->
                 <div class="border-t border-white/10 pt-5 space-y-4">
                     <h4 class="text-white font-bold text-sm uppercase tracking-widest flex items-center gap-2">
                         <i data-lucide="paperclip" class="w-4 h-4 text-yellow-400"></i> Archivos Respaldatorios
                     </h4>
 
-                    <!-- Programa -->
                     <div class="bg-white/5 border border-white/10 rounded-xl p-4">
                         <div class="flex items-center justify-between mb-2">
                             <label class="text-blue-400 mb-0">Programa de Estudio (PDF)</label>
@@ -466,7 +469,6 @@
                         <p class="text-[9px] text-slate-500 mt-1 italic">Dejar vacío para mantener el archivo actual.</p>
                     </div>
 
-                    <!-- Analítico -->
                     <div class="bg-white/5 border border-white/10 rounded-xl p-4">
                         <div class="flex items-center justify-between mb-2">
                             <label class="text-blue-400 mb-0">Modelo de Analítico (PDF)</label>
@@ -476,7 +478,6 @@
                         <p class="text-[9px] text-slate-500 mt-1 italic">Dejar vacío para mantener el archivo actual.</p>
                     </div>
 
-                    <!-- Diploma -->
                     <div class="bg-white/5 border border-white/10 rounded-xl p-4">
                         <div class="flex items-center justify-between mb-2">
                             <label class="text-blue-400 mb-0">Imagen Base del Diploma</label>
@@ -487,7 +488,6 @@
                     </div>
                 </div>
 
-                <!-- Constructor visual (precargado con el diploma actual) -->
                 <div id="edit-constructor-diploma" class="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 space-y-4">
                     <div class="flex items-center gap-2 border-b border-blue-500/30 pb-2">
                         <i data-lucide="move" class="w-4 h-4 text-blue-400"></i>
@@ -535,7 +535,6 @@
                     <input type="hidden" id="edit-pos-y" value="50">
                 </div>
 
-                <!-- Botones -->
                 <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
                     <button type="button" onclick="cerrarModalEdicion()" class="px-6 py-3 rounded-xl border border-white/10 text-slate-300 font-bold uppercase tracking-wider text-xs hover:bg-white/5 transition-colors">
                         Cancelar
@@ -612,7 +611,7 @@
         // ==========================================
         lucide.createIcons();
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
-        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5ODc2NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
+        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
         const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
 
         let institutoActual = null;
@@ -646,23 +645,13 @@
         }
 
         // ==========================================
-        // HELPER GENÉRICO: Constructor Visual de Diplomas
+        // HELPER: Constructor Visual de Diplomas
         // ==========================================
-        // Se reutiliza tanto en el form de alta como en el modal de edición.
-        // Recibe los IDs de los elementos del DOM para no duplicar código.
         function initConstructorVisual(config) {
             const {
-                inputDiplomaId,
-                containerId,
-                previewContainerId,
-                placeholderId,
-                sliderYId,
-                sliderXId,
-                labelYId,
-                labelXId,
-                posYInputId,
-                posXInputId,
-                textoFlotanteId
+                inputDiplomaId, containerId, previewContainerId, placeholderId,
+                sliderYId, sliderXId, labelYId, labelXId,
+                posYInputId, posXInputId, textoFlotanteId
             } = config;
 
             const inputDiploma = document.getElementById(inputDiplomaId);
@@ -720,7 +709,6 @@
             if (sliderX) sliderX.addEventListener('input', actualizarPosicion);
             actualizarPosicion();
 
-            // Exponer función para setear la imagen y posición desde fuera
             return {
                 setPreview: (imageUrl) => {
                     const previewContainer = document.getElementById(previewContainerId);
@@ -748,9 +736,7 @@
             };
         }
 
-        // Instanciar el constructor para el form de alta
         let constructorAlta = null;
-        // Instanciar el constructor para el modal de edición
         let constructorEdicion = null;
 
         // ==========================================
@@ -1006,7 +992,6 @@
                             </div>`;
                     }
 
-                    // Botón de edición: permitido siempre, pero con avisos según estado
                     const esEditable = c.estado === 'PENDIENTE' || c.estado === 'RECHAZADO';
                     const editTooltip = esEditable 
                         ? 'Editar curso' 
@@ -1053,25 +1038,22 @@
         }
 
         // ==========================================
-        // NUEVO: MODAL DE EDICIÓN DE CURSO
+        // MODAL DE EDICIÓN DE CURSO
         // ==========================================
         function abrirModalEdicion(cursoId) {
             const curso = cursosCargados.find(c => c.id === cursoId);
             if (!curso) return alert('No se encontró el curso.');
 
-            // Rellenar campos de texto
             document.getElementById('edit-curso-id').value = curso.id;
             document.getElementById('edit-curso-nombre').value = curso.nombre_curso || '';
             document.getElementById('edit-curso-carga').value = curso.carga_horaria || '';
             document.getElementById('edit-curso-docentes').value = curso.cuerpo_docente || '';
             document.getElementById('edit-curso-estado').value = curso.estado || 'PENDIENTE';
 
-            // Limpiar inputs de archivo (el usuario decide si reemplaza)
             document.getElementById('edit-curso-file-programa').value = '';
             document.getElementById('edit-curso-file-analitico').value = '';
             document.getElementById('edit-curso-file-diploma').value = '';
 
-            // Indicadores de archivos existentes
             const setEstado = (id, url) => {
                 const el = document.getElementById(id);
                 if (url) {
@@ -1086,7 +1068,6 @@
             setEstado('edit-estado-analitico', curso.analitico_url);
             setEstado('edit-estado-diploma', curso.diploma_base_url);
 
-            // Precargar constructor visual de edición con el diploma actual
             if (constructorEdicion) {
                 constructorEdicion.setTexts({
                     nombre: 'NOMBRE DEL ALUMNO',
@@ -1098,7 +1079,6 @@
                 constructorEdicion.setPosition(curso.pos_x || 50, curso.pos_y || 50);
             }
 
-            // Abrir modal
             const modal = document.getElementById('modal-editar-curso');
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1123,14 +1103,12 @@
             lucide.createIcons();
 
             try {
-                // 1. Capturar datos de texto
                 const nombre = document.getElementById('edit-curso-nombre').value.trim();
                 const carga = document.getElementById('edit-curso-carga').value.trim();
                 const docentes = document.getElementById('edit-curso-docentes').value.trim();
                 const posX = parseInt(document.getElementById('edit-pos-x').value || 50);
                 const posY = parseInt(document.getElementById('edit-pos-y').value || 50);
 
-                // 2. Capturar archivos nuevos (si los hay)
                 const filePrograma = document.getElementById('edit-curso-file-programa').files[0];
                 const fileAnalitico = document.getElementById('edit-curso-file-analitico').files[0];
                 const fileDiploma = document.getElementById('edit-curso-file-diploma').files[0];
@@ -1150,7 +1128,6 @@
                     return `${PROJECT_URL}/storage/v1/object/public/${bucket}/${fileName}`;
                 };
 
-                // 3. Subir solo los archivos que el usuario seleccionó
                 const updates = {
                     nombre_curso: nombre,
                     carga_horaria: carga,
@@ -1165,11 +1142,10 @@
 
                 console.log('✅ Updates a aplicar:', updates);
 
-                // 4. UPDATE en Supabase
                 const { error: updErr } = await db.from('renmcycf_aliados_cursos')
                     .update(updates)
                     .eq('id', cursoId)
-                    .eq('aliado_id', aliadoId); // Seguridad: solo el dueño puede editar
+                    .eq('aliado_id', aliadoId);
                 if (updErr) throw updErr;
 
                 alert('✅ Curso actualizado correctamente.');
@@ -1209,7 +1185,7 @@
         }
 
         // ==========================================
-        // proponerCurso (ALTA — sin cambios funcionales)
+        // proponerCurso (ALTA)
         // ==========================================
         async function proponerCurso(e) {
             e.preventDefault();
@@ -1691,7 +1667,6 @@
         window.addEventListener('DOMContentLoaded', async () => {
             aplicarTemaGuardado();
 
-            // Instanciar los DOS constructores visuales (alta y edición)
             constructorAlta = initConstructorVisual({
                 inputDiplomaId: 'curso-file-diploma',
                 containerId: 'constructor-diploma',
