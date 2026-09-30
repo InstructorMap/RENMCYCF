@@ -50,6 +50,9 @@
         .permission-checkbox { display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px; border: 1px solid var(--glass-border); }
         .permission-checkbox label { margin-bottom: 0; color: #e2e8f0; }
         input[readonly] { background: rgba(0,0,0,0.5); cursor: not-allowed; opacity: 0.6; }
+        /* Grilla de diplomas en el modal */
+        .diploma-card { transition: all 0.2s ease; }
+        .diploma-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15); }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -72,7 +75,7 @@
 
     <!-- MODAL EXPEDIENTE -->
     <div id="modal-expediente" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto print:block print:bg-white print:p-0">
-        <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col my-auto print-container" id="dossier-print-area">
+        <div class="bg-white w-full max-w-5xl rounded-2xl shadow-2xl flex flex-col my-auto print-container" id="dossier-print-area">
             <div class="bg-[#0a1128] text-white p-6 border-b-8 border-[#d4af37] text-center relative rounded-t-2xl print:rounded-none overflow-hidden">
                 <img id="modal-dyn-bg" src="" alt="Fondo dinámico institucional" class="absolute inset-0 w-full h-full object-cover opacity-20 filter grayscale hidden">
                 <div class="absolute inset-0 bg-[#0a1128]/80 hidden" id="modal-dyn-overlay"></div>
@@ -804,6 +807,7 @@
 
         </div>
     </main>
+
     <script>
         // ==========================================
         // CONFIGURACIÓN DE SUPABASE
@@ -812,6 +816,9 @@
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
         const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
         const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
+
+        // ⚠️ LÍMITE GLOBAL DE DIPLOMAS (sincronizado con el index público)
+        const MAX_DIPLOMAS = 30;
 
         let adminUser = null;
         let padronCompleto = [];
@@ -1149,7 +1156,6 @@
                 if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">Bandeja vacía.</td></tr>'; return; }
                 
                 tbody.innerHTML = data.map(p => {
-                    // ✅ TAREA 1: Interceptar ACTUALIZACION_LEGAJO (nuevos diplomas B2C)
                     if (p.tipo_tramite === 'ACTUALIZACION_LEGAJO') {
                         return `
                         <tr class="bg-emerald-900/10 border-b border-emerald-500/30">
@@ -1203,15 +1209,12 @@
             } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">${err.message}</td></tr>`; }
         }
 
-        // ✅ TAREA 2: Aprobar nuevo diploma (agrega URL al array diplomas_urls del padrón)
         async function aprobarNuevoDiploma(idSol, dni, urlDiploma) {
             if (!confirm(`¿Aprobar este nuevo diploma y agregarlo al legajo del DNI ${dni}?`)) return;
             try {
-                // 1. Consultar el padrón por DNI
                 const { data: padron, error: errPad } = await db.from('renmcycf_padron').select('id, diplomas_urls').eq('dni', dni).single();
                 if (errPad) throw errPad;
 
-                // 2. Parsear diplomas_urls (o crear array vacío)
                 let diplomasArr = [];
                 if (padron.diplomas_urls && padron.diplomas_urls !== 'null') {
                     try {
@@ -1219,21 +1222,16 @@
                             ? JSON.parse(padron.diplomas_urls) 
                             : padron.diplomas_urls;
                         if (!Array.isArray(diplomasArr)) diplomasArr = [];
-                    } catch(e) {
-                        diplomasArr = [];
-                    }
+                    } catch(e) { diplomasArr = []; }
                 }
 
-                // 3. Push del nuevo diploma
                 diplomasArr.push(urlDiploma);
 
-                // 4. Update en renmcycf_padron
                 const { error: updPadErr } = await db.from('renmcycf_padron')
                     .update({ diplomas_urls: JSON.stringify(diplomasArr) })
                     .eq('id', padron.id);
                 if (updPadErr) throw updPadErr;
 
-                // 5. Update en renmcycf_solicitudes
                 const { error: updSolErr } = await db.from('renmcycf_solicitudes')
                     .update({ estado: 'APROBADO' })
                     .eq('id', idSol);
@@ -1246,7 +1244,6 @@
             }
         }
 
-        // ✅ TAREA 2: Rechazar solicitud simple
         async function rechazarSolicitudSimple(idSol) {
             if (!confirm('¿Rechazar esta solicitud definitivamente?')) return;
             try {
@@ -1301,7 +1298,27 @@
         }
 
         // ==========================================
-        // ABRIR EXPEDIENTE (CON RENDERIZADO INTELIGENTE)
+        // HELPER: OBTENER ARRAY DE DIPLOMAS DESDE UN ITEM
+        // ==========================================
+        function extraerDiplomasDeItem(item) {
+            let arr = [];
+            if (item.diplomas_urls && item.diplomas_urls !== 'null') {
+                try {
+                    arr = typeof item.diplomas_urls === 'string' 
+                        ? JSON.parse(item.diplomas_urls) 
+                        : item.diplomas_urls;
+                    if (!Array.isArray(arr)) arr = [];
+                } catch(e) { arr = []; }
+            }
+            // Fallback legacy
+            if (arr.length === 0 && item.diploma_url && item.diploma_url.trim() !== '' && item.diploma_url !== 'null') {
+                arr = [item.diploma_url];
+            }
+            return arr;
+        }
+
+        // ==========================================
+        // ABRIR EXPEDIENTE
         // ==========================================
         function abrirExpediente(item) {
             itemDossierActual = item;
@@ -1348,11 +1365,11 @@
             const containerFotos = document.getElementById('dos-imagenes');
             containerFotos.innerHTML = '';
             
+            // Documentos fijos (single)
             const urls = [
                 { url: item.foto_perfil_url, campo: 'foto_perfil_url', titulo: 'Foto de Perfil' },
                 { url: item.dni_frente_url, campo: 'dni_frente_url', titulo: 'DNI Frente' },
                 { url: item.dni_dorso_url, campo: 'dni_dorso_url', titulo: 'DNI Dorso' },
-                { url: item.diploma_url, campo: 'diploma_url', titulo: 'Título / Diploma' },
                 { url: item.comprobante_url, campo: 'comprobante_url', titulo: 'Comprobante de Pago' }
             ];
             
@@ -1403,6 +1420,39 @@
                     </div>`;
                 }
             });
+
+            // ═══════════════════════════════════════════════════════════════
+            // BLOQUE DE DIPLOMAS MÚLTIPLES (hasta 30)
+            // ═══════════════════════════════════════════════════════════════
+            const diplomasArr = extraerDiplomasDeItem(item);
+            
+            containerFotos.innerHTML += `
+                <div class="col-span-2 border-2 border-dashed border-amber-400/60 rounded-xl p-4 bg-amber-50/40" id="bloque-diplomas-multiples">
+                    <div class="flex justify-between items-center mb-3 border-b border-amber-200 pb-2 flex-wrap gap-2">
+                        <p class="text-xs font-black text-forenseNavy uppercase tracking-widest flex items-center gap-2" id="diplomas-counter-label">
+                            <i data-lucide="award" class="w-4 h-4 text-amber-600"></i>
+                            Títulos y Certificados (<span id="diplomas-count">${diplomasArr.length}</span>/${MAX_DIPLOMAS})
+                        </p>
+                        <button type="button" onclick="agregarDiplomaManual()" 
+                                class="bg-[#0a1128] text-[#d4af37] hover:bg-slate-800 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow">
+                            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Agregar Diploma
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="diplomas-grid">
+                        ${diplomasArr.map((url, idx) => renderDiplomaCard(url, idx)).join('')}
+                        ${diplomasArr.length === 0 ? `
+                            <div class="col-span-full text-center py-6 text-slate-400">
+                                <i data-lucide="file-question" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+                                <p class="text-xs font-bold uppercase">Sin diplomas cargados</p>
+                                <button type="button" onclick="agregarDiplomaManual()" 
+                                        class="mt-3 bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors shadow">
+                                    <i data-lucide="upload" class="w-3.5 h-3.5"></i> Subir primer diploma
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
             
             const bloqueCorreccion = document.getElementById('bloque-correccion');
             const containerCorreccion = document.getElementById('dos-correccion-img');
@@ -1458,6 +1508,212 @@
         }
 
         function cerrarExpediente() { document.getElementById('modal-expediente').classList.add('hidden'); itemDossierActual = null; }
+
+        // ═══════════════════════════════════════════════════════════════
+        // GESTIÓN DE DIPLOMAS MÚLTIPLES (máx 30)
+        // ═══════════════════════════════════════════════════════════════
+        function renderDiplomaCard(url, idx) {
+            const esPDF = /\.pdf(\?|$)/i.test(url);
+            const contenidoVisual = esPDF
+                ? `<div class="w-full h-32 flex flex-col items-center justify-center bg-slate-100 rounded border border-slate-200">
+                       <i data-lucide="file-text" class="w-10 h-10 text-red-500"></i>
+                       <span class="text-[9px] font-black text-slate-600 uppercase tracking-widest mt-1">PDF</span>
+                   </div>`
+                : `<img src="${url}" class="w-full h-32 object-contain rounded bg-slate-50" alt="Diploma ${idx+1}">`;
+
+            return `
+            <div class="diploma-card border border-slate-200 rounded-lg p-2 bg-white shadow-sm flex flex-col relative">
+                <div class="flex justify-between items-center mb-1.5">
+                    <span class="text-[9px] font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-1.5 py-0.5 rounded">#${idx+1}</span>
+                    <button type="button" onclick="eliminarDiploma(${idx})" 
+                            class="text-red-400 hover:text-red-600 transition-colors" title="Eliminar">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+                <a href="${url}" target="_blank" rel="noopener" class="block">
+                    ${contenidoVisual}
+                </a>
+                <button type="button" onclick="reemplazarDiploma(${idx})" 
+                        class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white py-1 rounded text-[9px] font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-colors">
+                    <i data-lucide="refresh-cw" class="w-3 h-3"></i> Reemplazar
+                </button>
+            </div>`;
+        }
+
+        function getDiplomasActuales() {
+            return extraerDiplomasDeItem(itemDossierActual || {});
+        }
+
+        function refrescarGrillaDiplomas() {
+            const arr = getDiplomasActuales();
+            const grid = document.getElementById('diplomas-grid');
+            const counter = document.getElementById('diplomas-count');
+            if (!grid) return;
+            
+            if (counter) counter.innerText = arr.length;
+            
+            grid.innerHTML = arr.map((url, idx) => renderDiplomaCard(url, idx)).join('') 
+                + (arr.length === 0 ? `
+                    <div class="col-span-full text-center py-6 text-slate-400">
+                        <i data-lucide="file-question" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+                        <p class="text-xs font-bold uppercase">Sin diplomas cargados</p>
+                        <button type="button" onclick="agregarDiplomaManual()" 
+                                class="mt-3 bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors shadow">
+                            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Subir primer diploma
+                        </button>
+                    </div>` : '');
+            lucide.createIcons();
+        }
+
+        async function agregarDiplomaManual() {
+            if (!itemDossierActual) return;
+            const arr = getDiplomasActuales();
+            
+            if (arr.length >= MAX_DIPLOMAS) {
+                alert(`⚠️ Límite alcanzado: máximo ${MAX_DIPLOMAS} diplomas por profesional.`);
+                return;
+            }
+            
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*,application/pdf';
+            
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('El archivo supera los 10MB.');
+                    return;
+                }
+                try {
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    const nombreArchivo = `diploma_${itemDossierActual.dni}_${Date.now()}.${ext}`;
+                    
+                    const { error: upErr } = await db.storage
+                        .from('renmcycf-documentos')
+                        .upload(nombreArchivo, file, { cacheControl: '3600', upsert: false });
+                    if (upErr) throw upErr;
+                    
+                    const urlNueva = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${nombreArchivo}`;
+                    arr.push(urlNueva);
+                    
+                    const esSolicitud = ['PENDIENTE', 'EN AUDITORIA', 'OBSERVADO', 'RECHAZADO', 'RENOVACION_PENDIENTE']
+                        .includes(itemDossierActual.estado);
+                    const tablaDestino = esSolicitud ? 'renmcycf_solicitudes' : 'renmcycf_padron';
+                    
+                    const { error: dbErr } = await db.from(tablaDestino)
+                        .update({ diplomas_urls: JSON.stringify(arr) })
+                        .eq('id', itemDossierActual.id);
+                    if (dbErr) throw dbErr;
+                    
+                    itemDossierActual.diplomas_urls = JSON.stringify(arr);
+                    refrescarGrillaDiplomas();
+                    
+                    if (esSolicitud) { cargarSolicitudes(); cargarAuditoria(); }
+                    else { cargarPadron(); }
+                    
+                    alert('✅ Diploma agregado exitosamente.');
+                } catch (err) {
+                    alert('Error al subir diploma: ' + err.message);
+                }
+            };
+            input.click();
+        }
+
+        async function reemplazarDiploma(idx) {
+            if (!itemDossierActual) return;
+            const arr = getDiplomasActuales();
+            const urlVieja = arr[idx];
+            if (!urlVieja) return;
+            
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*,application/pdf';
+            
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('El archivo supera los 10MB.');
+                    return;
+                }
+                try {
+                    try {
+                        const nombreViejo = urlVieja.split('/').pop().split('?')[0];
+                        if (nombreViejo) {
+                            await db.storage.from('renmcycf-documentos').remove([nombreViejo]);
+                        }
+                    } catch(e) { console.warn('No se pudo borrar el viejo:', e.message); }
+                    
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    const nombreNuevo = `diploma_${itemDossierActual.dni}_${Date.now()}.${ext}`;
+                    const { error: upErr } = await db.storage
+                        .from('renmcycf-documentos')
+                        .upload(nombreNuevo, file, { cacheControl: '3600', upsert: false });
+                    if (upErr) throw upErr;
+                    
+                    const urlNueva = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${nombreNuevo}`;
+                    arr[idx] = urlNueva;
+                    
+                    const esSolicitud = ['PENDIENTE', 'EN AUDITORIA', 'OBSERVADO', 'RECHAZADO', 'RENOVACION_PENDIENTE']
+                        .includes(itemDossierActual.estado);
+                    const tablaDestino = esSolicitud ? 'renmcycf_solicitudes' : 'renmcycf_padron';
+                    
+                    const { error: dbErr } = await db.from(tablaDestino)
+                        .update({ diplomas_urls: JSON.stringify(arr) })
+                        .eq('id', itemDossierActual.id);
+                    if (dbErr) throw dbErr;
+                    
+                    itemDossierActual.diplomas_urls = JSON.stringify(arr);
+                    refrescarGrillaDiplomas();
+                    
+                    if (esSolicitud) { cargarSolicitudes(); cargarAuditoria(); }
+                    else { cargarPadron(); }
+                    
+                    alert('✅ Diploma reemplazado.');
+                } catch (err) {
+                    alert('Error al reemplazar: ' + err.message);
+                }
+            };
+            input.click();
+        }
+
+        async function eliminarDiploma(idx) {
+            if (!itemDossierActual) return;
+            const arr = getDiplomasActuales();
+            const urlEliminar = arr[idx];
+            if (!urlEliminar) return;
+            
+            if (!confirm(`⚠️ ¿Eliminar el diploma #${idx+1}?\nEsta acción no se puede deshacer.`)) return;
+            
+            try {
+                const nombreArchivo = urlEliminar.split('/').pop().split('?')[0];
+                if (nombreArchivo) {
+                    await db.storage.from('renmcycf-documentos').remove([nombreArchivo]);
+                }
+                
+                arr.splice(idx, 1);
+                
+                const esSolicitud = ['PENDIENTE', 'EN AUDITORIA', 'OBSERVADO', 'RECHAZADO', 'RENOVACION_PENDIENTE']
+                    .includes(itemDossierActual.estado);
+                const tablaDestino = esSolicitud ? 'renmcycf_solicitudes' : 'renmcycf_padron';
+                
+                const { error: dbErr } = await db.from(tablaDestino)
+                    .update({ diplomas_urls: JSON.stringify(arr) })
+                    .eq('id', itemDossierActual.id);
+                if (dbErr) throw dbErr;
+                
+                itemDossierActual.diplomas_urls = JSON.stringify(arr);
+                refrescarGrillaDiplomas();
+                
+                if (esSolicitud) { cargarSolicitudes(); cargarAuditoria(); }
+                else { cargarPadron(); }
+                
+                alert('✅ Diploma eliminado.');
+            } catch (err) {
+                alert('Error al eliminar: ' + err.message);
+            }
+        }
 
         async function elevarAComite() {
             if (!itemDossierActual) return;
@@ -1546,6 +1802,9 @@
 
                 const vencimiento = new Date(); vencimiento.setFullYear(vencimiento.getFullYear() + 1);
                 
+                // Consolidar diplomas: array JSON + fallback legacy
+                const diplomasFinales = extraerDiplomasDeItem(itemDossierActual);
+                
                 const { error: insErr } = await db.from('renmcycf_padron').insert([{
                     solicitud_id: itemDossierActual.id,
                     matricula_oficial: mat,
@@ -1560,8 +1819,8 @@
                     foto_perfil_url: itemDossierActual.foto_perfil_url,
                     dni_frente_url: itemDossierActual.dni_frente_url,
                     dni_dorso_url: itemDossierActual.dni_dorso_url,
-                    diploma_url: itemDossierActual.diploma_url,
-                    diplomas_urls: itemDossierActual.diplomas_urls,
+                    diploma_url: itemDossierActual.diploma_url || (diplomasFinales[0] || null),
+                    diplomas_urls: JSON.stringify(diplomasFinales),
                     estado_legal: 'ACTIVO',
                     email: itemDossierActual.email,
                     telefono: itemDossierActual.telefono,
@@ -1573,7 +1832,7 @@
                 
                 await db.from('renmcycf_solicitudes').update({ estado: 'APROBADO' }).eq('id', itemDossierActual.id);
                 
-                alert("✅ Matrícula aprobada y registrada en el Directorio exitosamente.");
+                alert(`✅ Matrícula ${mat} aprobada con ${diplomasFinales.length} diploma(s) integrado(s).`);
                 cerrarExpediente(); cargarAuditoria(); cargarPadron(); actualizarDashboard();
             } catch (err) { 
                 alert("Error: " + err.message); 
@@ -1596,7 +1855,7 @@
                 if (!file) return;
                 
                 if (file.size > 10 * 1024 * 1024) {
-                    alert('El archivo supera los 10MB. Comprima el documento e intente nuevamente.');
+                    alert('El archivo supera los 10MB.');
                     return;
                 }
                 
@@ -1606,14 +1865,9 @@
                         try {
                             const nombreViejo = urlVieja.split('/').pop().split('?')[0];
                             if (nombreViejo) {
-                                const { error: delErr } = await db.storage
-                                    .from('renmcycf-documentos')
-                                    .remove([nombreViejo]);
-                                if (delErr) console.warn('No se pudo borrar archivo viejo:', delErr.message);
+                                await db.storage.from('renmcycf-documentos').remove([nombreViejo]);
                             }
-                        } catch (eDel) {
-                            console.warn('Error parseando URL vieja:', eDel.message);
-                        }
+                        } catch (eDel) { console.warn(eDel.message); }
                     }
                     
                     const ext = file.name.split('.').pop().toLowerCase();
@@ -1678,21 +1932,13 @@
             };
             const nombreLegible = nombresCampos[campo] || campo;
             
-            if (!confirm(`⚠️ ¿Está seguro que desea ELIMINAR el documento "${nombreLegible}"?\n\nEsta acción borrará el archivo del almacenamiento y no se puede deshacer.`)) {
-                return;
-            }
+            if (!confirm(`⚠️ ¿Eliminar el documento "${nombreLegible}"?`)) return;
             
             try {
                 const nombreArchivo = urlActual.split('/').pop().split('?')[0];
                 
                 if (nombreArchivo) {
-                    const { error: delErr } = await db.storage
-                        .from('renmcycf-documentos')
-                        .remove([nombreArchivo]);
-                    
-                    if (delErr && !delErr.message.includes('not found')) {
-                        console.warn('Advertencia al borrar archivo:', delErr.message);
-                    }
+                    await db.storage.from('renmcycf-documentos').remove([nombreArchivo]);
                 }
                 
                 const esSolicitud = ['PENDIENTE', 'EN AUDITORIA', 'OBSERVADO', 'RECHAZADO', 'RENOVACION_PENDIENTE']
@@ -1709,8 +1955,7 @@
                 
                 itemDossierActual[campo] = null;
                 
-                alert('✅ Documento eliminado exitosamente.');
-                
+                alert('✅ Documento eliminado.');
                 abrirExpediente(itemDossierActual);
                 
                 if (esSolicitud) {
@@ -1744,6 +1989,7 @@
                 
                 tbody.innerHTML = data.map(p => {
                     const estadoColor = p.estado_legal === 'ACTIVO' ? 'text-emerald-400 bg-emerald-400/10 border border-emerald-400/20' : (p.estado_legal === 'SUSPENDIDO' ? 'text-yellow-400 bg-yellow-400/10 border border-yellow-400/20' : 'text-red-400 bg-red-400/10 border border-red-400/20');
+                    const numDiplomas = extraerDiplomasDeItem(p).length;
                     return `
                     <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                         <td class="p-4 font-mono text-xs text-slate-300 font-bold">${p.matricula_oficial || 'S/D'}</td>
@@ -1751,7 +1997,7 @@
                         <td class="p-4"><span class="px-2 py-1 rounded text-[10px] font-bold ${estadoColor}">${p.estado_legal} (${p.categoria})</span></td>
                         <td class="p-4 text-[10px] space-y-1">
                             ${p.foto_perfil_url ? `<a href="${p.foto_perfil_url}" target="_blank" class="flex items-center gap-1 text-slate-400 hover:text-blue-400 transition-colors"><i data-lucide="camera" class="w-3 h-3"></i> Foto</a>` : ''}
-                            ${p.diploma_url ? `<a href="${p.diploma_url}" target="_blank" class="flex items-center gap-1 text-slate-400 hover:text-emerald-400 transition-colors"><i data-lucide="award" class="w-3 h-3"></i> Título</a>` : ''}
+                            ${numDiplomas > 0 ? `<a href="#" onclick="event.preventDefault(); abrirExpediente(${JSON.stringify(p).replace(/'/g, "&#39;")})" class="flex items-center gap-1 text-slate-400 hover:text-amber-400 transition-colors"><i data-lucide="award" class="w-3 h-3"></i> ${numDiplomas} título(s)</a>` : ''}
                         </td>
                         <td class="p-4 text-right flex justify-end gap-2">
                             <a href="https://wa.me/${p.telefono || whatsappRegistro || '5490000000000'}" target="_blank" class="bg-emerald-600/20 text-emerald-400 p-2 rounded hover:bg-emerald-600/40 transition-colors" title="Contactar por WhatsApp"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
@@ -2946,7 +3192,6 @@
             } catch(err) { alert("Error al modificar timbres: " + err.message); }
         }
 
-        // ✅ TAREA 3: Auditoría de Cursos B2B con 3 enlaces apilados
         async function cargarCursosB2BPanel() {
             const tbody = document.getElementById('cursos-b2b-body'); 
             if (!tbody) return;
@@ -2964,7 +3209,6 @@
                 if(aliados) aliados.forEach(a => aliadosMap[a.id] = a.nombre);
 
                 tbody.innerHTML = cursos.map(c => {
-                    // ✅ TAREA 3: Renderizar 3 enlaces apilados verticalmente
                     const renderTemarioLink = (url, label, icono) => {
                         if (url && url.trim() !== '' && url !== 'null') {
                             return `<a href="${url}" target="_blank" class="text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-1.5 text-[11px] font-bold transition-colors">
