@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0a1128">
     <meta name="google" content="notranslate">
-    <meta name="description" content="RENMCYCF — Registro Nacional de Matriculados en Criminalística y Ciencias Forenses. Matriculate, obtené tu Credencial del Profesional verificable por QR y accedé a tu Legajo Digital.">
-    <meta name="keywords" content="matrícula criminalística, registro criminalística, ciencias forenses, perito criminalista, credencial profesional, matriculación forense, blockchain forense">
+    <meta name="description" content="RENMCYCF — Registro Nacional de Matriculados en Criminalística y Ciencias Forenses. Verificá credenciales, explorá el Directorio Nacional y creá tu identidad profesional verificable por QR.">
+    <meta name="keywords" content="matrícula criminalística, registro criminalística, ciencias forenses, perito criminalista, credencial profesional, matriculación forense, blockchain forense, directorio forense">
     <title>RENMCYCF · Matriculación Profesional en Criminalística y Ciencias Forenses</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,7 +26,7 @@
       "alternateName": "RENMCYCF",
       "url": "https://renmcycf.com",
       "logo": "https://renmcycf.com/logo.png",
-      "description": "Registro Nacional de Matriculados en Criminalística y Ciencias Forenses. Verificación profesional con trazabilidad blockchain.",
+      "description": "Registro Nacional de Matriculados en Criminalística y Ciencias Forenses. Verificación de credenciales profesionales, Directorio Nacional y Legajo Digital.",
       "sameAs": []
     }
     </script>
@@ -40,6 +40,19 @@
         { "@type": "Question", "name": "¿Cuáles son los requisitos para matricularse?", "acceptedAnswer": { "@type": "Answer", "text": "Ser mayor de edad, contar con DNI argentino o pasaporte, presentar título o certificado analítico en Criminalística o disciplinas afines, y abonar el arancel anual correspondiente." } },
         { "@type": "Question", "name": "¿Cuánto demora la auditoría de mi expediente?", "acceptedAnswer": { "@type": "Answer", "text": "El Comité Evaluador audita la documentación en un plazo de 24 a 48 horas hábiles." } }
       ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "RENMCYCF",
+      "url": "https://renmcycf.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://renmcycf.com/profesionales.renmcycf.html?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
     }
     </script>
 
@@ -234,7 +247,7 @@
                     <span class="nav-label">Explorar</span>
                     <div class="flex items-center gap-0.5">
                         <button onclick="switchSection('seccion-institucional')" class="hover:text-forenseGold transition-colors flex items-center gap-1 px-1.5 py-1"><i data-lucide="landmark" class="w-3.5 h-3.5"></i> Inst.</button>
-                        <button onclick="switchSection('seccion-mapa')" class="hover:text-forenseGold transition-colors flex items-center gap-1 px-1.5 py-1"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Mapa</button>
+                        <button onclick="switchSection('seccion-mapa')" class="hover:text-forenseGold transition-colors flex items-center gap-1 px-1.5 py-1"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Directorio</button>
                         <button onclick="switchSection('seccion-categorias')" class="hover:text-forenseGold transition-colors flex items-center gap-1 px-1.5 py-1"><i data-lucide="layers" class="w-3.5 h-3.5"></i> Cat.</button>
                         <button onclick="switchSection('seccion-comite')" class="hover:text-forenseGold transition-colors flex items-center gap-1 px-1.5 py-1"><i data-lucide="shield" class="w-3.5 h-3.5"></i> Comité</button>
                         <button onclick="switchSection('seccion-portal-divulgacion')" class="hover:text-forenseGold transition-colors flex items-center gap-1 px-1.5 py-1"><i data-lucide="book-open" class="w-3.5 h-3.5"></i> Portal</button>
@@ -267,11 +280,15 @@
 
         <div class="text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 pb-2 mb-2 mt-4">Explorar</div>
         <button onclick="switchSection('seccion-institucional'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="landmark" class="w-5 h-5 text-forenseGold"></i> Institucional</button>
-        <button onclick="switchSection('seccion-mapa'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-forenseGold"></i> Mapa</button>
+        <button onclick="switchSection('seccion-mapa'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-forenseGold"></i> Directorio Nacional</button>
         <button onclick="switchSection('seccion-categorias'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="layers" class="w-5 h-5 text-forenseGold"></i> Categorías</button>
         <button onclick="switchSection('seccion-comite'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="shield" class="w-5 h-5 text-forenseGold"></i> Autoridades</button>
         <button onclick="switchSection('seccion-portal-divulgacion'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="book-open" class="w-5 h-5 text-forenseGold"></i> Portal Científico</button>
         <button onclick="switchSection('seccion-biblioteca'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="library" class="w-5 h-5 text-forenseGold"></i> Biblioteca</button>
+
+        <div class="text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 pb-2 mb-2 mt-4">Experiencias</div>
+        <a href="test-perfil.renmcycf.html" onclick="toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="compass" class="w-5 h-5 text-forenseGold"></i> Test de Perfil</a>
+        <a href="desafio-forense.renmcycf.html" onclick="toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="search" class="w-5 h-5 text-forenseGold"></i> Desafío Forense</a>
     </div>
 
     <!-- MAIN -->
@@ -415,6 +432,48 @@
                 </div>
             </section>
 
+            <!-- EXPLORAR RENMCYCF -->
+            <section class="py-10 bg-slate-50 border-b border-slate-200">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="font-title text-xl md:text-2xl font-black text-forenseNavy uppercase tracking-tight">Explorá RENMCYCF</h3>
+                            <p class="text-xs text-slate-500 mt-1">Herramientas y recursos del registro</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                        <a href="test-perfil.renmcycf.html" class="group bg-white border border-slate-200 rounded-2xl p-5 hover:border-forenseGold hover:shadow-lg transition-all text-center">
+                            <div class="w-12 h-12 mx-auto rounded-xl bg-forenseGold/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <i data-lucide="compass" class="w-6 h-6 text-forenseGold"></i>
+                            </div>
+                            <h4 class="font-black text-xs text-forenseNavy uppercase tracking-wider">Test de Perfil</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">Descubrí tu área</p>
+                        </a>
+                        <a href="profesionales.renmcycf.html" class="group bg-white border border-slate-200 rounded-2xl p-5 hover:border-forenseGold hover:shadow-lg transition-all text-center">
+                            <div class="w-12 h-12 mx-auto rounded-xl bg-forenseGold/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <i data-lucide="users" class="w-6 h-6 text-forenseGold"></i>
+                            </div>
+                            <h4 class="font-black text-xs text-forenseNavy uppercase tracking-wider">Directorio</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">Profesionales registrados</p>
+                        </a>
+                        <button onclick="switchSection('seccion-verificacion')" class="group bg-white border border-slate-200 rounded-2xl p-5 hover:border-forenseGold hover:shadow-lg transition-all text-center">
+                            <div class="w-12 h-12 mx-auto rounded-xl bg-forenseGold/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <i data-lucide="search" class="w-6 h-6 text-forenseGold"></i>
+                            </div>
+                            <h4 class="font-black text-xs text-forenseNavy uppercase tracking-wider">Verificar</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">Matrícula por QR</p>
+                        </button>
+                        <a href="desafio-forense.renmcycf.html" class="group bg-white border border-slate-200 rounded-2xl p-5 hover:border-forenseGold hover:shadow-lg transition-all text-center">
+                            <div class="w-12 h-12 mx-auto rounded-xl bg-forenseGold/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <i data-lucide="target" class="w-6 h-6 text-forenseGold"></i>
+                            </div>
+                            <h4 class="font-black text-xs text-forenseNavy uppercase tracking-wider">Desafío Forense</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">Poné a prueba tu criterio</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
             <!-- ¿QUÉ RECIBÍS? -->
             <section class="py-20 md:py-28 bg-gradient-to-b from-white via-slate-50 to-white">
                 <div class="max-w-7xl mx-auto px-4">
@@ -486,6 +545,52 @@
                             <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
                             Empezar mi trámite ahora
                         </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MICROBLOQUE: TEST DE PERFIL PROFESIONAL FORENSE -->
+            <section class="py-14 md:py-20 bg-white border-y border-slate-100">
+                <div class="max-w-5xl mx-auto px-4">
+                    <div class="bg-gradient-to-br from-slate-50 via-white to-slate-50 border border-slate-200 rounded-3xl p-8 md:p-12 relative overflow-hidden" data-aos="fade-up">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-forenseGold/5 blur-3xl rounded-full pointer-events-none"></div>
+                        <div class="relative grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                            <div class="md:col-span-2">
+                                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-forenseGold/10 text-forenseGold text-[10px] font-black uppercase tracking-[0.18em] mb-4 border border-forenseGold/20">
+                                    <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+                                    Orientación Profesional
+                                </div>
+                                <h3 class="font-title text-2xl md:text-3xl font-black text-forenseNavy uppercase tracking-tight mb-3 leading-tight">
+                                    ¿Qué perfil profesional<br class="hidden md:block"> forense tenés?
+                                </h3>
+                                <p class="text-slate-600 text-sm md:text-base leading-relaxed mb-6 max-w-xl">
+                                    Descubrí en pocos minutos qué áreas de las Ciencias Forenses se relacionan más con tu perfil profesional. Una experiencia de orientación, no un diagnóstico.
+                                </p>
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <a href="test-perfil.renmcycf.html" class="inline-flex items-center justify-center gap-2 bg-forenseNavy text-forenseGold hover:bg-slate-800 font-black uppercase tracking-[0.15em] text-xs px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
+                                        <i data-lucide="play-circle" class="w-4 h-4"></i>
+                                        Descubrir mi perfil
+                                    </a>
+                                    <a href="desafio-forense.renmcycf.html" class="inline-flex items-center justify-center gap-2 border-2 border-slate-200 text-slate-600 hover:border-forenseGold hover:text-forenseGold font-bold uppercase tracking-[0.12em] text-xs px-6 py-3.5 rounded-xl transition-all">
+                                        <i data-lucide="target" class="w-4 h-4"></i>
+                                        Desafío Forense
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="md:col-span-1 flex justify-center">
+                                <div class="relative">
+                                    <div class="w-40 h-40 md:w-48 md:h-48 rounded-3xl bg-gradient-to-br from-forenseNavy to-slate-800 flex items-center justify-center shadow-2xl border-4 border-forenseGold/30 rotate-3 hover:rotate-0 transition-transform duration-500">
+                                        <div class="text-center">
+                                            <i data-lucide="fingerprint" class="w-16 h-16 md:w-20 md:h-20 text-forenseGold mx-auto mb-2"></i>
+                                            <span class="text-white text-[10px] font-black uppercase tracking-[0.2em]">Tu Perfil</span>
+                                        </div>
+                                    </div>
+                                    <div class="absolute -top-3 -right-3 w-12 h-12 rounded-full bg-forenseGold flex items-center justify-center shadow-lg border-4 border-white">
+                                        <i data-lucide="sparkles" class="w-5 h-5 text-forenseNavy"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1115,8 +1220,21 @@
                                         <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Especialidades Verificadas</p>
                                         <div id="res-especialidades" class="flex flex-wrap gap-2 justify-center md:justify-start"></div>
                                     </div>
-                                    <p class="text-xs text-emerald-400 mt-4 flex items-center justify-center md:justify-start gap-1 font-bold"><i data-lucide="check-circle" class="w-4 h-4"></i> PROFESIONAL HABILITADO Y ACTIVO</p>
+                                    <p class="text-xs text-emerald-400 mt-4 flex items-center justify-center md:justify-start gap-1 font-bold"><i data-lucide="check-circle" class="w-4 h-4"></i> PROFESIONAL REGISTRADO · MATRÍCULA VIGENTE</p>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 bg-slate-50 border border-slate-200 rounded-2xl p-5 text-center">
+                            <p class="text-xs text-slate-600 font-medium mb-3">¿Querés crear tu propia identidad profesional verificable?</p>
+                            <div class="flex flex-col sm:flex-row gap-2 justify-center">
+                                <button onclick="switchSection('seccion-institucional')" class="inline-flex items-center justify-center gap-2 bg-forenseNavy text-forenseGold hover:bg-slate-800 font-black uppercase tracking-[0.12em] text-[11px] px-5 py-3 rounded-xl shadow-md transition-all">
+                                    <i data-lucide="info" class="w-4 h-4"></i>
+                                    Conocer RENMCYCF
+                                </button>
+                                <button onclick="switchSection('seccion-inscripcion')" class="inline-flex items-center justify-center gap-2 bg-forenseGold text-forenseNavy hover:bg-yellow-500 font-black uppercase tracking-[0.12em] text-[11px] px-5 py-3 rounded-xl shadow-md transition-all">
+                                    <i data-lucide="user-plus" class="w-4 h-4"></i>
+                                    Iniciar Matriculación
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1151,13 +1269,18 @@
             </div>
         </section>
 
-        <!-- ═══════════ MAPA ═══════════ -->
+        <!-- ═══════════ MAPA / DIRECTORIO ═══════════ -->
         <section id="seccion-mapa" class="page-section py-16 bg-forenseNavy text-white relative">
             <div class="max-w-7xl mx-auto px-4 relative z-10">
                 <div class="text-center mb-8">
-                    <h2 class="font-title text-2xl md:text-3xl font-black mb-3 uppercase text-white"><i data-lucide="map-pin" class="inline w-6 h-6 text-forenseGold mr-2"></i>Directorio Nacional de Peritos</h2>
+                    <h2 class="font-title text-2xl md:text-3xl font-black mb-3 uppercase text-white"><i data-lucide="map-pin" class="inline w-6 h-6 text-forenseGold mr-2"></i>Directorio Nacional de Profesionales Registrados</h2>
                     <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
-                    <p class="text-slate-300 text-sm max-w-xl mx-auto">Encuentre profesionales habilitados por jurisdicción o especialidad.</p>
+                    <p class="text-slate-300 text-sm max-w-xl mx-auto">Encuentre profesionales registrados por especialidad o jurisdicción.</p>
+                    <div class="mt-4">
+                        <a href="profesionales.renmcycf.html" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold uppercase tracking-widest px-5 py-2.5 rounded-lg transition-all">
+                            <i data-lucide="list" class="w-4 h-4"></i> Ver Directorio Completo con Filtros
+                        </a>
+                    </div>
                 </div>
                 <div class="bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 md:p-6 mb-6 border border-white/10 shadow-lg">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
