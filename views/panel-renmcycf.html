@@ -557,13 +557,14 @@
                         </div>
                         <div class="bg-black/20 p-4 rounded-xl border border-white/5">
                             <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="contact" class="w-4 h-4"></i> Pago y Contacto</h4>
-                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2 mt-6 border-t border-white/10 pt-4"><i data-lucide="link" class="w-4 h-4"></i> Enlaces de Pago (Mercado Pago)</h4>
+                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2 mt-6 border-t border-white/10 pt-4"><i data-lucide="landmark" class="w-4 h-4"></i> Datos de Transferencia Bancaria</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div><label>Link Categoría A1 (y B1)</label><input type="url" id="conf-mp-a1" placeholder="https://mpago.la/..."></div>
-                                <div><label>Link Categoría A2</label><input type="url" id="conf-mp-a2" placeholder="https://mpago.la/..."></div>
-                                <div><label>Link Categoría A3 (B2 y B3)</label><input type="url" id="conf-mp-a3" placeholder="https://mpago.la/..."></div>
-                                <div><label>Link Categoría A4</label><input type="url" id="conf-mp-a4" placeholder="https://mpago.la/..."></div>
+                                <div><label>Alias</label><input type="text" id="conf-alias-cbu" placeholder="Ej: renmcycf.pagos"></div>
+                                <div><label>CBU (22 dígitos)</label><input type="text" id="conf-cbu" maxlength="22" placeholder="Ej: 0070099530004512345678"></div>
+                                <div><label>Titular de la Cuenta</label><input type="text" id="conf-titular-cuenta" placeholder="Ej: RENMCYCF - Registro Nacional"></div>
+                                <div><label>Banco</label><input type="text" id="conf-banco" placeholder="Ej: Banco Galicia"></div>
                             </div>
+                            <p class="text-[10px] text-slate-500 mt-3 italic">Estos datos aparecerán en el modal de renovación del legajo del profesional, en la sección pública de matriculación y en el email de confirmación.</p>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                                 <div><label>WhatsApp del Registro</label><input type="text" id="conf-whatsapp" placeholder="549XXXXXXXXXX"></div>
                                 <div><label>Email de Contacto</label><input type="email" id="conf-email"></div>
@@ -2368,10 +2369,10 @@
                     document.getElementById('conf-arancel-a2').value = data.arancel_a2 || ''; 
                     document.getElementById('conf-arancel-a3').value = data.arancel_a3 || ''; 
                     document.getElementById('conf-arancel-a4').value = data.arancel_a4 || ''; 
-                    document.getElementById('conf-mp-a1').value = data.mp_link_a1 || ''; 
-                    document.getElementById('conf-mp-a2').value = data.mp_link_a2 || ''; 
-                    document.getElementById('conf-mp-a3').value = data.mp_link_a3 || ''; 
-                    document.getElementById('conf-mp-a4').value = data.mp_link_a4 || ''; 
+                    document.getElementById('conf-alias-cbu').value = data.alias_cbu || '';
+                    document.getElementById('conf-cbu').value = data.cbu || '';
+                    document.getElementById('conf-titular-cuenta').value = data.titular_cuenta || '';
+                    document.getElementById('conf-banco').value = data.banco || '';
                     document.getElementById('conf-whatsapp').value = data.whatsapp || ''; 
                     document.getElementById('conf-email').value = data.email || ''; 
                     
@@ -2400,10 +2401,10 @@
                     arancel_a2: document.getElementById('conf-arancel-a2').value, 
                     arancel_a3: document.getElementById('conf-arancel-a3').value, 
                     arancel_a4: document.getElementById('conf-arancel-a4').value, 
-                    mp_link_a1: document.getElementById('conf-mp-a1').value,
-                    mp_link_a2: document.getElementById('conf-mp-a2').value,
-                    mp_link_a3: document.getElementById('conf-mp-a3').value,
-                    mp_link_a4: document.getElementById('conf-mp-a4').value,
+                    alias_cbu: document.getElementById('conf-alias-cbu').value.trim(),
+                    cbu: document.getElementById('conf-cbu').value.trim(),
+                    titular_cuenta: document.getElementById('conf-titular-cuenta').value.trim(),
+                    banco: document.getElementById('conf-banco').value.trim(),
                     whatsapp: document.getElementById('conf-whatsapp').value,
                     email: document.getElementById('conf-email').value,
                     
