@@ -1200,6 +1200,9 @@
             lucide.createIcons();
         }
 
+        // ==========================================
+        // ✅ ENVIAR RENOVACIÓN — PAYLOAD CORREGIDO
+        // ==========================================
         async function enviarRenovacion(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-enviar-renovacion');
@@ -1218,13 +1221,20 @@
                 
                 const urlComp = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${fileName}`;
 
+                // LA MAGIA: Copiamos silenciosamente los datos que ya tiene el legajo para cumplir con la Base de Datos
                 const payload = {
                     dni: alumnoActual.dni,
                     nombres: alumnoActual.nombres,
                     apellidos: alumnoActual.apellidos,
+                    ano_nacimiento: alumnoActual.ano_nacimiento, // Agregado para cumplir validación
                     email: alumnoActual.email,
                     telefono: alumnoActual.telefono,
+                    provincia_laboral: alumnoActual.provincia_laboral, // Agregado
                     categoria: alumnoActual.categoria,
+                    profesion: alumnoActual.profesion,
+                    foto_perfil_url: alumnoActual.foto_perfil_url, // Agregado
+                    dni_frente_url: alumnoActual.dni_frente_url, // Agregado
+                    dni_dorso_url: alumnoActual.dni_dorso_url, // Agregado
                     tipo_tramite: 'RENOVACION',
                     estado: 'RENOVACION_PENDIENTE',
                     comprobante_url: urlComp
@@ -1247,7 +1257,7 @@
         }
 
         // ==========================================
-        // ✅ TAREA 1 y 2: ABRIR MODAL NUEVO DIPLOMA + SUBIR
+        // ✅ TAREA 1 y 2: ABRIR MODAL NUEVO DIPLOMA + SUBIR (PAYLOAD CORREGIDO)
         // ==========================================
         function abrirModalNuevoDiploma() {
             safeClass('modal-nuevo-diploma', 'remove', 'hidden');
@@ -1277,14 +1287,21 @@
                 const { data: urlData } = db.storage.from('renmcycf-documentos').getPublicUrl(fileName);
                 const diplomaUrl = urlData.publicUrl;
 
+                // LA MAGIA: Rellenamos la solicitud con datos de fondo del profesional
                 const payload = {
                     dni: alumnoActual.dni,
                     nombres: alumnoActual.nombres,
                     apellidos: alumnoActual.apellidos,
+                    ano_nacimiento: alumnoActual.ano_nacimiento, // Agregado para cumplir validación
                     email: alumnoActual.email,
                     telefono: alumnoActual.telefono,
+                    provincia_laboral: alumnoActual.provincia_laboral, // Agregado
+                    categoria: alumnoActual.categoria,
+                    foto_perfil_url: alumnoActual.foto_perfil_url, // Agregado
+                    dni_frente_url: alumnoActual.dni_frente_url, // Agregado
+                    dni_dorso_url: alumnoActual.dni_dorso_url, // Agregado
                     tipo_tramite: 'ACTUALIZACION_LEGAJO',
-                    profesion: titulo,
+                    profesion: titulo, // Guardamos el nombre del curso acá
                     diploma_url: diplomaUrl,
                     estado: 'PENDIENTE'
                 };
@@ -1297,6 +1314,7 @@
                 const form = document.querySelector('#modal-nuevo-diploma form');
                 if(form) form.reset();
                 cerrarModalSeguro('modal-nuevo-diploma');
+                abrirModalDiplomas(); // Refrescar historial
             } catch(err) {
                 alert("Error: " + err.message);
             } finally {
