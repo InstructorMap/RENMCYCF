@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a1128">
+    <meta name="google" content="notranslate">
+    <meta name="description" content="Desafío Forense de RENMCYCF — Casos breves para poner a prueba tu razonamiento técnico en Ciencias Forenses. Sin registro, sin costo.">
+    <meta name="keywords" content="desafío forense, casos forenses, criminalística, ciencias forenses, razonamiento técnico">
+    <title>Desafío Forense · RENMCYCF</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forenseNavy: '#0a1128',
+                        forenseGold: '#d4af37',
+                        forenseBlue: '#1e3a8a'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        title: ['Montserrat', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { scroll-behavior: smooth; }
+        body { background-color: #f8fafc; color: #334155; min-height: 100vh; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; }
+
+        @keyframes fadeSlide { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-slide { animation: fadeSlide 0.4s ease forwards; }
+
+        @keyframes stampIn {
+            0% { opacity: 0; transform: scale(1.6) rotate(-12deg); }
+            60% { opacity: 1; transform: scale(0.95) rotate(-12deg); }
+            100% { opacity: 1; transform: scale(1) rotate(-12deg); }
+        }
+        .stamp-in { animation: stampIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+        .option-card {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 18px 22px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            font-family: inherit;
+            font-size: 15px;
+            color: #1e293b;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .option-card:hover:not(.disabled) {
+            border-color: #d4af37;
+            transform: translateX(4px);
+            box-shadow: 0 8px 24px -8px rgba(212, 175, 55, 0.25);
+            background: #fffef8;
+        }
+        .option-card.correct {
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+        .option-card.incorrect {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+        .option-card.disabled {
+            cursor: default;
+            pointer-events: none;
+        }
+        .option-card.disabled:not(.correct):not(.incorrect) {
+            opacity: 0.5;
+        }
+
+        .option-letter {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 13px;
+            color: #64748b;
+            flex-shrink: 0;
+            transition: all 0.25s;
+        }
+        .option-card:hover:not(.disabled) .option-letter {
+            background: #d4af37;
+            color: #0a1128;
+        }
+        .option-card.correct .option-letter {
+            background: #10b981;
+            color: white;
+        }
+        .option-card.incorrect .option-letter {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #d4af37; color: #0a1128;
+            font-weight: 900; text-transform: uppercase;
+            letter-spacing: 0.1em; font-size: 13px;
+            padding: 16px 32px; border-radius: 12px;
+            border: none; cursor: pointer;
+            transition: all 0.25s;
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px; font-family: inherit;
+            box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.5);
+        }
+        .btn-primary:hover {
+            background: #facc15;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px -10px rgba(212, 175, 55, 0.7);
+        }
+        .btn-secondary {
+            background: transparent; color: #334155;
+            border: 2px solid #e2e8f0;
+            font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.1em; font-size: 12px;
+            padding: 14px 28px; border-radius: 12px;
+            cursor: pointer; transition: all 0.25s;
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px; font-family: inherit;
+        }
+        .btn-secondary:hover {
+            border-color: #d4af37;
+            color: #0a1128;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="bg-forenseNavy text-white py-4 px-4 shadow-lg border-b-4 border-forenseGold">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <a href="index-test.renmcycf.html" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-full bg-white flex items-center justify-center border-2 border-forenseGold group-hover:scale-105 transition-transform">
+                    <i data-lucide="fingerprint" class="w-6 h-6 text-forenseNavy"></i>
+                </div>
+                <div class="leading-tight">
+                    <span class="font-title font-black text-lg tracking-tight block">RENMCYCF</span>
+                    <span class="text-[9px] text-forenseGold font-bold uppercase tracking-[0.18em]">Desafío Forense</span>
+                </div>
+            </a>
+            <a href="index-test.renmcycf.html" class="text-xs font-bold uppercase tracking-widest text-slate-300 hover:text-forenseGold transition-colors flex items-center gap-2">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Inicio
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="flex-1 py-8 md:py-14 px-4">
+        <div class="max-w-3xl mx-auto">
+
+            <!-- PANTALLA: INTRO -->
+            <div id="screen-intro">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-forenseGold/10 text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] mb-6 border border-forenseGold/20">
+                        <i data-lucide="search" class="w-3.5 h-3.5"></i> Desafío Forense
+                    </div>
+                    <h1 class="font-title text-3xl md:text-5xl font-black text-forenseNavy uppercase tracking-tight mb-4 leading-tight">
+                        Poné a prueba tu<br>razonamiento forense
+                    </h1>
+                    <div class="w-20 h-1 bg-forenseGold mx-auto mb-6"></div>
+                    <p class="text-slate-600 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+                        Cinco situaciones breves basadas en principios técnicos reales de las Ciencias Forenses. Sin registro, sin costo, sin presión.
+                    </p>
+                </div>
+
+                <!-- INFO CARD -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 max-w-2xl mx-auto mb-8">
+                    <div class="flex items-start gap-3 mb-5">
+                        <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+                            <i data-lucide="info" class="w-5 h-5 text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-forenseNavy uppercase tracking-wider mb-1">Antes de empezar</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                El objetivo es <strong>explorar cómo pensás</strong> frente a situaciones forenses. No es un examen oficial ni reemplaza formación académica. Al final podés compartir tu resultado y descubrir tu perfil profesional.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3 pt-4 border-t border-slate-100">
+                        <div class="text-center">
+                            <div class="text-2xl font-black text-forenseNavy font-mono">5</div>
+                            <div class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Casos</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-black text-forenseNavy font-mono">~4</div>
+                            <div class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Minutos</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-black text-forenseNavy font-mono">6</div>
+                            <div class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Áreas</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button onclick="startChallenge()" class="btn-primary">
+                        <i data-lucide="play-circle" class="w-5 h-5"></i>
+                        Comenzar Desafío
+                    </button>
+                </div>
+            </div>
+
+            <!-- PANTALLA: CASO -->
+            <div id="screen-case" class="hidden">
+                <!-- Barra de progreso -->
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-black text-slate-500 uppercase tracking-widest">
+                            Caso <span id="case-current">1</span> de <span id="case-total">5</span>
+                        </span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Puntaje</span>
+                            <span class="text-sm font-black text-forenseNavy font-mono">
+                                <span id="score-current">0</span>/<span id="score-total">5</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="h-full bg-gradient-to-r from-forenseGold to-yellow-400 transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Contenedor del caso -->
+                <div id="case-container" class="animate-slide">
+                    <!-- Inyectado por JS -->
+                </div>
+            </div>
+
+            <!-- PANTALLA: RESULTADO -->
+            <div id="screen-result" class="hidden">
+                <!-- Inyectado por JS -->
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-forenseNavy text-slate-400 py-8 px-4 border-t-4 border-forenseGold mt-8">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="text-[10px] uppercase tracking-widest font-bold mb-2">Registro Nacional de Matriculados en Criminalística y Ciencias Forenses</p>
+            <p class="text-[10px]">Desarrollado con tecnología ASARI SaaS · Todos los derechos reservados © 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // ═══════════════════════════════════════════════════════════
+        // CASOS DEL DESAFÍO
+        // Para agregar más: añadir entradas a este array.
+        // ═══════════════════════════════════════════════════════════
+
+        const CASES = [
+            {
+                id: '027',
+                number: '027',
+                title: 'Documento cuestionado',
+                category: 'Documentología',
+                difficulty: 'Intermedio',
+                difficultyColor: 'blue',
+                scenario: 'Un abogado presenta un contrato firmado que parece legítimo, pero sospecha que la firma del cliente fue alterada. Te entrega el documento original y una fotocopia.',
+                question: '¿Cuál es tu primer paso técnico?',
+                options: [
+                    { letter: 'A', text: 'Comparar la firma con otras firmas indubitables del mismo cliente.', correct: true, explanation: 'El cotejo con firmas indubitables es el método primario en documentología forense. Se realiza antes de cualquier análisis instrumental.' },
+                    { letter: 'B', text: 'Consultar al abogado si el cliente niega haber firmado.', correct: false, explanation: 'La consulta al letrado aporta contexto procesal, pero no constituye un paso técnico pericial.' },
+                    { letter: 'C', text: 'Enviar el documento a un laboratorio externo antes de analizarlo.', correct: false, explanation: 'La derivación se decide tras una evaluación preliminar, no como primer paso. Además, hay que preservar la cadena de custodia.' },
+                    { letter: 'D', text: 'Publicar el caso en redes sociales para pedir opiniones.', correct: false, explanation: 'Viola el secreto profesional y compromete la cadena de custodia. Nunca se hace.' }
+                ]
+            },
+            {
+                id: '034',
+                number: '034',
+                title: 'Escena con múltiples indicios',
+                category: 'Criminalística de Campo',
+                difficulty: 'Avanzado',
+                difficultyColor: 'amber',
+                scenario: 'Llegás a una escena donde hay sangre, huellas parciales y un objeto con posible evidencia biológica. El fiscal necesita saber qué priorizar.',
+                question: '¿Qué hacés primero?',
+                options: [
+                    { letter: 'A', text: 'Recolectar todo lo posible antes de que se deteriore.', correct: false, explanation: 'Recolectar sin planificar puede contaminar la escena. Hay que priorizar según riesgo de pérdida.' },
+                    { letter: 'B', text: 'Asegurar y documentar la escena completa antes de intervenir.', correct: true, explanation: 'La primera fase siempre es asegurar y documentar fotográficamente la escena completa. Sin esa etapa, cualquier recolección carece de valor probatorio.' },
+                    { letter: 'C', text: 'Recolectar primero las muestras biológicas por ser perecederas.', correct: false, explanation: 'Aunque las biológicas son perecederas, primero hay que fijar la escena. Si no, se pierde el contexto espacial.' },
+                    { letter: 'D', text: 'Esperar al equipo de biología forense antes de tocar nada.', correct: false, explanation: 'El criminalista de campo tiene competencia para la fijación inicial. Esperar puede derivar en pérdida de evidencia.' }
+                ]
+            },
+            {
+                id: '041',
+                number: '041',
+                title: 'Proyectil deformado',
+                category: 'Balística Forense',
+                difficulty: 'Intermedio',
+                difficultyColor: 'blue',
+                scenario: 'Recibís un proyectil deformado extraído de un cuerpo. El fiscal quiere saber si corresponde a un arma secuestrada en el allanamiento.',
+                question: '¿Qué análisis encarás primero?',
+                options: [
+                    { letter: 'A', text: 'Pesar y medir el proyectil para estimar el calibre.', correct: false, explanation: 'Es útil, pero insuficiente por sí solo. La deformación puede alterar medidas originales.' },
+                    { letter: 'B', text: 'Estudio comparativo de estrías por microscopía.', correct: true, explanation: 'El cotejo de estrías bajo microscopio comparativo es el método estándar para vincular proyectil y arma. Es la prueba balística principal.' },
+                    { letter: 'C', text: 'Espectrometría para determinar composición del plomo.', correct: false, explanation: 'Aporta datos de composición pero no vincula el proyectil con un arma específica.' },
+                    { letter: 'D', text: 'Preguntar al imputado si fue su arma.', correct: false, explanation: 'La confesión no reemplaza el análisis técnico. La evidencia balística es objetiva e independiente.' }
+                ]
+            },
+            {
+                id: '052',
+                number: '052',
+                title: 'Huella dactilar parcial',
+                category: 'Papiloscopía',
+                difficulty: 'Intermedio',
+                difficultyColor: 'blue',
+                scenario: 'Encontrás una huella dactilar parcial en una superficie no porosa. Un sospechoso con antecedentes fue detenido, pero niega haber estado en el lugar.',
+                question: '¿Qué es lo más riguroso?',
+                options: [
+                    { letter: 'A', text: 'Cotejar la huella con el sospechoso directo.', correct: false, explanation: 'El cotejo siempre debe hacerse contra un registro completo, no contra un único sospechoso. Si no, se sesga el análisis.' },
+                    { letter: 'B', text: 'Cargar la huella en un sistema AFIS y cotejar con todas las coincidencias posibles.', correct: true, explanation: 'El sistema AFIS permite cotejo contra miles de registros. Solo así el resultado es objetivo e imparcial.' },
+                    { letter: 'C', text: 'Descartar el análisis porque la huella es parcial.', correct: false, explanation: 'Las huellas parciales pueden ser identificativas si tienen suficientes minucias. No se descartan a priori.' },
+                    { letter: 'D', text: 'Dejar que el sospechoso explique por qué su huella podría estar ahí.', correct: false, explanation: 'La explicación del imputado no es prueba técnica. La huella se analiza objetivamente.' }
+                ]
+            },
+            {
+                id: '063',
+                number: '063',
+                title: 'Dispositivo con evidencia digital',
+                category: 'Informática Forense',
+                difficulty: 'Avanzado',
+                difficultyColor: 'amber',
+                scenario: 'Incautás un teléfono apagado con posible evidencia de un fraude. El fiscal quiere acceder a los chats lo antes posible.',
+                question: '¿Cuál es el procedimiento correcto?',
+                options: [
+                    { letter: 'A', text: 'Encenderlo y revisar los chats manualmente.', correct: false, explanation: 'Encenderlo activa borrado automático, bloqueo por PIN, y puede alterar registros. Rompe la cadena de custodia.' },
+                    { letter: 'B', text: 'Mantenerlo aislado en bolsa Faraday y preservar la evidencia sin encenderlo.', correct: true, explanation: 'La bolsa Faraday impide conexión a red (que podría borrar remotamente datos). Sin encender, se preserva el estado original.' },
+                    { letter: 'C', text: 'Conectarlo a una PC para copiar archivos visibles.', correct: false, explanation: 'Conectar un dispositivo puede modificar timestamps y activar sincronizaciones. Contamina la evidencia.' },
+                    { letter: 'D', text: 'Extraer la SIM y analizarla sin tocar el teléfono.', correct: false, explanation: 'Extraer la SIM altera el estado. Además, la evidencia puede estar en la memoria interna, no en la SIM.' }
+                ]
+            }
+        ];
+
+        // ═══════════════════════════════════════════════════════════
+        // ESTADO
+        // ═══════════════════════════════════════════════════════════
+
+        let currentIndex = 0;
+        let score = 0;
+        let answers = []; // { caseId, selectedLetter, correct }
+
+        // ═══════════════════════════════════════════════════════════
+        // NAVEGACIÓN
+        // ═══════════════════════════════════════════════════════════
+
+        function showScreen(id) {
+            ['screen-intro', 'screen-case', 'screen-result'].forEach(sid => {
+                const el = document.getElementById(sid);
+                if (el) el.classList.toggle('hidden', sid !== id);
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            lucide.createIcons();
+        }
+
+        function startChallenge() {
+            currentIndex = 0;
+            score = 0;
+            answers = [];
+            showScreen('screen-case');
+            renderCase();
+        }
+
+        function renderCase() {
+            const caso = CASES[currentIndex];
+            const container = document.getElementById('case-container');
+
+            document.getElementById('case-current').innerText = currentIndex + 1;
+            document.getElementById('case-total').innerText = CASES.length;
+            document.getElementById('score-current').innerText = score;
+            document.getElementById('score-total').innerText = CASES.length;
+
+            const percent = Math.round((currentIndex / CASES.length) * 100);
+            document.getElementById('progress-bar').style.width = percent + '%';
+
+            const difficultyClasses = {
+                'blue': 'bg-blue-50 text-blue-700 border-blue-200',
+                'amber': 'bg-amber-50 text-amber-700 border-amber-200',
+                'emerald': 'bg-emerald-50 text-emerald-700 border-emerald-200'
+            };
+            const diffClass = difficultyClasses[caso.difficultyColor] || difficultyClasses.blue;
+
+            container.innerHTML = `
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm">
+                    <!-- Encabezado del caso -->
+                    <div class="flex items-start justify-between gap-4 mb-5 pb-5 border-b border-slate-100">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[10px] font-black text-forenseGold uppercase tracking-[0.2em] font-mono">CASO #${caso.number}</span>
+                            </div>
+                            <h2 class="font-title text-xl md:text-2xl font-black text-forenseNavy uppercase tracking-tight leading-tight">
+                                ${caso.title}
+                            </h2>
+                        </div>
+                        <span class="shrink-0 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border ${diffClass}">
+                            ${caso.difficulty}
+                        </span>
+                    </div>
+
+                    <!-- Categoría -->
+                    <div class="flex items-center gap-2 mb-6">
+                        <i data-lucide="tag" class="w-3.5 h-3.5 text-forenseGold"></i>
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">${caso.category}</span>
+                    </div>
+
+                    <!-- Escenario -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-forenseNavy flex items-center justify-center shrink-0">
+                                <i data-lucide="file-text" class="w-4 h-4 text-forenseGold"></i>
+                            </div>
+                            <div>
+                                <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Situación</div>
+                                <p class="text-slate-700 text-sm leading-relaxed">${caso.scenario}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta -->
+                    <div class="mb-5">
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="help-circle" class="w-4 h-4 text-forenseGold"></i>
+                            <h3 class="text-sm font-black text-forenseNavy uppercase tracking-widest">
+                                ${caso.question}
+                            </h3>
+                        </div>
+                        <div class="space-y-3" id="options-container">
+                            ${caso.options.map(opt => `
+                                <button class="option-card" onclick="selectAnswer('${opt.letter}')" data-letter="${opt.letter}">
+                                    <span class="option-letter">${opt.letter}</span>
+                                    <span class="flex-1">${opt.text}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Explicación (oculta) -->
+                    <div id="explanation-container" class="hidden"></div>
+
+                    <!-- Botón siguiente (oculto) -->
+                    <div id="next-container" class="hidden mt-6 pt-5 border-t border-slate-100 flex justify-end">
+                        <button onclick="nextCase()" class="btn-primary">
+                            <span id="next-label">Siguiente caso</span>
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            container.classList.remove('animate-slide');
+            void container.offsetWidth;
+            container.classList.add('animate-slide');
+            lucide.createIcons();
+        }
+
+        function selectAnswer(letter) {
+            const caso = CASES[currentIndex];
+            const selectedOpt = caso.options.find(o => o.letter === letter);
+            if (!selectedOpt) return;
+
+            const alreadyAnswered = answers.some(a => a.caseId === caso.id);
+            if (alreadyAnswered) return;
+
+            answers.push({ caseId: caso.id, selectedLetter: letter, correct: selectedOpt.correct });
+            if (selectedOpt.correct) score++;
+            document.getElementById('score-current').innerText = score;
+
+            // Marcar botones
+            document.querySelectorAll('#options-container .option-card').forEach(btn => {
+                btn.classList.add('disabled');
+                const l = btn.dataset.letter;
+                const opt = caso.options.find(o => o.letter === l);
+                if (l === letter) {
+                    btn.classList.add(opt.correct ? 'correct' : 'incorrect');
+                } else if (opt && opt.correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            // Mostrar explicación
+            const expContainer = document.getElementById('explanation-container');
+            expContainer.classList.remove('hidden');
+            const colorScheme = selectedOpt.correct ? 'emerald' : 'amber';
+            expContainer.innerHTML = `
+                <div class="animate-slide bg-${colorScheme}-50 border border-${colorScheme}-200 rounded-xl p-5">
+                    <div class="flex items-start gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-${colorScheme}-500 flex items-center justify-center shrink-0">
+                            <i data-lucide="${selectedOpt.correct ? 'check-circle' : 'info'}" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-black text-${colorScheme}-800 uppercase tracking-widest mb-1">
+                                ${selectedOpt.correct ? 'Respuesta correcta' : 'Enfoque incorrecto'}
+                            </h4>
+                            <p class="text-sm text-${colorScheme}-900 leading-relaxed">${selectedOpt.explanation}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Mostrar botón siguiente
+            const nextContainer = document.getElementById('next-container');
+            nextContainer.classList.remove('hidden');
+            if (currentIndex === CASES.length - 1) {
+                document.getElementById('next-label').innerText = 'Ver mi resultado';
+            }
+
+            // Scroll suave hacia el botón
+            setTimeout(() => {
+                nextContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 200);
+
+            lucide.createIcons();
+        }
+
+        function nextCase() {
+            if (currentIndex < CASES.length - 1) {
+                currentIndex++;
+                renderCase();
+            } else {
+                showResult();
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // RESULTADO
+        // ═══════════════════════════════════════════════════════════
+
+        function showResult() {
+            const total = CASES.length;
+            const percent = Math.round((score / total) * 100);
+
+            // Determinar nivel según puntaje
+            let level, levelDesc, levelIcon, levelColor;
+            if (percent >= 80) {
+                level = 'Razonamiento Experto';
+                levelDesc = 'Tu criterio técnico demuestra una base sólida en principios forenses. Pensás con método y rigurosidad.';
+                levelIcon = 'award';
+                levelColor = 'emerald';
+            } else if (percent >= 50) {
+                level = 'Razonamiento Intermedio';
+                levelDesc = 'Mostrás un razonamiento técnico correcto en varios casos. Con formación específica podés consolidar criterios más finos.';
+                levelIcon = 'trending-up';
+                levelColor = 'blue';
+            } else {
+                level = 'Razonamiento Inicial';
+                levelDesc = 'Estás explorando el campo forense. Este desafío te sirve como punto de partida para profundizar en metodologías técnicas.';
+                levelIcon = 'compass';
+                levelColor = 'amber';
+            }
+
+            const shareText = `Completé el Desafío Forense de RENMCYCF con ${score}/${total} respuestas correctas. Nivel: ${level}. ¿Te animás?`;
+            const shareUrl = window.location.href.split('?')[0] + `?score=${score}&total=${total}`;
+
+            // Guardar para compartir
+            window.__shareText = shareText;
+            window.__shareUrl = shareUrl;
+
+            const container = document.getElementById('screen-result');
+            container.innerHTML = `
+                <div class="text-center mb-6">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em] mb-4 border border-emerald-100">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                        Desafío completado
+                    </div>
+                </div>
+
+                <!-- Tarjeta de resultado principal -->
+                <div class="relative bg-gradient-to-br from-forenseNavy to-slate-900 rounded-3xl p-8 md:p-12 text-center mb-6 border-4 border-forenseGold shadow-2xl overflow-hidden">
+                    <div class="absolute top-0 right-0 w-72 h-72 bg-forenseGold/10 blur-3xl rounded-full pointer-events-none"></div>
+                    <div class="absolute bottom-0 left-0 w-72 h-72 bg-blue-500/10 blur-3xl rounded-full pointer-events-none"></div>
+
+                    <div class="relative z-10">
+                        <div class="text-forenseGold text-[10px] font-black uppercase tracking-[0.3em] mb-4">TU RESULTADO</div>
+
+                        <!-- Puntaje grande -->
+                        <div class="mb-6">
+                            <div class="text-6xl md:text-7xl font-black text-white font-mono leading-none">
+                                ${score}<span class="text-forenseGold">/${total}</span>
+                            </div>
+                            <div class="text-[10px] text-slate-400 font-black uppercase tracking-[0.25em] mt-3">Respuestas correctas</div>
+                        </div>
+
+                        <!-- Nivel -->
+                        <div class="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md mb-6">
+                            <div class="w-10 h-10 rounded-lg bg-forenseGold flex items-center justify-center">
+                                <i data-lucide="${levelIcon}" class="w-5 h-5 text-forenseNavy"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="text-[9px] text-slate-400 font-black uppercase tracking-widest">Nivel</div>
+                                <div class="text-white font-black text-sm uppercase tracking-wide">${level}</div>
+                            </div>
+                        </div>
+
+                        <!-- Descripción -->
+                        <p class="text-slate-300 text-sm md:text-base leading-relaxed max-w-lg mx-auto">
+                            ${levelDesc}
+                        </p>
+
+                        <!-- Resumen por caso -->
+                        <div class="border-t border-white/10 pt-6 mt-6">
+                            <div class="text-[10px] text-slate-400 font-black uppercase tracking-[0.25em] mb-4">Resumen por caso</div>
+                            <div class="flex flex-wrap gap-2 justify-center">
+                                ${CASES.map((c, i) => {
+                                    const ans = answers.find(a => a.caseId === c.id);
+                                    const isCorrect = ans && ans.correct;
+                                    return `
+                                        <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-2">
+                                            <span class="text-[10px] font-mono font-black text-slate-400">#${c.number}</span>
+                                            <i data-lucide="${isCorrect ? 'check-circle' : 'x-circle'}" class="w-4 h-4 ${isCorrect ? 'text-emerald-400' : 'text-red-400'}"></i>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA principal: Test de perfil -->
+                <div class="bg-white border-2 border-forenseGold/30 rounded-2xl p-6 md:p-8 text-center mb-6">
+                    <div class="w-14 h-14 mx-auto rounded-xl bg-forenseGold/10 flex items-center justify-center mb-4">
+                        <i data-lucide="compass" class="w-7 h-7 text-forenseGold"></i>
+                    </div>
+                    <h3 class="font-title text-lg md:text-xl font-black text-forenseNavy uppercase tracking-tight mb-3">
+                        ¿Querés conocer tu perfil profesional forense?
+                    </h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-5 max-w-lg mx-auto">
+                        Hacé nuestro <strong>Test de Perfil Profesional</strong> y descubrí qué áreas de las Ciencias Forenses se relacionan más con tu forma de razonar.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <a href="test-perfil.renmcycf.html" class="btn-primary">
+                            <i data-lucide="compass" class="w-5 h-5"></i>
+                            Hacer Test de Perfil
+                        </a>
+                        <a href="index-test.renmcycf.html#seccion-inscripcion" class="btn-secondary">
+                            <i data-lucide="user-plus" class="w-4 h-4"></i>
+                            Conocer RENMCYCF
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Compartir -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center mb-6">
+                    <h4 class="font-black text-sm text-forenseNavy uppercase tracking-widest mb-4">
+                        Compartir mi resultado
+                    </h4>
+                    <div class="flex flex-wrap gap-3 justify-center">
+                        <button onclick="shareWhatsApp()" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-xl transition-all">
+                            <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+                        </button>
+                        <button onclick="shareLinkedIn()" class="inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-xl transition-all">
+                            <i data-lucide="linkedin" class="w-4 h-4"></i> LinkedIn
+                        </button>
+                        <button onclick="copyLink()" class="inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-xl transition-all">
+                            <i data-lucide="link" class="w-4 h-4"></i> Copiar enlace
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reintentar -->
+                <div class="text-center">
+                    <button onclick="restartChallenge()" class="text-slate-500 hover:text-forenseGold text-xs font-bold uppercase tracking-widest transition-colors inline-flex items-center gap-2">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                        Reintentar el desafío
+                    </button>
+                </div>
+            `;
+
+            showScreen('screen-result');
+            lucide.createIcons();
+        }
+
+        function restartChallenge() {
+            currentIndex = 0;
+            score = 0;
+            answers = [];
+            startChallenge();
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // COMPARTIR
+        // ═══════════════════════════════════════════════════════════
+
+        function shareWhatsApp() {
+            const text = encodeURIComponent(`${window.__shareText} ${window.__shareUrl}`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+
+        function shareLinkedIn() {
+            const url = encodeURIComponent(window.__shareUrl);
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+        }
+
+        function copyLink() {
+            const textToCopy = `${window.__shareText} ${window.__shareUrl}`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    alert('¡Enlace copiado al portapapeles!');
+                }).catch(() => fallbackCopy(textToCopy));
+            } else {
+                fallbackCopy(textToCopy);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); alert('¡Enlace copiado!'); } catch(e) { alert('No se pudo copiar: ' + text); }
+            document.body.removeChild(ta);
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // DEEP LINK: ?caso=027  ·  ?score=4&total=5
+        // ═══════════════════════════════════════════════════════════
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+
+            // Si viene con ?score=X&total=Y, mostrar resultado directo (compartido)
+            const sharedScore = params.get('score');
+            const sharedTotal = params.get('total');
+            if (sharedScore && sharedTotal) {
+                const s = parseInt(sharedScore);
+                const t = parseInt(sharedTotal);
+                if (!isNaN(s) && !isNaN(t) && t > 0) {
+                    score = s;
+                    // Simular respuestas para el resumen visual
+                    answers = CASES.slice(0, t).map((c, i) => ({
+                        caseId: c.id,
+                        selectedLetter: 'A',
+                        correct: i < s
+                    }));
+                    showResult();
+                    return;
+                }
+            }
+
+            // Si viene con ?caso=XXX, arrancar directo en ese caso
+            const caseId = params.get('caso');
+            if (caseId) {
+                const idx = CASES.findIndex(c => c.id === caseId || c.number === caseId);
+                if (idx >= 0) {
+                    currentIndex = idx;
+                    score = 0;
+                    answers = [];
+                    showScreen('screen-case');
+                    renderCase();
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
