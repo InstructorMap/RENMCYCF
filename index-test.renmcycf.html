@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#0a1128">
     <meta name="google" content="notranslate">
     <meta name="description" content="RENMCYCF — Registro Nacional de Matriculados en Criminalística y Ciencias Forenses. Matriculate, obtené tu Credencial del Profesional verificable por QR y accedé a tu Legajo Digital.">
-    <meta name="keywords" content="matrícula criminalística, registro criminalística, ciencias forenses, perito criminalista, credencial profesional, matriculación forense">
+    <meta name="keywords" content="matrícula criminalística, registro criminalística, ciencias forenses, perito criminalista, credencial profesional, matriculación forense, blockchain forense">
     <title>RENMCYCF · Matriculación Profesional en Criminalística y Ciencias Forenses</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,6 +17,31 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Registro Nacional de Matriculados en Criminalística y Ciencias Forenses",
+      "alternateName": "RENMCYCF",
+      "url": "https://renmcycf.com",
+      "logo": "https://renmcycf.com/logo.png",
+      "description": "Registro Nacional de Matriculados en Criminalística y Ciencias Forenses. Verificación profesional con trazabilidad blockchain.",
+      "sameAs": []
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "¿Qué es el RENMCYCF y cuál es su función?", "acceptedAnswer": { "@type": "Answer", "text": "El RENMCYCF es el Registro Nacional de Matriculados en Criminalística y Ciencias Forenses. Su función es centralizar, auditar y certificar a los profesionales del sector mediante un proceso de validación documental, ética y tecnológica." } },
+        { "@type": "Question", "name": "¿Qué respaldo tiene la credencial del RENMCYCF?", "acceptedAnswer": { "@type": "Answer", "text": "Es un documento de identidad profesional de carácter privado, con respaldo tecnológico Blockchain." } },
+        { "@type": "Question", "name": "¿Cuáles son los requisitos para matricularse?", "acceptedAnswer": { "@type": "Answer", "text": "Ser mayor de edad, contar con DNI argentino o pasaporte, presentar título o certificado analítico en Criminalística o disciplinas afines, y abonar el arancel anual correspondiente." } },
+        { "@type": "Question", "name": "¿Cuánto demora la auditoría de mi expediente?", "acceptedAnswer": { "@type": "Answer", "text": "El Comité Evaluador audita la documentación en un plazo de 24 a 48 horas hábiles." } }
+      ]
+    }
+    </script>
 
     <script>
         tailwind.config = {
@@ -36,7 +61,7 @@
                     },
                     boxShadow: {
                         'premium': '0 20px 60px -15px rgba(10, 17, 40, 0.15)',
-                        'gold': '0 20px 60px -15px rgba(212, 175, 55, 0.3)',
+                        'gold': '0 20px 60px -15px rgba(212, 175, 55, 0.3)'
                     }
                 }
             }
@@ -143,6 +168,13 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .divider-gold { height: 4px; width: 80px; background: linear-gradient(90deg, transparent, #d4af37, transparent); margin: 0 auto; }
+
+        .cta-auditoria { background: linear-gradient(145deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%); border: 2px solid #d4af37; color: #d4af37; backdrop-filter: blur(8px); }
+        .cta-auditoria:hover { background: linear-gradient(145deg, rgba(212, 175, 55, 0.3) 0%, rgba(212, 175, 55, 0.15) 100%); transform: scale(1.02); box-shadow: 0 0 25px rgba(212, 175, 55, 0.3); }
+
+        .animate-marquee { display: flex; width: max-content; animation: marquee 30s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
+        .animate-marquee:hover { animation-play-state: paused; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans bg-white">
@@ -173,9 +205,9 @@
                         <button onclick="switchSection('seccion-inscripcion')" data-cta="matricularme" class="bg-forenseGold text-forenseNavy hover:bg-yellow-500 transition-all px-3 py-2 rounded-lg shadow-md font-black flex items-center gap-1">
                             <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Matricularme
                         </button>
-                        <button onclick="switchSection('seccion-portafolio')" data-cta="legajo" class="hover:text-forenseGold transition-colors flex items-center gap-1 px-2 py-1 text-forenseBlue">
+                        <a href="legajo.renmcycf.html" data-cta="legajo" class="hover:text-forenseGold transition-colors flex items-center gap-1 px-2 py-1 text-forenseBlue">
                             <i data-lucide="folder-check" class="w-3.5 h-3.5"></i> Legajo
-                        </button>
+                        </a>
                     </div>
                 </div>
 
@@ -220,11 +252,11 @@
     <!-- MOBILE MENU -->
     <div class="mobile-overlay" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
     <div class="mobile-menu" id="mobile-menu">
-        <button class="absolute top-6 right-6 text-white" onclick="toggleMobileMenu()"><i data-lucide="x" class="w-8 h-8"></i></button>
+        <button class="absolute top-6 right-6 text-white" onclick="toggleMobileMenu()" aria-label="Cerrar menú"><i data-lucide="x" class="w-8 h-8"></i></button>
 
         <div class="text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 pb-2 mb-2">Soy Profesional</div>
         <button onclick="switchSection('seccion-inscripcion'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="user-plus" class="w-5 h-5 text-forenseGold"></i> Matricularme</button>
-        <button onclick="switchSection('seccion-portafolio'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="folder-check" class="w-5 h-5 text-forenseGold"></i> Legajo Digital</button>
+        <a href="legajo.renmcycf.html" onclick="toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="folder-check" class="w-5 h-5 text-forenseGold"></i> Legajo Digital</a>
 
         <div class="text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 pb-2 mb-2 mt-4">Soy Institución</div>
         <button onclick="switchSection('seccion-convenios-b2b'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="building-2" class="w-5 h-5 text-forenseGold"></i> Convenios</button>
@@ -264,7 +296,7 @@
                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                                     <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                                 </span>
-                                Inscripciones Abiertas · Ciclo 2026
+                                <span id="hero-badge-text">Inscripciones Abiertas · Ciclo 2026</span>
                             </div>
                             <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md text-slate-300 text-[10px] md:text-[11px] font-bold uppercase tracking-widest border border-white/10">
                                 <i data-lucide="users" class="w-3.5 h-3.5 text-forenseGold"></i>
@@ -725,8 +757,7 @@
 
                     <div class="mb-10">
                         <h3 class="text-xs font-black text-forenseGold uppercase tracking-[0.25em] mb-5 flex items-center gap-3">
-                            <span class="w-8 h-px bg-forenseGold/40"></span>
-                            Sobre el registro
+                            <span class="w-8 h-px bg-forenseGold/40"></span> Sobre el registro
                         </h3>
                         <div class="space-y-4">
                             <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary hover:border-forenseGold/50 transition-colors">
@@ -753,8 +784,7 @@
 
                     <div class="mb-10">
                         <h3 class="text-xs font-black text-forenseGold uppercase tracking-[0.25em] mb-5 flex items-center gap-3">
-                            <span class="w-8 h-px bg-forenseGold/40"></span>
-                            Requisitos y proceso
+                            <span class="w-8 h-px bg-forenseGold/40"></span> Requisitos y proceso
                         </h3>
                         <div class="space-y-4">
                             <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary hover:border-forenseGold/50 transition-colors">
@@ -801,8 +831,7 @@
 
                     <div class="mb-10">
                         <h3 class="text-xs font-black text-forenseGold uppercase tracking-[0.25em] mb-5 flex items-center gap-3">
-                            <span class="w-8 h-px bg-forenseGold/40"></span>
-                            Aranceles y pagos
+                            <span class="w-8 h-px bg-forenseGold/40"></span> Aranceles y pagos
                         </h3>
                         <div class="space-y-4">
                             <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary hover:border-forenseGold/50 transition-colors">
@@ -819,8 +848,7 @@
 
                     <div>
                         <h3 class="text-xs font-black text-forenseGold uppercase tracking-[0.25em] mb-5 flex items-center gap-3">
-                            <span class="w-8 h-px bg-forenseGold/40"></span>
-                            Especialidades y salida laboral
+                            <span class="w-8 h-px bg-forenseGold/40"></span> Especialidades y salida laboral
                         </h3>
                         <div class="space-y-4">
                             <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary hover:border-forenseGold/50 transition-colors">
@@ -892,7 +920,7 @@
                 </div>
             </section>
 
-            <!-- ALIANZAS -->
+            <!-- ALIANZAS + DIRECTORIO -->
             <section id="alianzas-estrategicas" class="pt-12 pb-8 bg-slate-900 border-b border-slate-800 overflow-hidden">
                 <div class="max-w-7xl mx-auto px-4">
                     <div class="text-center mb-8">
@@ -909,8 +937,9 @@
                                 <i data-lucide="search" class="w-3 h-3"></i> Buscador Nacional
                             </div>
                             <h3 class="text-2xl md:text-4xl font-black text-white uppercase tracking-tight mb-2">Entidades Capacitadoras</h3>
-                            <p class="text-slate-400 text-sm max-w-2xl mx-auto">Verifique el estado de auditoría de las instituciones.</p>
+                            <p class="text-slate-400 text-sm max-w-2xl mx-auto">Verifique el estado de auditoría tecnológica y trazabilidad de las instituciones que imparten Ciencias Forenses.</p>
                         </div>
+
                         <div class="max-w-3xl mx-auto bg-slate-800/80 backdrop-blur-md rounded-2xl p-2 border border-slate-700 shadow-xl flex flex-col md:flex-row gap-2 mb-12">
                             <div class="relative flex-1">
                                 <i data-lucide="building" class="absolute left-4 top-3.5 w-5 h-5 text-slate-500"></i>
@@ -918,7 +947,9 @@
                             </div>
                             <button onclick="filtrarDirectorio()" class="bg-forenseGold hover:bg-yellow-500 text-forenseNavy font-black uppercase tracking-widest text-xs px-8 py-3 rounded-xl transition-all shadow-md md:w-auto w-full">Buscar</button>
                         </div>
+
                         <div id="directorio-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
                         <div class="mt-12 text-center border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-center gap-6">
                             <p class="text-sm text-slate-400 font-medium">¿Su institución no figura o aparece como Pendiente?</p>
                             <a href="#" id="btn-reclamar-perfil" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-forenseGold border border-forenseGold/30 px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow flex items-center gap-2">
@@ -1400,10 +1431,10 @@
                                     <div class="border border-slate-200 p-3 rounded-lg bg-white">
                                         <div class="flex justify-between items-center mb-1">
                                             <span class="text-xs font-bold text-slate-700">Títulos y Certificados</span>
-                                            <span id="contador-archivos" class="text-[9px] font-bold text-white bg-forenseNavy px-2 py-0.5 rounded-full">0/10</span>
+                                            <span id="contador-archivos" class="text-[9px] font-bold text-white bg-forenseNavy px-2 py-0.5 rounded-full">0/30</span>
                                         </div>
                                         <input type="file" id="file-diplomas" multiple accept="image/*,application/pdf" required class="w-full text-xs text-slate-500" onchange="contarArchivos(this)">
-                                        <span class="text-[9px] text-slate-400 mt-1 block">Máximo 10 archivos.</span>
+                                        <span class="text-[9px] text-slate-400 mt-1 block">Máximo 30 archivos.</span>
                                     </div>
                                     <div class="border-2 border-emerald-200 bg-emerald-50 p-4 rounded-lg md:col-span-2 text-center shadow-sm"><span class="text-sm font-black text-emerald-800 uppercase tracking-widest block mb-2"><i data-lucide="receipt" class="inline w-4 h-4 mr-1"></i>Comprobante de Pago</span><input type="file" id="file-pago" accept="image/*,application/pdf" required class="w-full text-xs text-emerald-700 mx-auto max-w-xs file:bg-emerald-600 file:text-white file:border-0 file:rounded file:px-3 file:py-1 file:font-bold"></div>
                                 </div>
@@ -1428,7 +1459,7 @@
 
     </main>
 
-    <!-- FOOTER PREMIUM -->
+    <!-- FOOTER -->
     <footer class="bg-forenseNavy text-slate-300 py-14 border-t-4 border-forenseGold relative z-20">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
@@ -1446,10 +1477,10 @@
                         Registro Nacional de Matriculados en Criminalística y Ciencias Forenses. Plataforma de matriculación, verificación y legajo digital.
                     </p>
                     <div class="flex gap-3">
-                        <a href="#" id="footer-fb" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-forenseGold hover:text-forenseNavy transition flex items-center justify-center">
+                        <a href="#" id="footer-fb" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-forenseGold hover:text-forenseNavy transition flex items-center justify-center" aria-label="Facebook">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"/></svg>
                         </a>
-                        <a href="#" id="footer-ig" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-forenseGold hover:text-forenseNavy transition flex items-center justify-center">
+                        <a href="#" id="footer-ig" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-forenseGold hover:text-forenseNavy transition flex items-center justify-center" aria-label="Instagram">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"/></svg>
                         </a>
                     </div>
@@ -1482,15 +1513,15 @@
 
     <!-- FLOATING BUTTONS -->
     <div class="floating-container" id="floatingMenu">
-        <a href="#" id="float-wpp" target="_blank" class="float-option option-whatsapp"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
-        <a href="#" id="float-mail" class="float-option option-email"><i data-lucide="mail" class="w-5 h-5"></i></a>
-        <a href="#" id="float-fb" target="_blank" class="float-option option-facebook">
+        <a href="#" id="float-wpp" target="_blank" class="float-option option-whatsapp" aria-label="WhatsApp"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+        <a href="#" id="float-mail" class="float-option option-email" aria-label="Email"><i data-lucide="mail" class="w-5 h-5"></i></a>
+        <a href="#" id="float-fb" target="_blank" class="float-option option-facebook" aria-label="Facebook">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"/></svg>
         </a>
-        <a href="#" id="float-ig" target="_blank" class="float-option option-instagram">
+        <a href="#" id="float-ig" target="_blank" class="float-option option-instagram" aria-label="Instagram">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"/></svg>
         </a>
-        <button type="button" class="main-float group" onclick="toggleFloatingMenu()">
+        <button type="button" class="main-float group" onclick="toggleFloatingMenu()" aria-label="Abrir menú de contacto">
             <i data-lucide="help-circle" class="w-6 h-6 main-icon transition-transform"></i>
             <span class="font-bold text-[11px] md:text-xs uppercase tracking-widest whitespace-nowrap">¿Dudas? Consultanos</span>
         </button>
@@ -1498,7 +1529,7 @@
 
     <!-- MODAL VISOR -->
     <div id="modal-visor-imagen" class="fixed inset-0 bg-black/95 backdrop-blur-sm z-[200] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300" onclick="cerrarModalImagen()">
-        <button onclick="cerrarModalImagen()" class="absolute top-4 right-4 text-white/70 hover:text-white z-[210]"><i data-lucide="x" class="w-8 h-8"></i></button>
+        <button onclick="cerrarModalImagen()" class="absolute top-4 right-4 text-white/70 hover:text-white z-[210]" aria-label="Cerrar"><i data-lucide="x" class="w-8 h-8"></i></button>
         <div class="relative max-w-5xl max-h-[90vh] w-full h-full flex items-center justify-center">
             <img id="visor-imagen-src" src="" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl transition-transform duration-300 scale-95" alt="Vista" onclick="event.stopPropagation()">
         </div>
@@ -1512,6 +1543,8 @@
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
         const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
         const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
+
+        const MAX_DIPLOMAS_INDEX = 30;
 
         let configGlobal = {};
         let mapInstance = null;
@@ -1533,7 +1566,7 @@
         window.descargarBiblioteca = function(url, isPremium) {
             if (isPremium) {
                 alert("Material restringido. Ingresá desde tu Legajo Digital.");
-            } else {
+            } else if (url && url !== '#') {
                 window.open(url, '_blank');
             }
         };
@@ -1542,6 +1575,7 @@
             try { await db.rpc('incrementar_visita_publica'); } catch(e) {}
             try { await cargarTextosPublicos(); } catch(e) { console.warn(e); }
             try { await cargarConfiguracionPublica(); } catch(e) { console.warn(e); }
+            try { await cargarArancelesPublicos(); } catch(e) { console.warn(e); }
             try { await cargarAliadosPublicos(); } catch(e) { console.warn(e); }
             try { await cargarEmpresasPublicas(); } catch(e) { console.warn(e); }
             try { await cargarBeneficiosPublicos(); } catch(e) { console.warn(e); }
@@ -1551,12 +1585,73 @@
             try { await cargarTesisPublicas(); } catch(e) { console.warn(e); }
             try { await cargarComitePublico(); } catch(e) { console.warn(e); }
             try { await cargarEntidadesB2BSelect(); } catch(e) { console.warn(e); }
-            try { await cargarArancelesPublicos(); } catch(e) { console.warn(e); }
             try { initMap(); } catch(e) { console.warn(e); }
             try { await cargarContadorMatriculados(); } catch(e) { console.warn(e); }
             try { await verificarPromoHashB2C(); } catch(e) { console.warn(e); }
         });
 
+        // ═══════════ TEXTOS DINÁMICOS ═══════════
+        async function cargarTextosPublicos() {
+            try {
+                const { data } = await db.from('renmcycf_contenido').select('clave, valor');
+                if (!data) return;
+                const map = {
+                    'hero_badge_text': 'hero-badge-text', 'hero_title': 'hero-title', 'hero_subtitle': 'hero-subtitle',
+                    'cat_a1_desc': 'cat-a1-desc', 'cat_a2_desc': 'cat-a2-desc', 'cat_a3_desc': 'cat-a3-desc', 'cat_a4_desc': 'cat-a4-desc',
+                    'footer_texto': 'footer-texto',
+                    'institucional_intro_p1': 'institucional-intro-p1', 'institucional_intro_p2': 'institucional-intro-p2', 'institucional_intro_p3': 'institucional-intro-p3',
+                    'institucional_cierre': 'institucional-cierre',
+                    'mision_titulo': 'mision-titulo', 'mision_texto': 'mision-texto',
+                    'asari_titulo': 'asari-titulo', 'asari_texto': 'asari-texto',
+                    'asari_bullet_1': 'asari-bullet-1', 'asari_bullet_2': 'asari-bullet-2', 'asari_bullet_3': 'asari-bullet-3',
+                    'alianzas_titulo': 'alianzas-titulo', 'alianzas_subtitulo': 'alianzas-subtitulo',
+                    'empresas_titulo': 'empresas-titulo', 'empresas_subtitulo': 'empresas-subtitulo',
+                    'newsletter_titulo': 'newsletter-titulo-cta', 'newsletter_subtitulo': 'newsletter-subtitulo-cta'
+                };
+                data.forEach(item => {
+                    const id = map[item.clave];
+                    if (id) { const el = document.getElementById(id); if (el) el.innerText = item.valor || el.innerText; }
+                });
+            } catch (err) { console.error(err); }
+        }
+
+        // ═══════════ CONFIGURACIÓN ═══════════
+        async function cargarConfiguracionPublica() {
+            try {
+                const { data: conf } = await db.from('renmcycf_config').select('*').eq('id', 1).single();
+                if (conf) {
+                    configGlobal = conf;
+                    const setHref = (id, url) => { const el = document.getElementById(id); if (el) el.href = url || '#'; };
+                    const wppLink = `https://wa.me/${conf.whatsapp || ''}`;
+                    const mailLink = `mailto:${conf.email || ''}`;
+                    const wppB2B = `https://wa.me/${conf.whatsapp || ''}?text=Hola%20RENMCYCF.%20Quisiera%20información%20sobre%20Convenios.`;
+                    setHref('btn-convenio-wpp', wppB2B);
+                    setHref('float-wpp', wppLink); setHref('float-mail', mailLink);
+                    setHref('float-fb', conf.facebook); setHref('float-ig', conf.instagram);
+                    setHref('footer-fb', conf.facebook); setHref('footer-ig', conf.instagram);
+                    if (conf.logo_url) document.getElementById('nav-logo').src = conf.logo_url;
+                    if (conf.hero_image_url) document.getElementById('dyn-hero-bg').src = conf.hero_image_url;
+
+                    const elBancoNombre = document.getElementById('banco-nombre');
+                    const elBancoAlias = document.getElementById('banco-alias');
+                    const elBancoCbu = document.getElementById('banco-cbu');
+                    const elBancoTitular = document.getElementById('banco-titular');
+                    if (elBancoNombre) elBancoNombre.innerText = conf.banco || '—';
+                    if (elBancoAlias) elBancoAlias.innerText = conf.alias_cbu || '—';
+                    if (elBancoCbu) elBancoCbu.innerText = conf.cbu || '—';
+                    if (elBancoTitular) elBancoTitular.innerText = conf.titular_cuenta || '—';
+
+                    const setDisplay = (id, mostrar) => { const el = document.getElementById(id); if (el) el.style.display = (mostrar === false) ? 'none' : ''; };
+                    setDisplay('float-wpp', conf.mostrar_wpp); setDisplay('float-mail', conf.mostrar_email);
+                    setDisplay('float-fb', conf.mostrar_facebook); setDisplay('float-ig', conf.mostrar_instagram);
+
+                    const wppDirectorio = `https://wa.me/${conf.whatsapp || ''}?text=Hola%20RENMCYCF.%20Solicito%20perfil%20institucional.`;
+                    setHref('btn-reclamar-perfil', wppDirectorio);
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        // ═══════════ ARANCELES PÚBLICOS ═══════════
         async function cargarArancelesPublicos() {
             const grid = document.getElementById('grid-aranceles-publicos');
             if (!grid) return;
@@ -1599,6 +1694,7 @@
             }
         }
 
+        // ═══════════ PROMO B2C ═══════════
         async function verificarPromoHashB2C() {
             const params = new URLSearchParams(window.location.search);
             const promoHash = params.get('promo_hash');
@@ -1622,104 +1718,57 @@
                 const bannerContainer = document.getElementById('promo-b2c-banner');
                 if (bannerContainer) {
                     bannerContainer.innerHTML = `
-                        <div class="promo-b2c-banner bg-gradient-to-br from-yellow-500 via-amber-500 to-yellow-600 rounded-2xl p-6 md:p-8 text-center border-4 border-yellow-300 shadow-2xl">
-                            <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full shadow-lg mb-4 animate-bounce">
-                                <i data-lucide="party-popper" class="w-8 h-8 text-amber-600"></i>
+                        <div class="promo-b2c-banner bg-gradient-to-br from-yellow-500 via-amber-500 to-yellow-600 rounded-2xl p-6 md:p-8 text-center border-4 border-yellow-300 shadow-2xl relative overflow-hidden">
+                            <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_30%_20%,white_0%,transparent_50%)]"></div>
+                            <div class="relative z-10">
+                                <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full shadow-lg mb-4 animate-bounce">
+                                    <i data-lucide="party-popper" class="w-8 h-8 text-amber-600"></i>
+                                </div>
+                                <h3 class="font-title font-black text-xl md:text-3xl text-white uppercase tracking-tight mb-2 drop-shadow-md">🎉 ¡Felicidades Egresado!</h3>
+                                <p class="text-white text-sm md:text-base font-bold max-w-xl mx-auto drop-shadow">Descuento del <span class="bg-white text-amber-700 px-2 py-0.5 rounded font-black">20%</span> aplicado automáticamente.</p>
                             </div>
-                            <h3 class="font-title font-black text-xl md:text-3xl text-white uppercase mb-2">🎉 ¡Felicidades Egresado!</h3>
-                            <p class="text-white text-sm md:text-base font-bold max-w-xl mx-auto">Descuento del <span class="bg-white text-amber-700 px-2 py-0.5 rounded font-black">20%</span> aplicado automáticamente.</p>
                         </div>`;
                     bannerContainer.classList.remove('hidden');
                     lucide.createIcons();
                 }
+                setTimeout(() => { actualizarLinkYPrecio(); }, 300);
             } catch (err) { console.warn(err); }
         }
 
-        async function cargarTextosPublicos() {
-            try {
-                const { data } = await db.from('renmcycf_contenido').select('clave, valor');
-                if (!data) return;
-                const map = {
-                    'hero_badge_text': 'hero-badge-text', 'hero_title': 'hero-title', 'hero_subtitle': 'hero-subtitle',
-                    'cat_a1_desc': 'cat-a1-desc', 'cat_a2_desc': 'cat-a2-desc', 'cat_a3_desc': 'cat-a3-desc', 'cat_a4_desc': 'cat-a4-desc',
-                    'footer_texto': 'footer-texto',
-                    'institucional_intro_p1': 'institucional-intro-p1', 'institucional_intro_p2': 'institucional-intro-p2', 'institucional_intro_p3': 'institucional-intro-p3',
-                    'institucional_cierre': 'institucional-cierre',
-                    'mision_titulo': 'mision-titulo', 'mision_texto': 'mision-texto',
-                    'asari_titulo': 'asari-titulo', 'asari_texto': 'asari-texto',
-                    'asari_bullet_1': 'asari-bullet-1', 'asari_bullet_2': 'asari-bullet-2', 'asari_bullet_3': 'asari-bullet-3',
-                    'alianzas_titulo': 'alianzas-titulo', 'alianzas_subtitulo': 'alianzas-subtitulo',
-                    'empresas_titulo': 'empresas-titulo', 'empresas_subtitulo': 'empresas-subtitulo',
-                    'newsletter_titulo': 'newsletter-titulo-cta', 'newsletter_subtitulo': 'newsletter-subtitulo-cta'
-                };
-                data.forEach(item => {
-                    const id = map[item.clave];
-                    if (id) { const el = document.getElementById(id); if (el) el.innerText = item.valor || el.innerText; }
-                });
-            } catch (err) { console.error(err); }
-        }
-
-        async function cargarConfiguracionPublica() {
-            try {
-                const { data: conf } = await db.from('renmcycf_config').select('*').eq('id', 1).single();
-                if (conf) {
-                    configGlobal = conf;
-                    const setHref = (id, url) => { const el = document.getElementById(id); if (el) el.href = url || '#'; };
-                    const wppLink = `https://wa.me/${conf.whatsapp || ''}`;
-                    const mailLink = `mailto:${conf.email || ''}`;
-                    const wppB2B = `https://wa.me/${conf.whatsapp || ''}?text=Hola%20RENMCYCF.%20Quisiera%20información%20sobre%20Convenios.`;
-                    setHref('btn-convenio-wpp', wppB2B);
-                    setHref('float-wpp', wppLink); setHref('float-mail', mailLink);
-                    setHref('float-fb', conf.facebook); setHref('float-ig', conf.instagram);
-                    setHref('footer-fb', conf.facebook); setHref('footer-ig', conf.instagram);
-                    if (conf.logo_url) document.getElementById('nav-logo').src = conf.logo_url;
-                    if (conf.hero_image_url) document.getElementById('dyn-hero-bg').src = conf.hero_image_url;
-
-                    const elBancoNombre = document.getElementById('banco-nombre');
-                    const elBancoAlias = document.getElementById('banco-alias');
-                    const elBancoCbu = document.getElementById('banco-cbu');
-                    const elBancoTitular = document.getElementById('banco-titular');
-                    if (elBancoNombre) elBancoNombre.innerText = conf.banco || '—';
-                    if (elBancoAlias) elBancoAlias.innerText = conf.alias_cbu || '—';
-                    if (elBancoCbu) elBancoCbu.innerText = conf.cbu || '—';
-                    if (elBancoTitular) elBancoTitular.innerText = conf.titular_cuenta || '—';
-
-                    const setDisplay = (id, mostrar) => { const el = document.getElementById(id); if (el) el.style.display = (mostrar === false) ? 'none' : ''; };
-                    setDisplay('float-wpp', conf.mostrar_wpp); setDisplay('float-mail', conf.mostrar_email);
-                    setDisplay('float-fb', conf.mostrar_facebook); setDisplay('float-ig', conf.mostrar_instagram);
-
-                    const wppDirectorio = `https://wa.me/${conf.whatsapp || ''}?text=Hola%20RENMCYCF.%20Solicito%20perfil%20institucional.`;
-                    setHref('btn-reclamar-perfil', wppDirectorio);
-                }
-            } catch (err) { console.error(err); }
-        }
-
+        // ═══════════ DIRECTORIO DE ALIADOS CON TABS ═══════════
         window.switchInstTab = function(instId, tabId) {
             document.querySelectorAll('.inst-content-' + instId).forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.inst-tabbtn-' + instId).forEach(el => {
                 el.classList.remove('text-forenseNavy', 'border-forenseGold', 'bg-slate-50');
                 el.classList.add('text-slate-400', 'border-transparent');
             });
-            document.getElementById(`tab-${tabId}-${instId}`).classList.remove('hidden');
+            const content = document.getElementById(`tab-${tabId}-${instId}`);
+            if (content) content.classList.remove('hidden');
             const btn = document.getElementById(`btn-tab-${tabId}-${instId}`);
-            btn.classList.remove('text-slate-400', 'border-transparent');
-            btn.classList.add('text-forenseNavy', 'border-forenseGold', 'bg-slate-50');
+            if (btn) {
+                btn.classList.remove('text-slate-400', 'border-transparent');
+                btn.classList.add('text-forenseNavy', 'border-forenseGold', 'bg-slate-50');
+            }
         };
 
         async function cargarAliadosPublicos() {
             const gridContainer = document.getElementById('directorio-grid');
             if (!gridContainer) return;
-            gridContainer.innerHTML = '<div class="col-span-full text-center py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto text-slate-500 mb-2"></i><p class="text-xs text-slate-500 uppercase tracking-widest font-bold">Cargando...</p></div>';
+            gridContainer.innerHTML = '<div class="col-span-full text-center py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto text-slate-500 mb-2"></i><p class="text-xs text-slate-500 uppercase tracking-widest font-bold">Cargando base de datos...</p></div>';
             lucide.createIcons();
+
             try {
                 const [aliadosRes, cursosRes] = await Promise.all([
                     db.from('renmcycf_aliados').select('*').eq('activo', true).order('estado_auditoria', { ascending: true }),
-                    db.from('renmcycf_aliados_cursos').select('id, aliado_id, nombre_curso, carga_horaria, estado').eq('estado', 'APROBADO')
+                    db.from('renmcycf_aliados_cursos').select('id, aliado_id, nombre_curso, carga_horaria, estado, programa_url, analitico_url, diploma_base_url').eq('estado', 'APROBADO')
                 ]);
+
+                if (aliadosRes.error) throw aliadosRes.error;
+
                 const aliados = aliadosRes.data || [];
                 const cursos = cursosRes.data || [];
-                cursosAprobadosPorAliado =
-                                        cursosAprobadosPorAliado = {};
+
+                cursosAprobadosPorAliado = {};
                 cursos.forEach(c => {
                     if (!cursosAprobadosPorAliado[c.aliado_id]) cursosAprobadosPorAliado[c.aliado_id] = [];
                     cursosAprobadosPorAliado[c.aliado_id].push(c);
@@ -1728,103 +1777,177 @@
                 directorioData = aliados;
 
                 if (aliados.length === 0) {
-                    gridContainer.innerHTML = '<div class="col-span-full text-center py-10 text-slate-500 text-sm">Todavía no hay entidades registradas.</div>';
+                    gridContainer.innerHTML = '<div class="col-span-full text-center py-10 bg-slate-800/50 rounded-2xl border border-slate-700"><p class="text-sm text-slate-400">El directorio se está actualizando.</p></div>';
                     return;
                 }
-
-                gridContainer.innerHTML = aliados.map(a => {
-                    const cursosAliado = cursosAprobadosPorAliado[a.id] || [];
-                    const estado = (a.estado_auditoria || 'PENDIENTE').toUpperCase();
-                    const esVerificado = estado === 'APROBADO' || estado === 'VERIFICADO';
-                    const badgeClass = esVerificado
-                        ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                        : 'bg-amber-500/15 text-amber-300 border-amber-500/30';
-                    const badgeText = esVerificado ? 'Auditada' : 'Pendiente';
-                    const logo = a.logo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(a.nombre || 'Inst')}&background=1e293b&color=d4af37`;
-
-                    return `
-                        <div class="bg-slate-800/70 border border-slate-700 rounded-2xl overflow-hidden shadow-xl hover:border-forenseGold/50 transition-all group">
-                            <div class="p-5 flex items-start gap-4">
-                                <div class="w-16 h-16 rounded-xl bg-white flex items-center justify-center overflow-hidden shrink-0 border border-slate-600">
-                                    <img src="${logo}" alt="${a.nombre || ''}" class="w-full h-full object-contain p-1">
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="flex items-start justify-between gap-2 mb-1">
-                                        <h4 class="font-black text-white text-sm uppercase tracking-wide leading-tight truncate">${a.nombre || 'Institución'}</h4>
-                                        <span class="shrink-0 text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-full border ${badgeClass}">${badgeText}</span>
-                                    </div>
-                                    <p class="text-[11px] text-slate-400 flex items-center gap-1 mb-1">
-                                        <i data-lucide="map-pin" class="w-3 h-3"></i> ${a.provincia || 'Sin jurisdicción'}
-                                    </p>
-                                    ${a.web ? `<a href="${a.web}" target="_blank" class="text-[10px] text-forenseGold hover:text-yellow-300 font-bold uppercase tracking-wider inline-flex items-center gap-1"><i data-lucide="globe" class="w-3 h-3"></i> Sitio web</a>` : ''}
-                                </div>
-                            </div>
-                            ${cursosAliado.length > 0 ? `
-                            <div class="px-5 pb-5">
-                                <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">Cursos Auditados (${cursosAliado.length})</p>
-                                <div class="flex flex-wrap gap-1.5">
-                                    ${cursosAliado.slice(0, 3).map(c => `<span class="text-[9px] font-bold bg-slate-700/60 text-slate-300 px-2 py-1 rounded border border-slate-600">${c.nombre_curso}${c.carga_horaria ? ` · ${c.carga_horaria}hs` : ''}</span>`).join('')}
-                                    ${cursosAliado.length > 3 ? `<span class="text-[9px] font-bold text-forenseGold px-2 py-1">+${cursosAliado.length - 3} más</span>` : ''}
-                                </div>
-                            </div>` : ''}
-                        </div>`;
-                }).join('');
-                lucide.createIcons();
+                renderizarDirectorio(aliados);
             } catch (err) {
                 console.error(err);
                 gridContainer.innerHTML = '<div class="col-span-full text-center py-10 text-red-400 text-sm">Error cargando el directorio institucional.</div>';
             }
         }
 
+        function renderizarDirectorio(instituciones) {
+            const gridContainer = document.getElementById('directorio-grid');
+            if (!gridContainer) return;
+
+            if (instituciones.length === 0) {
+                gridContainer.innerHTML = '<div class="col-span-full text-center py-10"><p class="text-sm text-slate-400">No se encontraron instituciones con esos parámetros.</p></div>';
+                return;
+            }
+
+            let html = '';
+            instituciones.forEach(inst => {
+                const isAuditado = inst.estado_auditoria === 'AUDITADO';
+                
+                if (!isAuditado) {
+                    html += `
+                    <div class="col-span-1 rounded-2xl border p-6 flex flex-col transition-all duration-300 bg-slate-800/40 border-slate-700/50 grayscale-[40%] hover:grayscale-0">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-inner overflow-hidden">
+                                ${inst.logo_url ? `<img src="${inst.logo_url}" class="w-full h-full object-contain p-2">` : `<i data-lucide="landmark" class="w-8 h-8 text-slate-300 opacity-50"></i>`}
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-black text-sm md:text-base uppercase leading-tight mb-1 text-slate-300">${inst.nombre}</h4>
+                                <p class="text-[10px] text-slate-400 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> ${inst.provincia || 'Sede Central'}</p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">${inst.tipo_formacion || 'Formación Técnica / Académica'}</p>
+                            </div>
+                        </div>
+                        <div class="mt-auto">
+                            <span class="bg-amber-500/10 text-amber-500/70 border border-amber-500/20 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest flex items-center gap-1.5 w-max mb-4"><i data-lucide="clock" class="w-3 h-3"></i> Auditoría Pendiente</span>
+                            <a href="#seccion-convenios-b2b" class="w-full bg-forenseGold/10 hover:bg-forenseGold/20 border border-forenseGold/30 text-forenseGold py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">Solicitar Perfil y Auditoría</a>
+                        </div>
+                    </div>`;
+                    return;
+                }
+
+                const logoRender = inst.logo_url 
+                    ? `<img src="${inst.logo_url}" alt="${inst.nombre}" class="w-full h-full object-contain p-2">`
+                    : `<i data-lucide="landmark" class="w-12 h-12 text-slate-300"></i>`;
+
+                const btnContacto = inst.web_url
+                    ? `<a href="${inst.web_url}" target="_blank" rel="noopener" class="mt-4 bg-forenseNavy hover:bg-slate-800 text-white py-3 px-6 rounded-lg text-xs font-bold uppercase tracking-widest transition-all inline-flex items-center justify-center gap-2 shadow-md">Visitar Sitio Web <i data-lucide="external-link" class="w-4 h-4"></i></a>`
+                    : `<p class="mt-4 text-xs text-slate-500 italic">Contacto directo a través de la entidad.</p>`;
+
+                const cursosInst = cursosAprobadosPorAliado[inst.id] || [];
+                let htmlCursos = '<p class="text-sm text-slate-500 italic">El instituto se encuentra en proceso de carga de sus programas verificados.</p>';
+                if (cursosInst.length > 0) {
+                    const lista = cursosInst.map(c => `
+                        <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-lg mb-2">
+                            <div>
+                                <h5 class="text-forenseNavy font-bold text-sm uppercase">${c.nombre_curso}</h5>
+                                <p class="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5"><i data-lucide="clock" class="w-3 h-3 inline"></i> ${c.carga_horaria || 'Carga no especificada'}</p>
+                            </div>
+                            <span class="bg-emerald-100 text-emerald-700 border border-emerald-200 px-2 py-1 rounded text-[9px] font-black uppercase tracking-widest hidden sm:block">Doble Titulación Verificada</span>
+                        </div>
+                    `).join('');
+                    htmlCursos = `<p class="text-sm text-slate-600 mb-4">Los siguientes programas han superado la auditoría técnica del RENMCYCF:</p>${lista}`;
+                }
+
+                html += `
+                <div class="col-span-full bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden flex flex-col md:flex-row mb-2 transition-all hover:border-forenseGold/50">
+                    <div class="md:w-1/3 bg-gradient-to-b from-slate-50 to-white p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-200 relative">
+                        <div class="absolute top-4 left-4 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
+                            <i data-lucide="shield-check" class="w-3 h-3"></i> Entidad Auditada
+                        </div>
+                        <div class="w-32 h-32 bg-white rounded-full border-4 border-forenseGold flex items-center justify-center p-1 shadow-lg mb-5 overflow-hidden mt-6">
+                            ${logoRender}
+                        </div>
+                        <h3 class="font-title font-black text-xl text-forenseNavy text-center uppercase leading-tight mb-2">${inst.nombre}</h3>
+                        <p class="text-xs text-slate-500 flex items-center gap-1 font-medium"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-forenseGold"></i> ${inst.provincia || 'Sede Central'}</p>
+                    </div>
+
+                    <div class="md:w-2/3 flex flex-col bg-white">
+                        <div class="flex border-b border-slate-200 overflow-x-auto hide-scrollbar bg-white">
+                            <button onclick="switchInstTab('${inst.id}', 'contacto')" id="btn-tab-contacto-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] md:text-xs font-black uppercase tracking-widest text-forenseNavy border-b-2 border-forenseGold bg-slate-50 transition-colors whitespace-nowrap">
+                                Datos de Contacto
+                            </button>
+                            <button onclick="switchInstTab('${inst.id}', 'verificador')" id="btn-tab-verificador-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent hover:text-forenseNavy hover:bg-slate-50 transition-colors whitespace-nowrap">
+                                Registro de Egresados
+                            </button>
+                            <button onclick="switchInstTab('${inst.id}', 'cursos')" id="btn-tab-cursos-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent hover:text-forenseNavy hover:bg-slate-50 transition-colors whitespace-nowrap">
+                                Cursos Verificados
+                            </button>
+                        </div>
+
+                        <div class="p-6 md:p-8 flex-1">
+                            <div id="tab-contacto-${inst.id}" class="inst-content-${inst.id} block animate-fade-up">
+                                <h4 class="text-lg font-black text-slate-800 mb-3 uppercase">Información Institucional</h4>
+                                <p class="text-sm text-slate-600 mb-6">Comuníquese directamente con <strong>${inst.nombre}</strong> para conocer fechas de inscripción, aranceles y modalidad de cursado de los programas acreditados.</p>
+                                <div class="space-y-2 mb-6">
+                                    <p class="text-sm text-slate-700 flex items-center gap-2"><i data-lucide="building-2" class="w-4 h-4 text-forenseGold"></i> <strong class="uppercase text-[10px] tracking-widest text-slate-400">Tipo:</strong> ${inst.tipo_formacion || 'Academia'}</p>
+                                </div>
+                                ${btnContacto}
+                            </div>
+
+                            <div id="tab-verificador-${inst.id}" class="inst-content-${inst.id} hidden animate-fade-up">
+                                <h4 class="text-lg font-black text-slate-800 mb-3 uppercase">Validación de Certificados B2B</h4>
+                                <p class="text-sm text-slate-600 mb-6">Si realizó una capacitación en esta institución adherida, valide la autenticidad de su certificado ASARI o descargue una copia digital ingresando el <strong>Código Hash Inmutable (TxID)</strong> impreso en su diploma:</p>
+                                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Hash Criptográfico del Documento</label>
+                                    <div class="flex flex-col sm:flex-row gap-3">
+                                        <input type="text" id="hash-inst-${inst.id}" placeholder="Ej: ASARI-XXXXXX-XXXX" class="flex-1 bg-white border border-slate-300 rounded-lg px-4 py-3 text-sm text-slate-800 outline-none focus:border-forenseGold focus:ring-1 focus:ring-forenseGold shadow-inner font-mono uppercase">
+                                        <button onclick="window.location.href='certificado.html?hash=' + encodeURIComponent(document.getElementById('hash-inst-${inst.id}').value.trim())" class="bg-forenseGold hover:bg-yellow-500 text-forenseNavy font-black uppercase text-xs px-8 py-3 rounded-lg transition-all shadow-md whitespace-nowrap flex items-center justify-center gap-2">
+                                            <i data-lucide="search" class="w-4 h-4"></i> Validar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="tab-cursos-${inst.id}" class="inst-content-${inst.id} hidden animate-fade-up">
+                                <h4 class="text-lg font-black text-slate-800 mb-3 uppercase">Oferta Académica Verificada</h4>
+                                ${htmlCursos}
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            gridContainer.innerHTML = html;
+            lucide.createIcons();
+        }
+
         window.filtrarDirectorio = function() {
             const input = document.getElementById('dir-search-input');
             const term = (input ? input.value : '').toLowerCase().trim();
-            const grid = document.getElementById('directorio-grid');
-            if (!grid) return;
-            const cards = grid.querySelectorAll(':scope > div');
-            let visibles = 0;
-            cards.forEach(card => {
-                const txt = card.innerText.toLowerCase();
-                const match = term === '' || txt.includes(term);
-                card.style.display = match ? '' : 'none';
-                if (match) visibles++;
-            });
-            let emptyMsg = document.getElementById('dir-empty-msg');
-            if (visibles === 0) {
-                if (!emptyMsg) {
-                    emptyMsg = document.createElement('div');
-                    emptyMsg.id = 'dir-empty-msg';
-                    emptyMsg.className = 'col-span-full text-center py-10 text-slate-500 text-sm';
-                    emptyMsg.innerText = 'No se encontraron instituciones para esa búsqueda.';
-                    grid.appendChild(emptyMsg);
-                }
-                emptyMsg.style.display = '';
-            } else if (emptyMsg) {
-                emptyMsg.style.display = 'none';
+            if (!term) {
+                renderizarDirectorio(directorioData);
+                return;
             }
+            const filtrados = directorioData.filter(inst => 
+                (inst.nombre && inst.nombre.toLowerCase().includes(term)) ||
+                (inst.provincia && inst.provincia.toLowerCase().includes(term))
+            );
+            renderizarDirectorio(filtrados);
         };
 
+        // ═══════════ EMPRESAS ═══════════
         async function cargarEmpresasPublicas() {
             const contenedor = document.getElementById('contenedor-empresas-publicas');
             const bloque = document.getElementById('bloque-red-empresas');
             if (!contenedor || !bloque) return;
             try {
-                const { data } = await db.from('renmcycf_empresas').select('*').eq('activo', true).order('nombre');
+                const { data } = await db.from('renmcycf_empresas').select('*').eq('activo', true).order('orden').order('nombre');
                 if (!data || data.length === 0) { bloque.classList.add('hidden'); return; }
                 bloque.classList.remove('hidden');
                 contenedor.innerHTML = data.map(e => {
                     const logo = e.logo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(e.nombre || 'Emp')}&background=0a1128&color=d4af37`;
+                    const url = e.web_url || '#';
                     return `
-                        <div class="flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-                            <div class="w-20 h-20 md:w-24 md:h-24 rounded-xl bg-white flex items-center justify-center overflow-hidden shadow-lg border border-slate-700 p-2">
-                                <img src="${logo}" alt="${e.nombre || ''}" class="w-full h-full object-contain">
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col items-center text-center hover:border-forenseGold hover:bg-white/10 transition-all duration-300 group w-full sm:w-[300px] md:w-[340px]">
+                            <div class="w-full aspect-square relative mb-4 bg-white rounded-xl cursor-pointer overflow-hidden" onclick="abrirModalImagen('${logo}')">
+                                <img src="${logo}" alt="${e.nombre}" class="absolute inset-0 w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-300">
                             </div>
-                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center max-w-[100px]">${e.nombre || ''}</span>
+                            <h4 class="text-forenseGold font-bold text-base uppercase tracking-wider mb-2">${e.nombre}</h4>
+                            ${e.descripcion ? `<p class="text-slate-400 text-xs leading-relaxed line-clamp-3 mb-3">${e.descripcion}</p>` : ''}
+                            <a href="${url}" target="_blank" rel="noopener" class="mt-auto text-[10px] text-slate-400 hover:text-forenseGold transition-colors flex items-center gap-1 font-bold uppercase tracking-widest">Visitar web <i data-lucide="external-link" class="w-3 h-3"></i></a>
                         </div>`;
                 }).join('');
-            } catch (err) { console.warn(err); }
+                lucide.createIcons();
+            } catch (err) { console.warn(err); bloque.classList.add('hidden'); }
         }
 
+        // ═══════════ BENEFICIOS ═══════════
         async function cargarBeneficiosPublicos() {
             const contenedor = document.getElementById('contenedor-beneficios');
             if (!contenedor) return;
@@ -1836,12 +1959,12 @@
                 }
                 const iconos = ['badge-check', 'folder-check', 'qr-code', 'map-pin', 'book-open', 'trending-up', 'award', 'shield-check'];
                 contenedor.innerHTML = data.map((b, i) => `
-                    <div class="bg-white border border-slate-200 rounded-2xl p-6 hover:border-forenseGold hover:shadow-premium transition-all" data-aos="fade-up" data-aos-delay="${i * 60}">
-                        <div class="w-12 h-12 bg-gradient-to-br from-forenseGold to-yellow-600 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-forenseGold/30">
-                            <i data-lucide="${b.icono || iconos[i % iconos.length]}" class="w-6 h-6 text-white"></i>
+                    <div class="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl p-6 hover:shadow-xl hover:border-forenseGold/50 transition-all">
+                        <div class="w-12 h-12 bg-forenseGold/10 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="${b.icono || iconos[i % iconos.length]}" class="w-6 h-6 text-forenseGold"></i>
                         </div>
-                        <h4 class="font-black text-sm text-forenseNavy uppercase tracking-wider mb-2">${b.titulo || ''}</h4>
-                        <p class="text-xs text-slate-600 leading-relaxed">${b.descripcion || ''}</p>
+                        <h4 class="font-bold text-sm text-forenseNavy uppercase tracking-wider mb-2">${b.titulo || ''}</h4>
+                        ${b.descripcion ? `<p class="text-xs text-slate-600 leading-relaxed">${b.descripcion}</p>` : ''}
                     </div>`).join('');
                 lucide.createIcons();
             } catch (err) {
@@ -1849,31 +1972,61 @@
             }
         }
 
+        // ═══════════ NOTICIAS PORTAL ═══════════
         async function cargarNoticiasPublicas() {
             const contenedor = document.getElementById('contenedor-noticias-publicas');
             if (!contenedor) return;
             try {
-                const { data } = await db.from('renmcycf_noticias').select('*').eq('publicado', true).order('created_at', { ascending: false }).limit(6);
+                const { data } = await db.from('renmcycf_noticias').select('*').order('created_at', { ascending: false }).limit(6);
                 if (!data || data.length === 0) {
                     contenedor.innerHTML = '<p class="col-span-full text-center text-slate-400 text-sm py-8">No hay publicaciones todavía.</p>';
                     return;
                 }
-                contenedor.innerHTML = data.map(n => {
-                    const fecha = n.created_at ? new Date(n.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
-                    const img = n.imagen_url || 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=600';
+                contenedor.innerHTML = data.map(item => {
+                    let iconName = 'newspaper';
+                    let bgColor = 'bg-amber-100 text-amber-700';
+                    if (item.categoria_requerida === 'CIENCIA') { iconName = 'flask-conical'; bgColor = 'bg-blue-100 text-blue-700'; }
+                    if (item.categoria_requerida === 'TECNOLOGIA') { iconName = 'cpu'; bgColor = 'bg-emerald-100 text-emerald-700'; }
+                    
+                    const imagen = item.portada_url || 'https://placehold.co/400x200/0f172a/d4af37?text=RENMCYCF';
+                    const descripcion = item.descripcion || 'Publicación institucional del Registro Nacional.';
+                    
+                    const botonLink = item.link_contacto 
+                        ? `<button onclick="event.stopPropagation(); window.open('${item.link_contacto}', '_blank')" class="w-full mb-4 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-black uppercase tracking-widest py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg">
+                             <i data-lucide="external-link" class="w-4 h-4"></i> Acceder al Enlace
+                           </button>` 
+                        : '';
+                    
                     return `
-                        <article class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-premium hover:-translate-y-1 transition-all" data-aos="fade-up">
-                            <div class="h-44 overflow-hidden bg-slate-100">
-                                <img src="${img}" alt="${n.titulo || ''}" class="w-full h-full object-cover">
+                    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col hover:border-forenseGold hover:shadow-2xl transition-all duration-300">
+                        <div class="aspect-square relative overflow-hidden bg-slate-50 flex justify-center items-center border-b border-slate-100 p-2">
+                            <img src="${imagen}" class="w-full h-full object-contain drop-shadow-sm cursor-pointer hover:scale-105 transition-transform duration-300" alt="${item.titulo}" onclick="event.stopPropagation(); abrirModalImagen('${imagen}')">
+                            <div class="absolute top-3 left-3 ${bgColor} w-10 h-10 rounded-xl flex items-center justify-center shadow-md border border-white/50">
+                                <i data-lucide="${iconName}" class="w-5 h-5"></i>
                             </div>
-                            <div class="p-6">
-                                <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-forenseGold mb-2">
-                                    <i data-lucide="calendar" class="w-3 h-3"></i> ${fecha}
+                            <div class="absolute bottom-3 left-3 right-3">
+                                <span class="text-[9px] font-bold uppercase tracking-widest text-forenseGold">${item.categoria_requerida || 'GENERAL'}</span>
+                            </div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-1">
+                            <h3 class="font-title font-black text-lg text-forenseNavy mb-2 leading-snug">${item.titulo}</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed flex-1 mb-4">${descripcion}</p>
+                            ${botonLink}
+                            <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+                                <span class="text-xs font-bold text-slate-400 flex items-center gap-2">
+                                    <i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${new Date(item.created_at).toLocaleDateString('es-AR')}
+                                </span>
+                                <div class="flex items-center gap-4">
+                                    <button onclick="event.stopPropagation(); darMeGusta('${item.id}', this, ${item.likes || 0})" class="text-slate-400 hover:text-red-500 transition-colors flex items-center gap-1.5 text-xs font-bold z-20">
+                                        <i data-lucide="heart" class="w-4 h-4 heart-icon transition-transform"></i> <span class="likes-count">${item.likes || 0}</span>
+                                    </button>
+                                    <button onclick="event.stopPropagation(); compartirNoticia('${item.titulo.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-blue-500 transition-colors flex items-center gap-1.5 text-xs font-bold z-20">
+                                        <i data-lucide="share-2" class="w-4 h-4 hover:scale-110 transition-transform"></i>
+                                    </button>
                                 </div>
-                                <h3 class="font-black text-base text-forenseNavy uppercase tracking-wide mb-2 leading-tight">${n.titulo || ''}</h3>
-                                <p class="text-xs text-slate-600 leading-relaxed line-clamp-4">${n.resumen || n.contenido || ''}</p>
                             </div>
-                        </article>`;
+                        </div>
+                    </div>`;
                 }).join('');
                 lucide.createIcons();
             } catch (err) {
@@ -1881,61 +2034,119 @@
             }
         }
 
+        // ═══════════ HERO CAROUSEL ═══════════
         async function cargarNoticiaHero() {
             const carousel = document.getElementById('hero-carousel');
             const dots = document.getElementById('hero-carousel-dots');
             if (!carousel) return;
+
+            heroCarouselData = [];
+
             try {
-                const { data } = await db.from('renmcycf_noticias').select('*').eq('publicado', true).eq('destacado', true).order('created_at', { ascending: false }).limit(5);
-                let items = data && data.length > 0 ? data : [];
-                if (items.length === 0) {
-                    const { data: fallback } = await db.from('renmcycf_noticias').select('*').eq('publicado', true).order('created_at', { ascending: false }).limit(3);
-                    items = fallback || [];
+                const { data: noticias } = await db.from('renmcycf_noticias').select('*').order('created_at', { ascending: false }).limit(5);
+                if (noticias && noticias.length > 0) {
+                    noticias.forEach(n => {
+                        heroCarouselData.push({
+                            tipo: 'noticia',
+                            titulo: n.titulo,
+                            descripcion: n.descripcion || 'Publicación institucional.',
+                            imagen: n.portada_url || 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=600',
+                            categoria: n.categoria_requerida || 'GENERAL',
+                            likes: n.likes || 0,
+                            id: n.id,
+                            fecha: n.created_at,
+                            link_contacto: n.link_contacto || null
+                        });
+                    });
                 }
-                if (items.length === 0) {
+
+                if (heroCarouselData.length === 0) {
                     carousel.innerHTML = `
-                        <div class="p-10 text-center">
-                            <i data-lucide="newspaper" class="w-12 h-12 text-forenseGold mx-auto mb-4"></i>
-                            <h3 class="text-white font-black uppercase tracking-widest text-sm mb-2">Portal Científico</h3>
-                            <p class="text-slate-400 text-xs leading-relaxed">Próximamente publicaciones y novedades institucionales.</p>
+                        <div class="p-10 text-center text-slate-400 flex items-center justify-center h-full">
+                            <div>
+                                <i data-lucide="newspaper" class="w-10 h-10 mx-auto mb-3 opacity-50 text-forenseGold"></i>
+                                <p class="text-xs font-bold uppercase tracking-widest text-white mb-2">Portal Científico</p>
+                                <p class="text-slate-400 text-xs">Próximamente publicaciones institucionales.</p>
+                            </div>
                         </div>`;
+                    if (dots) dots.innerHTML = '';
                     lucide.createIcons();
                     return;
                 }
-                heroCarouselData = items;
-                renderHeroCarousel();
-                if (items.length > 1) {
-                    if (heroCarouselInterval) clearInterval(heroCarouselInterval);
-                    heroCarouselInterval = setInterval(() => {
-                        heroCarouselIndex = (heroCarouselIndex + 1) % heroCarouselData.length;
-                        renderHeroCarousel();
-                    }, 6000);
+
+                if (dots) {
+                    dots.innerHTML = heroCarouselData.map((_, i) => 
+                        `<button onclick="irASlideHero(${i})" class="hero-dot w-2 h-2 rounded-full transition-all ${i === 0 ? 'bg-forenseGold w-6' : 'bg-white/30 hover:bg-white/50'}" aria-label="Slide ${i+1}"></button>`
+                    ).join('');
                 }
-            } catch (err) { console.warn(err); }
+
+                heroCarouselIndex = 0;
+                renderHeroCarousel();
+                iniciarAutoPlayHero();
+
+                carousel.addEventListener('mouseenter', () => { if (heroCarouselInterval) clearInterval(heroCarouselInterval); });
+                carousel.addEventListener('mouseleave', () => { iniciarAutoPlayHero(); });
+
+            } catch (err) {
+                console.warn(err);
+                carousel.innerHTML = `
+                    <div class="p-10 text-center text-slate-400 flex items-center justify-center h-full">
+                        <div>
+                            <i data-lucide="alert-circle" class="w-10 h-10 mx-auto mb-3 opacity-50"></i>
+                            <p class="text-xs font-bold uppercase">No se pudo cargar</p>
+                        </div>
+                    </div>`;
+                lucide.createIcons();
+            }
         }
 
         function renderHeroCarousel() {
             const carousel = document.getElementById('hero-carousel');
             const dots = document.getElementById('hero-carousel-dots');
             if (!carousel || heroCarouselData.length === 0) return;
-            const n = heroCarouselData[heroCarouselIndex];
-            const fecha = n.created_at ? new Date(n.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
-            const img = n.imagen_url || 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=600';
+
+            const slide = heroCarouselData[heroCarouselIndex];
+            const img = slide.imagen;
+            const fecha = slide.fecha ? new Date(slide.fecha).toLocaleDateString('es-AR') : '';
+            
+            let iconName = 'newspaper';
+            if (slide.categoria === 'CIENCIA') iconName = 'flask-conical';
+            if (slide.categoria === 'TECNOLOGIA') iconName = 'cpu';
+            
+            const onClickAction = slide.link_contacto 
+                ? `window.open('${slide.link_contacto}', '_blank')` 
+                : `switchSection('seccion-portal-divulgacion')`;
+
             carousel.style.opacity = '0';
             setTimeout(() => {
                 carousel.innerHTML = `
-                    <div class="h-48 overflow-hidden bg-slate-800">
-                        <img src="${img}" alt="${n.titulo || ''}" class="w-full h-full object-cover opacity-80">
-                    </div>
-                    <div class="p-7">
-                        <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-forenseGold mb-3">
-                            <i data-lucide="calendar" class="w-3 h-3"></i> ${fecha}
+                    <div style="animation: heroFadeIn 0.6s ease forwards;">
+                        <div class="relative h-56 overflow-hidden bg-white border-b border-slate-100">
+                            <img src="${img}" class="w-full h-full object-contain p-6 cursor-pointer hover:scale-105 transition-transform duration-500" alt="${slide.titulo}" onclick="event.stopPropagation(); abrirModalImagen('${img}')">
+                            <div class="absolute top-3 left-3 bg-forenseGold/20 backdrop-blur-md text-forenseGold border border-forenseGold/40 w-10 h-10 rounded-xl flex items-center justify-center">
+                                <i data-lucide="${iconName}" class="w-5 h-5"></i>
+                            </div>
                         </div>
-                        <h3 class="font-black text-white text-lg uppercase tracking-wide mb-3 leading-tight">${n.titulo || ''}</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed line-clamp-4 mb-5">${n.resumen || n.contenido || ''}</p>
-                        <button onclick="switchSection('seccion-portal-divulgacion')" class="text-forenseGold hover:text-yellow-300 text-[10px] font-black uppercase tracking-widest inline-flex items-center gap-1 transition-colors">
-                            Leer más <i data-lucide="arrow-right" class="w-3 h-3"></i>
-                        </button>
+                        <div class="p-6">
+                            <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-forenseGold mb-3">
+                                <i data-lucide="calendar" class="w-3 h-3"></i> ${fecha} · ${slide.categoria}
+                            </div>
+                            <h3 class="font-black text-white text-base uppercase tracking-wide mb-2 leading-tight">${slide.titulo}</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed line-clamp-3 mb-4">${slide.descripcion}</p>
+                            <div class="flex items-center justify-between pt-3 border-t border-white/10">
+                                <button onclick="event.stopPropagation(); ${onClickAction}" class="text-forenseGold hover:text-yellow-300 text-[10px] font-black uppercase tracking-widest inline-flex items-center gap-1 transition-colors">
+                                    ${slide.link_contacto ? 'Acceder' : 'Leer más'} <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                                </button>
+                                <div class="flex items-center gap-3">
+                                    <button onclick="event.stopPropagation(); darMeGusta('${slide.id}', this, ${slide.likes})" class="text-slate-400 hover:text-red-400 transition-colors flex items-center gap-1.5 text-[11px] font-bold">
+                                        <i data-lucide="heart" class="w-4 h-4 heart-icon"></i> <span class="likes-count">${slide.likes}</span>
+                                    </button>
+                                    <button onclick="event.stopPropagation(); compartirNoticia('${slide.titulo.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-blue-400 transition-colors">
+                                        <i data-lucide="share-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>`;
                 lucide.createIcons();
                 carousel.style.transition = 'opacity 0.4s ease';
@@ -1943,17 +2154,36 @@
             }, 150);
 
             if (dots) {
-                dots.innerHTML = heroCarouselData.map((_, i) =>
-                    `<button onclick="heroCarouselIndex=${i}; renderHeroCarousel();" class="w-2 h-2 rounded-full transition-all ${i === heroCarouselIndex ? 'bg-forenseGold w-6' : 'bg-white/30 hover:bg-white/50'}"></button>`
-                ).join('');
+                const dotsEls = dots.querySelectorAll('.hero-dot');
+                dotsEls.forEach((dot, i) => {
+                    if (i === heroCarouselIndex) dot.className = 'hero-dot w-6 h-2 rounded-full transition-all bg-forenseGold';
+                    else dot.className = 'hero-dot w-2 h-2 rounded-full transition-all bg-white/30 hover:bg-white/50';
+                });
             }
         }
 
+        function irASlideHero(index) {
+            heroCarouselIndex = index;
+            renderHeroCarousel();
+            if (heroCarouselInterval) clearInterval(heroCarouselInterval);
+            iniciarAutoPlayHero();
+        }
+
+        function iniciarAutoPlayHero() {
+            if (heroCarouselInterval) clearInterval(heroCarouselInterval);
+            if (heroCarouselData.length <= 1) return;
+            heroCarouselInterval = setInterval(() => {
+                heroCarouselIndex = (heroCarouselIndex + 1) % heroCarouselData.length;
+                renderHeroCarousel();
+            }, 6000);
+        }
+
+        // ═══════════ BIBLIOTECA ═══════════
         async function cargarBibliotecaPublica() {
             const contenedor = document.getElementById('contenedor-biblioteca-ordenada');
             if (!contenedor) return;
             try {
-                const { data } = await db.from('renmcycf_biblioteca').select('*').eq('publico', true).order('categoria').order('created_at', { ascending: false });
+                const { data } = await db.from('renmcycf_biblioteca').select('*').eq('activo', true).order('created_at', { ascending: false });
                 if (!data || data.length === 0) {
                     contenedor.innerHTML = '<p class="text-center text-slate-400 text-sm py-8">Biblioteca en construcción.</p>';
                     return;
@@ -1972,20 +2202,22 @@
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             ${porCategoria[cat].map(item => {
-                                const esPremium = item.premium === true;
+                                const esPremium = item.tipo_acceso === 'PREMIUM';
+                                const tipo = item.tipo === 'video' ? 'play-circle' : item.tipo === 'pdf' ? 'file-text' : 'book';
                                 return `
                                 <div class="bg-white border border-slate-200 rounded-xl p-5 hover:border-forenseGold hover:shadow-lg transition-all text-left">
                                     <div class="flex items-start gap-3 mb-3">
                                         <div class="w-10 h-10 rounded-lg bg-forenseGold/10 border border-forenseGold/20 flex items-center justify-center shrink-0">
-                                            <i data-lucide="${item.tipo === 'video' ? 'play-circle' : item.tipo === 'pdf' ? 'file-text' : 'book'}" class="w-5 h-5 text-forenseGold"></i>
+                                            <i data-lucide="${tipo}" class="w-5 h-5 text-forenseGold"></i>
                                         </div>
                                         <div class="min-w-0">
                                             <h4 class="font-bold text-sm text-forenseNavy leading-tight mb-1">${item.titulo || ''}</h4>
+                                            <p class="text-[10px] text-slate-500">${item.autor || ''}</p>
                                             ${esPremium ? '<span class="text-[9px] font-black text-amber-600 uppercase tracking-widest"><i data-lucide="lock" class="inline w-3 h-3"></i> Solo matriculados</span>' : '<span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest"><i data-lucide="unlock" class="inline w-3 h-3"></i> Acceso libre</span>'}
                                         </div>
                                     </div>
-                                    <p class="text-xs text-slate-600 leading-relaxed line-clamp-3 mb-3">${item.descripcion || ''}</p>
-                                    <button onclick="descargarBiblioteca('${item.archivo_url || '#'}', ${esPremium})" class="text-[10px] font-black uppercase tracking-widest ${esPremium ? 'text-amber-600 hover:text-amber-700' : 'text-forenseNavy hover:text-forenseGold'} inline-flex items-center gap-1 transition-colors">
+                                    ${item.descripcion ? `<p class="text-xs text-slate-600 leading-relaxed line-clamp-2 mb-3">${item.descripcion}</p>` : ''}
+                                    <button onclick="descargarBiblioteca('${item.pdf_url || '#'}', ${esPremium})" class="text-[10px] font-black uppercase tracking-widest ${esPremium ? 'text-amber-600 hover:text-amber-700' : 'text-forenseNavy hover:text-forenseGold'} inline-flex items-center gap-1 transition-colors">
                                         <i data-lucide="${esPremium ? 'lock' : 'download'}" class="w-3 h-3"></i> ${esPremium ? 'Requiere Legajo' : 'Descargar'}
                                     </button>
                                 </div>`;
@@ -1999,31 +2231,35 @@
             }
         }
 
+        // ═══════════ TESIS ═══════════
         async function cargarTesisPublicas() {
             const contenedor = document.getElementById('contenedor-tesis-publicas');
             if (!contenedor) return;
             try {
-                const { data } = await db.from('renmcycf_tesis').select('*').eq('publicado', true).order('created_at', { ascending: false }).limit(20);
+                const { data } = await db.from('renmcycf_publicaciones').select('*').eq('estado', 'APROBADO').order('created_at', { ascending: false }).limit(20);
                 if (!data || data.length === 0) {
-                    contenedor.innerHTML = '<p class="text-center text-slate-400 text-sm py-6">Todavía no hay tesis publicadas.</p>';
+                    contenedor.innerHTML = `
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-8 text-center text-slate-500 text-sm">
+                            <i data-lucide="graduation-cap" class="w-8 h-8 mx-auto mb-3 text-slate-300"></i>
+                            Aún no hay investigaciones aprobadas publicadas.
+                        </div>`;
+                    lucide.createIcons();
                     return;
                 }
                 contenedor.innerHTML = data.map(t => {
                     const fecha = t.created_at ? new Date(t.created_at).toLocaleDateString('es-AR') : '';
                     return `
-                        <div class="bg-white border border-slate-200 rounded-xl p-5 hover:border-forenseGold hover:shadow-lg transition-all flex flex-col md:flex-row md:items-center gap-4">
-                            <div class="w-12 h-12 rounded-lg bg-forenseNavy flex items-center justify-center shrink-0">
-                                <i data-lucide="microscope" class="w-6 h-6 text-forenseGold"></i>
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md hover:border-forenseGold/50 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i data-lucide="file-text" class="w-4 h-4 text-forenseGold"></i>
+                                    <h4 class="font-bold text-slate-800 text-sm md:text-base leading-snug">${t.titulo}</h4>
+                                </div>
+                                <p class="text-xs text-slate-500 flex items-center gap-1"><i data-lucide="user" class="w-3.5 h-3.5"></i> Autor: ${t.autor_nombre || 'Matriculado RENMCYCF'} ${t.categoria ? `· ${t.categoria}` : ''} ${fecha ? `· ${fecha}` : ''}</p>
                             </div>
-                            <div class="flex-1 text-left">
-                                <h4 class="font-bold text-sm text-forenseNavy mb-1">${t.titulo || ''}</h4>
-                                <p class="text-xs text-slate-500 mb-1">${t.autor || ''} ${t.categoria ? `· ${t.categoria}` : ''}</p>
-                                <p class="text-xs text-slate-600 line-clamp-2">${t.resumen || ''}</p>
-                            </div>
-                            <div class="flex flex-col items-end gap-2 shrink-0">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${fecha}</span>
-                                ${t.archivo_url ? `<a href="${t.archivo_url}" target="_blank" class="text-[10px] font-black uppercase tracking-widest text-forenseGold hover:text-yellow-600 inline-flex items-center gap-1"><i data-lucide="download" class="w-3 h-3"></i> Descargar</a>` : ''}
-                            </div>
+                            <a href="${t.pdf_url}" target="_blank" class="inline-flex items-center justify-center gap-2 bg-forenseNavy hover:bg-slate-800 text-forenseGold px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition shadow whitespace-nowrap">
+                                <i data-lucide="download" class="w-4 h-4"></i> Descargar PDF
+                            </a>
                         </div>`;
                 }).join('');
                 lucide.createIcons();
@@ -2032,49 +2268,61 @@
             }
         }
 
+        // ═══════════ COMITÉ ═══════════
         async function cargarComitePublico() {
             const contenedor = document.getElementById('contenedor-comite');
-            if (!contenedor) return;
+            const seccion = document.getElementById('seccion-comite');
+            if (!contenedor || !seccion) return;
             try {
-                const { data } = await db.from('renmcycf_comite').select('*').eq('activo', true).order('orden');
+                const { data } = await db.from('renmcycf_comite').select('*').eq('activo', true).order('created_at', { ascending: true });
                 if (!data || data.length === 0) {
-                    contenedor.innerHTML = '<p class="col-span-full text-center text-slate-400 text-sm py-8">Autoridades en proceso de designación.</p>';
+                    seccion.style.display = 'none';
                     return;
                 }
                 contenedor.innerHTML = data.map(m => {
                     const foto = m.foto_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nombre || 'Miembro')}&background=0a1128&color=d4af37&size=200`;
                     return `
-                        <div class="bg-white border border-slate-200 rounded-2xl p-6 text-center hover:border-forenseGold hover:shadow-premium transition-all" data-aos="fade-up">
-                            <div class="w-28 h-28 rounded-full overflow-hidden mx-auto mb-4 border-4 border-forenseGold/30 shadow-lg">
-                                <img src="${foto}" alt="${m.nombre || ''}" class="w-full h-full object-cover">
+                        <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 text-center hover:shadow-xl transition-all hover:border-forenseGold/50">
+                            <div class="w-32 h-32 rounded-2xl overflow-hidden border-2 border-forenseGold mx-auto mb-4 shadow-md bg-slate-100">
+                                <img src="${foto}" alt="${m.nombre}" class="w-full h-full object-cover object-top">
                             </div>
-                            <h4 class="font-black text-base text-forenseNavy uppercase tracking-wide mb-1">${m.nombre || ''}</h4>
-                            <p class="text-xs font-bold text-forenseGold uppercase tracking-widest mb-3">${m.cargo || ''}</p>
-                            <p class="text-xs text-slate-600 leading-relaxed">${m.bio || ''}</p>
+                            <h3 class="font-title font-black text-lg text-forenseNavy mb-1">${m.nombre}</h3>
+                            <p class="text-forenseGold font-bold text-xs uppercase tracking-widest mb-3">${m.titulo || 'Miembro del Comité'}</p>
+                            ${m.resena ? `<p class="text-slate-500 text-sm italic leading-relaxed">${m.resena}</p>` : ''}
                         </div>`;
                 }).join('');
                 lucide.createIcons();
-            } catch (err) {
-                contenedor.innerHTML = '<p class="col-span-full text-center text-slate-400 text-sm py-8">Error cargando el comité.</p>';
-            }
+            } catch (err) { seccion.style.display = 'none'; }
         }
 
+        // ═══════════ ENTIDADES B2B SELECT ═══════════
         async function cargarEntidadesB2BSelect() {
             const select = document.getElementById('ins-entidad-referente');
             if (!select) return;
             try {
-                const { data } = await db.from('renmcycf_aliados').select('id, nombre').eq('activo', true).order('nombre');
-                if (!data || data.length === 0) {
-                    select.innerHTML = '<option value="" disabled selected>No hay entidades disponibles</option>';
-                    return;
+                const [aliadosRes, empresasRes] = await Promise.all([
+                    db.from('renmcycf_aliados').select('nombre').eq('activo', true).order('nombre'),
+                    db.from('renmcycf_empresas').select('nombre').eq('activo', true).order('nombre')
+                ]);
+                
+                let html = '<option value="" disabled selected>Seleccione su entidad avalada...</option>';
+                
+                if (aliadosRes.data && aliadosRes.data.length > 0) {
+                    html += '<optgroup label="Instituciones Académicas">';
+                    aliadosRes.data.forEach(a => html += `<option value="${a.nombre}">${a.nombre}</option>`);
+                    html += '</optgroup>';
                 }
-                select.innerHTML = '<option value="" disabled selected>Seleccione su institución...</option>' +
-                    data.map(a => `<option value="${a.id}">${a.nombre}</option>`).join('');
-            } catch (err) {
-                select.innerHTML = '<option value="" disabled selected>Error cargando entidades</option>';
-            }
+                
+                if (empresasRes.data && empresasRes.data.length > 0) {
+                    html += '<optgroup label="Empresas y Organizaciones">';
+                    empresasRes.data.forEach(e => html += `<option value="${e.nombre}">${e.nombre}</option>`);
+                    html += '</optgroup>';
+                }
+                select.innerHTML = html;
+            } catch (err) { console.warn(err); }
         }
 
+        // ═══════════ FORM WIZARD ═══════════
         window.toggleReferenteB2B = function() {
             const select = document.getElementById('ins-como-nos-conocio');
             const contenedor = document.getElementById('container-entidad-referente');
@@ -2087,16 +2335,20 @@
             const contador = document.getElementById('contador-archivos');
             if (!contador) return;
             let count = input.files.length;
-            if (count > 10) {
-                alert('Máximo 10 archivos permitidos. Se tomarán los primeros 10.');
+            if (count > MAX_DIPLOMAS_INDEX) {
+                alert(`Máximo ${MAX_DIPLOMAS_INDEX} archivos permitidos. Se tomarán los primeros ${MAX_DIPLOMAS_INDEX}.`);
                 const dt = new DataTransfer();
-                for (let i = 0; i < 10; i++) dt.items.add(input.files[i]);
+                for (let i = 0; i < MAX_DIPLOMAS_INDEX; i++) dt.items.add(input.files[i]);
                 input.files = dt.files;
-                count = 10;
+                count = MAX_DIPLOMAS_INDEX;
             }
-            contador.innerText = `${count}/10`;
-            contador.classList.toggle('bg-red-600', count > 10);
-            contador.classList.toggle('bg-forenseNavy', count <= 10);
+            contador.innerText = `${count}/${MAX_DIPLOMAS_INDEX}`;
+            contador.classList.toggle('bg-red-600', count > MAX_DIPLOMAS_INDEX);
+            contador.classList.toggle('bg-forenseNavy', count <= MAX_DIPLOMAS_INDEX);
+            if (count > 0 && count <= MAX_DIPLOMAS_INDEX) {
+                contador.classList.remove('bg-forenseNavy');
+                contador.classList.add('bg-emerald-600');
+            }
         };
 
         window.detectarCategoriaInteligente = function() {
@@ -2106,12 +2358,16 @@
             const txt = input.value.toLowerCase();
             if (txt.length < 4) return;
             let sugerida = '';
-            if (/licenciad|grado|universitari|abogad/.test(txt)) sugerida = 'A1';
-            else if (/t[eé]cnic[oa] superior|tecnicatura/.test(txt)) sugerida = 'A2';
-            else if (/auxiliar|diplomad/.test(txt)) sugerida = 'A3';
-            else if (/estudiante|consultor/.test(txt)) sugerida = 'A4';
-            else if (/seguridad.*licenciad|licenciad.*seguridad/.test(txt)) sugerida = 'B1';
-            else if (/t[eé]cnic[oa].*seguridad/.test(txt)) sugerida = 'B2';
+            if (txt.includes('seguridad')) {
+                if (/licenciad|grado|universitari/.test(txt)) sugerida = 'B1';
+                else if (/t[eé]cnic[oa] superior|tecnicatura/.test(txt)) sugerida = 'B2';
+                else sugerida = 'B3';
+            } else {
+                if (/licenciad|grado|universitari|abogad|m[eé]dic|doctor/.test(txt)) sugerida = 'A1';
+                else if (/t[eé]cnic[oa] superior|tecnicatura/.test(txt)) sugerida = 'A2';
+                else if (/auxiliar|diplomad|perito/.test(txt)) sugerida = 'A3';
+                else if (/estudiante|consultor|cursante/.test(txt)) sugerida = 'A4';
+            }
             if (sugerida && select.value !== sugerida) {
                 select.value = sugerida;
                 actualizarLinkYPrecio();
@@ -2132,18 +2388,36 @@
             };
             let precio = Number(precios[cat]) || 0;
             if (descuentoB2CActivo && precio > 0) {
-                precio = Math.round(precio * 0.8);
-                display.innerHTML = `<span class="line-through text-slate-400 text-base mr-2">$${new Intl.NumberFormat('es-AR').format(Number(precios[cat]))}</span>$${new Intl.NumberFormat('es-AR').format(precio)} <span class="text-xs text-emerald-600 font-bold">(-20%)</span>`;
+                const precioDesc = Math.round(precio * 0.8);
+                display.innerHTML = `<span class="line-through text-slate-400 text-base mr-2">$${new Intl.NumberFormat('es-AR').format(precio)}</span>$${new Intl.NumberFormat('es-AR').format(precioDesc)} <span class="text-xs text-emerald-600 font-bold">(-20%)</span>`;
             } else {
                 display.innerText = cat ? `$${new Intl.NumberFormat('es-AR').format(precio)}` : 'Seleccione Categoría';
             }
         };
 
         window.siguientePaso = function(paso) {
+            if (paso === 2) {
+                const nombres = document.getElementById('ins-nombres').value;
+                const apellidos = document.getElementById('ins-apellidos').value;
+                const dni = document.getElementById('ins-dni').value;
+                const ano = document.getElementById('ins-ano-nac').value;
+                const email = document.getElementById('ins-email').value;
+                const tel = document.getElementById('ins-tel').value;
+                const prov = document.getElementById('ins-prov').value;
+                if (!nombres || !apellidos || !dni || !ano || !email || !tel || !prov) {
+                    alert("Por favor, complete todos los campos del Paso 1.");
+                    return;
+                }
+            }
+            if (paso === 3) {
+                if (!document.getElementById('ins-categoria').value || !document.getElementById('ins-profesion').value) {
+                    alert("Complete su Profesión y seleccione una Categoría.");
+                    return;
+                }
+            }
             document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
             const target = document.getElementById('step-' + paso);
             if (target) target.classList.add('active');
-
             for (let i = 1; i <= 3; i++) {
                 const dot = document.getElementById('dot-' + i);
                 if (!dot) continue;
@@ -2156,30 +2430,44 @@
                 if (!line) continue;
                 line.classList.toggle('active', i < paso);
             }
-            window.scrollTo({ top: document.getElementById('seccion-inscripcion').offsetTop - 100, behavior: 'smooth' });
+            const target_scroll = document.getElementById('seccion-inscripcion');
+            if (target_scroll) window.scrollTo({ top: target_scroll.offsetTop - 100, behavior: 'smooth' });
         };
 
-        async function subirArchivo(file, carpeta) {
+        // ═══════════ SUBIDA DE ARCHIVOS ═══════════
+        async function subirArchivo(file, carpeta, bucket = 'renmcycf-documentos') {
             if (!file) return null;
             const ext = file.name.split('.').pop();
             const nombre = `${carpeta}/${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${ext}`;
-            const { error } = await db.storage.from('renmcycf_documentos').upload(nombre, file, { cacheControl: '3600', upsert: false });
+            const { error } = await db.storage.from(bucket).upload(nombre, file, { cacheControl: '3600', upsert: false });
             if (error) throw error;
-            const { data: urlData } = db.storage.from('renmcycf_documentos').getPublicUrl(nombre);
+            const { data: urlData } = db.storage.from(bucket).getPublicUrl(nombre);
             return urlData.publicUrl;
         }
 
+        // ═══════════ ENVÍO INSCRIPCIÓN ═══════════
         window.enviarInscripcion = async function(event) {
             event.preventDefault();
+            if (!document.getElementById('ins-ddjj').checked) {
+                alert("Debe aceptar la Declaración Jurada para continuar.");
+                return;
+            }
+            
             const btn = document.getElementById('btn-submit-tramite');
-            if (btn) { btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Enviando...'; lucide.createIcons(); }
+            const originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Enviando...';
+            lucide.createIcons();
 
             try {
                 const dni = document.getElementById('ins-dni').value.trim();
-                const { data: existente } = await db.from('renmcycf_matriculados').select('id, estado').eq('dni', dni).maybeSingle();
+                
+                const { data: existente } = await db.from('renmcycf_solicitudes').select('id, estado').eq('dni', dni).maybeSingle();
                 if (existente) {
                     alert('Ya existe un expediente con ese DNI. Podés consultar su estado en la sección Seguimiento.');
-                    if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-5 h-5"></i> Enviar Expediente'; lucide.createIcons(); }
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                    lucide.createIcons();
                     return;
                 }
 
@@ -2190,63 +2478,83 @@
                 const pagoFile = document.getElementById('file-pago').files[0];
 
                 const [fotoUrl, dniFrenteUrl, dniDorsoUrl, pagoUrl] = await Promise.all([
-                    subirArchivo(fotoFile, 'fotos'),
-                    subirArchivo(dniFrenteFile, 'dni'),
-                    subirArchivo(dniDorsoFile, 'dni'),
-                    subirArchivo(pagoFile, 'pagos')
+                    subirArchivo(fotoFile, 'fotos', 'renmcycf-media'),
+                    subirArchivo(dniFrenteFile, 'dni', 'renmcycf-documentos'),
+                    subirArchivo(dniDorsoFile, 'dni', 'renmcycf-documentos'),
+                    subirArchivo(pagoFile, 'pagos', 'renmcycf-documentos')
                 ]);
+
                 const diplomasUrls = [];
                 for (const f of diplomasFiles) {
-                    const u = await subirArchivo(f, 'diplomas');
+                    const u = await subirArchivo(f, 'diplomas', 'renmcycf-documentos');
                     if (u) diplomasUrls.push(u);
                 }
 
                 const especialidadesRaw = document.getElementById('ins-especialidades').value.trim();
                 const especialidades = especialidadesRaw
-                    ? especialidadesRaw.split(',').map(s => s.trim()).filter(Boolean).slice(0, 5)
+                    ? especialidadesRaw.split(',').map(s => s.trim().toUpperCase()).filter(Boolean).slice(0, 5)
                     : [];
 
+                const entidadRef = document.getElementById('ins-entidad-referente');
+
                 const payload = {
-                    nombres: document.getElementById('ins-nombres').value.trim(),
-                    apellidos: document.getElementById('ins-apellidos').value.trim(),
+                    nombres: document.getElementById('ins-nombres').value.trim().toUpperCase(),
+                    apellidos: document.getElementById('ins-apellidos').value.trim().toUpperCase(),
                     dni: dni,
                     ano_nacimiento: parseInt(document.getElementById('ins-ano-nac').value) || null,
-                    email: document.getElementById('ins-email').value.trim(),
+                    email: document.getElementById('ins-email').value.trim().toLowerCase(),
                     telefono: document.getElementById('ins-tel').value.trim(),
-                    provincia: document.getElementById('ins-prov').value.trim(),
+                    provincia_laboral: document.getElementById('ins-prov').value.trim().toUpperCase(),
                     como_nos_conocio: document.getElementById('ins-como-nos-conocio').value,
-                    entidad_referente_id: document.getElementById('ins-entidad-referente') ? (document.getElementById('ins-entidad-referente').value || null) : null,
-                    profesion: document.getElementById('ins-profesion').value.trim(),
+                    entidad_referente: (entidadRef && entidadRef.value) ? entidadRef.value : null,
+                    profesion: document.getElementById('ins-profesion').value.trim().toUpperCase(),
                     categoria: document.getElementById('ins-categoria').value,
-                    especialidades: especialidades,
-                    mostrar_directorio: document.getElementById('ins-directorio').checked,
-                    foto_url: fotoUrl,
+                    especialidades: JSON.stringify(especialidades),
+                    figurar_directorio: document.getElementById('ins-directorio').checked,
+                    foto_perfil_url: fotoUrl,
                     dni_frente_url: dniFrenteUrl,
                     dni_dorso_url: dniDorsoUrl,
-                    diplomas_urls: diplomasUrls,
-                    comprobante_pago_url: pagoUrl,
+                    diploma_url: diplomasUrls.length > 0 ? diplomasUrls[0] : null,
+                    diplomas_urls: JSON.stringify(diplomasUrls),
+                    comprobante_url: pagoUrl,
                     estado: 'PENDIENTE',
+                    terminos_aceptados: true,
+                    fecha_aceptacion_terminos: new Date().toISOString(),
                     created_at: new Date().toISOString()
                 };
 
-                const { error } = await db.from('renmcycf_matriculados').insert([payload]);
+                const { error } = await db.from('renmcycf_solicitudes').insert([payload]);
                 if (error) throw error;
 
-                if (btn) { btn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> ¡Expediente Enviado!'; btn.classList.remove('bg-forenseGold'); btn.classList.add('bg-emerald-500', 'text-white'); lucide.createIcons(); }
+                btn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> ¡Expediente Enviado!';
+                btn.classList.remove('bg-forenseGold');
+                btn.classList.add('bg-emerald-500', 'text-white');
+                lucide.createIcons();
 
                 setTimeout(() => {
                     alert('¡Expediente enviado con éxito!\n\nPodés seguir el estado con tu DNI en la sección "Seguir Trámite".');
                     document.getElementById('form-inscripcion').reset();
+                    document.getElementById('contador-archivos').innerText = `0/${MAX_DIPLOMAS_INDEX}`;
+                    document.getElementById('contador-archivos').classList.remove('bg-emerald-600');
+                    document.getElementById('contador-archivos').classList.add('bg-forenseNavy');
                     siguientePaso(1);
-                    if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-5 h-5"></i> Enviar Expediente'; btn.classList.add('bg-forenseGold'); btn.classList.remove('bg-emerald-500', 'text-white'); lucide.createIcons(); }
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                    btn.classList.add('bg-forenseGold');
+                    btn.classList.remove('bg-emerald-500', 'text-white');
+                    lucide.createIcons();
                 }, 1200);
+
             } catch (err) {
                 console.error(err);
                 alert('Hubo un error al enviar el expediente: ' + (err.message || 'Intente nuevamente.'));
-                if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-5 h-5"></i> Enviar Expediente'; lucide.createIcons(); }
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                lucide.createIcons();
             }
         };
 
+        // ═══════════ VERIFICACIÓN PÚBLICA ═══════════
         window.buscarProfesional = async function() {
             const input = document.getElementById('search-input');
             const results = document.getElementById('search-results');
@@ -2259,13 +2567,16 @@
             empty.classList.add('hidden');
 
             const btn = document.getElementById('btn-buscar-publico');
-            if (btn) { btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Buscando...'; lucide.createIcons(); }
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>'; lucide.createIcons(); }
 
             try {
-                const esDni = /^\d+$/.test(term);
-                let query = db.from('renmcycf_matriculados').select('*').eq('estado', 'APROBADO');
-                if (esDni) query = query.eq('dni', term);
-                else query = query.eq('numero_credencial', term);
+                const esDni = /^\d+$/.test(term) && term.length <= 9;
+                let query = db.from('renmcycf_padron').select('*').eq('estado_legal', 'ACTIVO');
+                if (esDni) {
+                    query = query.eq('dni', term);
+                } else {
+                    query = query.or(`matricula_oficial.eq.${term},numero_credencial.eq.${term}`);
+                }
 
                 const { data } = await query.maybeSingle();
 
@@ -2274,19 +2585,31 @@
                     return;
                 }
 
-                document.getElementById('res-foto').src = data.foto_url || `https://ui-avatars.com/api/?name=${encodeURIComponent((data.nombres || '') + ' ' + (data.apellidos || ''))}&background=0a1128&color=d4af37&size=200`;
+                document.getElementById('res-foto').src = data.foto_perfil_url || `https://ui-avatars.com/api/?name=${encodeURIComponent((data.nombres || '') + ' ' + (data.apellidos || ''))}&background=0a1128&color=d4af37&size=200`;
                 document.getElementById('res-nombre').innerText = `${data.nombres || ''} ${data.apellidos || ''}`.trim();
-                document.getElementById('res-cat').innerText = data.categoria || '—';
+                document.getElementById('res-cat').innerText = `CREDENCIAL ACTIVA · CATEGORÍA ${data.categoria || '—'}`;
                 document.getElementById('res-profesion').innerText = data.profesion || '—';
                 document.getElementById('res-dni').innerText = data.dni || '—';
-                document.getElementById('res-mat').innerText = data.numero_credencial || '—';
+                document.getElementById('res-mat').innerText = data.matricula_oficial || data.numero_credencial || '—';
 
                 const espContainer = document.getElementById('res-especialidades');
+                const espWrap = document.getElementById('res-especialidades-container');
                 if (espContainer) {
-                    const esp = Array.isArray(data.especialidades) ? data.especialidades : (data.especialidades ? String(data.especialidades).split(',').map(s => s.trim()) : []);
-                    espContainer.innerHTML = esp.length > 0
-                        ? esp.map(e => `<span class="bg-white/10 text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20">${e}</span>`).join('')
-                        : '<span class="text-slate-500 text-[10px] italic">Sin especialidades declaradas</span>';
+                    let espArr = [];
+                    if (data.especialidades && data.especialidades !== 'null') {
+                        try {
+                            espArr = typeof data.especialidades === 'string' ? JSON.parse(data.especialidades) : data.especialidades;
+                            if (!Array.isArray(espArr)) espArr = String(data.especialidades).split(',').map(s => s.trim()).filter(Boolean);
+                        } catch(e) {
+                            espArr = String(data.especialidades).split(',').map(s => s.trim()).filter(Boolean);
+                        }
+                    }
+                    if (espArr.length > 0) {
+                        espContainer.innerHTML = espArr.map(e => `<span class="bg-white/10 text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20">${e}</span>`).join('');
+                        if (espWrap) espWrap.style.display = 'block';
+                    } else {
+                        if (espWrap) espWrap.style.display = 'none';
+                    }
                 }
                 results.classList.remove('hidden');
             } catch (err) {
@@ -2297,6 +2620,7 @@
             }
         };
 
+        // ═══════════ TRACKING ═══════════
         window.buscarTracking = async function() {
             const input = document.getElementById('track-dni');
             const result = document.getElementById('tracking-result');
@@ -2309,48 +2633,89 @@
             result.classList.add('hidden');
 
             try {
-                const { data } = await db.from('renmcycf_matriculados').select('*').eq('dni', dni).maybeSingle();
-                if (!data) {
+                const { data: solicitud } = await db.from('renmcycf_solicitudes').select('*').eq('dni', dni).order('created_at', { ascending: false }).limit(1).maybeSingle();
+                
+                if (solicitud) {
+                    const estados = {
+                        'PENDIENTE': { icono: 'clock', color: 'amber', texto: 'Pendiente de auditoría inicial' },
+                        'EN AUDITORIA': { icono: 'search', color: 'blue', texto: 'En revisión por el Comité' },
+                        'EN_AUDITORIA': { icono: 'search', color: 'blue', texto: 'En revisión por el Comité' },
+                        'OBSERVADO': { icono: 'alert-triangle', color: 'orange', texto: 'Con observaciones — requiere corrección' },
+                        'APROBADO': { icono: 'check-circle', color: 'emerald', texto: 'Aprobado — credencial emitida' },
+                        'RECHAZADO': { icono: 'x-circle', color: 'red', texto: 'Rechazado' }
+                    };
+                    const info = estados[solicitud.estado] || estados['PENDIENTE'];
+                    const fecha = solicitud.created_at ? new Date(solicitud.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
+
+                    let htmlExtra = '';
+                    if (solicitud.estado === 'OBSERVADO') {
+                        htmlExtra = `
+                            <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                                <p class="text-xs text-red-700 mb-3 font-medium">Suba un archivo con la corrección solicitada por el Comité:</p>
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <input type="file" id="file-correccion" accept="image/*,application/pdf" class="flex-1 text-xs text-slate-500 file:bg-red-100 file:text-red-800 file:border-0 file:rounded file:px-3 file:py-1 file:font-bold file:mr-3">
+                                    <button onclick="subirCorreccion('${solicitud.id}')" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider transition">Subir Corrección</button>
+                                </div>
+                            </div>`;
+                    } else if (solicitud.estado === 'APROBADO') {
+                        htmlExtra = `
+                            <div class="mt-4">
+                                <a href="legajo.renmcycf.html" class="inline-flex bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg text-xs font-black uppercase tracking-widest transition">
+                                    <i data-lucide="folder-check" class="w-4 h-4 mr-2"></i> Abrir Legajo Digital
+                                </a>
+                            </div>`;
+                    }
+
                     result.innerHTML = `
-                        <div class="bg-red-50 border border-red-200 rounded-xl p-6 text-center text-red-800">
-                            <i data-lucide="alert-triangle" class="w-8 h-8 mx-auto mb-2 text-red-500"></i>
-                            <p class="font-bold text-sm">No se encontró expediente para ese DNI.</p>
-                            <p class="text-xs mt-1">Verificá el número o iniciá tu trámite.</p>
+                        <div class="bg-white border-2 border-${info.color}-200 rounded-2xl p-6 shadow-lg">
+                            <div class="flex items-start gap-4">
+                                <div class="w-14 h-14 rounded-xl bg-${info.color}-50 border border-${info.color}-200 flex items-center justify-center shrink-0">
+                                    <i data-lucide="${info.icono}" class="w-7 h-7 text-${info.color}-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-black text-forenseNavy text-lg uppercase tracking-wide">${solicitud.nombres} ${solicitud.apellidos}</h4>
+                                    <p class="text-sm text-slate-500 font-mono">DNI: ${solicitud.dni} · Cat: ${solicitud.categoria || '—'}</p>
+                                    <div class="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-${info.color}-50 border border-${info.color}-200 text-${info.color}-700 text-xs font-black uppercase tracking-widest">
+                                        ${info.texto}
+                                    </div>
+                                    ${solicitud.observaciones ? `<p class="mt-3 text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded-lg p-3"><strong>Observaciones:</strong> ${solicitud.observaciones}</p>` : ''}
+                                    <p class="text-[10px] text-slate-400 mt-3">Expediente creado: ${fecha}</p>
+                                    ${htmlExtra}
+                                </div>
+                            </div>
                         </div>`;
                     result.classList.remove('hidden');
                     lucide.createIcons();
                     return;
                 }
 
-                const estados = {
-                    'PENDIENTE': { icono: 'clock', color: 'amber', texto: 'Pendiente de auditoría inicial' },
-                    'EN_REVISION': { icono: 'search', color: 'blue', texto: 'En revisión por el Comité' },
-                    'OBSERVADO': { icono: 'alert-circle', color: 'orange', texto: 'Con observaciones — requiere corrección' },
-                    'APROBADO': { icono: 'check-circle', color: 'emerald', texto: 'Aprobado — credencial emitida' },
-                    'RECHAZADO': { icono: 'x-circle', color: 'red', texto: 'Rechazado' }
-                };
-                const estadoInfo = estados[data.estado] || estados['PENDIENTE'];
-                const fecha = data.created_at ? new Date(data.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+                // Fallback: buscar en padrón
+                const { data: padron } = await db.from('renmcycf_padron').select('*').eq('dni', dni).maybeSingle();
+                if (padron) {
+                    result.innerHTML = `
+                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 shadow-sm">
+                            <div class="flex items-start gap-4">
+                                <i data-lucide="check-circle" class="w-10 h-10 text-emerald-600 shrink-0"></i>
+                                <div>
+                                    <h4 class="font-black text-emerald-900 text-lg uppercase">Matrícula Aprobada</h4>
+                                    <p class="text-sm text-emerald-700 font-mono mt-1">Credencial: ${padron.matricula_oficial || '—'} · Estado: ${padron.estado_legal}</p>
+                                    <a href="legajo.renmcycf.html" class="inline-flex mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg text-xs font-black uppercase tracking-widest transition">
+                                        <i data-lucide="folder-check" class="w-4 h-4 mr-2"></i> Abrir Legajo Digital
+                                    </a>
+                                </div>
+                            </div>
+                        </div>`;
+                    result.classList.remove('hidden');
+                    lucide.createIcons();
+                    return;
+                }
 
                 result.innerHTML = `
-                    <div class="bg-white border-2 border-${estadoInfo.color}-200 rounded-2xl p-6 shadow-lg">
-                        <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-xl bg-${estadoInfo.color}-50 border border-${estadoInfo.color}-200 flex items-center justify-center shrink-0">
-                                <i data-lucide="${estadoInfo.icono}" class="w-7 h-7 text-${estadoInfo.color}-600"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-black text-forenseNavy text-lg uppercase tracking-wide">${data.nombres} ${data.apellidos}</h4>
-                                <p class="text-sm text-slate-500 font-mono">DNI: ${data.dni} · Cat: ${data.categoria || '—'}</p>
-                                <div class="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-${estadoInfo.color}-50 border border-${estadoInfo.color}-200 text-${estadoInfo.color}-700 text-xs font-black uppercase tracking-widest">
-                                    ${estadoInfo.texto}
-                                </div>
-                                ${data.observaciones ? `<p class="mt-3 text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded-lg p-3"><strong>Observaciones:</strong> ${data.observaciones}</p>` : ''}
-                                <p class="text-[10px] text-slate-400 mt-3">Expediente creado: ${fecha}</p>
-                            </div>
-                        </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 text-center text-slate-500 text-sm font-medium">
+                        No se encontraron trámites ni registros activos para el DNI ingresado.
                     </div>`;
                 result.classList.remove('hidden');
-                lucide.createIcons();
+
             } catch (err) {
                 console.error(err);
                 result.innerHTML = '<div class="bg-red-50 border border-red-200 rounded-xl p-6 text-center text-red-800 font-bold text-sm">Error al consultar. Intente nuevamente.</div>';
@@ -2360,18 +2725,35 @@
             }
         };
 
+        window.subirCorreccion = async function(solicitudId) {
+            const file = document.getElementById('file-correccion').files[0];
+            if (!file) { alert("Seleccione un archivo para subir."); return; }
+            try {
+                const fileName = `correccion/${solicitudId}_${Date.now()}.${file.name.split('.').pop()}`;
+                const { error: upErr } = await db.storage.from('renmcycf-documentos').upload(fileName, file);
+                if (upErr) throw upErr;
+                const { data: urlData } = db.storage.from('renmcycf-documentos').getPublicUrl(fileName);
+                const url = urlData.publicUrl;
+                const { error: updErr } = await db.from('renmcycf_solicitudes').update({ estado: 'PENDIENTE', correccion_url: url }).eq('id', solicitudId);
+                if (updErr) throw updErr;
+                alert("✅ Corrección subida. Su expediente ha vuelto a la Mesa de Entrada.");
+                buscarTracking();
+            } catch(e) { alert("Error: " + e.message); }
+        };
+
+        // ═══════════ MAPA ═══════════
         window.initMap = function() {
             const mapEl = document.getElementById('mapa-profesionales');
             if (!mapEl || mapInstance) return;
             try {
                 mapInstance = L.map('mapa-profesionales', {
-                    center: [-34.6037, -58.3816],
-                    zoom: 5,
-                    zoomControl: true,
+                    center: [-38.4161, -63.6167],
+                    zoom: 4,
+                    scrollWheelZoom: false,
                     attributionControl: false
                 });
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 18,
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
                     className: 'mapa-oscuro-free'
                 }).addTo(mapInstance);
                 markersLayerGroup = L.layerGroup().addTo(mapInstance);
@@ -2380,19 +2762,16 @@
         };
 
         async function cargarPeritosMapa() {
+            const loading = document.getElementById('map-loading');
             try {
-                const { data } = await db.from('renmcycf_matriculados')
-                    .select('nombres, apellidos, profesion, categoria, especialidades, provincia, lat, lng')
-                    .eq('estado', 'APROBADO')
-                    .eq('mostrar_directorio', true)
-                    .not('lat', 'is', null)
-                    .not('lng', 'is', null);
+                const { data } = await db.from('renmcycf_padron')
+                    .select('nombres, apellidos, profesion, categoria, especialidades, provincia_laboral, telefono, email, foto_perfil_url, facebook_url, instagram_url, linkedin_url')
+                    .eq('estado_legal', 'ACTIVO')
+                    .eq('figurar_directorio', true);
                 peritosMapaDB = data || [];
                 renderizarMarcadores(peritosMapaDB);
-                const loading = document.getElementById('map-loading');
                 if (loading) loading.style.display = 'none';
             } catch (err) {
-                const loading = document.getElementById('map-loading');
                 if (loading) loading.innerHTML = '<p class="text-red-400 text-xs font-bold uppercase">Error cargando mapa</p>';
             }
         }
@@ -2401,24 +2780,85 @@
             if (!markersLayerGroup) return;
             markersLayerGroup.clearLayers();
             if (!peritos || peritos.length === 0) return;
+
+            const coordsBase = {
+                'buenos aires': {lat: -34.6, lng: -58.4}, 'caba': {lat: -34.6, lng: -58.4},
+                'cordoba': {lat: -31.4, lng: -64.1}, 'córdoba': {lat: -31.4, lng: -64.1},
+                'santa fe': {lat: -31.6, lng: -60.7}, 'mendoza': {lat: -32.8, lng: -68.8},
+                'tucuman': {lat: -32.8, lng: -65.2}, 'tucumán': {lat: -32.8, lng: -65.2},
+                'salta': {lat: -26.8, lng: -65.2}, 'chubut': {lat: -43.3, lng: -65.1},
+                'neuquen': {lat: -43.2, lng: -68.3}, 'neuquén': {lat: -43.2, lng: -68.3},
+                'misiones': {lat: -27.4, lng: -55.9}, 'jujuy': {lat: -24.2, lng: -65.3},
+                'entre rios': {lat: -31.7, lng: -60.0}, 'corrientes': {lat: -27.5, lng: -58.8},
+                'chaco': {lat: -27.4, lng: -58.9}, 'formosa': {lat: -26.2, lng: -58.2},
+                'san juan': {lat: -31.5, lng: -68.5}, 'san luis': {lat: -33.3, lng: -66.3},
+                'la pampa': {lat: -36.6, lng: -64.3}, 'rio negro': {lat: -40.8, lng: -63.0},
+                'santa cruz': {lat: -51.6, lng: -69.2}, 'tierra del fuego': {lat: -54.8, lng: -68.3},
+                'catamarca': {lat: -28.5, lng: -65.8}, 'la rioja': {lat: -29.4, lng: -66.9},
+                'santiago del estero': {lat: -27.8, lng: -64.3},
+                'default': {lat: -34.6037, lng: -58.3816}
+            };
+
             peritos.forEach(p => {
-                if (!p.lat || !p.lng) return;
-                const esp = Array.isArray(p.especialidades) ? p.especialidades.join(', ') : (p.especialidades || '');
+                let center = coordsBase['default'];
+                if (p.provincia_laboral) {
+                    const provKey = Object.keys(coordsBase).find(k => p.provincia_laboral.toLowerCase().includes(k));
+                    if (provKey) center = coordsBase[provKey];
+                }
+                const randomLat = center.lat + (Math.random() - 0.5) * 0.15;
+                const randomLng = center.lng + (Math.random() - 0.5) * 0.15;
+
                 const icon = L.divIcon({
                     className: '',
-                    html: `<div style="background:#d4af37;width:14px;height:14px;border-radius:50%;border:3px solid #0a1128;box-shadow:0 0 0 2px #d4af37;"></div>`,
-                    iconSize: [14, 14],
-                    iconAnchor: [7, 7]
+                    html: `<div style="background:#d4af37;width:16px;height:16px;border-radius:50%;border:3px solid #0a1128;box-shadow:0 0 0 2px #d4af37,0 2px 8px rgba(0,0,0,0.4);"></div>`,
+                    iconSize: [16, 16],
+                    iconAnchor: [8, 8]
                 });
-                const marker = L.marker([p.lat, p.lng], { icon });
-                marker.bindPopup(`
-                    <div style="font-family:Inter,sans-serif;min-width:180px">
-                        <strong style="color:#0a1128;font-size:13px">${p.nombres || ''} ${p.apellidos || ''}</strong><br>
-                        <span style="font-size:11px;color:#d4af37;font-weight:700;text-transform:uppercase">${p.categoria || ''}</span><br>
-                        <span style="font-size:11px;color:#64748b">${p.profesion || ''}</span><br>
-                        ${esp ? `<span style="font-size:10px;color:#94a3b8">${esp}</span><br>` : ''}
-                        <span style="font-size:10px;color:#94a3b8">${p.provincia || ''}</span>
-                    </div>`);
+
+                let espBadges = '';
+                if (p.especialidades && p.especialidades !== 'null') {
+                    try {
+                        const arr = typeof p.especialidades === 'string' ? JSON.parse(p.especialidades) : p.especialidades;
+                        arr.forEach(e => { espBadges += `<span style="background:#e2e8f0; color:#475569; padding:3px 6px; border-radius:4px; font-size:9px; display:inline-block; margin:2px 2px 0 0; font-weight:bold;">${e}</span>`; });
+                    } catch(e) {}
+                }
+
+                const fotoHtml = p.foto_perfil_url 
+                    ? `<img src="${p.foto_perfil_url}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;border:2px solid #d4af37;flex-shrink:0;">` 
+                    : `<div style="width:45px;height:45px;border-radius:50%;background:#0a1128;color:#d4af37;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:16px;border:2px solid #d4af37;flex-shrink:0;">${(p.nombres||'?').charAt(0)}${(p.apellidos||'?').charAt(0)}</div>`;
+
+                let socialButtons = '';
+                if (p.facebook_url && p.facebook_url.trim() !== '') {
+                    socialButtons += `<a href="${p.facebook_url}" target="_blank" rel="noopener" style="width:32px;height:32px;background:#1877f2;color:white;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-weight:bold;font-size:14px;">f</a>`;
+                }
+                if (p.instagram_url && p.instagram_url.trim() !== '') {
+                    socialButtons += `<a href="${p.instagram_url}" target="_blank" rel="noopener" style="width:32px;height:32px;background:linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);color:white;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-weight:bold;font-size:13px;">IG</a>`;
+                }
+                if (p.linkedin_url && p.linkedin_url.trim() !== '') {
+                    socialButtons += `<a href="${p.linkedin_url}" target="_blank" rel="noopener" style="width:32px;height:32px;background:#0a66c2;color:white;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-weight:bold;font-size:12px;">in</a>`;
+                }
+
+                const popupHTML = `
+                    <div style="font-family:Inter,sans-serif; width: 270px;">
+                        <div style="display:flex; gap:10px; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:10px; margin-bottom:10px;">
+                            ${fotoHtml}
+                            <div>
+                                <strong style="color: #0a1128; font-size: 13px; text-transform:uppercase; line-height:1.2; display:block;">${p.nombres} ${p.apellidos}</strong>
+                                <span style="color: #d4af37; font-size:10px; font-weight:900; letter-spacing:0.5px;">CAT. ${p.categoria}</span>
+                            </div>
+                        </div>
+                        <p style="font-size: 11px; color: #334155; font-weight:700; margin-bottom:4px;">${p.profesion || 'Profesional Titulado'}</p>
+                        <p style="font-size: 10px; color: #64748b; margin-bottom:8px;">📍 ${p.provincia_laboral || 'Argentina'}</p>
+                        <div style="margin-bottom:12px;">${espBadges}</div>
+                        <div style="display:flex; gap:6px; margin-bottom:${socialButtons ? '8px' : '0'}">
+                            ${p.telefono ? `<a href="https://wa.me/${p.telefono}" target="_blank" rel="noopener" style="flex:1; font-size:10px; background:#25d366; color:white; padding:6px 0; border-radius:6px; text-decoration:none; display:flex; align-items:center; justify-content:center; font-weight:bold;">WhatsApp</a>` : ''}
+                            ${p.email ? `<a href="mailto:${p.email}" target="_blank" style="flex:1; font-size:10px; background:#0ea5e9; color:white; padding:6px 0; border-radius:6px; text-decoration:none; display:flex; align-items:center; justify-content:center; font-weight:bold;">Correo</a>` : ''}
+                        </div>
+                        ${socialButtons ? `<div style="display:flex; gap:8px; justify-content:center; border-top:1px solid #e2e8f0; padding-top:8px; margin-top:4px;">${socialButtons}</div>` : ''}
+                    </div>`;
+
+                const marker = L.marker([randomLat, randomLng], { icon });
+                marker.bindPopup(popupHTML);
                 marker.addTo(markersLayerGroup);
             });
         }
@@ -2427,82 +2867,146 @@
             const prov = (document.getElementById('map-filtro-prov')?.value || '').toLowerCase().trim();
             const esp = (document.getElementById('map-filtro-esp')?.value || '').toLowerCase().trim();
             const filtrados = peritosMapaDB.filter(p => {
-                const matchProv = !prov || (p.provincia || '').toLowerCase().includes(prov);
-                const espStr = Array.isArray(p.especialidades) ? p.especialidades.join(' ').toLowerCase() : (p.especialidades || '').toLowerCase();
-                const matchEsp = !esp || espStr.includes(esp);
+                const matchProv = !prov || (p.provincia_laboral || '').toLowerCase().includes(prov);
+                let espStr = '';
+                if (Array.isArray(p.especialidades)) espStr = p.especialidades.join(' ').toLowerCase();
+                else if (p.especialidades) espStr = String(p.especialidades).toLowerCase();
+                const matchEsp = !esp || espStr.includes(esp) || (p.profesion || '').toLowerCase().includes(esp) || (p.nombres || '').toLowerCase().includes(esp) || (p.apellidos || '').toLowerCase().includes(esp);
                 return matchProv && matchEsp;
             });
             renderizarMarcadores(filtrados);
-            if (mapInstance && filtrados.length > 0) {
-                const bounds = L.latLngBounds(filtrados.filter(p => p.lat && p.lng).map(p => [p.lat, p.lng]));
-                if (bounds.isValid()) mapInstance.fitBounds(bounds, { padding: [40, 40] });
-            }
         };
 
+        // ═══════════ CONTADOR ANIMADO ═══════════
         async function cargarContadorMatriculados() {
             const el = document.getElementById('hero-counter-matriculados');
             if (!el) return;
             try {
-                const { count } = await db.from('renmcycf_matriculados').select('*', { count: 'exact', head: true }).eq('estado', 'APROBADO');
-                if (count !== null) el.innerText = new Intl.NumberFormat('es-AR').format(count);
-                else el.innerText = '—';
+                const { count, error } = await db.from('renmcycf_padron').select('*', { count: 'exact', head: true }).eq('estado_legal', 'ACTIVO');
+                if (error) throw error;
+                if (count === 0 || count === null) { el.innerText = count || 0; return; }
+                
+                let start = 0;
+                const duration = 1500;
+                const increment = count / (duration / 16);
+                const timer = setInterval(() => {
+                    start += increment;
+                    if (start >= count) {
+                        clearInterval(timer);
+                        el.innerText = new Intl.NumberFormat('es-AR').format(count);
+                    } else {
+                        el.innerText = new Intl.NumberFormat('es-AR').format(Math.floor(start));
+                    }
+                }, 16);
             } catch (err) { el.innerText = '—'; }
         }
 
+        // ═══════════ NEWSLETTER ═══════════
         window.suscribirNewsletter = async function(event, origen) {
             event.preventDefault();
-            const emailEl = document.getElementById(origen === 'footer' ? 'news-foot-email' : 'news-pop-email');
-            const telEl = document.getElementById(origen === 'footer' ? 'news-foot-tel' : 'news-pop-tel');
-            const btn = document.getElementById(origen === 'footer' ? 'btn-news-foot' : 'btn-news-pop');
+            const sufijo = origen === 'institucional' ? 'inst' : 'foot';
+            const emailEl = document.getElementById(`news-${sufijo}-email`);
+            const telEl = document.getElementById(`news-${sufijo}-tel`);
+            const btn = document.getElementById(`btn-news-${sufijo}`);
             if (!emailEl) return;
-            const email = emailEl.value.trim();
-            const tel = telEl ? telEl.value.trim() : '';
+            const email = emailEl.value.trim().toLowerCase();
+            const tel = telEl && telEl.value.trim() ? telEl.value.trim() : null;
             if (!email) return;
 
-            if (btn) { btn.disabled = true; btn.innerText = 'Enviando...'; }
+            const originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline"></i>';
+            lucide.createIcons();
+
             try {
-                await db.from('renmcycf_newsletter').insert([{ email, telefono: tel, origen, created_at: new Date().toISOString() }]);
-                alert('¡Gracias por suscribirte!');
-                emailEl.value = '';
-                if (telEl) telEl.value = '';
+                const { data: existe } = await db.from('renmcycf_suscriptores').select('id, confirmado').eq('email', email).maybeSingle();
+                if (existe) {
+                    alert(existe.confirmado ? "Ya estás suscripto con este email. ¡Gracias!" : "Ya te registraste, revisá tu email para confirmar.");
+                } else {
+                    await db.from('renmcycf_suscriptores').insert([{
+                        email: email,
+                        telefono: tel,
+                        confirmado: false,
+                        activo: true,
+                        created_at: new Date().toISOString()
+                    }]);
+                    alert("¡Gracias! Te enviamos un email para confirmar tu suscripción.");
+                    emailEl.value = '';
+                    if (telEl) telEl.value = '';
+                }
             } catch (err) {
-                alert('Hubo un error. Intentá nuevamente.');
+                console.error(err);
+                alert("No pudimos procesar tu suscripción. Intentá nuevamente.");
             } finally {
-                if (btn) { btn.disabled = false; btn.innerText = 'Suscribirme'; }
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                lucide.createIcons();
             }
+        };
+
+        // ═══════════ LIKES Y COMPARTIR ═══════════
+        window.darMeGusta = async function(noticiaId, btnEl, currentLikes) {
+            if (btnEl.disabled) return;
+            btnEl.disabled = true;
+
+            const icon = btnEl.querySelector('.heart-icon');
+            const countSpan = btnEl.querySelector('.likes-count');
+            
+            if (icon) {
+                icon.classList.remove('text-slate-400');
+                icon.classList.add('fill-red-500', 'text-red-500', 'scale-125');
+            }
+            if (countSpan) {
+                countSpan.classList.remove('text-slate-400');
+                countSpan.classList.add('text-red-500');
+                countSpan.innerText = parseInt(currentLikes) + 1;
+            }
+
+            try {
+                const { data } = await db.from('renmcycf_noticias').select('likes').eq('id', noticiaId).single();
+                const likesActuales = Number(data?.likes) || 0;
+                await db.from('renmcycf_noticias').update({ likes: likesActuales + 1 }).eq('id', noticiaId);
+            } catch (err) {
+                console.warn("Error al registrar like:", err);
+                if (icon) icon.classList.remove('fill-red-500', 'text-red-500', 'scale-125');
+                if (countSpan) countSpan.innerText = currentLikes;
+                btnEl.disabled = false;
+            }
+        };
+
+        window.compartirNoticia = async function(titulo) {
+            const url = window.location.href;
+            const texto = `Mirá esta novedad en el Portal de RENMCYCF: ${titulo}`;
+            if (navigator.share) {
+                try { await navigator.share({ title: 'RENMCYCF', text: texto, url: url }); } catch (err) {}
+            } else {
+                navigator.clipboard.writeText(`${texto} - ${url}`);
+                alert('¡Enlace copiado al portapapeles!');
+            }
+        };
+
+        // ═══════════ UI HELPERS ═══════════
+        window.switchSection = function(sectionId) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active-section'));
+            const target = document.getElementById(sectionId);
+            if (target) {
+                target.classList.add('active-section');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            if (sectionId === 'seccion-mapa') {
+                if (!mapInstance) initMap();
+                else setTimeout(() => mapInstance.invalidateSize(), 300);
+            }
+        };
+
+        window.toggleMobileMenu = function() {
+            document.getElementById('mobile-menu')?.classList.toggle('open');
+            document.getElementById('mobile-overlay')?.classList.toggle('open');
         };
 
         window.toggleFloatingMenu = function() {
             const menu = document.getElementById('floatingMenu');
             if (menu) menu.classList.toggle('active');
-        };
-
-        document.addEventListener('click', function(e) {
-            const menu = document.getElementById('floatingMenu');
-            if (menu && !menu.contains(e.target)) menu.classList.remove('active');
-        });
-
-        window.toggleMobileMenu = function() {
-            const menu = document.getElementById('mobile-menu');
-            const overlay = document.getElementById('mobile-overlay');
-            if (menu) menu.classList.toggle('open');
-            if (overlay) overlay.classList.toggle('open');
-        };
-
-        window.switchSection = function(sectionId) {
-            const secciones = document.querySelectorAll('.page-section');
-            secciones.forEach(s => {
-                s.classList.remove('active-section');
-                if (s.id === sectionId) {
-                    s.classList.add('active-section');
-                }
-            });
-            const target = document.getElementById(sectionId);
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            if (sectionId === 'seccion-mapa' && !mapInstance) initMap();
-            if (sectionId === 'seccion-mapa' && mapInstance) {
-                setTimeout(() => mapInstance.invalidateSize(), 300);
-            }
         };
 
         window.abrirModalImagen = function(src) {
@@ -2531,15 +3035,20 @@
             }, 300);
         };
 
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('floatingMenu');
+            if (menu && !menu.contains(e.target)) menu.classList.remove('active');
+        });
+
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 cerrarModalImagen();
-                const menu = document.getElementById('floatingMenu');
-                if (menu) menu.classList.remove('active');
+                document.getElementById('floatingMenu')?.classList.remove('active');
+                document.getElementById('mobile-menu')?.classList.remove('open');
+                document.getElementById('mobile-overlay')?.classList.remove('open');
             }
         });
 
-        // Inicializar iconos después de que todo cargue
         window.addEventListener('load', function() {
             lucide.createIcons();
             AOS.refresh();
