@@ -1,6 +1,67 @@
-        <!-- ═══════════════════════════════════════════ -->
-        <!-- VERIFICACIÓN PÚBLICA -->
-        <!-- ═══════════════════════════════════════════ -->
+        <!-- ══════ INSTITUCIONAL ══════ -->
+        <section id="seccion-institucional" class="page-section py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="font-title text-3xl md:text-4xl font-black text-forenseNavy mb-4 uppercase tracking-tight">
+                        <i data-lucide="landmark" class="inline w-8 h-8 text-forenseGold mr-2 mb-1"></i>Institucional & Tecnología
+                    </h2>
+                    <div class="w-24 h-1.5 bg-forenseGold mx-auto mb-6"></div>
+                    <p class="text-slate-600 text-lg max-w-3xl mx-auto font-medium">La evolución de la identidad profesional forense.</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto mb-16">
+                    <h3 id="mision-titulo" class="text-2xl font-black text-forenseNavy uppercase tracking-widest mb-3 text-center">Nuestra Misión</h3>
+                    <div class="w-16 h-1 bg-forenseGold mx-auto mb-6"></div>
+                    <p id="mision-texto" class="text-slate-600 leading-relaxed text-justify text-lg">
+                        El Registro Nacional (RENMCYCF) nace como una respuesta a la necesidad crítica de centralizar, transparentar y jerarquizar a los profesionales de la Criminalística, las Ciencias Forenses y la Seguridad.
+                    </p>
+                </div>
+
+                <div class="max-w-4xl mx-auto mb-16 bg-slate-50 rounded-3xl p-8 md:p-12 border border-slate-200">
+                    <h3 class="text-2xl font-black text-forenseNavy uppercase tracking-widest mb-6 text-center">
+                        <i data-lucide="shield-check" class="inline w-6 h-6 text-forenseGold mr-2 mb-1"></i>
+                        El Valor de la Confianza
+                    </h3>
+                    <div class="space-y-4 text-slate-600 leading-relaxed text-justify">
+                        <p id="institucional-intro-p1"></p>
+                        <p id="institucional-intro-p2"></p>
+                        <p id="institucional-intro-p3"></p>
+                    </div>
+                    <p id="institucional-cierre" class="mt-8 text-center italic text-forenseNavy font-bold text-base border-t-2 border-forenseGold/30 pt-6"></p>
+                </div>
+
+                <div class="mb-16">
+                    <div class="text-center mb-10">
+                        <h3 class="text-2xl font-black text-forenseNavy uppercase tracking-widest mb-3">
+                            <i data-lucide="award" class="inline w-6 h-6 text-forenseGold mr-2 mb-1"></i>
+                            Beneficios de Pertenecer
+                        </h3>
+                        <div class="w-16 h-1 bg-forenseGold mx-auto"></div>
+                    </div>
+                    <div id="contenedor-beneficios" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <div class="col-span-full text-center text-slate-400 py-8">
+                            <i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto mb-2"></i>
+                            <p class="text-xs font-bold uppercase tracking-widest">Cargando...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="max-w-4xl mx-auto mb-16 bg-gradient-to-br from-forenseNavy to-slate-900 rounded-3xl p-8 md:p-12 text-white shadow-2xl border-4 border-slate-800">
+                    <h3 id="asari-titulo" class="text-xl md:text-2xl font-black text-forenseGold uppercase tracking-widest mb-4 flex items-center gap-3">
+                        <i data-lucide="cpu" class="w-7 h-7"></i>
+                        Potenciado por ASARI Core
+                    </h3>
+                    <p id="asari-texto" class="text-slate-300 text-sm md:text-base leading-relaxed text-justify mb-6"></p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3 text-sm text-slate-200"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i><span id="asari-bullet-1"></span></li>
+                        <li class="flex items-start gap-3 text-sm text-slate-200"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i><span id="asari-bullet-2"></span></li>
+                        <li class="flex items-start gap-3 text-sm text-slate-200"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i><span id="asari-bullet-3"></span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════ VERIFICACIÓN ══════ -->
         <section id="seccion-verificacion" class="page-section py-16 md:py-24 bg-white">
             <div class="max-w-4xl mx-auto px-4">
                 <div class="text-center mb-10">
@@ -81,11 +142,11 @@
                 <div class="bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 md:p-6 mb-6 border border-white/10 shadow-lg">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="text-[10px] uppercase font-bold text-forenseGold mb-1 block">Filtrar por Provincia</label>
+                            <label class="text-[10px] uppercase font-bold text-forenseGold mb-1 block">Provincia</label>
                             <input type="text" id="map-filtro-prov" placeholder="Ej: Córdoba" class="w-full bg-black/40 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:border-forenseGold outline-none">
                         </div>
                         <div>
-                            <label class="text-[10px] uppercase font-bold text-forenseGold mb-1 block">Área o Especialidad</label>
+                            <label class="text-[10px] uppercase font-bold text-forenseGold mb-1 block">Especialidad</label>
                             <input type="text" id="map-filtro-esp" placeholder="Ej: Balística" class="w-full bg-black/40 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:border-forenseGold outline-none">
                         </div>
                         <div class="flex items-end">
@@ -156,7 +217,6 @@
                         <i data-lucide="shield" class="inline w-8 h-8 text-forenseGold mr-2"></i>Comité Evaluador
                     </h2>
                     <div class="w-24 h-1.5 bg-forenseGold mx-auto mb-4"></div>
-                    <p class="text-slate-600 text-sm max-w-2xl mx-auto">Autoridades encargadas de la auditoría documental.</p>
                 </div>
                 <div id="contenedor-comite" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="col-span-full text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando...</div>
@@ -206,7 +266,7 @@
             </div>
         </section>
 
-        <!-- INSCRIPCIÓN (WIZARD) -->
+        <!-- INSCRIPCIÓN WIZARD -->
         <section id="seccion-inscripcion" class="page-section py-16 bg-white">
             <div class="max-w-4xl mx-auto px-4">
                 <div class="text-center mb-10">
@@ -366,16 +426,12 @@
                 </div>
             </div>
         </section>
-
     </main>
 
-    <!-- ═══════════════════════════════════════════ -->
     <!-- FOOTER PREMIUM -->
-    <!-- ═══════════════════════════════════════════ -->
     <footer class="bg-forenseNavy text-slate-300 py-14 border-t-4 border-forenseGold relative z-20">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
-                <!-- Columna 1: Marca -->
                 <div class="md:col-span-2">
                     <div class="flex items-center gap-3 mb-4">
                         <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center border-2 border-forenseGold">
@@ -387,7 +443,7 @@
                         </div>
                     </div>
                     <p class="text-xs text-slate-400 leading-relaxed mb-6 max-w-md">
-                        Registro Nacional de Matriculados en Criminalística y Ciencias Forenses. Plataforma de matriculación, verificación y legajo digital para profesionales del sector forense y de la seguridad.
+                        Registro Nacional de Matriculados en Criminalística y Ciencias Forenses. Plataforma de matriculación, verificación y legajo digital.
                     </p>
                     <div class="flex gap-3">
                         <a href="#" id="footer-fb" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-forenseGold hover:text-forenseNavy transition flex items-center justify-center">
@@ -399,7 +455,6 @@
                     </div>
                 </div>
 
-                <!-- Columna 2: Newsletter -->
                 <div class="md:col-span-2">
                     <h4 id="newsletter-titulo-footer" class="font-title text-base font-black text-white mb-2 uppercase tracking-widest">Recibí las novedades del registro</h4>
                     <p id="newsletter-subtitulo-footer" class="text-xs text-slate-400 mb-4">Noticias, publicaciones científicas y actualizaciones. Sin spam.</p>
@@ -412,7 +467,6 @@
                 </div>
             </div>
 
-            <!-- Trust seals -->
             <div class="pt-8 border-t border-white/10 flex flex-wrap items-center justify-center gap-6 text-[10px] font-black uppercase tracking-widest text-slate-500">
                 <span class="flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4 text-emerald-400"></i> Datos encriptados</span>
                 <span class="flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> Comité Evaluador</span>
@@ -426,9 +480,7 @@
         </div>
     </footer>
 
-    <!-- ═══════════════════════════════════════════ -->
     <!-- FLOATING BUTTONS -->
-    <!-- ═══════════════════════════════════════════ -->
     <div class="floating-container" id="floatingMenu">
         <a href="#" id="float-wpp" target="_blank" class="float-option option-whatsapp"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
         <a href="#" id="float-mail" class="float-option option-email"><i data-lucide="mail" class="w-5 h-5"></i></a>
@@ -452,9 +504,6 @@
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════ -->
-    <!-- SCRIPTS -->
-    <!-- ═══════════════════════════════════════════ -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         AOS.init({ once: true, duration: 700, easing: 'ease-out-cubic' });
@@ -475,7 +524,6 @@
         let heroCarouselIndex = 0;
         let heroCarouselInterval = null;
 
-        // Track CTA (para GA4 / Clarity)
         window.trackCTA = function(ctaId) {
             console.log('📊 [CTA] Click:', ctaId, '| Time:', new Date().toISOString());
             if (window.gtag) window.gtag('event', 'cta_click', { cta_id: ctaId });
@@ -492,7 +540,6 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             try { await db.rpc('incrementar_visita_publica'); } catch(e) {}
-
             try { await cargarTextosPublicos(); } catch(e) { console.warn(e); }
             try { await cargarConfiguracionPublica(); } catch(e) { console.warn(e); }
             try { await cargarAliadosPublicos(); } catch(e) { console.warn(e); }
@@ -510,19 +557,18 @@
             try { await verificarPromoHashB2C(); } catch(e) { console.warn(e); }
         });
 
-        // ═══ NUEVA: Aranceles públicos ═══
         async function cargarArancelesPublicos() {
             const grid = document.getElementById('grid-aranceles-publicos');
             if (!grid) return;
             try {
-                const { data } = await db.from('renmcycf_config').select('arancel_a1, arancel_a2, arancel_a3, arancel_a4, banco, alias_cbu, cbu, titular_cuenta').eq('id', 1).maybeSingle();
+                const { data } = await db.from('renmcycf_config').select('arancel_a1, arancel_a2, arancel_a3, arancel_a4').eq('id', 1).maybeSingle();
                 if (!data) { grid.innerHTML = '<p class="col-span-full text-center text-slate-400 text-sm py-8">Aranceles en actualización.</p>'; return; }
 
                 const categorias = [
-                    { cat: 'A1', ref: 'arancel_a1', nombre: 'Categoría A1', desc: 'Grado Universitario', color: 'forenseGold' },
-                    { cat: 'A2', ref: 'arancel_a2', nombre: 'Categoría A2', desc: 'Técnico Superior', color: 'blue' },
-                    { cat: 'A3', ref: 'arancel_a3', nombre: 'Categoría A3', desc: 'Auxiliar / Diplomado', color: 'emerald' },
-                    { cat: 'A4', ref: 'arancel_a4', nombre: 'Categoría A4', desc: 'Consultor / Estudiante', color: 'purple' }
+                    { cat: 'A1', ref: 'arancel_a1', nombre: 'Categoría A1', desc: 'Grado Universitario' },
+                    { cat: 'A2', ref: 'arancel_a2', nombre: 'Categoría A2', desc: 'Técnico Superior' },
+                    { cat: 'A3', ref: 'arancel_a3', nombre: 'Categoría A3', desc: 'Auxiliar / Diplomado' },
+                    { cat: 'A4', ref: 'arancel_a4', nombre: 'Categoría A4', desc: 'Consultor / Estudiante' }
                 ];
 
                 grid.innerHTML = categorias.map(c => {
@@ -542,7 +588,7 @@
                             </div>
                             <ul class="space-y-2 mt-5 text-xs text-slate-600">
                                 <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> Auditoría documental</li>
-                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> Credencial + Legajo Digital</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> Credencial + Legajo</li>
                                 <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> Verificación QR</li>
                             </ul>
                         </div>`;
@@ -609,8 +655,6 @@
                 data.forEach(item => {
                     const id = map[item.clave];
                     if (id) { const el = document.getElementById(id); if (el) el.innerText = item.valor || el.innerText; }
-                    if (item.clave === 'credencial_bg') { const imgFrente = document.getElementById('demo-credencial-frente'); if(imgFrente && item.valor) imgFrente.src = item.valor; }
-                    if (item.clave === 'credencial_bg_dorso') { const imgDorso = document.getElementById('demo-credencial-dorso'); if(imgDorso && item.valor) imgDorso.src = item.valor; }
                 });
             } catch (err) { console.error(err); }
         }
@@ -717,12 +761,12 @@
                     <div class="md:w-2/3 flex flex-col bg-white">
                         <div class="flex border-b border-slate-200 overflow-x-auto hide-scrollbar">
                             <button onclick="switchInstTab('${inst.id}', 'contacto')" id="btn-tab-contacto-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] font-black uppercase tracking-widest text-forenseNavy border-b-2 border-forenseGold bg-slate-50 whitespace-nowrap">Contacto</button>
-                            <button onclick="switchInstTab('${inst.id}', 'verificador')" id="btn-tab-verificador-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent hover:text-forenseNavy whitespace-nowrap">Egresados</button>
-                            <button onclick="switchInstTab('${inst.id}', 'cursos')" id="btn-tab-cursos-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent hover:text-forenseNavy whitespace-nowrap">Cursos</button>
+                            <button onclick="switchInstTab('${inst.id}', 'verificador')" id="btn-tab-verificador-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent whitespace-nowrap">Egresados</button>
+                            <button onclick="switchInstTab('${inst.id}', 'cursos')" id="btn-tab-cursos-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent whitespace-nowrap">Cursos</button>
                         </div>
                         <div class="p-6 md:p-8 flex-1">
                             <div id="tab-contacto-${inst.id}" class="inst-content-${inst.id} block"><h4 class="text-lg font-black text-slate-800 mb-3 uppercase">Información</h4><p class="text-sm text-slate-600 mb-6">Comuníquese con <strong>${inst.nombre}</strong>.</p>${btnContacto}</div>
-                            <div id="tab-verificador-${inst.id}" class="inst-content-${inst.id} hidden"><h4 class="text-lg font-black text-slate-800 mb-3 uppercase">Validación de Certificados</h4><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><input type="text" id="hash-inst-${inst.id}" placeholder="Ej: ASARI-XXXXXX" class="w-full bg-white border border-slate-300 rounded-lg px-4 py-3 text-sm outline-none focus:border-forenseGold font-mono uppercase mb-3"><button onclick="window.location.href='certificado.html?hash=' + encodeURIComponent(document.getElementById('hash-inst-${inst.id}').value.trim())" class="w-full bg-forenseGold hover:bg-yellow-500 text-forenseNavy font-black uppercase text-xs px-8 py-3 rounded-lg flex items-center justify-center gap-2"><i data-lucide="search" class="w-4 h-4"></i> Validar</button></div></div>
+                            <div id="tab-verificador-${inst.id}" class="inst-content-${inst.id} hidden"><h4 class="text-lg font-black text-slate-800 mb-3 uppercase">Validación</h4><div class="bg-slate-50 p-6 rounded-xl border border-slate-200"><input type="text" id="hash-inst-${inst.id}" placeholder="Ej: ASARI-XXXXXX" class="w-full bg-white border border-slate-300 rounded-lg px-4 py-3 text-sm outline-none focus:border-forenseGold font-mono uppercase mb-3"><button onclick="window.location.href='certificado.html?hash=' + encodeURIComponent(document.getElementById('hash-inst-${inst.id}').value.trim())" class="w-full bg-forenseGold hover:bg-yellow-500 text-forenseNavy font-black uppercase text-xs px-8 py-3 rounded-lg flex items-center justify-center gap-2"><i data-lucide="search" class="w-4 h-4"></i> Validar</button></div></div>
                             <div id="tab-cursos-${inst.id}" class="inst-content-${inst.id} hidden"><h4 class="text-lg font-black text-slate-800 mb-3 uppercase">Oferta Verificada</h4>${htmlCursos}</div>
                         </div>
                     </div>
@@ -806,12 +850,9 @@
             try {
                 const { data: noticias } = await db.from('renmcycf_noticias').select('*').order('created_at', { ascending: false }).limit(5);
                 if (noticias) noticias.forEach(n => heroCarouselData.push({ tipo: 'noticia', titulo: n.titulo, descripcion: n.descripcion || 'Publicación institucional.', imagen: n.portada_url || 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=600', categoria: n.categoria_requerida || 'GENERAL', likes: n.likes || 0, id: n.id, fecha: n.created_at, link_contacto: n.link_contacto }));
-
                 const { data: empresas } = await db.from('renmcycf_empresas').select('*').eq('activo', true).limit(5);
                 if (empresas) empresas.forEach(e => heroCarouselData.push({ tipo: 'empresa', titulo: e.nombre, descripcion: e.descripcion || 'Empresa aliada.', imagen: e.logo_url, categoria: 'EMPRESA ALIADA', url: e.web_url || '#', id: e.id }));
-
                 if (heroCarouselData.length === 0) { container.innerHTML = '<div class="p-10 text-center text-slate-400">Sin publicaciones.</div>'; return; }
-
                 if (dotsContainer) dotsContainer.innerHTML = heroCarouselData.map((_, i) => `<button onclick="irASlideHero(${i})" class="hero-dot w-2 h-2 rounded-full ${i === 0 ? 'bg-forenseGold w-6' : 'bg-white/30'}"></button>`).join('');
                 renderizarSlideHero();
                 heroCarouselInterval = setInterval(() => { heroCarouselIndex = (heroCarouselIndex + 1) % heroCarouselData.length; renderizarSlideHero(); }, 6000);
@@ -1092,7 +1133,7 @@
                 };
                 const { error: dbError } = await db.from('renmcycf_solicitudes').insert([payload]);
                 if (dbError) throw dbError;
-                alert("¡Expediente enviado! Consulte el estado en Seguimiento.");
+                alert("¡Expediente enviado!");
                 document.getElementById('form-inscripcion').reset();
                 document.getElementById('contador-archivos').innerText = '0/10';
                 siguientePaso(1);
@@ -1129,7 +1170,7 @@
 
         function renderizarPines(peritos) {
             markersLayerGroup.clearLayers();
-            const coordsBase = { 'buenos aires': {lat: -34.6, lng: -58.4}, 'caba': {lat: -34.6, lng: -58.4}, 'cordoba': {lat: -31.4, lng: -64.1}, 'córdoba': {lat: -31.4, lng: -64.1}, 'santa fe': {lat: -31.6, lng: -60.7}, 'mendoza': {lat: -32.8, lng: -68.8}, 'tucuman': {lat: -32.8, lng: -65.2}, 'tucumán': {lat: -32.8, lng: -65.2}, 'salta': {lat: -26.8, lng: -65.2}, 'default': {lat: -34.6037, lng: -58.3816} };
+            const coordsBase = { 'buenos aires': {lat: -34.6, lng: -58.4}, 'caba': {lat: -34.6, lng: -58.4}, 'cordoba': {lat: -31.4, lng: -64.1}, 'córdoba': {lat: -31.4, lng: -64.1}, 'santa fe': {lat: -31.6, lng: -60.7}, 'mendoza': {lat: -32.8, lng: -68.8}, 'tucuman': {lat: -32.8, lng: -65.2}, 'salta': {lat: -26.8, lng: -65.2}, 'default': {lat: -34.6037, lng: -58.3816} };
             peritos.forEach(p => {
                 let center = coordsBase['default'];
                 if (p.provincia_laboral) { const provKey = Object.keys(coordsBase).find(k => p.provincia_laboral.toLowerCase().includes(k)); if (provKey) center = coordsBase[provKey]; }
@@ -1151,7 +1192,7 @@
                 container.innerHTML = data.map(item => {
                     const imagen = item.portada_url || 'https://placehold.co/400x200/0f172a/d4af37?text=RENMCYCF';
                     const botonLink = item.link_contacto ? `<button onclick="window.open('${item.link_contacto}', '_blank')" class="w-full mb-4 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-black uppercase py-3 rounded-xl flex items-center justify-center gap-2"><i data-lucide="external-link" class="w-4 h-4"></i> Acceder</button>` : '';
-                    return `<div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col hover:border-forenseGold transition-all">
+                    return `<div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
                         <div class="aspect-square relative bg-slate-50 flex justify-center items-center p-2"><img src="${imagen}" class="w-full h-full object-contain cursor-pointer" onclick="abrirModalImagen('${imagen}')"></div>
                         <div class="p-6 flex flex-col flex-1">
                             <h3 class="font-title font-black text-lg text-forenseNavy mb-2">${item.titulo}</h3>
@@ -1251,6 +1292,5 @@
             } catch (err) { counterEl.innerText = "---"; }
         }
     </script>
-
 </body>
 </html>
