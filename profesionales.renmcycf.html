@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a1128">
+    <meta name="description" content="Directorio Nacional de Profesionales Registrados en RENMCYCF. Filtrá por especialidad, provincia y matrícula.">
+    <title>Directorio Nacional de Profesionales · RENMCYCF</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forenseNavy: '#0a1128',
+                        forenseGold: '#d4af37',
+                        forenseBlue: '#1e3a8a'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        title: ['Montserrat', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; color: #334155; min-height: 100vh; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; }
+        .prof-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .prof-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(10, 17, 40, 0.15); border-color: #d4af37; }
+        .filter-input { width: 100%; padding: 12px 16px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; color: #1e293b; background: white; transition: all 0.2s; outline: none; }
+        .filter-input:focus { border-color: #1e3a8a; box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.08); }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="bg-forenseNavy text-white py-4 px-4 shadow-lg border-b-4 border-forenseGold sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="index-test.renmcycf.html" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-full bg-white flex items-center justify-center border-2 border-forenseGold group-hover:scale-105 transition-transform">
+                    <i data-lucide="fingerprint" class="w-6 h-6 text-forenseNavy"></i>
+                </div>
+                <div class="leading-tight">
+                    <span class="font-title font-black text-lg tracking-tight block">RENMCYCF</span>
+                    <span class="text-[9px] text-forenseGold font-bold uppercase tracking-[0.18em]">Directorio Nacional</span>
+                </div>
+            </a>
+            <a href="index-test.renmcycf.html" class="text-xs font-bold uppercase tracking-widest text-slate-300 hover:text-forenseGold transition-colors flex items-center gap-2">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Inicio
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="flex-1 py-10 md:py-14 px-4">
+        <div class="max-w-7xl mx-auto">
+
+            <!-- HEADER SECCIÓN -->
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-forenseGold/10 text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] mb-5 border border-forenseGold/20">
+                    <i data-lucide="users" class="w-3.5 h-3.5"></i> Directorio Nacional
+                </div>
+                <h1 class="font-title text-3xl md:text-5xl font-black text-forenseNavy uppercase tracking-tight mb-4 leading-tight">
+                    Profesionales Registrados
+                </h1>
+                <div class="w-24 h-1 bg-forenseGold mx-auto mb-5"></div>
+                <p class="text-slate-600 text-base max-w-2xl mx-auto leading-relaxed">
+                    Encontrá profesionales registrados por especialidad, provincia o matrícula. Todos los perfiles listados están validados por el Comité Evaluador de RENMCYCF.
+                </p>
+            </div>
+
+            <!-- FILTROS -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 mb-8 shadow-sm">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Nombre o Matrícula</label>
+                        <input type="text" id="filter-name" class="filter-input" placeholder="Ej: García o 1007/26" oninput="applyFilters()">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Provincia</label>
+                        <select id="filter-province" class="filter-input" onchange="applyFilters()">
+                            <option value="">Todas las provincias</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Especialidad</label>
+                        <input type="text" id="filter-specialty" class="filter-input" placeholder="Ej: Balística" oninput="applyFilters()">
+                    </div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+                    <span class="text-xs text-slate-500 font-bold">
+                        <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i>
+                        Mostrando <span id="results-count" class="text-forenseNavy font-black">0</span> profesionales
+                    </span>
+                    <button onclick="clearFilters()" class="text-[10px] font-black text-slate-400 hover:text-forenseGold uppercase tracking-widest transition-colors inline-flex items-center gap-1">
+                        <i data-lucide="x-circle" class="w-3 h-3"></i> Limpiar filtros
+                    </button>
+                </div>
+            </div>
+
+            <!-- LOADING STATE -->
+            <div id="loading-state" class="text-center py-16">
+                <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto text-forenseGold mb-3"></i>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Cargando directorio...</p>
+            </div>
+
+            <!-- EMPTY STATE -->
+            <div id="empty-state" class="hidden text-center py-16 bg-white border border-slate-200 rounded-2xl">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
+                    <i data-lucide="users" class="w-8 h-8 text-slate-400"></i>
+                </div>
+                <h3 class="font-black text-lg text-slate-700 mb-2">No se encontraron profesionales</h3>
+                <p class="text-sm text-slate-500 max-w-md mx-auto mb-5">No hay profesionales registrados que coincidan con los filtros aplicados.</p>
+                <button onclick="clearFilters()" class="inline-flex items-center gap-2 bg-forenseNavy text-forenseGold font-black uppercase tracking-widest text-xs px-5 py-3 rounded-lg hover:bg-slate-800 transition">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i> Limpiar filtros
+                </button>
+            </div>
+
+            <!-- GRID -->
+            <div id="professionals-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-forenseNavy text-slate-400 py-8 px-4 border-t-4 border-forenseGold mt-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-[10px] uppercase tracking-widest font-bold mb-2">Registro Nacional de Matriculados en Criminalística y Ciencias Forenses</p>
+            <p class="text-[10px]">Desarrollado con tecnología ASARI SaaS · Todos los derechos reservados © 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
+        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
+        const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
+
+        let ALL_PROFESSIONALS = [];
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadProfessionals();
+        });
+
+        async function loadProfessionals() {
+            try {
+                const { data, error } = await db.from('renmcycf_padron')
+                    .select('id, nombres, apellidos, dni, matricula_oficial, numero_credencial, categoria, profesion, especialidades, provincia_laboral, foto_perfil_url, estado_legal, figurar_directorio')
+                    .eq('estado_legal', 'ACTIVO')
+                    .eq('figurar_directorio', true)
+                    .order('apellidos', { ascending: true });
+
+                if (error) throw error;
+
+                ALL_PROFESSIONALS = (data || []).filter(p => {
+                    // Solo mostrar si tiene al menos nombre + apellido
+                    return p.nombres && p.apellidos;
+                });
+
+                populateProvinceFilter();
+                renderProfessionals(ALL_PROFESSIONALS);
+            } catch (err) {
+                console.error('Error cargando directorio:', err);
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('empty-state').classList.remove('hidden');
+            }
+        }
+
+        function populateProvinceFilter() {
+            const provinces = [...new Set(ALL_PROFESSIONALS.map(p => p.provincia_laboral).filter(Boolean))].sort();
+            const select = document.getElementById('filter-province');
+            provinces.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p;
+                opt.textContent = p;
+                select.appendChild(opt);
+            });
+        }
+
+        function applyFilters() {
+            const nameFilter = (document.getElementById('filter-name').value || '').toLowerCase().trim();
+            const provinceFilter = document.getElementById('filter-province').value;
+            const specialtyFilter = (document.getElementById('filter-specialty').value || '').toLowerCase().trim();
+
+            const filtered = ALL_PROFESSIONALS.filter(p => {
+                const fullName = `${p.nombres} ${p.apellidos}`.toLowerCase();
+                const matricula = (p.matricula_oficial || p.numero_credencial || '').toLowerCase();
+                const matchName = !nameFilter || fullName.includes(nameFilter) || matricula.includes(nameFilter);
+
+                const matchProvince = !provinceFilter || p.provincia_laboral === provinceFilter;
+
+                let specialtiesStr = '';
+                if (p.especialidades) {
+                    if (Array.isArray(p.especialidades)) specialtiesStr = p.especialidades.join(' ');
+                    else specialtiesStr = String(p.especialidades);
+                }
+                specialtiesStr = specialtiesStr.toLowerCase();
+                const matchSpecialty = !specialtyFilter || specialtiesStr.includes(specialtyFilter) || (p.profesion || '').toLowerCase().includes(specialtyFilter);
+
+                return matchName && matchProvince && matchSpecialty;
+            });
+
+            renderProfessionals(filtered);
+        }
+
+        function clearFilters() {
+            document.getElementById('filter-name').value = '';
+            document.getElementById('filter-province').value = '';
+            document.getElementById('filter-specialty').value = '';
+            renderProfessionals(ALL_PROFESSIONALS);
+        }
+
+        function renderProfessionals(list) {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('results-count').innerText = list.length;
+
+            const grid = document.getElementById('professionals-grid');
+            const empty = document.getElementById('empty-state');
+
+            if (list.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+
+            grid.innerHTML = list.map(p => {
+                const foto = p.foto_perfil_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.nombres + ' ' + p.apellidos)}&background=0a1128&color=d4af37&size=200`;
+                const matricula = p.matricula_oficial || p.numero_credencial || 'S/D';
+                let especialidades = [];
+                if (p.especialidades) {
+                    try {
+                        especialidades = Array.isArray(p.especialidades) ? p.especialidades : JSON.parse(p.especialidades);
+                        if (!Array.isArray(especialidades)) especialidades = String(p.especialidades).split(',').map(s => s.trim()).filter(Boolean);
+                    } catch(e) {
+                        especialidades = String(p.especialidades).split(',').map(s => s.trim()).filter(Boolean);
+                    }
+                }
+
+                const profileUrl = `perfil-profesional.renmcycf.html?dni=${p.dni}`;
+
+                return `
+                    <div class="prof-card bg-white border border-slate-200 rounded-2xl overflow-hidden">
+                        <div class="bg-gradient-to-br from-forenseNavy to-slate-800 p-6 text-center relative">
+                            <div class="absolute top-3 right-3 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-full">
+                                <i data-lucide="check-circle" class="w-3 h-3 inline"></i> Registrado
+                            </div>
+                            <div class="w-20 h-20 mx-auto rounded-full overflow-hidden border-2 border-forenseGold mb-3 shadow-lg bg-slate-700">
+                                <img src="${foto}" alt="${p.nombres} ${p.apellidos}" class="w-full h-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.nombres)}&background=0a1128&color=d4af37'">
+                            </div>
+                            <h3 class="font-title font-black text-white text-base uppercase tracking-wide leading-tight mb-1">
+                                ${p.nombres} ${p.apellidos}
+                            </h3>
+                            <p class="text-forenseGold text-[10px] font-black uppercase tracking-[0.2em]">CAT. ${p.categoria || '—'}</p>
+                        </div>
+                        <div class="p-5">
+                            <div class="text-xs text-slate-600 font-medium mb-3 min-h-[32px]">
+                                ${p.profesion || 'Profesional del sector forense'}
+                            </div>
+                            
+                            <div class="flex items-center gap-2 text-[11px] text-slate-500 mb-3">
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-forenseGold shrink-0"></i>
+                                <span class="truncate">${p.provincia_laboral || 'Argentina'}</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-2 text-[11px] text-slate-500 mb-3">
+                                <i data-lucide="award" class="w-3.5 h-3.5 text-forenseGold shrink-0"></i>
+                                <span class="font-mono font-bold">${matricula}</span>
+                            </div>
+
+                            ${especialidades.length > 0 ? `
+                                <div class="flex flex-wrap gap-1.5 mb-4">
+                                    ${especialidades.slice(0, 3).map(e => `<span class="bg-slate-100 text-slate-600 text-[9px] font-bold px-2 py-1 rounded border border-slate-200">${e}</span>`).join('')}
+                                    ${especialidades.length > 3 ? `<span class="text-[9px] font-bold text-forenseGold px-2 py-1">+${especialidades.length - 3}</span>` : ''}
+                                </div>
+                            ` : ''}
+
+                            <a href="${profileUrl}" class="w-full inline-flex items-center justify-center gap-2 bg-forenseNavy hover:bg-slate-800 text-forenseGold font-black uppercase tracking-widest text-[10px] py-3 rounded-lg transition-all">
+                                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                Ver Perfil Público
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+    </script>
+
+</body>
+</html>
