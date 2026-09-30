@@ -636,7 +636,6 @@
                     <i data-lucide="award" class="w-5 h-5 text-blue-600"></i> Mis Títulos Validados
                 </button>
 
-                <!-- ✅ TAREA 1: NUEVO BOTÓN -->
                 <button class="full-width bg-[#0a1128] text-[#d4af37] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-lg hover:bg-slate-800 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="abrirModalNuevoDiploma()"><i data-lucide="upload" class="w-5 h-5"></i> Acreditar Nueva Formación</button>
             </div>
         </div>
@@ -791,14 +790,44 @@
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <h3 class="font-black text-[#0a1128] text-lg uppercase mb-2">Renovar Matrícula</h3>
-            <p class="text-xs text-slate-500 mb-4 leading-relaxed">Abone el arancel anual y adjunte el comprobante de pago aquí. El sistema actualizará su vigencia sin pasar por el Comité Evaluador.</p>
-            <a href="#" id="link-mp-renovacion" target="_blank" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 mb-4 text-xs uppercase">
-                <i data-lucide="credit-card" class="w-4 h-4"></i> 1. Pagar en MercadoPago
-            </a>
+            <p class="text-xs text-slate-500 mb-4 leading-relaxed">Realice la transferencia con los siguientes datos y luego adjunte el comprobante. El sistema actualizará su vigencia sin pasar por el Comité Evaluador.</p>
+
+            <!-- DATOS DE TRANSFERENCIA BANCARIA -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-4 space-y-3" id="bloque-datos-bancarios">
+                <div class="flex items-start justify-between gap-2">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-0.5">Alias</p>
+                        <p id="dato-alias" class="font-mono font-bold text-[#0a1128] text-sm break-all">---</p>
+                    </div>
+                    <button type="button" onclick="copiarAlPortapapeles('dato-alias')" class="shrink-0 bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-[#0a1128] p-2 rounded-lg transition-colors" title="Copiar Alias">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+
+                <div class="flex items-start justify-between gap-2">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-0.5">CBU</p>
+                        <p id="dato-cbu" class="font-mono font-bold text-[#0a1128] text-sm break-all">---</p>
+                    </div>
+                    <button type="button" onclick="copiarAlPortapapeles('dato-cbu')" class="shrink-0 bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-[#0a1128] p-2 rounded-lg transition-colors" title="Copiar CBU">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+
+                <div class="border-t border-slate-200 pt-3">
+                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-0.5">Titular</p>
+                    <p id="dato-titular" class="font-bold text-[#0a1128] text-sm">---</p>
+                </div>
+
+                <div>
+                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-0.5">Banco</p>
+                    <p id="dato-banco" class="font-bold text-[#0a1128] text-sm">---</p>
+                </div>
+            </div>
             
             <form onsubmit="enviarRenovacion(event)" class="space-y-4 border-t border-slate-100 pt-4">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">2. Adjuntar Comprobante (PDF o Imagen)</label>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Adjuntar Comprobante (PDF o Imagen)</label>
                     <input type="file" id="file-comprobante-renovacion" accept="image/*,application/pdf" required class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#0a1128] file:text-[#d4af37]">
                 </div>
                 <button type="submit" id="btn-enviar-renovacion" class="w-full bg-[#d4af37] text-[#0a1128] font-black uppercase tracking-widest py-3 rounded-xl shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2">
@@ -808,7 +837,7 @@
         </div>
     </div>
 
-    <!-- ✅ TAREA 1: NUEVO MODAL ACREDITAR FORMACIÓN -->
+    <!-- NUEVO MODAL ACREDITAR FORMACIÓN -->
     <div id="modal-nuevo-diploma" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[150] hidden flex flex-col items-center justify-center p-4">
         <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl relative">
             <button onclick="cerrarModalSeguro('modal-nuevo-diploma')" class="absolute top-4 right-4 text-slate-400 hover:text-[#0a1128]">
@@ -861,6 +890,42 @@
             if (element) {
                 if(action === 'add') element.classList.add(cls);
                 if(action === 'remove') element.classList.remove(cls);
+            }
+        }
+
+        // Copiar al portapapeles con feedback
+        async function copiarAlPortapapeles(idElemento) {
+            const elem = el(idElemento);
+            if (!elem) return;
+            const texto = elem.innerText.trim();
+            if (!texto || texto === '---') {
+                alert('No hay datos para copiar.');
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(texto);
+                // Feedback visual
+                const boton = elem.parentElement.querySelector('button');
+                if (boton) {
+                    const iconoOrig = boton.innerHTML;
+                    boton.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i>';
+                    boton.classList.add('bg-emerald-50', 'border-emerald-300');
+                    lucide.createIcons();
+                    setTimeout(() => {
+                        boton.innerHTML = iconoOrig;
+                        boton.classList.remove('bg-emerald-50', 'border-emerald-300');
+                        lucide.createIcons();
+                    }, 1500);
+                }
+            } catch (err) {
+                // Fallback para navegadores sin clipboard API
+                const textarea = document.createElement('textarea');
+                textarea.value = texto;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try { document.execCommand('copy'); alert('Copiado: ' + texto); }
+                catch(e) { alert('No se pudo copiar. Copie manualmente: ' + texto); }
+                document.body.removeChild(textarea);
             }
         }
 
@@ -1190,13 +1255,32 @@
             }
         }
 
+        // ✅ RENOVAR MATRÍCULA — carga datos bancarios desde configGlobal
         function renovarMatricula() {
-            safeClass('modal-renovacion', 'remove', 'hidden');
-            if (configGlobal.mp_link) {
-                document.getElementById('link-mp-renovacion').href = configGlobal.mp_link;
-            } else {
-                document.getElementById('link-mp-renovacion').style.display = 'none';
+            // Cargar datos bancarios
+            const alias = configGlobal.alias_cbu || '---';
+            const cbu = configGlobal.cbu || '---';
+            const titular = configGlobal.titular_cuenta || '---';
+            const banco = configGlobal.banco || '---';
+
+            if (el('dato-alias')) el('dato-alias').innerText = alias;
+            if (el('dato-cbu')) el('dato-cbu').innerText = cbu;
+            if (el('dato-titular')) el('dato-titular').innerText = titular;
+            if (el('dato-banco')) el('dato-banco').innerText = banco;
+
+            // Si NO hay datos bancarios cargados, mostrar mensaje de advertencia
+            const sinDatos = (!configGlobal.alias_cbu && !configGlobal.cbu && !configGlobal.titular_cuenta && !configGlobal.banco);
+            if (el('bloque-datos-bancarios')) {
+                if (sinDatos) {
+                    el('bloque-datos-bancarios').innerHTML = `
+                        <div class="text-center py-3">
+                            <i data-lucide="alert-circle" class="w-6 h-6 text-amber-500 mx-auto mb-2"></i>
+                            <p class="text-[10px] text-amber-700 font-bold">Los datos bancarios aún no fueron configurados. Por favor, contacte a administración.</p>
+                        </div>`;
+                }
             }
+
+            safeClass('modal-renovacion', 'remove', 'hidden');
             lucide.createIcons();
         }
 
@@ -1221,20 +1305,19 @@
                 
                 const urlComp = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${fileName}`;
 
-                // LA MAGIA: Copiamos silenciosamente los datos que ya tiene el legajo para cumplir con la Base de Datos
                 const payload = {
                     dni: alumnoActual.dni,
                     nombres: alumnoActual.nombres,
                     apellidos: alumnoActual.apellidos,
-                    ano_nacimiento: alumnoActual.ano_nacimiento, // Agregado para cumplir validación
+                    ano_nacimiento: alumnoActual.ano_nacimiento,
                     email: alumnoActual.email,
                     telefono: alumnoActual.telefono,
-                    provincia_laboral: alumnoActual.provincia_laboral, // Agregado
+                    provincia_laboral: alumnoActual.provincia_laboral,
                     categoria: alumnoActual.categoria,
                     profesion: alumnoActual.profesion,
-                    foto_perfil_url: alumnoActual.foto_perfil_url, // Agregado
-                    dni_frente_url: alumnoActual.dni_frente_url, // Agregado
-                    dni_dorso_url: alumnoActual.dni_dorso_url, // Agregado
+                    foto_perfil_url: alumnoActual.foto_perfil_url,
+                    dni_frente_url: alumnoActual.dni_frente_url,
+                    dni_dorso_url: alumnoActual.dni_dorso_url,
                     tipo_tramite: 'RENOVACION',
                     estado: 'RENOVACION_PENDIENTE',
                     comprobante_url: urlComp
@@ -1257,7 +1340,7 @@
         }
 
         // ==========================================
-        // ✅ TAREA 1 y 2: ABRIR MODAL NUEVO DIPLOMA + SUBIR (PAYLOAD CORREGIDO)
+        // ABRIR MODAL NUEVO DIPLOMA + SUBIR (PAYLOAD CORREGIDO)
         // ==========================================
         function abrirModalNuevoDiploma() {
             safeClass('modal-nuevo-diploma', 'remove', 'hidden');
@@ -1287,21 +1370,20 @@
                 const { data: urlData } = db.storage.from('renmcycf-documentos').getPublicUrl(fileName);
                 const diplomaUrl = urlData.publicUrl;
 
-                // LA MAGIA: Rellenamos la solicitud con datos de fondo del profesional
                 const payload = {
                     dni: alumnoActual.dni,
                     nombres: alumnoActual.nombres,
                     apellidos: alumnoActual.apellidos,
-                    ano_nacimiento: alumnoActual.ano_nacimiento, // Agregado para cumplir validación
+                    ano_nacimiento: alumnoActual.ano_nacimiento,
                     email: alumnoActual.email,
                     telefono: alumnoActual.telefono,
-                    provincia_laboral: alumnoActual.provincia_laboral, // Agregado
+                    provincia_laboral: alumnoActual.provincia_laboral,
                     categoria: alumnoActual.categoria,
-                    foto_perfil_url: alumnoActual.foto_perfil_url, // Agregado
-                    dni_frente_url: alumnoActual.dni_frente_url, // Agregado
-                    dni_dorso_url: alumnoActual.dni_dorso_url, // Agregado
+                    foto_perfil_url: alumnoActual.foto_perfil_url,
+                    dni_frente_url: alumnoActual.dni_frente_url,
+                    dni_dorso_url: alumnoActual.dni_dorso_url,
                     tipo_tramite: 'ACTUALIZACION_LEGAJO',
-                    profesion: titulo, // Guardamos el nombre del curso acá
+                    profesion: titulo,
                     diploma_url: diplomaUrl,
                     estado: 'PENDIENTE'
                 };
@@ -1314,7 +1396,7 @@
                 const form = document.querySelector('#modal-nuevo-diploma form');
                 if(form) form.reset();
                 cerrarModalSeguro('modal-nuevo-diploma');
-                abrirModalDiplomas(); // Refrescar historial
+                abrirModalDiplomas();
             } catch(err) {
                 alert("Error: " + err.message);
             } finally {
@@ -1923,7 +2005,7 @@
         }
 
         // ==========================================
-        // ✅ TAREA 3: MODAL DIPLOMAS CON HISTORIAL DE TRÁMITES
+        // MODAL DIPLOMAS CON HISTORIAL DE TRÁMITES
         // ==========================================
         async function abrirModalDiplomas() {
             const container = el('lista-diplomas-modal');
@@ -1935,7 +2017,6 @@
             let html = '';
             let hayDiplomas = false;
             
-            // --- Diplomas aprobados existentes ---
             if (alumnoActual.diplomas_urls && alumnoActual.diplomas_urls !== "null") {
                 try {
                     const arr = typeof alumnoActual.diplomas_urls === 'string' ? JSON.parse(alumnoActual.diplomas_urls) : alumnoActual.diplomas_urls;
@@ -1971,7 +2052,6 @@
                     </div>`;
             }
             
-            // --- ✅ TAREA 3: Historial de trámites de actualización ---
             try {
                 const { data: tramites } = await db.from('renmcycf_solicitudes')
                     .select('profesion, estado, created_at')
