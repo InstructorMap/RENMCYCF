@@ -635,6 +635,9 @@
                 <button class="full-width bg-white border border-slate-200 text-[#0a1128] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-sm hover:bg-slate-50 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="abrirModalDiplomas()">
                     <i data-lucide="award" class="w-5 h-5 text-blue-600"></i> Mis Títulos Validados
                 </button>
+
+                <!-- ✅ TAREA 1: NUEVO BOTÓN -->
+                <button class="full-width bg-[#0a1128] text-[#d4af37] font-black uppercase text-[10px] tracking-wider py-4 rounded-xl shadow-lg hover:bg-slate-800 flex items-center justify-center gap-2 transition-transform active:scale-95" onclick="abrirModalNuevoDiploma()"><i data-lucide="upload" class="w-5 h-5"></i> Acreditar Nueva Formación</button>
             </div>
         </div>
     </div>
@@ -788,7 +791,7 @@
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <h3 class="font-black text-[#0a1128] text-lg uppercase mb-2">Renovar Matrícula</h3>
-            <p class="text-xs text-slate-500 mb-4 leading-relaxed">Abonne el arancel anual y adjunte el comprobante de pago aquí. El sistema actualizará su vigencia sin pasar por el Comité Evaluador.</p>
+            <p class="text-xs text-slate-500 mb-4 leading-relaxed">Abone el arancel anual y adjunte el comprobante de pago aquí. El sistema actualizará su vigencia sin pasar por el Comité Evaluador.</p>
             <a href="#" id="link-mp-renovacion" target="_blank" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 mb-4 text-xs uppercase">
                 <i data-lucide="credit-card" class="w-4 h-4"></i> 1. Pagar en MercadoPago
             </a>
@@ -800,6 +803,31 @@
                 </div>
                 <button type="submit" id="btn-enviar-renovacion" class="w-full bg-[#d4af37] text-[#0a1128] font-black uppercase tracking-widest py-3 rounded-xl shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2">
                     <i data-lucide="send" class="w-4 h-4"></i> Enviar Renovación
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ✅ TAREA 1: NUEVO MODAL ACREDITAR FORMACIÓN -->
+    <div id="modal-nuevo-diploma" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[150] hidden flex flex-col items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl relative">
+            <button onclick="cerrarModalSeguro('modal-nuevo-diploma')" class="absolute top-4 right-4 text-slate-400 hover:text-[#0a1128]">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <h3 class="font-black text-[#0a1128] text-lg uppercase mb-2">Acreditar Nueva Formación</h3>
+            <p class="text-xs text-slate-500 mb-4 leading-relaxed">Adjunte su nuevo diploma o certificado. El Comité Evaluador lo auditará para integrarlo a su Legajo Público.</p>
+            
+            <form onsubmit="subirNuevoDiploma(event)" class="space-y-4 border-t border-slate-100 pt-4">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nombre de la Especialidad/Curso</label>
+                    <input type="text" id="nuevo-diploma-titulo" placeholder="Nombre de la Especialidad/Curso" required class="form-input text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Archivo (PDF o Imagen)</label>
+                    <input type="file" id="file-nuevo-diploma" accept="image/*,application/pdf" required class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#0a1128] file:text-[#d4af37]">
+                </div>
+                <button type="submit" id="btn-enviar-nuevo-diploma" class="w-full bg-[#d4af37] text-[#0a1128] font-black uppercase tracking-widest py-3 rounded-xl shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2">
+                    <i data-lucide="send" class="w-4 h-4"></i> Enviar a Auditoría
                 </button>
             </form>
         </div>
@@ -1209,6 +1237,66 @@
                 cerrarModalSeguro('modal-renovacion');
                 document.getElementById('alerta-renovacion').innerHTML = '<div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-blue-800 text-xs font-bold text-center">Renovación en proceso de acreditación.</div>';
                 document.getElementById('alerta-renovacion').classList.remove('hidden');
+            } catch(err) {
+                alert("Error: " + err.message);
+            } finally {
+                btn.innerHTML = orig;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        // ==========================================
+        // ✅ TAREA 1 y 2: ABRIR MODAL NUEVO DIPLOMA + SUBIR
+        // ==========================================
+        function abrirModalNuevoDiploma() {
+            safeClass('modal-nuevo-diploma', 'remove', 'hidden');
+            lucide.createIcons();
+        }
+
+        async function subirNuevoDiploma(e) {
+            e.preventDefault();
+            const btn = el('btn-enviar-nuevo-diploma');
+            if(!btn) return;
+            
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> ENVIANDO...';
+            btn.disabled = true;
+            lucide.createIcons();
+
+            try {
+                const file = el('file-nuevo-diploma').files[0];
+                const titulo = el('nuevo-diploma-titulo').value.trim();
+                if (!file) throw new Error('Seleccione un archivo');
+                if (!titulo) throw new Error('Ingrese el nombre de la formación');
+
+                const fileName = `actualizacion_${alumnoActual.dni}_${Date.now()}.${file.name.split('.').pop()}`;
+                const { error: upErr } = await db.storage.from('renmcycf-documentos').upload(fileName, file);
+                if (upErr) throw upErr;
+
+                const { data: urlData } = db.storage.from('renmcycf-documentos').getPublicUrl(fileName);
+                const diplomaUrl = urlData.publicUrl;
+
+                const payload = {
+                    dni: alumnoActual.dni,
+                    nombres: alumnoActual.nombres,
+                    apellidos: alumnoActual.apellidos,
+                    email: alumnoActual.email,
+                    telefono: alumnoActual.telefono,
+                    tipo_tramite: 'ACTUALIZACION_LEGAJO',
+                    profesion: titulo,
+                    diploma_url: diplomaUrl,
+                    estado: 'PENDIENTE'
+                };
+
+                const { error: dbErr } = await db.from('renmcycf_solicitudes').insert([payload]);
+                if (dbErr) throw dbErr;
+
+                alert("✅ Diploma enviado a auditoría. El Comité Evaluador lo revisará a la brevedad.");
+                el('form-nuevo-diploma')?.reset();
+                const form = document.querySelector('#modal-nuevo-diploma form');
+                if(form) form.reset();
+                cerrarModalSeguro('modal-nuevo-diploma');
             } catch(err) {
                 alert("Error: " + err.message);
             } finally {
@@ -1816,20 +1904,27 @@
             lucide.createIcons();
         }
 
-        function abrirModalDiplomas() {
+        // ==========================================
+        // ✅ TAREA 3: MODAL DIPLOMAS CON HISTORIAL DE TRÁMITES
+        // ==========================================
+        async function abrirModalDiplomas() {
             const container = el('lista-diplomas-modal');
             if(!container) return;
             
-            container.innerHTML = '';
+            container.innerHTML = '<div class="text-center py-8"><i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto text-slate-400"></i></div>';
+            lucide.createIcons();
+            
+            let html = '';
             let hayDiplomas = false;
             
+            // --- Diplomas aprobados existentes ---
             if (alumnoActual.diplomas_urls && alumnoActual.diplomas_urls !== "null") {
                 try {
                     const arr = typeof alumnoActual.diplomas_urls === 'string' ? JSON.parse(alumnoActual.diplomas_urls) : alumnoActual.diplomas_urls;
                     if(arr.length > 0) {
                         hayDiplomas = true;
                         arr.forEach((url, i) => {
-                            container.innerHTML += `
+                            html += `
                                 <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-center">
                                     <div>
                                         <h4 class="text-white font-bold text-sm uppercase">Título Registrado #${i+1}</h4>
@@ -1846,7 +1941,7 @@
             
             if (!hayDiplomas && alumnoActual.diploma_url) {
                 hayDiplomas = true;
-                container.innerHTML = `
+                html += `
                     <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-center">
                         <div>
                             <h4 class="text-white font-bold text-sm uppercase">Título Oficial Registrado</h4>
@@ -1858,10 +1953,47 @@
                     </div>`;
             }
             
-            if (!hayDiplomas) {
-                container.innerHTML = '<div class="text-center text-slate-400 border border-dashed border-slate-700 p-6 rounded-xl">No hay diplomas o certificados registrados en su expediente.</div>';
+            // --- ✅ TAREA 3: Historial de trámites de actualización ---
+            try {
+                const { data: tramites } = await db.from('renmcycf_solicitudes')
+                    .select('profesion, estado, created_at')
+                    .eq('dni', alumnoActual.dni)
+                    .eq('tipo_tramite', 'ACTUALIZACION_LEGAJO');
+                
+                if (tramites && tramites.length > 0) {
+                    tramites.forEach(t => {
+                        const esPendiente = t.estado === 'PENDIENTE';
+                        const esObservado = t.estado === 'OBSERVADO';
+                        
+                        if (esPendiente || esObservado) {
+                            const bgClass = esPendiente ? 'bg-amber-900/40 border-amber-600/50' : 'bg-slate-700/60 border-slate-500/50';
+                            const badgeClass = esPendiente ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 'bg-red-500/20 text-red-300 border-red-500/30';
+                            const badgeText = esPendiente ? 'En Auditoría' : 'Observado';
+                            const iconName = esPendiente ? 'clock' : 'alert-triangle';
+                            const fecha = t.created_at ? new Date(t.created_at).toLocaleDateString('es-AR') : '';
+                            
+                            html += `
+                                <div class="${bgClass} p-4 rounded-xl border flex justify-between items-center">
+                                    <div>
+                                        <h4 class="text-white font-bold text-sm uppercase">${t.profesion || 'Formación sin título'}</h4>
+                                        <p class="text-[10px] text-slate-300 font-mono mt-1">Enviado el ${fecha}</p>
+                                    </div>
+                                    <span class="${badgeClass} border text-[9px] font-black uppercase px-3 py-1.5 rounded-lg flex items-center gap-1.5 shrink-0">
+                                        <i data-lucide="${iconName}" class="w-3.5 h-3.5"></i> ${badgeText}
+                                    </span>
+                                </div>`;
+                        }
+                    });
+                }
+            } catch(e) {
+                console.error("Error cargando historial de trámites:", e);
             }
             
+            if (!html) {
+                html = '<div class="text-center text-slate-400 border border-dashed border-slate-700 p-6 rounded-xl">No hay diplomas o certificados registrados en su expediente.</div>';
+            }
+            
+            container.innerHTML = html;
             safeClass('modal-diplomas', 'remove', 'hidden');
             lucide.createIcons();
         }
