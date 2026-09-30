@@ -369,7 +369,7 @@
                         </div>
                         <div class="relative">
                             <div id="hero-carousel-dots" class="flex justify-center gap-2 mb-3"></div>
-                            <div id="hero-carousel" class="relative bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl overflow-hidden shadow-2xl" style="min-height: 480px;">
+                            <div id="hero-carousel" class="relative bg-forenseNavy border border-white/15 rounded-2xl overflow-hidden shadow-2xl" style="min-height: 520px;">
                                 <div class="p-10 text-center text-slate-400 flex items-center justify-center h-full">
                                     <div>
                                         <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i>
@@ -1590,7 +1590,6 @@
             try { await verificarPromoHashB2C(); } catch(e) { console.warn(e); }
         });
 
-        // ═══════════ TEXTOS DINÁMICOS ═══════════
         async function cargarTextosPublicos() {
             try {
                 const { data } = await db.from('renmcycf_contenido').select('clave, valor');
@@ -1615,7 +1614,6 @@
             } catch (err) { console.error(err); }
         }
 
-        // ═══════════ CONFIGURACIÓN ═══════════
         async function cargarConfiguracionPublica() {
             try {
                 const { data: conf } = await db.from('renmcycf_config').select('*').eq('id', 1).single();
@@ -1651,7 +1649,6 @@
             } catch (err) { console.error(err); }
         }
 
-        // ═══════════ ARANCELES PÚBLICOS ═══════════
         async function cargarArancelesPublicos() {
             const grid = document.getElementById('grid-aranceles-publicos');
             if (!grid) return;
@@ -1694,7 +1691,6 @@
             }
         }
 
-        // ═══════════ PROMO B2C ═══════════
         async function verificarPromoHashB2C() {
             const params = new URLSearchParams(window.location.search);
             const promoHash = params.get('promo_hash');
@@ -1735,7 +1731,6 @@
             } catch (err) { console.warn(err); }
         }
 
-        // ═══════════ DIRECTORIO DE ALIADOS CON TABS ═══════════
         window.switchInstTab = function(instId, tabId) {
             document.querySelectorAll('.inst-content-' + instId).forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.inst-tabbtn-' + instId).forEach(el => {
@@ -1921,7 +1916,6 @@
             renderizarDirectorio(filtrados);
         };
 
-        // ═══════════ EMPRESAS ═══════════
         async function cargarEmpresasPublicas() {
             const contenedor = document.getElementById('contenedor-empresas-publicas');
             const bloque = document.getElementById('bloque-red-empresas');
@@ -1947,7 +1941,6 @@
             } catch (err) { console.warn(err); bloque.classList.add('hidden'); }
         }
 
-        // ═══════════ BENEFICIOS ═══════════
         async function cargarBeneficiosPublicos() {
             const contenedor = document.getElementById('contenedor-beneficios');
             if (!contenedor) return;
@@ -1972,7 +1965,6 @@
             }
         }
 
-        // ═══════════ NOTICIAS PORTAL ═══════════
         async function cargarNoticiasPublicas() {
             const contenedor = document.getElementById('contenedor-noticias-publicas');
             if (!contenedor) return;
@@ -1988,7 +1980,7 @@
                     if (item.categoria_requerida === 'CIENCIA') { iconName = 'flask-conical'; bgColor = 'bg-blue-100 text-blue-700'; }
                     if (item.categoria_requerida === 'TECNOLOGIA') { iconName = 'cpu'; bgColor = 'bg-emerald-100 text-emerald-700'; }
                     
-                    const imagen = item.portada_url || 'https://placehold.co/400x200/0f172a/d4af37?text=RENMCYCF';
+                    const imagen = item.portada_url || 'https://placehold.co/800x600/0f172a/d4af37?text=RENMCYCF';
                     const descripcion = item.descripcion || 'Publicación institucional del Registro Nacional.';
                     
                     const botonLink = item.link_contacto 
@@ -1999,13 +1991,13 @@
                     
                     return `
                     <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col hover:border-forenseGold hover:shadow-2xl transition-all duration-300">
-                        <div class="aspect-square relative overflow-hidden bg-slate-50 flex justify-center items-center border-b border-slate-100 p-2">
-                            <img src="${imagen}" class="w-full h-full object-contain drop-shadow-sm cursor-pointer hover:scale-105 transition-transform duration-300" alt="${item.titulo}" onclick="event.stopPropagation(); abrirModalImagen('${imagen}')">
-                            <div class="absolute top-3 left-3 ${bgColor} w-10 h-10 rounded-xl flex items-center justify-center shadow-md border border-white/50">
+                        <div class="relative w-full overflow-hidden bg-gradient-to-br from-slate-900 to-forenseNavy border-b border-slate-100 cursor-pointer group" style="height: 280px;" onclick="abrirModalImagen('${imagen}')">
+                            <img src="${imagen}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${item.titulo}">
+                            <div class="absolute top-3 left-3 ${bgColor} w-11 h-11 rounded-xl flex items-center justify-center shadow-md border border-white/50">
                                 <i data-lucide="${iconName}" class="w-5 h-5"></i>
                             </div>
                             <div class="absolute bottom-3 left-3 right-3">
-                                <span class="text-[9px] font-bold uppercase tracking-widest text-forenseGold">${item.categoria_requerida || 'GENERAL'}</span>
+                                <span class="inline-block text-[9px] font-black uppercase tracking-widest text-white bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">${item.categoria_requerida || 'GENERAL'}</span>
                             </div>
                         </div>
                         <div class="p-6 flex flex-col flex-1">
@@ -2034,7 +2026,6 @@
             }
         }
 
-        // ═══════════ HERO CAROUSEL ═══════════
         async function cargarNoticiaHero() {
             const carousel = document.getElementById('hero-carousel');
             const dots = document.getElementById('hero-carousel-dots');
@@ -2121,15 +2112,18 @@
             setTimeout(() => {
                 carousel.innerHTML = `
                     <div style="animation: heroFadeIn 0.6s ease forwards;">
-                        <div class="relative h-56 overflow-hidden bg-white border-b border-slate-100">
-                            <img src="${img}" class="w-full h-full object-contain p-6 cursor-pointer hover:scale-105 transition-transform duration-500" alt="${slide.titulo}" onclick="event.stopPropagation(); abrirModalImagen('${img}')">
-                            <div class="absolute top-3 left-3 bg-forenseGold/20 backdrop-blur-md text-forenseGold border border-forenseGold/40 w-10 h-10 rounded-xl flex items-center justify-center">
-                                <i data-lucide="${iconName}" class="w-5 h-5"></i>
+                        <div class="relative w-full overflow-hidden bg-gradient-to-br from-slate-900 to-forenseNavy cursor-pointer group" style="height: 340px;" onclick="abrirModalImagen('${img}')">
+                            <img src="${img}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="${slide.titulo}">
+                            <div class="absolute top-4 left-4 bg-forenseGold/90 backdrop-blur-md text-forenseNavy border border-white/40 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
+                                <i data-lucide="${iconName}" class="w-6 h-6"></i>
+                            </div>
+                            <div class="absolute bottom-3 left-3 right-3 flex items-center gap-2">
+                                <span class="text-[9px] font-black uppercase tracking-widest text-white bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">${slide.categoria}</span>
                             </div>
                         </div>
-                        <div class="p-6">
+                        <div class="p-6 bg-forenseNavy">
                             <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-forenseGold mb-3">
-                                <i data-lucide="calendar" class="w-3 h-3"></i> ${fecha} · ${slide.categoria}
+                                <i data-lucide="calendar" class="w-3 h-3"></i> ${fecha}
                             </div>
                             <h3 class="font-black text-white text-base uppercase tracking-wide mb-2 leading-tight">${slide.titulo}</h3>
                             <p class="text-xs text-slate-300 leading-relaxed line-clamp-3 mb-4">${slide.descripcion}</p>
@@ -2178,7 +2172,6 @@
             }, 6000);
         }
 
-        // ═══════════ BIBLIOTECA ═══════════
         async function cargarBibliotecaPublica() {
             const contenedor = document.getElementById('contenedor-biblioteca-ordenada');
             if (!contenedor) return;
@@ -2231,7 +2224,6 @@
             }
         }
 
-        // ═══════════ TESIS ═══════════
         async function cargarTesisPublicas() {
             const contenedor = document.getElementById('contenedor-tesis-publicas');
             if (!contenedor) return;
@@ -2268,7 +2260,6 @@
             }
         }
 
-        // ═══════════ COMITÉ ═══════════
         async function cargarComitePublico() {
             const contenedor = document.getElementById('contenedor-comite');
             const seccion = document.getElementById('seccion-comite');
@@ -2295,7 +2286,6 @@
             } catch (err) { seccion.style.display = 'none'; }
         }
 
-        // ═══════════ ENTIDADES B2B SELECT ═══════════
         async function cargarEntidadesB2BSelect() {
             const select = document.getElementById('ins-entidad-referente');
             if (!select) return;
@@ -2322,7 +2312,6 @@
             } catch (err) { console.warn(err); }
         }
 
-        // ═══════════ FORM WIZARD ═══════════
         window.toggleReferenteB2B = function() {
             const select = document.getElementById('ins-como-nos-conocio');
             const contenedor = document.getElementById('container-entidad-referente');
@@ -2434,7 +2423,6 @@
             if (target_scroll) window.scrollTo({ top: target_scroll.offsetTop - 100, behavior: 'smooth' });
         };
 
-        // ═══════════ SUBIDA DE ARCHIVOS ═══════════
         async function subirArchivo(file, carpeta, bucket = 'renmcycf-documentos') {
             if (!file) return null;
             const ext = file.name.split('.').pop();
@@ -2445,7 +2433,6 @@
             return urlData.publicUrl;
         }
 
-        // ═══════════ ENVÍO INSCRIPCIÓN ═══════════
         window.enviarInscripcion = async function(event) {
             event.preventDefault();
             if (!document.getElementById('ins-ddjj').checked) {
@@ -2554,7 +2541,6 @@
             }
         };
 
-        // ═══════════ VERIFICACIÓN PÚBLICA ═══════════
         window.buscarProfesional = async function() {
             const input = document.getElementById('search-input');
             const results = document.getElementById('search-results');
@@ -2620,7 +2606,6 @@
             }
         };
 
-        // ═══════════ TRACKING ═══════════
         window.buscarTracking = async function() {
             const input = document.getElementById('track-dni');
             const result = document.getElementById('tracking-result');
@@ -2689,7 +2674,6 @@
                     return;
                 }
 
-                // Fallback: buscar en padrón
                 const { data: padron } = await db.from('renmcycf_padron').select('*').eq('dni', dni).maybeSingle();
                 if (padron) {
                     result.innerHTML = `
@@ -2741,7 +2725,6 @@
             } catch(e) { alert("Error: " + e.message); }
         };
 
-        // ═══════════ MAPA ═══════════
         window.initMap = function() {
             const mapEl = document.getElementById('mapa-profesionales');
             if (!mapEl || mapInstance) return;
@@ -2877,7 +2860,6 @@
             renderizarMarcadores(filtrados);
         };
 
-        // ═══════════ CONTADOR ANIMADO ═══════════
         async function cargarContadorMatriculados() {
             const el = document.getElementById('hero-counter-matriculados');
             if (!el) return;
@@ -2901,7 +2883,6 @@
             } catch (err) { el.innerText = '—'; }
         }
 
-        // ═══════════ NEWSLETTER ═══════════
         window.suscribirNewsletter = async function(event, origen) {
             event.preventDefault();
             const sufijo = origen === 'institucional' ? 'inst' : 'foot';
@@ -2944,7 +2925,6 @@
             }
         };
 
-        // ═══════════ LIKES Y COMPARTIR ═══════════
         window.darMeGusta = async function(noticiaId, btnEl, currentLikes) {
             if (btnEl.disabled) return;
             btnEl.disabled = true;
@@ -2985,7 +2965,6 @@
             }
         };
 
-        // ═══════════ UI HELPERS ═══════════
         window.switchSection = function(sectionId) {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active-section'));
             const target = document.getElementById(sectionId);
