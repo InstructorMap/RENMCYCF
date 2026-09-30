@@ -380,7 +380,7 @@
                 </div>
             </div>
 
-            <!-- RED DE EMPRESAS (NUEVO) -->
+            <!-- RED DE EMPRESAS -->
             <div id="view-empresas" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
@@ -461,7 +461,6 @@
                                 </select>
                             </div>
                             <div><label>Imagen Portada</label><input type="file" id="camp-portada" accept="image/*" class="text-slate-400"></div>
-                            <!-- TAREA 1: NUEVO CAMPO -->
                             <div><label>Enlace Externo (Red Social / Web)</label><input type="url" id="camp-link" placeholder="https://..." class="text-slate-400"></div>
                             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">PUBLICAR</button>
                         </form>
@@ -659,7 +658,6 @@
                         <div><label>Descripción Categoría A4</label><textarea id="cont-cat-a4-desc" rows="3"></textarea></div>
                         <div><label>Texto Footer</label><textarea id="cont-footer-texto" rows="2"></textarea></div>
 
-                        <!-- NUEVOS TEXTOS INSTITUCIONALES -->
                         <div class="bg-black/20 p-4 rounded-xl border border-white/5 mt-4">
                             <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="landmark" class="w-4 h-4"></i> Sección Institucional</h4>
                             <div class="space-y-4">
@@ -702,7 +700,7 @@
                 </div>
             </div>
 
-            <!-- BENEFICIOS (NUEVO) -->
+            <!-- BENEFICIOS -->
             <div id="view-beneficios" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
@@ -729,7 +727,7 @@
                 </div>
             </div>
 
-            <!-- SUSCRIPTORES (NUEVO) -->
+            <!-- SUSCRIPTORES -->
             <div id="view-suscriptores" class="tab-content space-y-6">
                 <div class="glass-card p-6">
                     <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
@@ -1150,6 +1148,27 @@
                 if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="p-3 text-center text-slate-400">Bandeja vacía.</td></tr>'; return; }
                 
                 tbody.innerHTML = data.map(p => {
+                    // ✅ TAREA 1: Interceptar ACTUALIZACION_LEGAJO (nuevos diplomas B2C)
+                    if (p.tipo_tramite === 'ACTUALIZACION_LEGAJO') {
+                        return `
+                        <tr class="bg-emerald-900/10 border-b border-emerald-500/30">
+                            <td class="p-3">
+                                <div class="font-bold text-white">${p.nombres} ${p.apellidos} <span class="text-[9px] bg-emerald-500 text-white px-2 py-0.5 rounded ml-2 shadow">NUEVO DIPLOMA</span></div>
+                                <div class="text-[10px] text-slate-400">DNI: ${p.dni}</div>
+                            </td>
+                            <td class="p-3"><span class="px-2 py-1 bg-slate-800 rounded text-[10px] font-bold text-emerald-400">${p.profesion || 'S/D'}</span></td>
+                            <td class="p-3 text-xs text-emerald-400">
+                                <a href="${p.diploma_url}" target="_blank" class="hover:underline flex items-center gap-1"><i data-lucide="award" class="w-3 h-3"></i> Ver Diploma</a>
+                            </td>
+                            <td class="p-3 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <button onclick="aprobarNuevoDiploma('${p.id}', '${p.dni}', '${p.diploma_url}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors shadow-md flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> Aprobar</button>
+                                    <button onclick="rechazarSolicitudSimple('${p.id}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors shadow-md flex items-center gap-1"><i data-lucide="x-circle" class="w-3 h-3"></i> Rechazar</button>
+                                </div>
+                            </td>
+                        </tr>`;
+                    }
+
                     if (p.tipo_tramite === 'RENOVACION' || p.estado === 'RENOVACION_PENDIENTE') {
                         return `
                         <tr class="bg-blue-900/10 border-b border-blue-500/30">
@@ -1181,6 +1200,64 @@
                 }).join('');
                 lucide.createIcons();
             } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">${err.message}</td></tr>`; }
+        }
+
+        // ✅ TAREA 2: Aprobar nuevo diploma (agrega URL al array diplomas_urls del padrón)
+        async function aprobarNuevoDiploma(idSol, dni, urlDiploma) {
+            if (!confirm(`¿Aprobar este nuevo diploma y agregarlo al legajo del DNI ${dni}?`)) return;
+            try {
+                // 1. Consultar el padrón por DNI
+                const { data: padron, error: errPad } = await db.from('renmcycf_padron').select('id, diplomas_urls').eq('dni', dni).single();
+                if (errPad) throw errPad;
+
+                // 2. Parsear diplomas_urls (o crear array vacío)
+                let diplomasArr = [];
+                if (padron.diplomas_urls && padron.diplomas_urls !== 'null') {
+                    try {
+                        diplomasArr = typeof padron.diplomas_urls === 'string' 
+                            ? JSON.parse(padron.diplomas_urls) 
+                            : padron.diplomas_urls;
+                        if (!Array.isArray(diplomasArr)) diplomasArr = [];
+                    } catch(e) {
+                        diplomasArr = [];
+                    }
+                }
+
+                // 3. Push del nuevo diploma
+                diplomasArr.push(urlDiploma);
+
+                // 4. Update en renmcycf_padron
+                const { error: updPadErr } = await db.from('renmcycf_padron')
+                    .update({ diplomas_urls: JSON.stringify(diplomasArr) })
+                    .eq('id', padron.id);
+                if (updPadErr) throw updPadErr;
+
+                // 5. Update en renmcycf_solicitudes
+                const { error: updSolErr } = await db.from('renmcycf_solicitudes')
+                    .update({ estado: 'APROBADO' })
+                    .eq('id', idSol);
+                if (updSolErr) throw updSolErr;
+
+                alert('✅ Diploma aprobado e integrado al Legajo Público.');
+                cargarSolicitudes();
+            } catch (err) {
+                alert('Error al aprobar diploma: ' + err.message);
+            }
+        }
+
+        // ✅ TAREA 2: Rechazar solicitud simple
+        async function rechazarSolicitudSimple(idSol) {
+            if (!confirm('¿Rechazar esta solicitud definitivamente?')) return;
+            try {
+                const { error } = await db.from('renmcycf_solicitudes')
+                    .update({ estado: 'RECHAZADO' })
+                    .eq('id', idSol);
+                if (error) throw error;
+                alert('✅ Solicitud rechazada.');
+                cargarSolicitudes();
+            } catch (err) {
+                alert('Error al rechazar: ' + err.message);
+            }
         }
 
         async function aprobarRenovacion(idSol, dni) {
@@ -1222,6 +1299,9 @@
             } catch (err) { tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-red-400">${err.message}</td></tr>`; }
         }
 
+        // ==========================================
+        // ABRIR EXPEDIENTE (CON RENDERIZADO INTELIGENTE)
+        // ==========================================
         function abrirExpediente(item) {
             itemDossierActual = item;
             document.getElementById('dos-matricula').innerText = item.matricula_oficial || 'EN TRÁMITE';
@@ -1276,30 +1356,71 @@
             ];
             
             urls.forEach((imgItem) => {
-                if (imgItem.url) {
+                const tieneArchivo = imgItem.url && imgItem.url.trim() !== '' && imgItem.url !== 'null';
+                
+                if (tieneArchivo) {
+                    const esPDF = /\.pdf(\?|$)/i.test(imgItem.url);
+                    const enlaceAbrir = `<a href="${imgItem.url}" target="_blank" rel="noopener" class="block w-full relative group cursor-pointer">`;
+                    
+                    const contenidoVisual = esPDF
+                        ? `<div class="w-full h-40 flex flex-col items-center justify-center bg-slate-100 rounded border border-slate-200 group-hover:bg-slate-200 transition-colors">
+                               <i data-lucide="file-text" class="w-16 h-16 text-red-500"></i>
+                               <span class="text-[10px] font-black text-slate-600 uppercase tracking-widest mt-2">Documento PDF</span>
+                               <span class="text-[9px] text-slate-400 mt-1">Clic para abrir</span>
+                           </div>`
+                        : `<img src="${imgItem.url}" class="w-full h-40 object-contain rounded bg-slate-50 group-hover:opacity-90 transition-opacity" id="img-${imgItem.campo}" alt="${imgItem.titulo}">`;
+                    
                     containerFotos.innerHTML += `
                     <div class="border border-slate-200 rounded-lg p-3 bg-white shadow-sm text-center flex flex-col relative">
                         <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 border-b border-slate-100 pb-1">${imgItem.titulo}</p>
-                        <a href="${imgItem.url}" target="_blank" class="block w-full relative group">
-                            <img src="${imgItem.url}" class="w-full h-40 object-contain rounded print:object-contain" id="img-${imgItem.campo}">
-                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity print:hidden">
-                                <button onclick="event.preventDefault(); reemplazarDocumento('${imgItem.campo}')" class="bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold">Reemplazar</button>
+                        ${enlaceAbrir}
+                            ${contenidoVisual}
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 rounded print:hidden pointer-events-none">
+                                <span class="bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold shadow pointer-events-auto" onclick="event.preventDefault(); event.stopPropagation(); reemplazarDocumento('${imgItem.campo}')">
+                                    <i data-lucide="refresh-cw" class="w-3 h-3 inline mr-1"></i> Reemplazar
+                                </span>
                             </div>
                         </a>
+                        <div class="flex justify-center gap-2 mt-2 print:hidden">
+                            <button type="button" onclick="reemplazarDocumento('${imgItem.campo}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition-colors">
+                                <i data-lucide="refresh-cw" class="w-3 h-3"></i> Reemplazar
+                            </button>
+                            <button type="button" onclick="eliminarDocumento('${imgItem.campo}')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition-colors">
+                                <i data-lucide="trash-2" class="w-3 h-3"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>`;
+                } else {
+                    containerFotos.innerHTML += `
+                    <div class="border-2 border-dashed border-slate-300 rounded-lg p-3 bg-slate-50 shadow-sm text-center flex flex-col items-center justify-center min-h-[210px]">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">${imgItem.titulo}</p>
+                        <i data-lucide="file-question" class="w-12 h-12 text-slate-300 mb-2"></i>
+                        <span class="text-[10px] text-slate-400 uppercase font-bold mb-3">Sin archivo</span>
+                        <button type="button" onclick="reemplazarDocumento('${imgItem.campo}')" class="bg-[#0a1128] hover:bg-slate-800 text-[#d4af37] px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow">
+                            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Subir Documento
+                        </button>
                     </div>`;
                 }
             });
-
+            
             const bloqueCorreccion = document.getElementById('bloque-correccion');
             const containerCorreccion = document.getElementById('dos-correccion-img');
             containerCorreccion.innerHTML = '';
             if (item.correccion_url) {
+                const esPDFCorreccion = /\.pdf(\?|$)/i.test(item.correccion_url);
+                const contenidoCorreccion = esPDFCorreccion
+                    ? `<div class="w-full h-40 flex flex-col items-center justify-center bg-red-100 rounded border border-red-200">
+                           <i data-lucide="file-text" class="w-16 h-16 text-red-600"></i>
+                           <span class="text-[10px] font-black text-red-800 uppercase tracking-widest mt-2">Documento PDF</span>
+                       </div>`
+                    : `<img src="${item.correccion_url}" class="w-full h-40 object-contain rounded">`;
+                
                 bloqueCorreccion.classList.remove('hidden');
                 containerCorreccion.innerHTML = `
                     <div class="border border-red-200 rounded-lg p-3 bg-red-50 shadow-sm text-center flex flex-col relative md:col-span-2">
                         <p class="text-[10px] font-bold text-red-600 uppercase tracking-widest mb-2 border-b border-red-100 pb-1">Archivo de Subsanación Enviado por Postulante</p>
-                        <a href="${item.correccion_url}" target="_blank" class="block w-full">
-                            <img src="${item.correccion_url}" class="w-full h-40 object-contain rounded">
+                        <a href="${item.correccion_url}" target="_blank" rel="noopener" class="block w-full">
+                            ${contenidoCorreccion}
                         </a>
                     </div>`;
             } else {
@@ -1464,26 +1585,143 @@
 
         async function reemplazarDocumento(campo) {
             if (!itemDossierActual) return;
+            
             const input = document.createElement('input');
-            input.type = 'file'; input.accept = 'image/*,application/pdf';
+            input.type = 'file';
+            input.accept = 'image/*,application/pdf';
+            
             input.onchange = async (e) => {
-                const file = e.target.files[0]; if (!file) return;
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('El archivo supera los 10MB. Comprima el documento e intente nuevamente.');
+                    return;
+                }
+                
                 try {
-                    const fileName = `${campo}_${Date.now()}.${file.name.split('.').pop()}`;
-                    await db.storage.from('renmcycf-media').upload(fileName, file, { cacheControl: '3600', upsert: true });
-                    const url = `${PROJECT_URL}/storage/v1/object/public/renmcycf-media/${fileName}`;
-                    
-                    if (itemDossierActual.estado === 'PENDIENTE' || itemDossierActual.estado === 'EN AUDITORIA' || itemDossierActual.estado === 'OBSERVADO') {
-                        await db.from('renmcycf_solicitudes').update({ [campo]: url }).eq('id', itemDossierActual.id);
-                    } else {
-                        await db.from('renmcycf_padron').update({ [campo]: url }).eq('id', itemDossierActual.id);
+                    const urlVieja = itemDossierActual[campo];
+                    if (urlVieja && urlVieja.trim() !== '' && urlVieja !== 'null') {
+                        try {
+                            const nombreViejo = urlVieja.split('/').pop().split('?')[0];
+                            if (nombreViejo) {
+                                const { error: delErr } = await db.storage
+                                    .from('renmcycf-documentos')
+                                    .remove([nombreViejo]);
+                                if (delErr) console.warn('No se pudo borrar archivo viejo:', delErr.message);
+                            }
+                        } catch (eDel) {
+                            console.warn('Error parseando URL vieja:', eDel.message);
+                        }
                     }
-                    itemDossierActual[campo] = url;
-                    const img = document.getElementById(`img-${campo}`); if (img) img.src = url;
-                    alert("✅ Documento reemplazado exitosamente.");
-                } catch (err) { alert("Error: " + err.message); }
+                    
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    const nombreNuevo = `${itemDossierActual.dni}_${campo}_${Date.now()}.${ext}`;
+                    
+                    const { error: upErr } = await db.storage
+                        .from('renmcycf-documentos')
+                        .upload(nombreNuevo, file, { cacheControl: '3600', upsert: true });
+                    
+                    if (upErr) throw upErr;
+                    
+                    const urlNueva = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${nombreNuevo}`;
+                    
+                    const esSolicitud = ['PENDIENTE', 'EN AUDITORIA', 'OBSERVADO', 'RECHAZADO', 'RENOVACION_PENDIENTE']
+                        .includes(itemDossierActual.estado);
+                    
+                    const tablaDestino = esSolicitud ? 'renmcycf_solicitudes' : 'renmcycf_padron';
+                    
+                    const { error: dbErr } = await db
+                        .from(tablaDestino)
+                        .update({ [campo]: urlNueva })
+                        .eq('id', itemDossierActual.id);
+                    
+                    if (dbErr) throw dbErr;
+                    
+                    itemDossierActual[campo] = urlNueva;
+                    
+                    alert('✅ Documento reemplazado exitosamente.');
+                    
+                    abrirExpediente(itemDossierActual);
+                    
+                    if (esSolicitud) {
+                        cargarSolicitudes();
+                        cargarAuditoria();
+                    } else {
+                        cargarPadron();
+                    }
+                    
+                } catch (err) {
+                    alert('Error al reemplazar documento: ' + err.message);
+                }
             };
+            
             input.click();
+        }
+
+        async function eliminarDocumento(campo) {
+            if (!itemDossierActual) return;
+            
+            const urlActual = itemDossierActual[campo];
+            if (!urlActual || urlActual.trim() === '' || urlActual === 'null') {
+                alert('No hay documento que eliminar en este campo.');
+                return;
+            }
+            
+            const nombresCampos = {
+                foto_perfil_url: 'Foto de Perfil',
+                dni_frente_url: 'DNI Frente',
+                dni_dorso_url: 'DNI Dorso',
+                diploma_url: 'Título / Diploma',
+                comprobante_url: 'Comprobante de Pago'
+            };
+            const nombreLegible = nombresCampos[campo] || campo;
+            
+            if (!confirm(`⚠️ ¿Está seguro que desea ELIMINAR el documento "${nombreLegible}"?\n\nEsta acción borrará el archivo del almacenamiento y no se puede deshacer.`)) {
+                return;
+            }
+            
+            try {
+                const nombreArchivo = urlActual.split('/').pop().split('?')[0];
+                
+                if (nombreArchivo) {
+                    const { error: delErr } = await db.storage
+                        .from('renmcycf-documentos')
+                        .remove([nombreArchivo]);
+                    
+                    if (delErr && !delErr.message.includes('not found')) {
+                        console.warn('Advertencia al borrar archivo:', delErr.message);
+                    }
+                }
+                
+                const esSolicitud = ['PENDIENTE', 'EN AUDITORIA', 'OBSERVADO', 'RECHAZADO', 'RENOVACION_PENDIENTE']
+                    .includes(itemDossierActual.estado);
+                
+                const tablaDestino = esSolicitud ? 'renmcycf_solicitudes' : 'renmcycf_padron';
+                
+                const { error: dbErr } = await db
+                    .from(tablaDestino)
+                    .update({ [campo]: null })
+                    .eq('id', itemDossierActual.id);
+                
+                if (dbErr) throw dbErr;
+                
+                itemDossierActual[campo] = null;
+                
+                alert('✅ Documento eliminado exitosamente.');
+                
+                abrirExpediente(itemDossierActual);
+                
+                if (esSolicitud) {
+                    cargarSolicitudes();
+                    cargarAuditoria();
+                } else {
+                    cargarPadron();
+                }
+                
+            } catch (err) {
+                alert('Error al eliminar documento: ' + err.message);
+            }
         }
 
         // ==========================================
@@ -1737,7 +1975,7 @@
         async function eliminarAliado(id) { if (!confirm("¿Eliminar aliado definitivamente?")) return; await db.from('renmcycf_aliados').delete().eq('id', id); cargarAliadosPanel(); }
 
         // ==========================================
-        // 6. RED DE EMPRESAS (NUEVO)
+        // 6. RED DE EMPRESAS
         // ==========================================
         async function cargarEmpresasPanel() {
             const tbody = document.getElementById('empresas-body');
@@ -1961,7 +2199,7 @@
         }
 
         // ==========================================
-        // 8. PORTAL CIENTÍFICO (EX CAMPUS)
+        // 8. PORTAL CIENTÍFICO
         // ==========================================
         async function cargarNoticiasPanel() {
             const tbody = document.getElementById('campus-body'); tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center">Cargando...</td></tr>';
@@ -2254,7 +2492,7 @@
         }
 
         // ==========================================
-        // 13. BENEFICIOS (NUEVO)
+        // 13. BENEFICIOS
         // ==========================================
         async function cargarBeneficiosPanel() {
             const tbody = document.getElementById('beneficios-body');
@@ -2347,7 +2585,7 @@
         }
 
         // ==========================================
-        // 14. SUSCRIPTORES NEWSLETTER (NUEVO)
+        // 14. SUSCRIPTORES NEWSLETTER
         // ==========================================
         let suscriptoresCache = [];
 
@@ -2693,7 +2931,7 @@
         }
 
         // ==========================================
-        // 17. NUEVAS FUNCIONES B2B (TIMBRES Y CURSOS)
+        // 17. FUNCIONES B2B (TIMBRES Y CURSOS)
         // ==========================================
         async function modificarTimbres(id, cantidad, nombre) {
             if(!confirm(`¿Seguro que deseas sumar/restar ${cantidad} timbres a ${nombre}?`)) return;
@@ -2707,6 +2945,7 @@
             } catch(err) { alert("Error al modificar timbres: " + err.message); }
         }
 
+        // ✅ TAREA 3: Auditoría de Cursos B2B con 3 enlaces apilados
         async function cargarCursosB2BPanel() {
             const tbody = document.getElementById('cursos-b2b-body'); 
             if (!tbody) return;
@@ -2723,31 +2962,51 @@
                 const aliadosMap = {};
                 if(aliados) aliados.forEach(a => aliadosMap[a.id] = a.nombre);
 
-                tbody.innerHTML = cursos.map(c => `
-                <tr class="border-b border-white/5 hover:bg-white/5">
-                    <td class="p-3 font-bold text-white text-xs">${aliadosMap[c.aliado_id] || 'S/D'}</td>
-                    <td class="p-3">
-                        <span class="text-white font-bold block text-sm">${c.nombre_curso}</span>
-                        <span class="text-[10px] text-slate-400 block"><i data-lucide="clock" class="inline w-3 h-3"></i> Carga: ${c.carga_horaria || 'S/D'}</span>
-                        <span class="text-[10px] text-blue-400 block mt-1"><i data-lucide="users" class="inline w-3 h-3"></i> Docentes: ${c.cuerpo_docente || 'S/D'}</span>
-                    </td>
-                    <td class="p-3 text-xs">
-                        ${c.programa_url ? `<a href="${c.programa_url}" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1"><i data-lucide="file-text" class="w-4 h-4"></i> Ver PDF</a>` : '<span class="text-slate-500">Sin archivo</span>'}
-                    </td>
-                    <td class="p-3">
-                        <span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${c.estado==='APROBADO'?'bg-emerald-900/30 text-emerald-400':(c.estado==='RECHAZADO'?'bg-red-900/30 text-red-400':'bg-amber-900/30 text-amber-400')}">
-                            ${c.estado || 'PENDIENTE'}
-                        </span>
-                    </td>
-                    <td class="p-3 text-right">
-                        ${c.estado === 'PENDIENTE' ? `
-                            <button onclick="auditarCursoB2B('${c.id}', 'APROBADO')" class="bg-emerald-500/20 text-emerald-400 p-1.5 rounded hover:bg-emerald-500/40 mx-1" title="Aprobar"><i data-lucide="check" class="w-4 h-4"></i></button>
-                            <button onclick="auditarCursoB2B('${c.id}', 'RECHAZADO')" class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40" title="Rechazar"><i data-lucide="x" class="w-4 h-4"></i></button>
-                        ` : `
-                            <button onclick="auditarCursoB2B('${c.id}', 'PENDIENTE')" class="border border-white/20 text-slate-400 px-2 py-1 rounded text-[9px] hover:text-white transition-colors" title="Revertir a Pendiente"><i data-lucide="rotate-ccw" class="w-3 h-3 inline mr-1"></i> Revocar</button>
-                        `}
-                    </td>
-                </tr>`).join('');
+                tbody.innerHTML = cursos.map(c => {
+                    // ✅ TAREA 3: Renderizar 3 enlaces apilados verticalmente
+                    const renderTemarioLink = (url, label, icono) => {
+                        if (url && url.trim() !== '' && url !== 'null') {
+                            return `<a href="${url}" target="_blank" class="text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-1.5 text-[11px] font-bold transition-colors">
+                                        <i data-lucide="${icono}" class="w-3.5 h-3.5 shrink-0"></i> ${label}
+                                    </a>`;
+                        } else {
+                            return `<span class="text-slate-500 text-[11px] flex items-center gap-1.5 font-medium">
+                                        <i data-lucide="minus-circle" class="w-3.5 h-3.5 shrink-0"></i> Falta ${label}
+                                    </span>`;
+                        }
+                    };
+
+                    const temarioHTML = `
+                        <div class="flex flex-col gap-1.5">
+                            ${renderTemarioLink(c.programa_url, 'Programa', 'file-text')}
+                            ${renderTemarioLink(c.analitico_url, 'Analítico', 'file-spreadsheet')}
+                            ${renderTemarioLink(c.diploma_base_url, 'Diploma Base', 'file-badge')}
+                        </div>`;
+
+                    return `
+                    <tr class="border-b border-white/5 hover:bg-white/5">
+                        <td class="p-3 font-bold text-white text-xs">${aliadosMap[c.aliado_id] || 'S/D'}</td>
+                        <td class="p-3">
+                            <span class="text-white font-bold block text-sm">${c.nombre_curso}</span>
+                            <span class="text-[10px] text-slate-400 block"><i data-lucide="clock" class="inline w-3 h-3"></i> Carga: ${c.carga_horaria || 'S/D'}</span>
+                            <span class="text-[10px] text-blue-400 block mt-1"><i data-lucide="users" class="inline w-3 h-3"></i> Docentes: ${c.cuerpo_docente || 'S/D'}</span>
+                        </td>
+                        <td class="p-3">${temarioHTML}</td>
+                        <td class="p-3">
+                            <span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${c.estado==='APROBADO'?'bg-emerald-900/30 text-emerald-400':(c.estado==='RECHAZADO'?'bg-red-900/30 text-red-400':'bg-amber-900/30 text-amber-400')}">
+                                ${c.estado || 'PENDIENTE'}
+                            </span>
+                        </td>
+                        <td class="p-3 text-right">
+                            ${c.estado === 'PENDIENTE' ? `
+                                <button onclick="auditarCursoB2B('${c.id}', 'APROBADO')" class="bg-emerald-500/20 text-emerald-400 p-1.5 rounded hover:bg-emerald-500/40 mx-1" title="Aprobar"><i data-lucide="check" class="w-4 h-4"></i></button>
+                                <button onclick="auditarCursoB2B('${c.id}', 'RECHAZADO')" class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40" title="Rechazar"><i data-lucide="x" class="w-4 h-4"></i></button>
+                            ` : `
+                                <button onclick="auditarCursoB2B('${c.id}', 'PENDIENTE')" class="border border-white/20 text-slate-400 px-2 py-1 rounded text-[9px] hover:text-white transition-colors" title="Revertir a Pendiente"><i data-lucide="rotate-ccw" class="w-3 h-3 inline mr-1"></i> Revocar</button>
+                            `}
+                        </td>
+                    </tr>`;
+                }).join('');
                 lucide.createIcons();
             } catch (err) { tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
         }
