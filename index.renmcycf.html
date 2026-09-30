@@ -199,7 +199,7 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* TAREA 1: Estilo CTA Auditoría */
+        /* Estilo CTA Auditoría */
         .cta-auditoria {
             background: linear-gradient(145deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
             border: 2px solid #d4af37;
@@ -212,14 +212,14 @@
             box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
         }
 
-        /* TAREA 5: Estilo recuadro bancario */
+        /* Estilo recuadro bancario */
         .banco-card {
             background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
             border: 2px solid #d4af37;
             box-shadow: inset 0 2px 8px rgba(0,0,0,0.05), 0 4px 15px rgba(212, 175, 55, 0.15);
         }
 
-        /* TAREA 4: Filtro oscuro para el mapa gratuito de OpenStreetMap (sin API KEY) */
+        /* Filtro oscuro para el mapa gratuito de OpenStreetMap (sin API KEY) */
         .mapa-oscuro-free { filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(85%); }
     </style>
 </head>
@@ -311,7 +311,6 @@
                             El único padrón nacional centralizado con tecnología <strong class="text-forenseGold font-semibold">Blockchain</strong> e inmutabilidad verificable.
                         </p>
                         
-                        <!-- TAREA 1: Botones CTA reorganizados con Auditoría como botón destacado -->
                         <div class="flex flex-col sm:flex-row flex-wrap gap-4">
                             <button id="hero-cta-primary" onclick="switchSection('seccion-inscripcion')" class="bg-forenseGold text-forenseNavy font-black uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl shadow-lg hover:scale-105 transition-all text-center">Comenzar Inscripción</button>
                             <button id="hero-cta-secondary" onclick="switchSection('seccion-verificacion')" class="bg-white/15 backdrop-blur-sm text-white border border-white/25 font-bold uppercase tracking-[0.15em] text-sm px-6 py-4 rounded-xl hover:bg-white/25 transition-all text-center">Verificar Profesional</button>
@@ -331,10 +330,8 @@
                         </div>
                         
                         <div class="relative">
-                            <!-- INDICADORES DE SLIDE -->
                             <div id="hero-carousel-dots" class="flex justify-center gap-2 mb-3"></div>
                             
-                            <!-- CONTENEDOR DEL CARRUSEL -->
                             <div id="hero-carousel" class="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden shadow-2xl transition-all" style="min-height: 480px;">
                                 <div class="p-10 text-center text-slate-400 flex items-center justify-center h-full">
                                     <div>
@@ -375,7 +372,7 @@
                                 <i data-lucide="building" class="absolute left-4 top-3.5 w-5 h-5 text-slate-500"></i>
                                 <input type="text" id="dir-search-input" placeholder="Nombre del Instituto o Provincia..." class="w-full bg-transparent border-none text-white px-12 py-3 focus:ring-0 outline-none placeholder-slate-500" onkeyup="filtrarDirectorio()">
                             </div>
-                            <button class="bg-forenseGold hover:bg-yellow-500 text-forenseNavy font-black uppercase tracking-widest text-xs px-8 py-3 rounded-xl transition-all shadow-md md:w-auto w-full">Buscar</button>
+                            <button onclick="filtrarDirectorio()" class="bg-forenseGold hover:bg-yellow-500 text-forenseNavy font-black uppercase tracking-widest text-xs px-8 py-3 rounded-xl transition-all shadow-md md:w-auto w-full">Buscar</button>
                         </div>
 
                         <!-- Grilla de Resultados -->
@@ -407,14 +404,12 @@
 
             <!-- MOTOR DE PROSPECCIÓN B2B - CONVENIOS -->
             <section id="seccion-convenios-b2b" class="relative py-24 bg-[#050914] overflow-hidden border-y border-white/10">
-                <!-- Background effects -->
                 <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:20px_20px]"></div>
                 <div class="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-forenseGold/5 blur-[120px] rounded-full pointer-events-none"></div>
 
                 <div class="max-w-7xl mx-auto px-4 relative z-10">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                         
-                        <!-- Copywriting B2B - TAREA 2: Nuevo enfoque en visibilidad, divulgación, seriedad y certificados verificables blockchain -->
                         <div class="lg:col-span-7" data-aos="fade-right">
                             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 text-forenseGold text-[10px] font-bold uppercase tracking-[0.2em] mb-6 border border-white/10 backdrop-blur-sm">
                                 <i data-lucide="building" class="w-4 h-4"></i> Programa de Convenios Académicos
@@ -447,7 +442,6 @@
                             </div>
                         </div>
 
-                        <!-- Call to Action B2B -->
                         <div class="lg:col-span-5" data-aos="fade-left">
                             <div class="bg-white/5 border border-white/10 p-8 rounded-3xl backdrop-blur-md shadow-2xl relative overflow-hidden">
                                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-forenseGold via-yellow-200 to-forenseGold"></div>
@@ -551,7 +545,7 @@
                     </ul>
                 </div>
 
-                <!-- BLOQUE 5: PREGUNTAS FRECUENTES (FAQ) - TAREA 6: Limpieza de términos legales -->
+                <!-- BLOQUE 5: PREGUNTAS FRECUENTES (FAQ) -->
                 <div class="max-w-4xl mx-auto mb-16" data-aos="fade-up">
                     <div class="text-center mb-10">
                         <h3 class="text-2xl md:text-3xl font-black text-forenseNavy uppercase tracking-widest mb-3">
@@ -563,7 +557,6 @@
                     </div>
 
                     <div class="space-y-4">
-                        <!-- FAQ 1 -->
                         <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary">
                             <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-forenseNavy hover:text-forenseGold transition-colors">
                                 <h4 class="font-bold text-base md:text-lg">¿Qué es el RENMCYCF y cuál es su función?</h4>
@@ -574,7 +567,6 @@
                             </div>
                         </details>
 
-                        <!-- FAQ 2 - TAREA 6: Eliminada mención a "validez legal", reemplazada por respaldo tecnológico -->
                         <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary">
                             <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-forenseNavy hover:text-forenseGold transition-colors">
                                 <h4 class="font-bold text-base md:text-lg">¿Qué respaldo tiene la credencial del RENMCYCF?</h4>
@@ -585,7 +577,6 @@
                             </div>
                         </details>
 
-                        <!-- FAQ 3 -->
                         <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary">
                             <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-forenseNavy hover:text-forenseGold transition-colors">
                                 <h4 class="font-bold text-base md:text-lg">¿Cuáles son los requisitos para matricularse?</h4>
@@ -596,7 +587,6 @@
                             </div>
                         </details>
 
-                        <!-- FAQ 4 -->
                         <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary">
                             <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-forenseNavy hover:text-forenseGold transition-colors">
                                 <h4 class="font-bold text-base md:text-lg">¿Cómo es el proceso de matriculación paso a paso?</h4>
@@ -607,7 +597,6 @@
                             </div>
                         </details>
 
-                        <!-- FAQ 5 -->
                         <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary">
                             <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-forenseNavy hover:text-forenseGold transition-colors">
                                 <h4 class="font-bold text-base md:text-lg">¿Cuánto cuesta matricularse y con qué frecuencia se paga?</h4>
@@ -618,7 +607,6 @@
                             </div>
                         </details>
 
-                        <!-- FAQ 6 -->
                         <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary">
                             <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-forenseNavy hover:text-forenseGold transition-colors">
                                 <h4 class="font-bold text-base md:text-lg">¿Cuánto demora la auditoría de mi expediente?</h4>
@@ -629,7 +617,6 @@
                             </div>
                         </details>
 
-                        <!-- FAQ 7 -->
                         <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary">
                             <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-forenseNavy hover:text-forenseGold transition-colors">
                                 <h4 class="font-bold text-base md:text-lg">¿Dónde trabaja y qué salida laboral tiene un Criminalista?</h4>
@@ -640,7 +627,6 @@
                             </div>
                         </details>
 
-                        <!-- FAQ 8 -->
                         <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary">
                             <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-forenseNavy hover:text-forenseGold transition-colors">
                                 <h4 class="font-bold text-base md:text-lg">¿Qué especialidades forenses incluye el registro?</h4>
@@ -651,7 +637,6 @@
                             </div>
                         </details>
 
-                        <!-- FAQ 9 - TAREA 6: Eliminada mención a "padrón oficial" -->
                         <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary">
                             <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-forenseNavy hover:text-forenseGold transition-colors">
                                 <h4 class="font-bold text-base md:text-lg">¿Cómo verifico la autenticidad de una credencial?</h4>
@@ -662,7 +647,6 @@
                             </div>
                         </details>
 
-                        <!-- FAQ 10 -->
                         <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm faq-summary">
                             <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-forenseNavy hover:text-forenseGold transition-colors">
                                 <h4 class="font-bold text-base md:text-lg">¿Qué pasa si mi solicitud es observada o rechazada?</h4>
@@ -795,7 +779,7 @@
             </div>
         </section>
 
-        <!-- 4. MAPA INTELIGENTE - TAREA 4: URL de tiles sin API KEY -->
+        <!-- 4. MAPA INTELIGENTE -->
         <section id="seccion-mapa" class="page-section py-16 bg-forenseNavy text-white relative">
             <div class="max-w-7xl mx-auto px-4 relative z-10">
                 <div class="text-center mb-8">
@@ -940,7 +924,7 @@
             </div>
         </section>
 
-        <!-- 9. INSCRIPCIÓN WIZARD - TAREA 5: Eliminado Mercado Pago, agregado datos bancarios -->
+        <!-- 9. INSCRIPCIÓN WIZARD -->
         <section id="seccion-inscripcion" class="page-section py-16 bg-white">
             <div class="max-w-4xl mx-auto px-4">
                 <div class="text-center mb-10">
@@ -962,7 +946,6 @@
                     <form id="form-inscripcion" onsubmit="enviarInscripcion(event)">
                         
                         <div id="step-1" class="form-step active space-y-6">
-                            <!-- BANNER PROMO B2C (inyectado dinámicamente cuando viene ?promo_hash=) -->
                             <div id="promo-b2c-banner" class="hidden"></div>
 
                             <h3 class="font-black text-lg text-forenseNavy uppercase border-b border-slate-100 pb-2"><i data-lucide="user" class="inline w-5 h-5 text-forenseGold mr-1"></i> Datos Personales</h3>
@@ -975,7 +958,6 @@
                                 <div><label class="form-label">Teléfono / WhatsApp</label><input type="tel" id="ins-tel" required class="form-input font-mono" placeholder="Ej: 549351..."></div>
                                 <div class="md:col-span-2"><label class="form-label">Provincia / Ciudad Laboral</label><input type="text" id="ins-prov" required class="form-input" placeholder="Ej: Córdoba Capital"></div>
                                 
-                                <!-- NUEVO CAMPO: ¿Cómo nos conociste? + Dinámico B2B -->
                                 <div class="md:col-span-2">
                                     <label class="form-label">¿Cómo nos conociste? / Convenio</label>
                                     <select id="ins-como-nos-conocio" required class="form-input font-bold text-forenseNavy bg-slate-50" onchange="toggleReferenteB2B()">
@@ -1040,7 +1022,7 @@
                         <div id="step-3" class="form-step space-y-6">
                             <h3 class="font-black text-lg text-forenseNavy uppercase border-b border-slate-100 pb-2"><i data-lucide="file-up" class="inline w-5 h-5 text-forenseGold mr-1"></i> Documentación y Pago</h3>
                             
-                            <!-- TAREA 5: Recuadro de transferencia bancaria (reemplaza Mercado Pago) -->
+                            <!-- RECUADRO DE TRANSFERENCIA BANCARIA CON 4 DATOS CORREGIDOS -->
                             <div class="banco-card rounded-2xl p-6 md:p-8">
                                 <div class="text-center mb-6">
                                     <div class="inline-flex items-center justify-center w-14 h-14 bg-forenseGold/10 rounded-2xl border border-forenseGold/30 mb-3">
@@ -1050,18 +1032,27 @@
                                     <p class="text-xs text-slate-500 mt-1">Realice el pago del arancel anual y luego suba el comprobante.</p>
                                 </div>
 
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                <!-- Fila 1: Banco y Titular -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                     <div class="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
                                         <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Banco</p>
-                                        <p class="font-black text-forenseNavy text-sm" id="banco-alias">Cargando...</p>
+                                        <p class="font-black text-forenseNavy text-sm" id="banco-nombre">Cargando...</p>
                                     </div>
                                     <div class="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
-                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Alias / CBU</p>
-                                        <p class="font-mono font-black text-forenseNavy text-sm break-all" id="banco-cbu">Cargando...</p>
-                                    </div>
-                                    <div class="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
-                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Titular</p>
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Titular de la Cuenta</p>
                                         <p class="font-black text-forenseNavy text-sm" id="banco-titular">Cargando...</p>
+                                    </div>
+                                </div>
+
+                                <!-- Fila 2: Alias y CBU -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Alias</p>
+                                        <p class="font-mono font-black text-forenseNavy text-sm break-all" id="banco-alias">Cargando...</p>
+                                    </div>
+                                    <div class="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">CBU</p>
+                                        <p class="font-mono font-black text-forenseNavy text-sm break-all" id="banco-cbu">Cargando...</p>
                                     </div>
                                 </div>
 
@@ -1370,7 +1361,7 @@
         }
 
         // ==========================================
-        // CONFIGURACIÓN DINÁMICA - TAREA 5: Cargar datos bancarios
+        // CONFIGURACIÓN DINÁMICA - DATOS BANCARIOS CORREGIDOS
         // ==========================================
         async function cargarConfiguracionPublica() {
             try {
@@ -1391,14 +1382,16 @@
                         document.getElementById('dyn-hero-bg').src = conf.hero_image_url;
                     }
 
-                    // TAREA 5: Cargar datos bancarios en los spans correspondientes
-                    const bancoAlias = document.getElementById('banco-alias');
-                    const bancoCbu = document.getElementById('banco-cbu');
-                    const bancoTitular = document.getElementById('banco-titular');
-                    
-                    if (bancoAlias) bancoAlias.innerText = conf.banco || conf.alias || 'Banco no configurado';
-                    if (bancoCbu) bancoCbu.innerText = conf.cbu || conf.alias || 'CBU no configurado';
-                    if (bancoTitular) bancoTitular.innerText = conf.titular || 'Titular no configurado';
+                    // ✅ DATOS BANCARIOS CON COLUMNAS CORRECTAS
+                    const elBancoNombre = document.getElementById('banco-nombre');
+                    const elBancoAlias = document.getElementById('banco-alias');
+                    const elBancoCbu = document.getElementById('banco-cbu');
+                    const elBancoTitular = document.getElementById('banco-titular');
+
+                    if (elBancoNombre) elBancoNombre.innerText = conf.banco || '—';
+                    if (elBancoAlias) elBancoAlias.innerText = conf.alias_cbu || '—';
+                    if (elBancoCbu) elBancoCbu.innerText = conf.cbu || '—';
+                    if (elBancoTitular) elBancoTitular.innerText = conf.titular_cuenta || '—';
 
                     const setDisplay = (id, mostrar) => {
                         const el = document.getElementById(id);
@@ -1416,12 +1409,11 @@
         }
 
         // ==========================================
-        // ⭐ DIRECTORIO CON VIDRIERA PREMIUM B2B (Full-Width + Tabs) - TAREA 3
+        // DIRECTORIO CON VIDRIERA PREMIUM B2B (Full-Width + Tabs)
         // ==========================================
         let directorioData = [];
-        let cursosAprobadosPorAliado = {}; // Mapa: aliado_id -> [cursos aprobados]
+        let cursosAprobadosPorAliado = {};
 
-        // ⭐ CONTROL DE PESTAÑAS (TABS) POR INSTITUTO
         window.switchInstTab = function(instId, tabId) {
             document.querySelectorAll('.inst-content-' + instId).forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.inst-tabbtn-' + instId).forEach(el => {
@@ -1551,7 +1543,6 @@
                             <button onclick="switchInstTab('${inst.id}', 'verificador')" id="btn-tab-verificador-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent hover:text-forenseNavy hover:bg-slate-50 transition-colors whitespace-nowrap">
                                 Registro de Egresados
                             </button>
-                            <!-- TAREA 3: Cambio de "Cursos Avalados" a "Cursos Verificados" -->
                             <button onclick="switchInstTab('${inst.id}', 'cursos')" id="btn-tab-cursos-${inst.id}" class="inst-tabbtn-${inst.id} flex-1 py-4 px-4 text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent hover:text-forenseNavy hover:bg-slate-50 transition-colors whitespace-nowrap">
                                 Cursos Verificados
                             </button>
@@ -1583,7 +1574,6 @@
                                 </div>
                             </div>
 
-                            <!-- TAREA 3: Título interno de la pestaña cambiado a "Oferta Académica Verificada" -->
                             <div id="tab-cursos-${inst.id}" class="inst-content-${inst.id} hidden animate-fade-up">
                                 <h4 class="text-lg font-black text-slate-800 mb-3 uppercase">Oferta Académica Verificada</h4>
                                 ${htmlCursos}
@@ -2313,7 +2303,6 @@
             }
         }
 
-        // ⭐ MODIFICADA para aplicar descuento B2C - TAREA 5: Eliminada lógica de Mercado Pago
         function actualizarLinkYPrecio() {
             const cat = document.getElementById('ins-categoria').value;
             const displayPrecio = document.getElementById('display-precio-final');
@@ -2428,17 +2417,16 @@
         }
 
         // ==========================================
-        // MAPA - 100% GRATUITO CON OPENSTREETMAP (Sin API KEY) + Filtro Oscuro CSS
+        // MAPA - 100% GRATUITO CON OPENSTREETMAP
         // ==========================================
         async function initMap() {
             if (mapInstance) return;
             mapInstance = L.map('mapa-profesionales', { scrollWheelZoom: false }).setView([-38.4161, -63.6167], 4);
             
-            // MAPA 100% GRATUITO CON OPENSTREETMAP (Sin API KEY) + Filtro Oscuro
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { 
                 maxZoom: 19,
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                className: 'mapa-oscuro-free' // Le pone el filtro oscuro por CSS
+                className: 'mapa-oscuro-free'
             }).addTo(mapInstance);
             
             markersLayerGroup = L.layerGroup().addTo(mapInstance);
