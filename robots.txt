@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /index.renmcycf.html
+Allow: /validador.renmcycf.html
+Disallow: /superadmin.html
+Disallow: /instituto.html
+Disallow: /legajo.renmcycf.html
