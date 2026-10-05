@@ -1,0 +1,8 @@
+# RENMCYCF - Registro Nacional de Matriculados en Criminalística y Ciencias Forenses
+Esta plataforma es un registro oficial con tecnología de trazabilidad inmutable y doble validación para profesionales de las ciencias forenses en Argentina.
+
+## Servicios:
+- Emisión de credenciales digitales.
+- Validación pública de matrículas mediante código QR.
+- Campus virtual, biblioteca y auditoría de tesis.
+- Sistema B2B para institutos aliados (Doble Certificación).
