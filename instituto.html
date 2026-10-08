@@ -7,7 +7,6 @@
     <title>ASARI Core · Portal Institucional</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Silenciar el warning de Tailwind CDN en producción (solo cosmético)
         (function() {
             const originalWarn = console.warn;
             console.warn = function(...args) {
@@ -24,10 +23,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Paleta Institucional Forense Premium */
             --forense-navy: #0a1128;
             --forense-navy-deep: #050914;
             --forense-gold: #d4af37;
@@ -46,57 +44,18 @@
         }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-        .glass-panel {
-            background: var(--panel-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--panel-border);
-            border-radius: 16px;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.55);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(212, 175, 55, 0.10);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
+        .glass-panel { background: var(--panel-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--panel-border); border-radius: 16px; }
+        .glass-card { background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.10); border-radius: 12px; transition: all 0.3s ease; }
         .glass-card:hover { border-color: rgba(212, 175, 55, 0.28); }
 
-        .sidebar-link {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px 16px; border-radius: 10px;
-            transition: all 0.3s; color: #94a3b8; cursor: pointer;
-            border-left: 3px solid transparent;
-        }
+        .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; transition: all 0.3s; color: #94a3b8; cursor: pointer; border-left: 3px solid transparent; }
         .sidebar-link:hover { color: white; background: rgba(212, 175, 55, 0.05); }
-        .sidebar-link.active {
-            color: var(--forense-gold);
-            background: rgba(212, 175, 55, 0.10);
-            border-left: 3px solid var(--forense-gold);
-        }
+        .sidebar-link.active { color: var(--forense-gold); background: rgba(212, 175, 55, 0.10); border-left: 3px solid var(--forense-gold); }
 
-        input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="password"], select, textarea {
-            width: 100%; background: rgba(0,0,0,0.35);
-            border: 1px solid var(--panel-border);
-            border-radius: 8px; padding: 10px 12px;
-            color: white; outline: none;
-            transition: all 0.3s; font-size: 0.85rem;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--forense-gold);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
-        }
-        label {
-            display: block; font-size: 0.65rem; font-weight: 800;
-            color: #94a3b8; text-transform: uppercase;
-            letter-spacing: 1px; margin-bottom: 4px;
-        }
-        th {
-            background: rgba(10, 17, 40, 0.7);
-            text-transform: uppercase; font-size: 0.7rem;
-            letter-spacing: 1px; color: #cbd5e1;
-            border-bottom: 1px solid var(--panel-border);
-        }
+        input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="password"], select, textarea { width: 100%; background: rgba(0,0,0,0.35); border: 1px solid var(--panel-border); border-radius: 8px; padding: 10px 12px; color: white; outline: none; transition: all 0.3s; font-size: 0.85rem; }
+        input:focus, select:focus, textarea:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12); }
+        label { display: block; font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        th { background: rgba(10, 17, 40, 0.7); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; color: #cbd5e1; border-bottom: 1px solid var(--panel-border); }
         tr { border-bottom: 1px solid rgba(212, 175, 55, 0.08); }
 
         .tab-content { display: none; }
@@ -108,65 +67,24 @@
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--forense-gold-soft); }
 
-        #login-screen {
-            position: fixed; inset: 0; z-index: 100;
-            background: var(--forense-navy-deep);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .login-box {
-            background: var(--panel-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--panel-border-strong);
-            padding: 40px; border-radius: 20px;
-            text-align: center; width: 100%; max-width: 420px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 60px rgba(212, 175, 55, 0.05);
-        }
+        #login-screen { position: fixed; inset: 0; z-index: 100; background: var(--forense-navy-deep); display: flex; align-items: center; justify-content: center; }
+        .login-box { background: var(--panel-bg); backdrop-filter: blur(20px); border: 1px solid var(--panel-border-strong); padding: 40px; border-radius: 20px; text-align: center; width: 100%; max-width: 420px; box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 60px rgba(212, 175, 55, 0.05); }
 
-        /* Botón dorado institucional (reemplaza gradiente gamer) */
-        .btn-gold {
-            background: var(--forense-gold);
-            color: var(--forense-navy);
-            font-weight: 900;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(212, 175, 55, 0.5);
-        }
-        .btn-gold:hover {
-            background: #e6c14a;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.30);
-        }
+        .btn-gold { background: var(--forense-gold); color: var(--forense-navy); font-weight: 900; transition: all 0.3s ease; border: 1px solid rgba(212, 175, 55, 0.5); }
+        .btn-gold:hover { background: #e6c14a; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.30); }
         .stat-number { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
 
-        /* MODALES */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: #0a1128; border: 1px solid rgba(212, 175, 55, 0.20); border-radius: 20px; width: 100%; max-width: 780px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.6); animation: modalIn 0.3s ease-out; }
+        .modal-content { background: #0a1128; border: 1px solid rgba(212, 175, 55, 0.20); border-radius: 20px; width: 100%; max-width: 1180px; max-height: 92vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.6); animation: modalIn 0.3s ease-out; }
         @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        /* MODO CLARO INSTITUCIONAL (estilo ministerio) */
-        body.light-theme {
-            background-color: #fafaf7;
-            color: #0a1128;
-            background-image: none;
-        }
-        body.light-theme .glass-panel {
-            background: rgba(255, 255, 255, 0.95);
-            border-color: rgba(10, 17, 40, 0.10);
-            box-shadow: 0 10px 30px rgba(10, 17, 40, 0.05);
-        }
-        body.light-theme .glass-card {
-            background: rgba(255, 255, 255, 0.90);
-            border-color: rgba(10, 17, 40, 0.08);
-            box-shadow: 0 4px 15px rgba(10, 17, 40, 0.04);
-        }
+        body.light-theme { background-color: #fafaf7; color: #0a1128; background-image: none; }
+        body.light-theme .glass-panel { background: rgba(255, 255, 255, 0.95); border-color: rgba(10, 17, 40, 0.10); box-shadow: 0 10px 30px rgba(10, 17, 40, 0.05); }
+        body.light-theme .glass-card { background: rgba(255, 255, 255, 0.90); border-color: rgba(10, 17, 40, 0.08); box-shadow: 0 4px 15px rgba(10, 17, 40, 0.04); }
         body.light-theme .glass-card:hover { border-color: rgba(212, 175, 55, 0.45); }
-        body.light-theme input[type="text"], body.light-theme input[type="number"], body.light-theme input[type="email"], body.light-theme input[type="url"], body.light-theme input[type="password"], body.light-theme select, body.light-theme textarea {
-            background: #ffffff; border-color: #cbd5e1; color: #0a1128;
-        }
-        body.light-theme input:focus, body.light-theme select:focus, body.light-theme textarea:focus {
-            border-color: var(--forense-gold);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
-        }
+        body.light-theme input[type="text"], body.light-theme input[type="number"], body.light-theme input[type="email"], body.light-theme input[type="url"], body.light-theme input[type="password"], body.light-theme select, body.light-theme textarea { background: #ffffff; border-color: #cbd5e1; color: #0a1128; }
+        body.light-theme input:focus, body.light-theme select:focus, body.light-theme textarea:focus { border-color: var(--forense-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); }
         body.light-theme th { background: rgba(10, 17, 40, 0.05); color: #0a1128; border-bottom: 1px solid rgba(10, 17, 40, 0.10); }
         body.light-theme tr { border-color: rgba(10, 17, 40, 0.06); }
         body.light-theme .sidebar-link { color: #475569; }
@@ -184,66 +102,104 @@
         body.light-theme .modal-content { background: #ffffff; border-color: rgba(10, 17, 40, 0.10); }
         body.light-theme .modal-content .text-white { color: #0a1128 !important; }
 
-        input[type="file"] {
-            width: 100%; background: rgba(0,0,0,0.35);
-            border: 1px solid var(--panel-border);
-            border-radius: 8px; padding: 8px 12px;
-            color: #94a3b8; outline: none;
-            transition: all 0.3s; font-size: 0.75rem; cursor: pointer;
-        }
-        input[type="file"]::file-selector-button {
-            background: var(--forense-navy);
-            color: var(--forense-gold);
-            border: 1px solid rgba(212, 175, 55, 0.35);
-            border-radius: 6px; padding: 5px 12px;
-            font-weight: 700; font-size: 0.7rem;
-            margin-right: 10px; cursor: pointer; transition: all 0.3s;
-        }
-        input[type="file"]::file-selector-button:hover {
-            background: #0f1d3d;
-            border-color: var(--forense-gold);
-        }
+        input[type="file"] { width: 100%; background: rgba(0,0,0,0.35); border: 1px solid var(--panel-border); border-radius: 8px; padding: 8px 12px; color: #94a3b8; outline: none; transition: all 0.3s; font-size: 0.75rem; cursor: pointer; }
+        input[type="file"]::file-selector-button { background: var(--forense-navy); color: var(--forense-gold); border: 1px solid rgba(212, 175, 55, 0.35); border-radius: 6px; padding: 5px 12px; font-weight: 700; font-size: 0.7rem; margin-right: 10px; cursor: pointer; transition: all 0.3s; }
+        input[type="file"]::file-selector-button:hover { background: #0f1d3d; border-color: var(--forense-gold); }
         body.light-theme input[type="file"] { background: #ffffff; border-color: #cbd5e1; color: #64748b; }
         body.light-theme input[type="file"]::file-selector-button { background: #0a1128; color: #d4af37; }
 
-        input[type="range"] {
-            -webkit-appearance: none; appearance: none;
-            width: 100%; height: 6px; border-radius: 3px;
-            background: rgba(0,0,0,0.4); outline: none; padding: 0;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; appearance: none;
-            width: 16px; height: 16px; border-radius: 50%;
-            background: var(--forense-gold);
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
-        }
-        input[type="range"]::-moz-range-thumb {
-            width: 16px; height: 16px; border-radius: 50%;
-            background: var(--forense-gold);
-            cursor: pointer; border: none;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
-        }
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.4); outline: none; padding: 0; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--forense-gold); cursor: pointer; box-shadow: 0 0 10px rgba(212, 175, 55, 0.6); }
+        input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--forense-gold); cursor: pointer; border: none; box-shadow: 0 0 10px rgba(212, 175, 55, 0.6); }
         body.light-theme input[type="range"] { background: rgba(10, 17, 40, 0.15); }
+        input[type="color"] { width: 100%; height: 38px; padding: 2px; border-radius: 8px; background: rgba(0,0,0,0.35); border: 1px solid var(--panel-border); cursor: pointer; }
 
         #faldon-trazabilidad .logo-oficial-wrapper { background: #ffffff !important; }
 
         /* ═══════════════════════════════════════════════════════════════ */
-        /* PREVIEW WYSIWYG REALISTA (mockup del faldón inmutable)          */
+        /* EDITOR WYSIWYG AVANZADO                                         */
         /* ═══════════════════════════════════════════════════════════════ */
-        .preview-diploma-container {
-            aspect-ratio: 1.414 / 1;
-            width: 100%;
-            position: relative;
-            background-color: #ffffff;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 2px solid var(--forense-gold-soft);
+        .editor-wrapper {
+            background: linear-gradient(145deg, rgba(10,17,40,0.95), rgba(5,9,20,0.98));
+            border: 1px solid var(--panel-border-strong);
+            border-radius: 16px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+            gap: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         }
-        /* Zona superior: área del diploma base (≈80%) */
+        .editor-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.20);
+        }
+        .editor-toolbar-title {
+            display: flex; align-items: center; gap: 8px;
+            color: var(--forense-gold);
+            font-size: 11px; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 1.5px;
+        }
+        .editor-toolbar-actions {
+            display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+        }
+        .editor-tool-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.10);
+            color: #cbd5e1;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .editor-tool-btn:hover {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: var(--forense-gold);
+            color: var(--forense-gold);
+        }
+        .editor-tool-btn.active {
+            background: var(--forense-gold);
+            border-color: var(--forense-gold);
+            color: var(--forense-navy);
+        }
+        .editor-stage-outer {
+            position: relative;
+            width: 100%;
+            background: repeating-linear-gradient(45deg, #0f172a, #0f172a 10px, #111c33 10px, #111c33 20px);
+            border-radius: 12px;
+            padding: 16px;
+            overflow: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 480px;
+        }
+        .editor-stage-inner {
+            position: relative;
+            transition: transform 0.25s ease;
+            transform-origin: center center;
+        }
+        .preview-diploma-container {
+            position: relative;
+            width: 100%;
+            max-width: 780px;
+            aspect-ratio: 1.414 / 1;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 0 0 2px rgba(212, 175, 55, 0.35);
+        }
         .preview-diploma-upper {
             position: relative;
             flex: 1 1 80%;
@@ -254,7 +210,93 @@
             background-color: #ffffff;
             overflow: hidden;
         }
-        /* Mockup del faldón inmutable (proporcional a 144px reales) */
+        /* Cuadrícula */
+        .editor-grid-overlay {
+            position: absolute; inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            background-image:
+                linear-gradient(rgba(212, 175, 55, 0.28) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.28) 1px, transparent 1px);
+            background-size: 10% 10%;
+            z-index: 15;
+        }
+        .editor-grid-overlay.active { opacity: 1; }
+        /* Líneas guía */
+        .editor-guide-line {
+            position: absolute;
+            background: rgba(212, 175, 55, 0.55);
+            pointer-events: none;
+            z-index: 16;
+            display: none;
+        }
+        .editor-guide-line.active { display: block; }
+        .editor-guide-h {
+            left: 0; right: 0; height: 1px;
+            box-shadow: 0 0 8px rgba(212,175,55,0.6);
+        }
+        .editor-guide-v {
+            top: 0; bottom: 0; width: 1px;
+            box-shadow: 0 0 8px rgba(212,175,55,0.6);
+        }
+        /* Bloque flotante de datos */
+        .preview-datos-flotante {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 85%;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(6px);
+            border: 2px solid rgba(212, 175, 55, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            text-align: center;
+            cursor: grab;
+            user-select: none;
+            transition: box-shadow 0.2s ease;
+            z-index: 20;
+        }
+        .preview-datos-flotante:hover {
+            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.35);
+        }
+        .preview-datos-flotante.dragging {
+            cursor: grabbing;
+            box-shadow: 0 15px 45px rgba(212, 175, 55, 0.55);
+        }
+        .preview-datos-flotante .pdt-nombre {
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #0a1128;
+            line-height: 1.1;
+            margin-bottom: 4px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .preview-datos-flotante .pdt-dni {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+        .preview-datos-flotante .pdt-curso {
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #1e3a8a;
+            line-height: 1.15;
+            margin-bottom: 3px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .preview-datos-flotante .pdt-carga {
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 1px;
+        }
+
+        /* Mockup faldón */
         .preview-faldon-mock {
             flex: 0 0 20%;
             min-height: 0;
@@ -267,82 +309,150 @@
             border-top: 2px solid var(--forense-gold);
             font-family: 'Outfit', sans-serif;
             position: relative;
+            z-index: 25;
         }
-        .preview-faldon-mock .pfm-left {
-            display: flex; align-items: center; gap: 6px;
-            width: 30%;
-        }
-        .preview-faldon-mock .pfm-shield {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: #ffffff;
-            border: 2px solid var(--forense-gold);
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-        .preview-faldon-mock .pfm-brand {
-            font-size: 8px; font-weight: 900;
-            color: var(--forense-gold);
-            letter-spacing: 0.5px; line-height: 1.1;
-            text-transform: uppercase;
-        }
-        .preview-faldon-mock .pfm-brand small {
-            display: block; font-size: 6px;
-            color: #94a3b8; font-weight: 700;
-            letter-spacing: 0.3px; margin-top: 1px;
-        }
-        .preview-faldon-mock .pfm-center {
-            width: 40%; text-align: center;
-        }
-        .preview-faldon-mock .pfm-center .pfm-hash-label {
-            font-size: 6px; color: #64748b;
-            text-transform: uppercase; letter-spacing: 1.5px;
-            font-weight: 700; margin-bottom: 2px;
-        }
-        .preview-faldon-mock .pfm-center .pfm-hash {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 8px; font-weight: 700;
-            color: #d4af37; line-height: 1.2;
-        }
-        .preview-faldon-mock .pfm-center .pfm-fecha {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 6px; color: #94a3b8;
-            margin-top: 2px;
-        }
-        .preview-faldon-mock .pfm-right {
-            display: flex; align-items: center; justify-content: flex-end;
-            gap: 6px; width: 30%;
-        }
-        .preview-faldon-mock .pfm-qr-mock {
-            width: 34px; height: 34px;
-            background: #ffffff;
-            border: 1.5px solid var(--forense-gold);
-            border-radius: 3px;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(5, 1fr);
-            padding: 2px; gap: 1px;
-            flex-shrink: 0;
-        }
-        .preview-faldon-mock .pfm-qr-mock span {
-            background: #0f172a;
-            border-radius: 1px;
-        }
+        .preview-faldon-mock .pfm-left { display: flex; align-items: center; gap: 6px; width: 30%; }
+        .preview-faldon-mock .pfm-shield { width: 32px; height: 32px; border-radius: 50%; background: #ffffff; border: 2px solid var(--forense-gold); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .preview-faldon-mock .pfm-brand { font-size: 8px; font-weight: 900; color: var(--forense-gold); letter-spacing: 0.5px; line-height: 1.1; text-transform: uppercase; }
+        .preview-faldon-mock .pfm-brand small { display: block; font-size: 6px; color: #94a3b8; font-weight: 700; letter-spacing: 0.3px; margin-top: 1px; }
+        .preview-faldon-mock .pfm-center { width: 40%; text-align: center; }
+        .preview-faldon-mock .pfm-center .pfm-hash-label { font-size: 6px; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 2px; }
+        .preview-faldon-mock .pfm-center .pfm-hash { font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700; color: #d4af37; line-height: 1.2; }
+        .preview-faldon-mock .pfm-center .pfm-fecha { font-family: 'JetBrains Mono', monospace; font-size: 6px; color: #94a3b8; margin-top: 2px; }
+        .preview-faldon-mock .pfm-right { display: flex; align-items: center; justify-content: flex-end; gap: 6px; width: 30%; }
+        .preview-faldon-mock .pfm-qr-mock { width: 34px; height: 34px; background: #ffffff; border: 1.5px solid var(--forense-gold); border-radius: 3px; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); padding: 2px; gap: 1px; flex-shrink: 0; }
+        .preview-faldon-mock .pfm-qr-mock span { background: #0f172a; border-radius: 1px; }
         .preview-faldon-mock .pfm-qr-mock span:nth-child(3n) { background: #ffffff; }
         .preview-faldon-mock .pfm-qr-mock span:nth-child(7n) { background: #ffffff; }
         .preview-faldon-mock .pfm-qr-mock span:nth-child(11n) { background: #ffffff; }
-        .preview-faldon-mock .pfm-qr-label {
-            font-size: 6px; color: #d4af37;
-            font-weight: 900; text-transform: uppercase;
-            letter-spacing: 0.5px; text-align: right;
-            line-height: 1.2;
+        .preview-faldon-mock .pfm-qr-label { font-size: 6px; color: #d4af37; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; line-height: 1.2; }
+        .preview-faldon-mock .pfm-qr-label small { display: block; font-size: 5px; color: #94a3b8; font-weight: 700; margin-top: 1px; }
+
+        /* Panel de controles */
+        .editor-controls-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
-        .preview-faldon-mock .pfm-qr-label small {
-            display: block; font-size: 5px;
-            color: #94a3b8; font-weight: 700;
-            margin-top: 1px;
+        @media (min-width: 900px) {
+            .editor-controls-grid { grid-template-columns: repeat(3, 1fr); }
         }
-        .light-theme .preview-diploma-container { border-color: rgba(10,17,40,0.20); }
+        .editor-control-group {
+            background: rgba(0,0,0,0.30);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+        .editor-control-group-title {
+            font-size: 9px;
+            font-weight: 900;
+            color: var(--forense-gold);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed rgba(212, 175, 55, 0.25);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .editor-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .editor-row-full { display: block; margin-bottom: 8px; }
+        .editor-mini-label {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 9px; font-weight: 800;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+        .editor-mini-label .val {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--forense-gold);
+            font-size: 10px;
+        }
+        .editor-preset-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .editor-preset-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.10);
+            color: #cbd5e1;
+            padding: 8px 4px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
+        }
+        .editor-preset-btn:hover { background: rgba(212, 175, 55, 0.15); border-color: var(--forense-gold); color: var(--forense-gold); }
+
+        .editor-toggle-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 6px 8px;
+            background: rgba(0,0,0,0.20);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #cbd5e1;
+        }
+        .editor-switch {
+            position: relative;
+            width: 34px; height: 18px;
+            background: rgba(255,255,255,0.10);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+        }
+        .editor-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 14px; height: 14px;
+            background: #94a3b8;
+            border-radius: 50%;
+            transition: all 0.25s ease;
+        }
+        .editor-switch.active { background: var(--forense-gold); }
+        .editor-switch.active::after { left: 18px; background: #0a1128; }
+
+        .editor-zoom-bar {
+            display: flex; align-items: center; gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--forense-gold);
+            font-weight: 700;
+        }
+        .editor-zoom-bar button {
+            width: 26px; height: 26px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #cbd5e1;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .editor-zoom-bar button:hover { background: rgba(212, 175, 55, 0.2); border-color: var(--forense-gold); color: var(--forense-gold); }
+
         .light-theme .preview-faldon-mock { background: #0a1128; }
+        .light-theme .editor-wrapper { background: linear-gradient(145deg, rgba(241,245,249,0.95), rgba(226,232,240,0.98)); }
+        .light-theme .editor-control-group { background: rgba(255,255,255,0.9); }
+        .light-theme .editor-stage-outer { background: repeating-linear-gradient(45deg, #e2e8f0, #e2e8f0 10px, #f1f5f9 10px, #f1f5f9 20px); }
+        .light-theme .editor-tool-btn { background: rgba(10,17,40,0.04); border-color: rgba(10,17,40,0.10); color: #475569; }
+        .light-theme .editor-tool-btn:hover { background: rgba(212, 175, 55, 0.15); color: var(--forense-gold-soft); }
+        .light-theme .editor-tool-btn.active { background: var(--forense-gold); color: var(--forense-navy); }
+        .light-theme .editor-toggle-row { background: rgba(10,17,40,0.04); color: #475569; }
+        .light-theme .editor-preset-btn { background: rgba(10,17,40,0.04); border-color: rgba(10,17,40,0.10); color: #475569; }
+        .light-theme .editor-preset-btn:hover { background: rgba(212, 175, 55, 0.15); color: var(--forense-gold-soft); border-color: var(--forense-gold); }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -367,12 +477,10 @@
     <aside class="w-64 glass-panel m-4 mr-0 flex flex-col z-20 hidden md:flex border-r border-white/5">
         <div class="pt-8 pb-6 px-6 border-b border-white/5 relative flex flex-col items-center text-center gap-3">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#d4af37] via-[#0a1128] to-[#d4af37]"></div>
-            
             <div class="w-24 h-24 rounded-full bg-white p-2 flex items-center justify-center overflow-hidden border-2 border-[#d4af37]/50 shadow-[0_0_20px_rgba(212,175,55,0.15)] shrink-0">
                 <img id="sidebar-logo-img" src="" class="w-full h-full object-contain mix-blend-multiply hidden transition-transform duration-500 hover:scale-110">
                 <i data-lucide="building-2" id="sidebar-logo-icon" class="text-[#d4af37] w-10 h-10"></i>
             </div>
-            
             <div class="min-w-0 w-full mt-2">
                 <h3 class="text-white font-black tracking-wider text-base truncate" id="sidebar-instituto-nombre">ASARI Core</h3>
                 <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block mt-1">Panel Institucional</span>
@@ -401,12 +509,10 @@
                 <button onclick="toggleTema()" id="btn-theme-toggle" class="p-2.5 rounded-xl border border-white/10 hover:bg-white/10 text-slate-300 transition-colors" title="Cambiar tema">
                     <i data-lucide="sun" id="theme-icon" class="w-4 h-4"></i>
                 </button>
-
                 <div class="text-right">
                     <p class="text-xs font-bold text-white" id="header-instituto">Cargando...</p>
                     <p class="text-[10px] text-[#d4af37] font-mono font-bold" id="header-timbres">Derechos: 0</p>
                 </div>
-
                 <div class="w-12 h-12 rounded-full bg-white p-1 border border-[#d4af37]/40 flex items-center justify-center overflow-hidden shadow-sm shrink-0">
                     <img id="header-logo-img" src="" class="w-full h-full object-contain mix-blend-multiply hidden">
                     <i data-lucide="building" id="header-logo-icon" class="w-5 h-5 text-slate-700"></i>
@@ -444,7 +550,6 @@
                         <p class="text-[10px] text-slate-500 mt-2">Programas habilitados para certificar.</p>
                     </div>
                 </div>
-
                 <div class="glass-card p-8 border-[#d4af37]/40 text-center">
                     <div class="w-20 h-20 bg-[#d4af37]/15 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i data-lucide="shopping-cart" class="w-10 h-10 text-[#d4af37]"></i>
@@ -468,7 +573,6 @@
                             <div><label>Nombre del Curso</label><input type="text" id="curso-nombre" required placeholder="Ej: Criminalística Forense Avanzada"></div>
                             <div><label>Carga Horaria</label><input type="text" id="curso-carga" required placeholder="Ej: 120 horas"></div>
                             <div><label>Cuerpo Docente</label><textarea id="curso-docentes" rows="2" required placeholder="Ej: Lic. Juan Pérez, Dr. María González"></textarea></div>
-                            
                             <div>
                                 <label class="text-blue-400">Programa de Estudio (PDF)</label>
                                 <input type="file" id="curso-file-programa" accept="application/pdf" required class="form-input">
@@ -485,87 +589,220 @@
                                 <p class="text-[9px] text-slate-500 mt-1 italic">Diseño base del diploma institucional (JPG/PNG).</p>
                             </div>
 
-                            <div id="constructor-diploma" class="hidden bg-[#0a1128] border border-[#d4af37]/30 rounded-xl p-4 space-y-4">
-                                <div class="flex items-center gap-2 border-b border-[#d4af37]/30 pb-2">
-                                    <i data-lucide="move" class="w-4 h-4 text-[#d4af37]"></i>
-                                    <p class="text-xs font-bold text-[#d4af37] uppercase tracking-widest">Vista Previa Realista (WYSIWYG)</p>
-                                </div>
-
-                                <!-- PREVIEW WYSIWYG: Imagen superior + Mockup faldón inferior -->
-                                <div id="preview-diploma-container" class="preview-diploma-container">
-                                    <!-- Zona superior: imagen del diploma -->
-                                    <div id="preview-diploma-upper" class="preview-diploma-upper" style="background-size: contain; background-position: center; background-repeat: no-repeat;">
-                                        <div id="preview-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
-                                            <div class="text-center">
-                                                <i data-lucide="image" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
-                                                <p>Seleccione la imagen base del diploma</p>
-                                            </div>
-                                        </div>
-
-                                        <div id="preview-texto-alumno"
-                                             class="absolute bg-white/95 backdrop-blur-sm text-slate-900 px-4 py-2 rounded-lg shadow-lg border-2 border-[#d4af37]/60 pointer-events-none"
-                                             style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 85%; text-align: center;">
-                                            <p class="font-black text-sm md:text-base leading-tight">NOMBRE DEL ALUMNO</p>
-                                            <p class="font-mono text-[10px] md:text-xs font-bold text-slate-600">DNI: 12.345.678</p>
-                                            <p class="font-bold text-[9px] md:text-[10px] text-[#0a1128] uppercase mt-1">CRIMINALÍSTICA FORENSE AVANZADA</p>
-                                        </div>
+                            <!-- ═══════════════════════════════════════════════════════════════ -->
+                            <!-- EDITOR WYSIWYG AVANZADO — ALTA                                  -->
+                            <!-- ═══════════════════════════════════════════════════════════════ -->
+                            <div id="constructor-diploma" class="hidden editor-wrapper">
+                                <div class="editor-toolbar">
+                                    <div class="editor-toolbar-title">
+                                        <i data-lucide="layout-template" class="w-4 h-4"></i>
+                                        Editor Profesional de Diploma
                                     </div>
-
-                                    <!-- Zona inferior: mockup del faldón inmutable -->
-                                    <div class="preview-faldon-mock">
-                                        <div class="pfm-left">
-                                            <div class="pfm-shield">
-                                                <i data-lucide="shield-check" style="width: 16px; height: 16px; color: #d4af37;"></i>
-                                            </div>
-                                            <div class="pfm-brand">
-                                                RENMCYCF
-                                                <small>Verificación Inmutable</small>
-                                            </div>
-                                        </div>
-                                        <div class="pfm-center">
-                                            <div class="pfm-hash-label">Certificado con Trazabilidad</div>
-                                            <div class="pfm-hash">HASH: ASARI-XXXXXX</div>
-                                            <div class="pfm-fecha">EMISIÓN: 01/01/2026</div>
-                                        </div>
-                                        <div class="pfm-right">
-                                            <div class="pfm-qr-label">
-                                                Escanear
-                                                <small>renmcycf.com.ar</small>
-                                            </div>
-                                            <div class="pfm-qr-mock">
-                                                <span></span><span></span><span></span><span></span><span></span>
-                                                <span></span><span></span><span></span><span></span><span></span>
-                                                <span></span><span></span><span></span><span></span><span></span>
-                                                <span></span><span></span><span></span><span></span><span></span>
-                                                <span></span><span></span><span></span><span></span><span></span>
-                                            </div>
-                                        </div>
+                                    <div class="editor-toolbar-actions">
+                                        <button type="button" class="editor-tool-btn" id="btn-toggle-grid" onclick="editorToggleGrid('alta')" title="Mostrar/ocultar cuadrícula">
+                                            <i data-lucide="grid-3x3" class="w-3 h-3"></i> Grid
+                                        </button>
+                                        <button type="button" class="editor-tool-btn" id="btn-toggle-guides" onclick="editorToggleGuides('alta')" title="Mostrar/ocultar guías">
+                                            <i data-lucide="align-center" class="w-3 h-3"></i> Guías
+                                        </button>
+                                        <button type="button" class="editor-tool-btn" onclick="editorFullPreview('alta')" title="Ver tamaño real">
+                                            <i data-lucide="maximize-2" class="w-3 h-3"></i> 1:1
+                                        </button>
                                     </div>
                                 </div>
 
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <div>
-                                        <label class="text-[10px] text-slate-400 flex justify-between mb-1">
-                                            <span>Eje Y (Vertical)</span>
-                                            <span id="label-pos-y" class="font-mono text-[#d4af37]">50%</span>
-                                        </label>
-                                        <input type="range" id="slider-pos-y" min="0" max="100" value="50" class="w-full">
+                                <!-- Canvas -->
+                                <div class="editor-stage-outer">
+                                    <div class="editor-stage-inner" id="editor-stage-inner-alta">
+                                        <div id="preview-diploma-container" class="preview-diploma-container">
+                                            <div id="preview-diploma-upper" class="preview-diploma-upper" style="background-size: contain; background-position: center; background-repeat: no-repeat;">
+                                                <div id="preview-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
+                                                    <div class="text-center">
+                                                        <i data-lucide="image" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
+                                                        <p class="font-bold uppercase tracking-widest text-[10px]">Seleccione la imagen base del diploma</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="editor-grid-overlay" id="editor-grid-alta"></div>
+                                                <div class="editor-guide-line editor-guide-h" id="editor-guide-h-alta" style="top: 50%;"></div>
+                                                <div class="editor-guide-line editor-guide-v" id="editor-guide-v-alta" style="left: 50%;"></div>
+
+                                                <div id="preview-texto-alumno" class="preview-datos-flotante" data-editor="alta">
+                                                    <div class="pdt-nombre" style="font-size: 16px;">NOMBRE DEL ALUMNO</div>
+                                                    <div class="pdt-dni" style="font-size: 11px;">DNI: 12.345.678</div>
+                                                    <div class="pdt-curso" style="font-size: 12px;">CRIMINALÍSTICA FORENSE AVANZADA</div>
+                                                    <div class="pdt-carga" style="font-size: 9px;">Carga Horaria: 120 Horas Cátedra</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Mockup faldón -->
+                                            <div class="preview-faldon-mock">
+                                                <div class="pfm-left">
+                                                    <div class="pfm-shield">
+                                                        <i data-lucide="shield-check" style="width: 16px; height: 16px; color: #d4af37;"></i>
+                                                    </div>
+                                                    <div class="pfm-brand">
+                                                        RENMCYCF
+                                                        <small>Verificación Inmutable</small>
+                                                    </div>
+                                                </div>
+                                                <div class="pfm-center">
+                                                    <div class="pfm-hash-label">Certificado con Trazabilidad</div>
+                                                    <div class="pfm-hash">HASH: ASARI-XXXXXX</div>
+                                                    <div class="pfm-fecha">EMISIÓN: 01/01/2026</div>
+                                                </div>
+                                                <div class="pfm-right">
+                                                    <div class="pfm-qr-label">
+                                                        Escanear
+                                                        <small>renmcycf.com.ar</small>
+                                                    </div>
+                                                    <div class="pfm-qr-mock">
+                                                        <span></span><span></span><span></span><span></span><span></span>
+                                                        <span></span><span></span><span></span><span></span><span></span>
+                                                        <span></span><span></span><span></span><span></span><span></span>
+                                                        <span></span><span></span><span></span><span></span><span></span>
+                                                        <span></span><span></span><span></span><span></span><span></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label class="text-[10px] text-slate-400 flex justify-between mb-1">
+                                </div>
+
+                                <!-- Panel de controles -->
+                                <div class="editor-controls-grid" data-editor="alta">
+                                    <!-- Grupo 1: Posición -->
+                                    <div class="editor-control-group">
+                                        <div class="editor-control-group-title">
+                                            <i data-lucide="move" class="w-3 h-3"></i> Posición del Bloque
+                                        </div>
+                                        <div class="editor-mini-label">
                                             <span>Eje X (Horizontal)</span>
-                                            <span id="label-pos-x" class="font-mono text-[#d4af37]">50%</span>
-                                        </label>
-                                        <input type="range" id="slider-pos-x" min="0" max="100" value="50" class="w-full">
+                                            <span class="val" id="label-pos-x">50%</span>
+                                        </div>
+                                        <input type="range" id="slider-pos-x" min="0" max="100" value="50" class="w-full mb-2">
+                                        <div class="editor-mini-label">
+                                            <span>Eje Y (Vertical)</span>
+                                            <span class="val" id="label-pos-y">50%</span>
+                                        </div>
+                                        <input type="range" id="slider-pos-y" min="0" max="100" value="50" class="w-full mb-3">
+                                        
+                                        <div class="editor-control-group-title" style="margin-top: 8px;">
+                                            <i data-lucide="layout-grid" class="w-3 h-3"></i> Presets de Posición
+                                        </div>
+                                        <div class="editor-preset-grid">
+                                            <button type="button" class="editor-preset-btn" onclick="editorApplyPreset('alta','center')" title="Centrar">
+                                                <i data-lucide="circle-dot" class="w-4 h-4"></i> Centro
+                                            </button>
+                                            <button type="button" class="editor-preset-btn" onclick="editorApplyPreset('alta','top')" title="Arriba">
+                                                <i data-lucide="arrow-up-to-line" class="w-4 h-4"></i> Arriba
+                                            </button>
+                                            <button type="button" class="editor-preset-btn" onclick="editorApplyPreset('alta','bottom')" title="Abajo">
+                                                <i data-lucide="arrow-down-to-line" class="w-4 h-4"></i> Abajo
+                                            </button>
+                                            <button type="button" class="editor-preset-btn" onclick="editorApplyPreset('alta','top-left')" title="Sup. Izq.">
+                                                <i data-lucide="arrow-up-left" class="w-4 h-4"></i> Sup.Izq
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Grupo 2: Tipografía -->
+                                    <div class="editor-control-group">
+                                        <div class="editor-control-group-title">
+                                            <i data-lucide="type" class="w-3 h-3"></i> Tipografía
+                                        </div>
+                                        <div class="editor-row">
+                                            <div>
+                                                <div class="editor-mini-label"><span>Familia</span></div>
+                                                <select id="editor-font-family" onchange="editorApplyTypography('alta')">
+                                                    <option value="'Outfit', sans-serif">Outfit (Moderna)</option>
+                                                    <option value="'Playfair Display', serif">Playfair (Elegante)</option>
+                                                    <option value="'Inter', sans-serif">Inter (Neutra)</option>
+                                                    <option value="'JetBrains Mono', monospace">JetBrains (Mono)</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <div class="editor-mini-label"><span>Peso</span></div>
+                                                <select id="editor-font-weight" onchange="editorApplyTypography('alta')">
+                                                    <option value="400">Regular</option>
+                                                    <option value="700">Bold</option>
+                                                    <option value="900" selected>Black</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="editor-mini-label">
+                                            <span>Tamaño Base Nombre</span>
+                                            <span class="val" id="editor-size-label">16px</span>
+                                        </div>
+                                        <input type="range" id="editor-font-size" min="10" max="42" value="16" class="w-full mb-3" oninput="editorApplyTypography('alta')">
+                                        
+                                        <div class="editor-row">
+                                            <div>
+                                                <div class="editor-mini-label"><span>Color</span></div>
+                                                <input type="color" id="editor-font-color" value="#0a1128" oninput="editorApplyTypography('alta')">
+                                            </div>
+                                            <div>
+                                                <div class="editor-mini-label"><span>Alineación</span></div>
+                                                <select id="editor-text-align" onchange="editorApplyTypography('alta')">
+                                                    <option value="center" selected>Centro</option>
+                                                    <option value="left">Izquierda</option>
+                                                    <option value="right">Derecha</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="editor-mini-label">
+                                            <span>Interlineado</span>
+                                            <span class="val" id="editor-lineheight-label">1.1</span>
+                                        </div>
+                                        <input type="range" id="editor-line-height" min="0.9" max="2" step="0.05" value="1.1" class="w-full" oninput="editorApplyTypography('alta')">
+                                    </div>
+
+                                    <!-- Grupo 3: Opciones Avanzadas -->
+                                    <div class="editor-control-group">
+                                        <div class="editor-control-group-title">
+                                            <i data-lucide="sliders" class="w-3 h-3"></i> Opciones Avanzadas
+                                        </div>
+                                        
+                                        <div class="editor-toggle-row">
+                                            <span>Auto-ajustar texto largo</span>
+                                            <div class="editor-switch active" id="editor-autofit-switch" onclick="editorToggleAutoFit('alta')"></div>
+                                        </div>
+                                        <div class="editor-mini-label">
+                                            <span>Ancho Máximo del Bloque</span>
+                                            <span class="val" id="editor-maxwidth-label">85%</span>
+                                        </div>
+                                        <input type="range" id="editor-max-width" min="30" max="95" value="85" class="w-full mb-3" oninput="editorApplyAutoFit('alta')">
+                                        
+                                        <div class="editor-control-group-title" style="margin-top: 8px;">
+                                            <i data-lucide="list" class="w-3 h-3"></i> Datos a Mostrar
+                                        </div>
+                                        <div class="editor-toggle-row">
+                                            <span>Nombre completo</span>
+                                            <div class="editor-switch active" id="editor-show-nombre" onclick="editorToggleContent('alta','nombre')"></div>
+                                        </div>
+                                        <div class="editor-toggle-row">
+                                            <span>DNI</span>
+                                            <div class="editor-switch active" id="editor-show-dni" onclick="editorToggleContent('alta','dni')"></div>
+                                        </div>
+                                        <div class="editor-toggle-row">
+                                            <span>Nombre del Curso</span>
+                                            <div class="editor-switch active" id="editor-show-curso" onclick="editorToggleContent('alta','curso')"></div>
+                                        </div>
+                                        <div class="editor-toggle-row">
+                                            <span>Carga Horaria</span>
+                                            <div class="editor-switch active" id="editor-show-carga" onclick="editorToggleContent('alta','carga')"></div>
+                                        </div>
                                     </div>
                                 </div>
 
+                                <!-- Inputs hidden (compatibilidad con JS legacy) -->
                                 <input type="hidden" id="pos-x" value="50">
                                 <input type="hidden" id="pos-y" value="50">
+                                <input type="hidden" id="diseno-config" value="">
 
-                                <p class="text-[9px] text-[#d4af37]/70 italic text-center">
+                                <p class="text-[10px] text-[#d4af37]/80 italic text-center mt-2">
                                     <i data-lucide="info" class="inline w-3 h-3"></i>
-                                    El faldón negro inferior es inmutable y se agrega automáticamente al PDF final. Asegurese de que la imagen de su diploma no oculte información importante en esa zona.
+                                    El faldón negro inferior es inmutable y se agrega automáticamente al PDF final. Usá el toggle "Grid" para ver la cuadrícula de alineación.
                                 </p>
                             </div>
 
@@ -635,21 +872,17 @@
                             <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2 flex items-center gap-2 relative z-10">
                                 <i data-lucide="file-spreadsheet" class="w-5 h-5 text-emerald-400"></i> Emisión Masiva (Excel)
                             </h3>
-                            
                             <div class="space-y-4 relative z-10">
                                 <button type="button" onclick="descargarPlantillaExcel()" class="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-emerald-400 text-xs font-bold py-2 rounded-lg flex justify-center items-center gap-2 transition-colors">
                                     <i data-lucide="download" class="w-4 h-4"></i> 1. Descargar Plantilla Modelo
                                 </button>
-
                                 <div class="bg-black/30 p-4 rounded-xl border border-white/5">
                                     <label class="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-2">2. Subir Archivo Completo</label>
                                     <input type="file" id="file-excel-masivo" accept=".xlsx, .xls" class="w-full text-xs text-slate-300 file:bg-emerald-600 file:text-white file:border-0 file:rounded file:px-3 file:py-1 file:font-bold file:mr-3 hover:file:bg-emerald-500 cursor-pointer">
                                 </div>
-
                                 <button type="button" onclick="procesarEmisionMasiva()" id="btn-emitir-masivo" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-black uppercase tracking-widest py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
                                     <i data-lucide="zap" class="w-5 h-5"></i> Procesar Lote
                                 </button>
-
                                 <div id="progreso-masivo" class="hidden">
                                     <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
                                         <span id="progreso-texto">Procesando...</span>
@@ -699,7 +932,7 @@
                     </div>
                     <div>
                         <h3 class="text-white font-black text-lg">Editar Curso</h3>
-                        <p class="text-[10px] text-slate-400 uppercase tracking-widest">Modificar datos y/o archivos respaldatorios</p>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-widest">Modificar datos, archivos y diseño del diploma</p>
                     </div>
                 </div>
                 <button onclick="cerrarModalEdicion()" class="p-2 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
@@ -718,29 +951,16 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="md:col-span-2">
-                        <label>Nombre del Curso</label>
-                        <input type="text" id="edit-curso-nombre" required>
-                    </div>
-                    <div>
-                        <label>Carga Horaria</label>
-                        <input type="text" id="edit-curso-carga" required>
-                    </div>
-                    <div>
-                        <label>Estado Actual</label>
-                        <input type="text" id="edit-curso-estado" disabled class="opacity-60 cursor-not-allowed">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label>Cuerpo Docente</label>
-                        <textarea id="edit-curso-docentes" rows="2" required></textarea>
-                    </div>
+                    <div class="md:col-span-2"><label>Nombre del Curso</label><input type="text" id="edit-curso-nombre" required></div>
+                    <div><label>Carga Horaria</label><input type="text" id="edit-curso-carga" required></div>
+                    <div><label>Estado Actual</label><input type="text" id="edit-curso-estado" disabled class="opacity-60 cursor-not-allowed"></div>
+                    <div class="md:col-span-2"><label>Cuerpo Docente</label><textarea id="edit-curso-docentes" rows="2" required></textarea></div>
                 </div>
 
                 <div class="border-t border-white/10 pt-5 space-y-4">
                     <h4 class="text-white font-bold text-sm uppercase tracking-widest flex items-center gap-2">
                         <i data-lucide="paperclip" class="w-4 h-4 text-[#d4af37]"></i> Archivos Respaldatorios
                     </h4>
-
                     <div class="bg-white/5 border border-white/10 rounded-xl p-4">
                         <div class="flex items-center justify-between mb-2">
                             <label class="text-blue-400 mb-0">Programa de Estudio (PDF)</label>
@@ -749,7 +969,6 @@
                         <input type="file" id="edit-curso-file-programa" accept="application/pdf" class="form-input">
                         <p class="text-[9px] text-slate-500 mt-1 italic">Dejar vacío para mantener el archivo actual.</p>
                     </div>
-
                     <div class="bg-white/5 border border-white/10 rounded-xl p-4">
                         <div class="flex items-center justify-between mb-2">
                             <label class="text-blue-400 mb-0">Modelo de Analítico (PDF)</label>
@@ -758,7 +977,6 @@
                         <input type="file" id="edit-curso-file-analitico" accept="application/pdf" class="form-input">
                         <p class="text-[9px] text-slate-500 mt-1 italic">Dejar vacío para mantener el archivo actual.</p>
                     </div>
-
                     <div class="bg-white/5 border border-white/10 rounded-xl p-4">
                         <div class="flex items-center justify-between mb-2">
                             <label class="text-blue-400 mb-0">Imagen Base del Diploma</label>
@@ -769,83 +987,208 @@
                     </div>
                 </div>
 
-                <div id="edit-constructor-diploma" class="bg-[#0a1128] border border-[#d4af37]/30 rounded-xl p-4 space-y-4">
-                    <div class="flex items-center gap-2 border-b border-[#d4af37]/30 pb-2">
-                        <i data-lucide="move" class="w-4 h-4 text-[#d4af37]"></i>
-                        <p class="text-xs font-bold text-[#d4af37] uppercase tracking-widest">Vista Previa Realista (WYSIWYG)</p>
-                    </div>
-
-                    <!-- PREVIEW WYSIWYG: Imagen superior + Mockup faldón inferior -->
-                    <div id="edit-preview-diploma-container" class="preview-diploma-container">
-                        <!-- Zona superior: imagen del diploma -->
-                        <div id="edit-preview-diploma-upper" class="preview-diploma-upper" style="background-size: contain; background-position: center; background-repeat: no-repeat;">
-                            <div id="edit-preview-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
-                                <div class="text-center">
-                                    <i data-lucide="image" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
-                                    <p>Sin imagen base disponible</p>
-                                </div>
-                            </div>
-
-                            <div id="edit-preview-texto-alumno"
-                                 class="absolute bg-white/95 backdrop-blur-sm text-slate-900 px-4 py-2 rounded-lg shadow-lg border-2 border-[#d4af37]/60 pointer-events-none"
-                                 style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 85%; text-align: center;">
-                                <p class="font-black text-sm md:text-base leading-tight">NOMBRE DEL ALUMNO</p>
-                                <p class="font-mono text-[10px] md:text-xs font-bold text-slate-600">DNI: 12.345.678</p>
-                                <p class="font-bold text-[9px] md:text-[10px] text-[#0a1128] uppercase mt-1">NOMBRE DEL CURSO</p>
-                            </div>
+                <!-- ═══════════════════════════════════════════════════════════════ -->
+                <!-- EDITOR WYSIWYG AVANZADO — EDICIÓN                               -->
+                <!-- ═══════════════════════════════════════════════════════════════ -->
+                <div id="edit-constructor-diploma" class="editor-wrapper">
+                    <div class="editor-toolbar">
+                        <div class="editor-toolbar-title">
+                            <i data-lucide="layout-template" class="w-4 h-4"></i>
+                            Editor Profesional de Diploma
                         </div>
-
-                        <!-- Zona inferior: mockup del faldón inmutable -->
-                        <div class="preview-faldon-mock">
-                            <div class="pfm-left">
-                                <div class="pfm-shield">
-                                    <i data-lucide="shield-check" style="width: 16px; height: 16px; color: #d4af37;"></i>
-                                </div>
-                                <div class="pfm-brand">
-                                    RENMCYCF
-                                    <small>Verificación Inmutable</small>
-                                </div>
-                            </div>
-                            <div class="pfm-center">
-                                <div class="pfm-hash-label">Certificado con Trazabilidad</div>
-                                <div class="pfm-hash">HASH: ASARI-XXXXXX</div>
-                                <div class="pfm-fecha">EMISIÓN: 01/01/2026</div>
-                            </div>
-                            <div class="pfm-right">
-                                <div class="pfm-qr-label">
-                                    Escanear
-                                    <small>renmcycf.com.ar</small>
-                                </div>
-                                <div class="pfm-qr-mock">
-                                    <span></span><span></span><span></span><span></span><span></span>
-                                    <span></span><span></span><span></span><span></span><span></span>
-                                    <span></span><span></span><span></span><span></span><span></span>
-                                    <span></span><span></span><span></span><span></span><span></span>
-                                    <span></span><span></span><span></span><span></span><span></span>
-                                </div>
-                            </div>
+                        <div class="editor-toolbar-actions">
+                            <button type="button" class="editor-tool-btn" id="btn-toggle-grid-edit" onclick="editorToggleGrid('edit')" title="Mostrar/ocultar cuadrícula">
+                                <i data-lucide="grid-3x3" class="w-3 h-3"></i> Grid
+                            </button>
+                            <button type="button" class="editor-tool-btn" id="btn-toggle-guides-edit" onclick="editorToggleGuides('edit')" title="Mostrar/ocultar guías">
+                                <i data-lucide="align-center" class="w-3 h-3"></i> Guías
+                            </button>
+                            <button type="button" class="editor-tool-btn" onclick="editorFullPreview('edit')" title="Ver tamaño real">
+                                <i data-lucide="maximize-2" class="w-3 h-3"></i> 1:1
+                            </button>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-[10px] text-slate-400 flex justify-between mb-1">
-                                <span>Eje Y (Vertical)</span>
-                                <span id="edit-label-pos-y" class="font-mono text-[#d4af37]">50%</span>
-                            </label>
-                            <input type="range" id="edit-slider-pos-y" min="0" max="100" value="50" class="w-full">
+                    <div class="editor-stage-outer">
+                        <div class="editor-stage-inner" id="editor-stage-inner-edit">
+                            <div id="edit-preview-diploma-container" class="preview-diploma-container">
+                                <div id="edit-preview-diploma-upper" class="preview-diploma-upper" style="background-size: contain; background-position: center; background-repeat: no-repeat;">
+                                    <div id="edit-preview-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
+                                        <div class="text-center">
+                                            <i data-lucide="image" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
+                                            <p class="font-bold uppercase tracking-widest text-[10px]">Sin imagen base disponible</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="editor-grid-overlay" id="editor-grid-edit"></div>
+                                    <div class="editor-guide-line editor-guide-h" id="editor-guide-h-edit" style="top: 50%;"></div>
+                                    <div class="editor-guide-line editor-guide-v" id="editor-guide-v-edit" style="left: 50%;"></div>
+
+                                    <div id="edit-preview-texto-alumno" class="preview-datos-flotante" data-editor="edit">
+                                        <div class="pdt-nombre" style="font-size: 16px;">NOMBRE DEL ALUMNO</div>
+                                        <div class="pdt-dni" style="font-size: 11px;">DNI: 12.345.678</div>
+                                        <div class="pdt-curso" style="font-size: 12px;">NOMBRE DEL CURSO</div>
+                                        <div class="pdt-carga" style="font-size: 9px;">Carga Horaria: XX Horas Cátedra</div>
+                                    </div>
+                                </div>
+
+                                <div class="preview-faldon-mock">
+                                    <div class="pfm-left">
+                                        <div class="pfm-shield">
+                                            <i data-lucide="shield-check" style="width: 16px; height: 16px; color: #d4af37;"></i>
+                                        </div>
+                                        <div class="pfm-brand">
+                                            RENMCYCF
+                                            <small>Verificación Inmutable</small>
+                                        </div>
+                                    </div>
+                                    <div class="pfm-center">
+                                        <div class="pfm-hash-label">Certificado con Trazabilidad</div>
+                                        <div class="pfm-hash">HASH: ASARI-XXXXXX</div>
+                                        <div class="pfm-fecha">EMISIÓN: 01/01/2026</div>
+                                    </div>
+                                    <div class="pfm-right">
+                                        <div class="pfm-qr-label">
+                                            Escanear
+                                            <small>renmcycf.com.ar</small>
+                                        </div>
+                                        <div class="pfm-qr-mock">
+                                            <span></span><span></span><span></span><span></span><span></span>
+                                            <span></span><span></span><span></span><span></span><span></span>
+                                            <span></span><span></span><span></span><span></span><span></span>
+                                            <span></span><span></span><span></span><span></span><span></span>
+                                            <span></span><span></span><span></span><span></span><span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label class="text-[10px] text-slate-400 flex justify-between mb-1">
+                    </div>
+
+                    <div class="editor-controls-grid" data-editor="edit">
+                        <div class="editor-control-group">
+                            <div class="editor-control-group-title">
+                                <i data-lucide="move" class="w-3 h-3"></i> Posición del Bloque
+                            </div>
+                            <div class="editor-mini-label">
                                 <span>Eje X (Horizontal)</span>
-                                <span id="edit-label-pos-x" class="font-mono text-[#d4af37]">50%</span>
-                            </label>
-                            <input type="range" id="edit-slider-pos-x" min="0" max="100" value="50" class="w-full">
+                                <span class="val" id="edit-label-pos-x">50%</span>
+                            </div>
+                            <input type="range" id="edit-slider-pos-x" min="0" max="100" value="50" class="w-full mb-2">
+                            <div class="editor-mini-label">
+                                <span>Eje Y (Vertical)</span>
+                                <span class="val" id="edit-label-pos-y">50%</span>
+                            </div>
+                            <input type="range" id="edit-slider-pos-y" min="0" max="100" value="50" class="w-full mb-3">
+                            
+                            <div class="editor-control-group-title" style="margin-top: 8px;">
+                                <i data-lucide="layout-grid" class="w-3 h-3"></i> Presets de Posición
+                            </div>
+                            <div class="editor-preset-grid">
+                                <button type="button" class="editor-preset-btn" onclick="editorApplyPreset('edit','center')" title="Centrar">
+                                    <i data-lucide="circle-dot" class="w-4 h-4"></i> Centro
+                                </button>
+                                <button type="button" class="editor-preset-btn" onclick="editorApplyPreset('edit','top')" title="Arriba">
+                                    <i data-lucide="arrow-up-to-line" class="w-4 h-4"></i> Arriba
+                                </button>
+                                <button type="button" class="editor-preset-btn" onclick="editorApplyPreset('edit','bottom')" title="Abajo">
+                                    <i data-lucide="arrow-down-to-line" class="w-4 h-4"></i> Abajo
+                                </button>
+                                <button type="button" class="editor-preset-btn" onclick="editorApplyPreset('edit','top-left')" title="Sup. Izq.">
+                                    <i data-lucide="arrow-up-left" class="w-4 h-4"></i> Sup.Izq
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="editor-control-group">
+                            <div class="editor-control-group-title">
+                                <i data-lucide="type" class="w-3 h-3"></i> Tipografía
+                            </div>
+                            <div class="editor-row">
+                                <div>
+                                    <div class="editor-mini-label"><span>Familia</span></div>
+                                    <select id="edit-editor-font-family" onchange="editorApplyTypography('edit')">
+                                        <option value="'Outfit', sans-serif">Outfit (Moderna)</option>
+                                        <option value="'Playfair Display', serif">Playfair (Elegante)</option>
+                                        <option value="'Inter', sans-serif">Inter (Neutra)</option>
+                                        <option value="'JetBrains Mono', monospace">JetBrains (Mono)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <div class="editor-mini-label"><span>Peso</span></div>
+                                    <select id="edit-editor-font-weight" onchange="editorApplyTypography('edit')">
+                                        <option value="400">Regular</option>
+                                        <option value="700">Bold</option>
+                                        <option value="900" selected>Black</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="editor-mini-label">
+                                <span>Tamaño Base Nombre</span>
+                                <span class="val" id="edit-editor-size-label">16px</span>
+                            </div>
+                            <input type="range" id="edit-editor-font-size" min="10" max="42" value="16" class="w-full mb-3" oninput="editorApplyTypography('edit')">
+                            
+                            <div class="editor-row">
+                                <div>
+                                    <div class="editor-mini-label"><span>Color</span></div>
+                                    <input type="color" id="edit-editor-font-color" value="#0a1128" oninput="editorApplyTypography('edit')">
+                                </div>
+                                <div>
+                                    <div class="editor-mini-label"><span>Alineación</span></div>
+                                    <select id="edit-editor-text-align" onchange="editorApplyTypography('edit')">
+                                        <option value="center" selected>Centro</option>
+                                        <option value="left">Izquierda</option>
+                                        <option value="right">Derecha</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="editor-mini-label">
+                                <span>Interlineado</span>
+                                <span class="val" id="edit-editor-lineheight-label">1.1</span>
+                            </div>
+                            <input type="range" id="edit-editor-line-height" min="0.9" max="2" step="0.05" value="1.1" class="w-full" oninput="editorApplyTypography('edit')">
+                        </div>
+
+                        <div class="editor-control-group">
+                            <div class="editor-control-group-title">
+                                <i data-lucide="sliders" class="w-3 h-3"></i> Opciones Avanzadas
+                            </div>
+                            <div class="editor-toggle-row">
+                                <span>Auto-ajustar texto largo</span>
+                                <div class="editor-switch active" id="edit-editor-autofit-switch" onclick="editorToggleAutoFit('edit')"></div>
+                            </div>
+                            <div class="editor-mini-label">
+                                <span>Ancho Máximo del Bloque</span>
+                                <span class="val" id="edit-editor-maxwidth-label">85%</span>
+                            </div>
+                            <input type="range" id="edit-editor-max-width" min="30" max="95" value="85" class="w-full mb-3" oninput="editorApplyAutoFit('edit')">
+                            
+                            <div class="editor-control-group-title" style="margin-top: 8px;">
+                                <i data-lucide="list" class="w-3 h-3"></i> Datos a Mostrar
+                            </div>
+                            <div class="editor-toggle-row">
+                                <span>Nombre completo</span>
+                                <div class="editor-switch active" id="edit-editor-show-nombre" onclick="editorToggleContent('edit','nombre')"></div>
+                            </div>
+                            <div class="editor-toggle-row">
+                                <span>DNI</span>
+                                <div class="editor-switch active" id="edit-editor-show-dni" onclick="editorToggleContent('edit','dni')"></div>
+                            </div>
+                            <div class="editor-toggle-row">
+                                <span>Nombre del Curso</span>
+                                <div class="editor-switch active" id="edit-editor-show-curso" onclick="editorToggleContent('edit','curso')"></div>
+                            </div>
+                            <div class="editor-toggle-row">
+                                <span>Carga Horaria</span>
+                                <div class="editor-switch active" id="edit-editor-show-carga" onclick="editorToggleContent('edit','carga')"></div>
+                            </div>
                         </div>
                     </div>
 
                     <input type="hidden" id="edit-pos-x" value="50">
                     <input type="hidden" id="edit-pos-y" value="50">
+                    <input type="hidden" id="edit-diseno-config" value="">
                 </div>
 
                 <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
@@ -863,28 +1206,17 @@
     <!-- PLANTILLA HÍBRIDA DEL PDF -->
     <div id="cert-render-zone" style="position: absolute; left: -9999px; top: -9999px; width: 1123px; height: 794px; background: white;">
         <div id="cert-template" class="w-full h-full relative overflow-hidden flex flex-col" style="font-family: 'Outfit', sans-serif; background: #ffffff;">
-            
-            <div id="area-diploma-base" 
-                 class="relative w-full" 
-                 style="height: 650px; background-size: contain; background-position: center; background-repeat: no-repeat; background-color: #ffffff;">
-                
-                <div id="datos-alumno-flotante"
-                     class="absolute"
-                     style="top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; max-width: 80%;">
+            <div id="area-diploma-base" class="relative w-full" style="height: 650px; background-size: contain; background-position: center; background-repeat: no-repeat; background-color: #ffffff;">
+                <div id="datos-alumno-flotante" class="absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; max-width: 80%;">
                     <h1 id="pdf-alumno" class="font-black uppercase tracking-wide" style="font-size: 42px; color: #0f172a; line-height: 1.1; margin-bottom: 6px; font-family: 'Outfit', sans-serif;">JUAN PÉREZ</h1>
                     <p id="pdf-dni" class="font-mono font-bold" style="font-size: 18px; color: #334155; margin-bottom: 12px;">DNI: 12.345.678</p>
                     <p id="pdf-curso" class="font-black uppercase tracking-wider" style="font-size: 22px; color: #1e3a8a; margin-bottom: 4px;">CRIMINALÍSTICA FORENSE AVANZADA</p>
                     <p id="pdf-carga" class="font-bold uppercase" style="font-size: 12px; color: #64748b; letter-spacing: 1px;">Carga Horaria: 120 Horas Cátedra</p>
                 </div>
             </div>
-
-            <div id="faldon-trazabilidad" 
-                 class="relative w-full flex items-center justify-between px-8 py-4" 
-                 style="height: 144px; background: #0f172a; color: #ffffff;">
-
+            <div id="faldon-trazabilidad" class="relative w-full flex items-center justify-between px-8 py-4" style="height: 144px; background: #0f172a; color: #ffffff;">
                 <div class="flex items-center gap-3" style="width: 30%;">
-                    <div class="logo-oficial-wrapper rounded-full flex items-center justify-center shrink-0" 
-                         style="width: 56px; height: 56px; background: #ffffff; border: 3px solid #d4af37; overflow: hidden;">
+                    <div class="logo-oficial-wrapper rounded-full flex items-center justify-center shrink-0" style="width: 56px; height: 56px; background: #ffffff; border: 3px solid #d4af37; overflow: hidden;">
                         <i data-lucide="shield-check" style="width: 30px; height: 30px; color: #d4af37;"></i>
                     </div>
                     <div>
@@ -892,27 +1224,18 @@
                         <p style="font-size: 9px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.3;">Verificación Tecnológica<br>Inmutable</p>
                     </div>
                 </div>
-
                 <div class="text-center" style="width: 40%;">
                     <p style="font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">Certificado con Trazabilidad Blockchain</p>
-                    <p style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #e2e8f0; margin-bottom: 3px;">
-                        HASH: <span id="pdf-hash" style="color: #d4af37;">ASARI-000000</span>
-                    </p>
-                    <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #94a3b8;">
-                        EMISIÓN: <span id="pdf-fecha">01/01/2026</span>
-                    </p>
+                    <p style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #e2e8f0; margin-bottom: 3px;">HASH: <span id="pdf-hash" style="color: #d4af37;">ASARI-000000</span></p>
+                    <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #94a3b8;">EMISIÓN: <span id="pdf-fecha">01/01/2026</span></p>
                 </div>
-
                 <div class="flex items-center justify-end gap-3" style="width: 30%;">
                     <div class="text-right">
                         <p style="font-size: 9px; font-weight: 900; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Escanear</p>
                         <p style="font-size: 7px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Verificar autenticidad</p>
                         <p style="font-size: 7px; font-weight: 700; color: #64748b; font-family: 'JetBrains Mono', monospace; margin-top: 2px;">renmcycf.com.ar</p>
                     </div>
-                    <div id="pdf-qr-container" 
-                         class="flex items-center justify-center shrink-0"
-                         style="width: 100px; height: 100px; background: #ffffff; border: 2px solid #d4af37; padding: 4px; border-radius: 4px;">
-                    </div>
+                    <div id="pdf-qr-container" class="flex items-center justify-center shrink-0" style="width: 100px; height: 100px; background: #ffffff; border: 2px solid #d4af37; padding: 4px; border-radius: 4px;"></div>
                 </div>
             </div>
         </div>
@@ -931,8 +1254,50 @@
         let aliadoId = null;
         let cursosCargados = [];
 
+        // ═══════════════════════════════════════════════════════════════
+        // ESTADO GLOBAL DEL EDITOR WYSIWYG
+        // ═══════════════════════════════════════════════════════════════
+        const editorState = {
+            alta: {
+                posX: 50,
+                posY: 50,
+                fontFamily: "'Outfit', sans-serif",
+                fontWeight: 900,
+                fontSize: 16,
+                fontColor: '#0a1128',
+                textAlign: 'center',
+                lineHeight: 1.1,
+                autoFit: true,
+                maxWidth: 85,
+                showNombre: true,
+                showDni: true,
+                showCurso: true,
+                showCarga: true,
+                showGrid: false,
+                showGuides: false
+            },
+            edit: {
+                posX: 50,
+                posY: 50,
+                fontFamily: "'Outfit', sans-serif",
+                fontWeight: 900,
+                fontSize: 16,
+                fontColor: '#0a1128',
+                textAlign: 'center',
+                lineHeight: 1.1,
+                autoFit: true,
+                maxWidth: 85,
+                showNombre: true,
+                showDni: true,
+                showCurso: true,
+                showCarga: true,
+                showGrid: false,
+                showGuides: false
+            }
+        };
+
         // ==========================================
-        // TEMA CLARO / OSCURO
+        // TEMA
         // ==========================================
         function aplicarTemaGuardado() {
             const tema = localStorage.getItem('asari_instituto_theme') || 'dark';
@@ -957,14 +1322,406 @@
             }
         }
 
-        // ==========================================
-        // HELPER: Constructor Visual de Diplomas
-        // ==========================================
+        // ═══════════════════════════════════════════════════════════════
+        // EDITOR WYSIWYG AVANZADO — HELPERS
+        // ═══════════════════════════════════════════════════════════════
+        function _editorGetElements(editor) {
+            const isAlta = editor === 'alta';
+            return {
+                sliderX: document.getElementById(isAlta ? 'slider-pos-x' : 'edit-slider-pos-x'),
+                sliderY: document.getElementById(isAlta ? 'slider-pos-y' : 'edit-slider-pos-y'),
+                labelX: document.getElementById(isAlta ? 'label-pos-x' : 'edit-label-pos-x'),
+                labelY: document.getElementById(isAlta ? 'label-pos-y' : 'edit-label-pos-y'),
+                hiddenX: document.getElementById(isAlta ? 'pos-x' : 'edit-pos-x'),
+                hiddenY: document.getElementById(isAlta ? 'pos-y' : 'edit-pos-y'),
+                hiddenConfig: document.getElementById(isAlta ? 'diseno-config' : 'edit-diseno-config'),
+                texto: document.getElementById(isAlta ? 'preview-texto-alumno' : 'edit-preview-texto-alumno'),
+                grid: document.getElementById(isAlta ? 'editor-grid-alta' : 'editor-grid-edit'),
+                guideH: document.getElementById(isAlta ? 'editor-guide-h-alta' : 'editor-guide-h-edit'),
+                guideV: document.getElementById(isAlta ? 'editor-guide-v-alta' : 'editor-guide-v-edit'),
+                fontFamily: document.getElementById(isAlta ? 'editor-font-family' : 'edit-editor-font-family'),
+                fontWeight: document.getElementById(isAlta ? 'editor-font-weight' : 'edit-editor-font-weight'),
+                fontSize: document.getElementById(isAlta ? 'editor-font-size' : 'edit-editor-font-size'),
+                fontSizeLabel: document.getElementById(isAlta ? 'editor-size-label' : 'edit-editor-size-label'),
+                fontColor: document.getElementById(isAlta ? 'editor-font-color' : 'edit-editor-font-color'),
+                textAlign: document.getElementById(isAlta ? 'editor-text-align' : 'edit-editor-text-align'),
+                lineHeight: document.getElementById(isAlta ? 'editor-line-height' : 'edit-editor-line-height'),
+                lineHeightLabel: document.getElementById(isAlta ? 'editor-lineheight-label' : 'edit-editor-lineheight-label'),
+                autoFitSwitch: document.getElementById(isAlta ? 'editor-autofit-switch' : 'edit-editor-autofit-switch'),
+                maxWidth: document.getElementById(isAlta ? 'editor-max-width' : 'edit-editor-max-width'),
+                maxWidthLabel: document.getElementById(isAlta ? 'editor-maxwidth-label' : 'edit-editor-maxwidth-label'),
+                showNombre: document.getElementById(isAlta ? 'editor-show-nombre' : 'edit-editor-show-nombre'),
+                showDni: document.getElementById(isAlta ? 'editor-show-dni' : 'edit-editor-show-dni'),
+                showCurso: document.getElementById(isAlta ? 'editor-show-curso' : 'edit-editor-show-curso'),
+                showCarga: document.getElementById(isAlta ? 'editor-show-carga' : 'edit-editor-show-carga')
+            };
+        }
+
+        function _editorRenderizar(editor) {
+            const st = editorState[editor];
+            const els = _editorGetElements(editor);
+            if (!els.texto) return;
+
+            // Posición
+            if (els.texto) {
+                els.texto.style.top = `${st.posY}%`;
+                els.texto.style.left = `${st.posX}%`;
+                els.texto.style.transform = 'translate(-50%, -50%)';
+                els.texto.style.maxWidth = `${st.maxWidth}%`;
+            }
+            if (els.labelX) els.labelX.textContent = `${st.posX}%`;
+            if (els.labelY) els.labelY.textContent = `${st.posY}%`;
+            if (els.hiddenX) els.hiddenX.value = st.posX;
+            if (els.hiddenY) els.hiddenY.value = st.posY;
+
+            // Guías
+            if (els.guideH) els.guideH.style.top = `${st.posY}%`;
+            if (els.guideV) els.guideV.style.left = `${st.posX}%`;
+
+            // Tipografía
+            const nombre = els.texto.querySelector('.pdt-nombre');
+            const dni = els.texto.querySelector('.pdt-dni');
+            const curso = els.texto.querySelector('.pdt-curso');
+            const carga = els.texto.querySelector('.pdt-carga');
+
+            if (nombre) {
+                nombre.style.fontFamily = st.fontFamily;
+                nombre.style.fontWeight = st.fontWeight;
+                nombre.style.fontSize = st.fontSize + 'px';
+                nombre.style.color = st.fontColor;
+                nombre.style.lineHeight = st.lineHeight;
+                nombre.style.textAlign = st.textAlign;
+            }
+            if (dni) {
+                dni.style.fontFamily = st.fontFamily;
+                dni.style.fontWeight = Math.min(st.fontWeight, 700);
+                dni.style.fontSize = Math.max(9, st.fontSize * 0.7) + 'px';
+                dni.style.textAlign = st.textAlign;
+            }
+            if (curso) {
+                curso.style.fontFamily = st.fontFamily;
+                curso.style.fontWeight = st.fontWeight;
+                curso.style.fontSize = Math.max(10, st.fontSize * 0.75) + 'px';
+                curso.style.lineHeight = st.lineHeight;
+                curso.style.textAlign = st.textAlign;
+            }
+            if (carga) {
+                carga.style.fontFamily = st.fontFamily;
+                carga.style.fontSize = Math.max(8, st.fontSize * 0.55) + 'px';
+                carga.style.textAlign = st.textAlign;
+            }
+            if (els.texto) els.texto.style.textAlign = st.textAlign;
+
+            // Visibilidad de datos
+            if (dni) dni.style.display = st.showDni ? '' : 'none';
+            if (curso) curso.style.display = st.showCurso ? '' : 'none';
+            if (carga) carga.style.display = st.showCarga ? '' : 'none';
+            if (nombre) nombre.style.display = st.showNombre ? '' : 'none';
+
+            // Auto-fit
+            if (st.autoFit) {
+                _editorAutoFit(editor);
+            } else {
+                // Restaurar tamaño base
+                if (nombre) nombre.style.fontSize = st.fontSize + 'px';
+                if (curso) curso.style.fontSize = Math.max(10, st.fontSize * 0.75) + 'px';
+            }
+        }
+
+        function _editorAutoFit(editor) {
+            const st = editorState[editor];
+            const els = _editorGetElements(editor);
+            if (!els.texto) return;
+
+            const nombre = els.texto.querySelector('.pdt-nombre');
+            const curso = els.texto.querySelector('.pdt-curso');
+            if (!nombre) return;
+
+            const containerWidth = els.texto.parentElement.clientWidth;
+            const maxWidthPx = (st.maxWidth / 100) * containerWidth;
+
+            // Resetear al tamaño base
+            nombre.style.fontSize = st.fontSize + 'px';
+            if (curso) curso.style.fontSize = Math.max(10, st.fontSize * 0.75) + 'px';
+
+            // Reducir el nombre si supera el ancho
+            let nombreSize = st.fontSize;
+            let iteraciones = 0;
+            while (nombre.scrollWidth > maxWidthPx && nombreSize > 8 && iteraciones < 30) {
+                nombreSize -= 0.5;
+                nombre.style.fontSize = nombreSize + 'px';
+                iteraciones++;
+            }
+
+            // Reducir el curso si supera el ancho
+            if (curso) {
+                let cursoSize = Math.max(10, st.fontSize * 0.75);
+                let it2 = 0;
+                while (curso.scrollWidth > maxWidthPx && cursoSize > 7 && it2 < 30) {
+                    cursoSize -= 0.5;
+                    curso.style.fontSize = cursoSize + 'px';
+                    it2++;
+                }
+            }
+        }
+
+        function _editorSerialize(editor) {
+            const st = editorState[editor];
+            return JSON.stringify({
+                posX: st.posX,
+                posY: st.posY,
+                fontFamily: st.fontFamily,
+                fontWeight: st.fontWeight,
+                fontSize: st.fontSize,
+                fontColor: st.fontColor,
+                textAlign: st.textAlign,
+                lineHeight: st.lineHeight,
+                autoFit: st.autoFit,
+                maxWidth: st.maxWidth,
+                showNombre: st.showNombre,
+                showDni: st.showDni,
+                showCurso: st.showCurso,
+                showCarga: st.showCarga
+            });
+        }
+
+        function _editorDeserialize(editor, jsonStr) {
+            if (!jsonStr) return;
+            try {
+                const data = typeof jsonStr === 'string' ? JSON.parse(jsonStr) : jsonStr;
+                Object.assign(editorState[editor], data);
+            } catch (e) {
+                console.warn('No se pudo deserializar diseno_config:', e);
+            }
+        }
+
+        function _editorSyncUI(editor) {
+            const st = editorState[editor];
+            const els = _editorGetElements(editor);
+            if (els.sliderX) els.sliderX.value = st.posX;
+            if (els.sliderY) els.sliderY.value = st.posY;
+            if (els.fontFamily) els.fontFamily.value = st.fontFamily;
+            if (els.fontWeight) els.fontWeight.value = st.fontWeight;
+            if (els.fontSize) els.fontSize.value = st.fontSize;
+            if (els.fontSizeLabel) els.fontSizeLabel.textContent = st.fontSize + 'px';
+            if (els.fontColor) els.fontColor.value = st.fontColor;
+            if (els.textAlign) els.textAlign.value = st.textAlign;
+            if (els.lineHeight) els.lineHeight.value = st.lineHeight;
+            if (els.lineHeightLabel) els.lineHeightLabel.textContent = st.lineHeight.toFixed(2);
+            if (els.maxWidth) els.maxWidth.value = st.maxWidth;
+            if (els.maxWidthLabel) els.maxWidthLabel.textContent = st.maxWidth + '%';
+            if (els.autoFitSwitch) els.autoFitSwitch.classList.toggle('active', st.autoFit);
+            if (els.showNombre) els.showNombre.classList.toggle('active', st.showNombre);
+            if (els.showDni) els.showDni.classList.toggle('active', st.showDni);
+            if (els.showCurso) els.showCurso.classList.toggle('active', st.showCurso);
+            if (els.showCarga) els.showCarga.classList.toggle('active', st.showCarga);
+        }
+
+        // API pública llamada desde los onclick en HTML
+        function editorApplyTypography(editor) {
+            const els = _editorGetElements(editor);
+            const st = editorState[editor];
+            if (els.fontFamily) st.fontFamily = els.fontFamily.value;
+            if (els.fontWeight) st.fontWeight = parseInt(els.fontWeight.value);
+            if (els.fontSize) st.fontSize = parseInt(els.fontSize.value);
+            if (els.fontColor) st.fontColor = els.fontColor.value;
+            if (els.textAlign) st.textAlign = els.textAlign.value;
+            if (els.lineHeight) st.lineHeight = parseFloat(els.lineHeight.value);
+            if (els.fontSizeLabel) els.fontSizeLabel.textContent = st.fontSize + 'px';
+            if (els.lineHeightLabel) els.lineHeightLabel.textContent = st.lineHeight.toFixed(2);
+            _editorRenderizar(editor);
+            _editorSyncHidden(editor);
+        }
+
+        function editorApplyAutoFit(editor) {
+            const els = _editorGetElements(editor);
+            const st = editorState[editor];
+            if (els.maxWidth) st.maxWidth = parseInt(els.maxWidth.value);
+            if (els.maxWidthLabel) els.maxWidthLabel.textContent = st.maxWidth + '%';
+            _editorRenderizar(editor);
+            _editorSyncHidden(editor);
+        }
+
+        function editorToggleAutoFit(editor) {
+            const st = editorState[editor];
+            const els = _editorGetElements(editor);
+            st.autoFit = !st.autoFit;
+            if (els.autoFitSwitch) els.autoFitSwitch.classList.toggle('active', st.autoFit);
+            _editorRenderizar(editor);
+            _editorSyncHidden(editor);
+        }
+
+        function editorToggleContent(editor, key) {
+            const st = editorState[editor];
+            const map = { nombre: 'showNombre', dni: 'showDni', curso: 'showCurso', carga: 'showCarga' };
+            const prop = map[key];
+            if (!prop) return;
+            st[prop] = !st[prop];
+            _editorSyncUI(editor);
+            _editorRenderizar(editor);
+            _editorSyncHidden(editor);
+        }
+
+        function editorToggleGrid(editor) {
+            const st = editorState[editor];
+            const els = _editorGetElements(editor);
+            st.showGrid = !st.showGrid;
+            if (els.grid) els.grid.classList.toggle('active', st.showGrid);
+            const btn = document.getElementById(editor === 'alta' ? 'btn-toggle-grid' : 'btn-toggle-grid-edit');
+            if (btn) btn.classList.toggle('active', st.showGrid);
+        }
+
+        function editorToggleGuides(editor) {
+            const st = editorState[editor];
+            const els = _editorGetElements(editor);
+            st.showGuides = !st.showGuides;
+            if (els.guideH) els.guideH.classList.toggle('active', st.showGuides);
+            if (els.guideV) els.guideV.classList.toggle('active', st.showGuides);
+            const btn = document.getElementById(editor === 'alta' ? 'btn-toggle-guides' : 'btn-toggle-guides-edit');
+            if (btn) btn.classList.toggle('active', st.showGuides);
+        }
+
+        function editorApplyPreset(editor, preset) {
+            const st = editorState[editor];
+            switch (preset) {
+                case 'center':
+                    st.posX = 50; st.posY = 50;
+                    break;
+                case 'top':
+                    st.posX = 50; st.posY = 25;
+                    break;
+                case 'bottom':
+                    st.posX = 50; st.posY = 72;
+                    break;
+                case 'top-left':
+                    st.posX = 30; st.posY = 25;
+                    break;
+            }
+            _editorSyncUI(editor);
+            _editorRenderizar(editor);
+            _editorSyncHidden(editor);
+        }
+
+        function editorFullPreview(editor) {
+            const texto = document.getElementById(editor === 'alta' ? 'preview-texto-alumno' : 'edit-preview-texto-alumno');
+            const container = texto?.closest('.preview-diploma-container');
+            if (!container) return;
+
+            // Modal simple con la imagen
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;cursor:zoom-out';
+            overlay.onclick = () => overlay.remove();
+
+            const clone = container.cloneNode(true);
+            clone.style.maxWidth = '95vw';
+            clone.style.maxHeight = '90vh';
+            clone.style.boxShadow = '0 0 60px rgba(212,175,55,0.35)';
+            overlay.appendChild(clone);
+            document.body.appendChild(overlay);
+            lucide.createIcons();
+        }
+
+        function _editorSyncHidden(editor) {
+            const els = _editorGetElements(editor);
+            if (els.hiddenConfig) els.hiddenConfig.value = _editorSerialize(editor);
+        }
+
+        function _editorInitListeners(editor) {
+            const els = _editorGetElements(editor);
+            const st = editorState[editor];
+
+            if (els.sliderX) els.sliderX.addEventListener('input', () => {
+                st.posX = parseInt(els.sliderX.value);
+                _editorSyncUI(editor);
+                _editorRenderizar(editor);
+                _editorSyncHidden(editor);
+            });
+            if (els.sliderY) els.sliderY.addEventListener('input', () => {
+                st.posY = parseInt(els.sliderY.value);
+                _editorSyncUI(editor);
+                _editorRenderizar(editor);
+                _editorSyncHidden(editor);
+            });
+
+            // Drag & Drop del bloque
+            if (els.texto) {
+                let dragging = false;
+                let startX, startY, startLeft, startTop;
+                let containerRect;
+
+                els.texto.addEventListener('mousedown', (e) => {
+                    if (e.target.closest('select, input, button')) return;
+                    dragging = true;
+                    els.texto.classList.add('dragging');
+                    containerRect = els.texto.parentElement.getBoundingClientRect();
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startLeft = (st.posX / 100) * containerRect.width;
+                    startTop = (st.posY / 100) * containerRect.height;
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (!dragging) return;
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    const newLeft = Math.max(0, Math.min(containerRect.width, startLeft + dx));
+                    const newTop = Math.max(0, Math.min(containerRect.height, startTop + dy));
+                    st.posX = Math.round((newLeft / containerRect.width) * 100);
+                    st.posY = Math.round((newTop / containerRect.height) * 100);
+                    _editorSyncUI(editor);
+                    _editorRenderizar(editor);
+                });
+
+                document.addEventListener('mouseup', () => {
+                    if (dragging) {
+                        dragging = false;
+                        els.texto.classList.remove('dragging');
+                        _editorSyncHidden(editor);
+                    }
+                });
+
+                // Touch
+                els.texto.addEventListener('touchstart', (e) => {
+                    const touch = e.touches[0];
+                    dragging = true;
+                    els.texto.classList.add('dragging');
+                    containerRect = els.texto.parentElement.getBoundingClientRect();
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                    startLeft = (st.posX / 100) * containerRect.width;
+                    startTop = (st.posY / 100) * containerRect.height;
+                }, { passive: true });
+
+                document.addEventListener('touchmove', (e) => {
+                    if (!dragging) return;
+                    const touch = e.touches[0];
+                    const dx = touch.clientX - startX;
+                    const dy = touch.clientY - startY;
+                    const newLeft = Math.max(0, Math.min(containerRect.width, startLeft + dx));
+                    const newTop = Math.max(0, Math.min(containerRect.height, startTop + dy));
+                    st.posX = Math.round((newLeft / containerRect.width) * 100);
+                    st.posY = Math.round((newTop / containerRect.height) * 100);
+                    _editorSyncUI(editor);
+                    _editorRenderizar(editor);
+                }, { passive: true });
+
+                document.addEventListener('touchend', () => {
+                    if (dragging) {
+                        dragging = false;
+                        els.texto.classList.remove('dragging');
+                        _editorSyncHidden(editor);
+                    }
+                });
+            }
+        }
+
+        // Wrapper de compatibilidad con initConstructorVisual legacy
         function initConstructorVisual(config) {
             const {
                 inputDiplomaId, containerId, previewContainerId, placeholderId,
                 sliderYId, sliderXId, labelYId, labelXId,
-                posYInputId, posXInputId, textoFlotanteId
+                posYInputId, posXInputId, textoFlotanteId, editorKey
             } = config;
 
             const inputDiploma = document.getElementById(inputDiplomaId);
@@ -975,15 +1732,12 @@
                 const container = document.getElementById(containerId);
                 const previewContainer = document.getElementById(previewContainerId);
                 const placeholder = document.getElementById(placeholderId);
-                
                 if (!file) return;
-
                 if (!file.type.startsWith('image/')) {
                     alert('Por favor, seleccione un archivo de imagen válido (JPG, PNG, etc.)');
                     inputDiploma.value = '';
                     return;
                 }
-
                 const reader = new FileReader();
                 reader.onload = function(evt) {
                     if (container) container.classList.remove('hidden');
@@ -994,33 +1748,13 @@
                 reader.readAsDataURL(file);
             });
 
-            const sliderY = document.getElementById(sliderYId);
-            const sliderX = document.getElementById(sliderXId);
-            const labelY = document.getElementById(labelYId);
-            const labelX = document.getElementById(labelXId);
-            const inputPosY = document.getElementById(posYInputId);
-            const inputPosX = document.getElementById(posXInputId);
-            const textoFlotante = document.getElementById(textoFlotanteId);
-
-            function actualizarPosicion() {
-                const y = parseInt(sliderY?.value || 50);
-                const x = parseInt(sliderX?.value || 50);
-
-                if (labelY) labelY.textContent = `${y}%`;
-                if (labelX) labelX.textContent = `${x}%`;
-                if (inputPosY) inputPosY.value = y;
-                if (inputPosX) inputPosX.value = x;
-
-                if (textoFlotante) {
-                    textoFlotante.style.top = `${y}%`;
-                    textoFlotante.style.left = `${x}%`;
-                    textoFlotante.style.transform = 'translate(-50%, -50%)';
-                }
+            // Init editor key
+            if (editorKey) {
+                _editorSyncUI(editorKey);
+                _editorInitListeners(editorKey);
+                _editorRenderizar(editorKey);
+                _editorSyncHidden(editorKey);
             }
-
-            if (sliderY) sliderY.addEventListener('input', actualizarPosicion);
-            if (sliderX) sliderX.addEventListener('input', actualizarPosicion);
-            actualizarPosicion();
 
             return {
                 setPreview: (imageUrl) => {
@@ -1034,18 +1768,30 @@
                     }
                 },
                 setPosition: (x, y) => {
-                    if (sliderX) sliderX.value = x;
-                    if (sliderY) sliderY.value = y;
-                    actualizarPosicion();
+                    if (!editorKey) return;
+                    editorState[editorKey].posX = x;
+                    editorState[editorKey].posY = y;
+                    _editorSyncUI(editorKey);
+                    _editorRenderizar(editorKey);
+                    _editorSyncHidden(editorKey);
                 },
                 setTexts: ({ nombre, curso }) => {
                     const texto = document.getElementById(textoFlotanteId);
                     if (!texto) return;
-                    const pNombre = texto.children[0];
-                    const pCurso = texto.children[2];
+                    const pNombre = texto.querySelector('.pdt-nombre');
+                    const pCurso = texto.querySelector('.pdt-curso');
                     if (pNombre && nombre) pNombre.textContent = nombre;
                     if (pCurso && curso) pCurso.textContent = curso;
-                }
+                    if (editorKey) _editorRenderizar(editorKey);
+                },
+                setConfig: (config) => {
+                    if (!editorKey) return;
+                    if (config) _editorDeserialize(editorKey, config);
+                    _editorSyncUI(editorKey);
+                    _editorRenderizar(editorKey);
+                    _editorSyncHidden(editorKey);
+                },
+                getConfig: () => editorKey ? _editorSerialize(editorKey) : ''
             };
         }
 
@@ -1061,11 +1807,9 @@
             const pass = document.getElementById('login-password').value.trim();
             const btn = document.getElementById('btn-login');
             const errorDiv = document.getElementById('login-error');
-            
             errorDiv.classList.add('hidden');
             btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin mx-auto"></i>'; 
             btn.disabled = true;
-
             try {
                 const { error } = await db.auth.signInWithPassword({ email, password: pass });
                 if (error) throw error;
@@ -1081,74 +1825,28 @@
 
         async function verificarSesion() {
             const { data: { session }, error } = await db.auth.getSession();
-            if (error || !session) { 
-                document.getElementById('login-screen').style.display = 'flex'; 
-                return; 
-            }
-            
-            const { data: rolData, error: rolError } = await db.from('renmcycf_roles')
-                .select('rol, activo, nombres, apellidos, aliado_id')
-                .eq('user_id', session.user.id)
-                .single();
-            
-            if (rolError || !rolData || !rolData.activo) {
-                await db.auth.signOut();
-                mostrarErrorLogin("Acceso denegado. Cuenta inactiva o inexistente.");
-                return;
-            }
-
-            if (rolData.rol !== 'director') {
-                await db.auth.signOut();
-                mostrarErrorLogin("Acceso denegado. Esta cuenta no tiene privilegios institucionales.");
-                return;
-            }
-
-            if (!rolData.aliado_id) {
-                await db.auth.signOut();
-                mostrarErrorLogin("Acceso denegado. Su cuenta no está vinculada a ninguna institución.");
-                return;
-            }
-
+            if (error || !session) { document.getElementById('login-screen').style.display = 'flex'; return; }
+            const { data: rolData, error: rolError } = await db.from('renmcycf_roles').select('rol, activo, nombres, apellidos, aliado_id').eq('user_id', session.user.id).single();
+            if (rolError || !rolData || !rolData.activo) { await db.auth.signOut(); mostrarErrorLogin("Acceso denegado. Cuenta inactiva o inexistente."); return; }
+            if (rolData.rol !== 'director') { await db.auth.signOut(); mostrarErrorLogin("Acceso denegado. Esta cuenta no tiene privilegios institucionales."); return; }
+            if (!rolData.aliado_id) { await db.auth.signOut(); mostrarErrorLogin("Acceso denegado. Su cuenta no está vinculada a ninguna institución."); return; }
             aliadoId = rolData.aliado_id;
-
-            const { data: aliado, error: aliadoError } = await db.from('renmcycf_aliados')
-                .select('*')
-                .eq('id', aliadoId)
-                .single();
-
-            if (aliadoError || !aliado) {
-                await db.auth.signOut();
-                mostrarErrorLogin("Error: No se encontró la institución asociada.");
-                return;
-            }
-
+            const { data: aliado, error: aliadoError } = await db.from('renmcycf_aliados').select('*').eq('id', aliadoId).single();
+            if (aliadoError || !aliado) { await db.auth.signOut(); mostrarErrorLogin("Error: No se encontró la institución asociada."); return; }
             institutoActual = aliado;
-
             if (aliado.logo_url) {
                 const headerImg = document.getElementById('header-logo-img');
                 const headerIcon = document.getElementById('header-logo-icon');
-                if (headerImg && headerIcon) {
-                    headerImg.src = aliado.logo_url;
-                    headerImg.classList.remove('hidden');
-                    headerIcon.classList.add('hidden');
-                }
-
+                if (headerImg && headerIcon) { headerImg.src = aliado.logo_url; headerImg.classList.remove('hidden'); headerIcon.classList.add('hidden'); }
                 const sideImg = document.getElementById('sidebar-logo-img');
                 const sideIcon = document.getElementById('sidebar-logo-icon');
-                if (sideImg && sideIcon) {
-                    sideImg.src = aliado.logo_url;
-                    sideImg.classList.remove('hidden');
-                    sideIcon.classList.add('hidden');
-                }
+                if (sideImg && sideIcon) { sideImg.src = aliado.logo_url; sideImg.classList.remove('hidden'); sideIcon.classList.add('hidden'); }
             }
-
             const sideName = document.getElementById('sidebar-instituto-nombre');
             if (sideName) sideName.textContent = aliado.nombre || 'Mi Instituto';
-
             document.getElementById('header-instituto').textContent = aliado.nombre || 'Instituto';
             document.getElementById('header-timbres').textContent = `Derechos: ${aliado.saldo_timbres || 0}`;
             document.getElementById('login-screen').style.display = 'none';
-
             await cargarDashboardInstituto();
             showTab('dashboard');
             lucide.createIcons();
@@ -1175,24 +1873,14 @@
             document.getElementById('btn-login').innerHTML = 'INGRESAR';
             document.getElementById('btn-login').disabled = false;
             document.getElementById('login-screen').style.display = 'flex';
-            
             const headerImg = document.getElementById('header-logo-img');
             const headerIcon = document.getElementById('header-logo-icon');
-            if (headerImg && headerIcon) {
-                headerImg.classList.add('hidden');
-                headerImg.src = '';
-                headerIcon.classList.remove('hidden');
-            }
+            if (headerImg && headerIcon) { headerImg.classList.add('hidden'); headerImg.src = ''; headerIcon.classList.remove('hidden'); }
             const sideImg = document.getElementById('sidebar-logo-img');
             const sideIcon = document.getElementById('sidebar-logo-icon');
-            if (sideImg && sideIcon) {
-                sideImg.classList.add('hidden');
-                sideImg.src = '';
-                sideIcon.classList.remove('hidden');
-            }
+            if (sideImg && sideIcon) { sideImg.classList.add('hidden'); sideImg.src = ''; sideIcon.classList.remove('hidden'); }
             const sideName = document.getElementById('sidebar-instituto-nombre');
             if (sideName) sideName.textContent = 'ASARI Core';
-            
             lucide.createIcons();
         }
 
@@ -1202,17 +1890,10 @@
         function showTab(id) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
-            
             document.getElementById('view-' + id).classList.add('active');
             document.getElementById('nav-' + id)?.classList.add('active');
-            
-            const titles = { 
-                'dashboard': 'Dashboard Institucional', 
-                'cursos': 'Gestión de Cursos', 
-                'certificados': 'Emisión de Certificados' 
-            };
+            const titles = { 'dashboard': 'Dashboard Institucional', 'cursos': 'Gestión de Cursos', 'certificados': 'Emisión de Certificados' };
             document.getElementById('page-title').textContent = titles[id] || id;
-            
             if (id === 'dashboard') cargarDashboardInstituto();
             if (id === 'cursos') cargarCursosInstituto();
             if (id === 'certificados') cargarCertificadosInstituto();
@@ -1223,32 +1904,17 @@
         // ==========================================
         async function cargarDashboardInstituto() {
             if (!aliadoId) return;
-
             try {
-                const { data: aliado } = await db.from('renmcycf_aliados')
-                    .select('saldo_timbres')
-                    .eq('id', aliadoId)
-                    .single();
-
+                const { data: aliado } = await db.from('renmcycf_aliados').select('saldo_timbres').eq('id', aliadoId).single();
                 if (aliado) {
                     document.getElementById('stat-timbres').textContent = aliado.saldo_timbres || 0;
                     document.getElementById('header-timbres').textContent = `Derechos: ${aliado.saldo_timbres || 0}`;
                 }
-
-                const { count: certCount } = await db.from('renmcycf_certificados_b2b')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('aliado_id', aliadoId);
+                const { count: certCount } = await db.from('renmcycf_certificados_b2b').select('*', { count: 'exact', head: true }).eq('aliado_id', aliadoId);
                 document.getElementById('stat-certificados').textContent = certCount || 0;
-
-                const { count: cursosCount } = await db.from('renmcycf_aliados_cursos')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('aliado_id', aliadoId)
-                    .eq('estado', 'APROBADO');
+                const { count: cursosCount } = await db.from('renmcycf_aliados_cursos').select('*', { count: 'exact', head: true }).eq('aliado_id', aliadoId).eq('estado', 'APROBADO');
                 document.getElementById('stat-cursos').textContent = cursosCount || 0;
-
-            } catch (err) { 
-                console.error("Error Dashboard:", err); 
-            }
+            } catch (err) { console.error("Error Dashboard:", err); }
         }
 
         function contactarSoporte() {
@@ -1263,133 +1929,74 @@
             const tbody = document.getElementById('cursos-body');
             if (!tbody) return;
             tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">Cargando...</td></tr>';
-
             try {
-                const { data: cursos, error } = await db.from('renmcycf_aliados_cursos')
-                    .select('*')
-                    .eq('aliado_id', aliadoId)
-                    .order('created_at', { ascending: false });
-
+                const { data: cursos, error } = await db.from('renmcycf_aliados_cursos').select('*').eq('aliado_id', aliadoId).order('created_at', { ascending: false });
                 if (error) throw error;
-
                 cursosCargados = cursos || [];
-
-                if (!cursos || cursos.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">No hay cursos propuestos aún.</td></tr>';
-                    return;
-                }
-
+                if (!cursos || cursos.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">No hay cursos propuestos aún.</td></tr>'; return; }
                 tbody.innerHTML = cursos.map(c => {
                     const tieneDocumentacion = c.programa_url && c.analitico_url && c.diploma_base_url;
-                    
                     let celdaDocumentacion = '';
                     if (tieneDocumentacion) {
-                        celdaDocumentacion = `
-                            <div class="flex flex-col gap-1">
-                                <span class="inline-flex items-center gap-1.5 bg-emerald-900/30 text-emerald-400 border border-emerald-500/40 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider w-max">
-                                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Documentación Adjuntada
-                                </span>
-                                <span class="text-[9px] text-slate-500 italic">Enviados a Comité</span>
-                            </div>`;
+                        celdaDocumentacion = `<div class="flex flex-col gap-1"><span class="inline-flex items-center gap-1.5 bg-emerald-900/30 text-emerald-400 border border-emerald-500/40 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider w-max"><i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Documentación Adjuntada</span><span class="text-[9px] text-slate-500 italic">Enviados a Comité</span></div>`;
                     } else {
                         const faltantes = [];
                         if (!c.programa_url) faltantes.push('Programa');
                         if (!c.analitico_url) faltantes.push('Analítico');
                         if (!c.diploma_base_url) faltantes.push('Diploma');
-                        celdaDocumentacion = `
-                            <div class="flex flex-col gap-1">
-                                <span class="inline-flex items-center gap-1.5 bg-amber-900/30 text-amber-400 border border-amber-500/40 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider w-max">
-                                    <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Incompleto
-                                </span>
-                                <span class="text-[9px] text-slate-500 italic">Falta: ${faltantes.join(', ')}</span>
-                            </div>`;
+                        celdaDocumentacion = `<div class="flex flex-col gap-1"><span class="inline-flex items-center gap-1.5 bg-amber-900/30 text-amber-400 border border-amber-500/40 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider w-max"><i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Incompleto</span><span class="text-[9px] text-slate-500 italic">Falta: ${faltantes.join(', ')}</span></div>`;
                     }
-
                     const esEditable = c.estado === 'PENDIENTE' || c.estado === 'RECHAZADO';
-                    const editTooltip = esEditable 
-                        ? 'Editar curso' 
-                        : 'Editar (ya aprobado — los cambios reinician la auditoría)';
-
+                    const editTooltip = esEditable ? 'Editar curso' : 'Editar (ya aprobado — los cambios reinician la auditoría)';
                     return `
                     <tr class="border-b border-white/5 hover:bg-white/5">
-                        <td class="p-3">
-                            <span class="text-white font-bold block text-sm">${c.nombre_curso}</span>
-                            <span class="text-[10px] text-slate-400 block"><i data-lucide="clock" class="inline w-3 h-3"></i> ${c.carga_horaria || 'S/D'}</span>
-                        </td>
-                        <td class="p-3 text-[10px] text-blue-400">
-                            <i data-lucide="users" class="inline w-3 h-3"></i> ${c.cuerpo_docente || 'S/D'}
-                        </td>
-                        <td class="p-3">
-                            ${celdaDocumentacion}
-                        </td>
-                        <td class="p-3">
-                            <span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${c.estado==='APROBADO'?'bg-emerald-900/30 text-emerald-400':(c.estado==='RECHAZADO'?'bg-red-900/30 text-red-400':'bg-amber-900/30 text-amber-400')}">
-                                ${c.estado || 'PENDIENTE'}
-                            </span>
-                        </td>
-                        <td class="p-3 text-right">
-                            <div class="flex items-center justify-end gap-2">
-                                <button onclick="abrirModalEdicion('${c.id}')" 
-                                        class="p-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/40 text-blue-400 transition-colors"
-                                        title="${editTooltip}">
-                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                                </button>
-                                <button onclick="eliminarCurso('${c.id}', '${(c.nombre_curso || '').replace(/'/g, "\\'")}')" 
-                                        class="p-2 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-400 transition-colors"
-                                        title="Eliminar curso">
-                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                </button>
-                            </div>
-                        </td>
+                        <td class="p-3"><span class="text-white font-bold block text-sm">${c.nombre_curso}</span><span class="text-[10px] text-slate-400 block"><i data-lucide="clock" class="inline w-3 h-3"></i> ${c.carga_horaria || 'S/D'}</span></td>
+                        <td class="p-3 text-[10px] text-blue-400"><i data-lucide="users" class="inline w-3 h-3"></i> ${c.cuerpo_docente || 'S/D'}</td>
+                        <td class="p-3">${celdaDocumentacion}</td>
+                        <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${c.estado==='APROBADO'?'bg-emerald-900/30 text-emerald-400':(c.estado==='RECHAZADO'?'bg-red-900/30 text-red-400':'bg-amber-900/30 text-amber-400')}">${c.estado || 'PENDIENTE'}</span></td>
+                        <td class="p-3 text-right"><div class="flex items-center justify-end gap-2">
+                            <button onclick="abrirModalEdicion('${c.id}')" class="p-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/40 text-blue-400 transition-colors" title="${editTooltip}"><i data-lucide="edit-3" class="w-3.5 h-3.5"></i></button>
+                            <button onclick="eliminarCurso('${c.id}', '${(c.nombre_curso || '').replace(/'/g, "\\'")}')" class="p-2 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-400 transition-colors" title="Eliminar curso"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                        </div></td>
                     </tr>`;
                 }).join('');
                 lucide.createIcons();
-
-            } catch (err) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`;
-            }
+            } catch (err) { tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
         }
 
-        // ==========================================
-        // MODAL DE EDICIÓN DE CURSO
-        // ==========================================
         function abrirModalEdicion(cursoId) {
             const curso = cursosCargados.find(c => c.id === cursoId);
             if (!curso) return alert('No se encontró el curso.');
-
             document.getElementById('edit-curso-id').value = curso.id;
             document.getElementById('edit-curso-nombre').value = curso.nombre_curso || '';
             document.getElementById('edit-curso-carga').value = curso.carga_horaria || '';
             document.getElementById('edit-curso-docentes').value = curso.cuerpo_docente || '';
             document.getElementById('edit-curso-estado').value = curso.estado || 'PENDIENTE';
-
             document.getElementById('edit-curso-file-programa').value = '';
             document.getElementById('edit-curso-file-analitico').value = '';
             document.getElementById('edit-curso-file-diploma').value = '';
-
             const setEstado = (id, url) => {
                 const el = document.getElementById(id);
-                if (url) {
-                    el.textContent = '✓ Ya cargado';
-                    el.className = 'text-[9px] font-bold uppercase tracking-widest text-emerald-400';
-                } else {
-                    el.textContent = '⚠ Faltante';
-                    el.className = 'text-[9px] font-bold uppercase tracking-widest text-amber-400';
-                }
+                if (url) { el.textContent = '✓ Ya cargado'; el.className = 'text-[9px] font-bold uppercase tracking-widest text-emerald-400'; }
+                else { el.textContent = '⚠ Faltante'; el.className = 'text-[9px] font-bold uppercase tracking-widest text-amber-400'; }
             };
             setEstado('edit-estado-programa', curso.programa_url);
             setEstado('edit-estado-analitico', curso.analitico_url);
             setEstado('edit-estado-diploma', curso.diploma_base_url);
 
+            // Cargar diseno_config (si existe) o legacy pos_x/pos_y
+            const configStr = curso.diseno_config || null;
+            if (configStr) {
+                _editorDeserialize('edit', configStr);
+            } else if (curso.pos_x != null || curso.pos_y != null) {
+                editorState.edit.posX = curso.pos_x || 50;
+                editorState.edit.posY = curso.pos_y || 50;
+            }
+
             if (constructorEdicion) {
-                constructorEdicion.setTexts({
-                    nombre: 'NOMBRE DEL ALUMNO',
-                    curso: curso.nombre_curso || 'NOMBRE DEL CURSO'
-                });
-                if (curso.diploma_base_url) {
-                    constructorEdicion.setPreview(curso.diploma_base_url);
-                }
-                constructorEdicion.setPosition(curso.pos_x || 50, curso.pos_y || 50);
+                constructorEdicion.setTexts({ nombre: 'NOMBRE DEL ALUMNO', curso: curso.nombre_curso || 'NOMBRE DEL CURSO' });
+                if (curso.diploma_base_url) constructorEdicion.setPreview(curso.diploma_base_url);
+                constructorEdicion.setConfig(configStr);
             }
 
             const modal = document.getElementById('modal-editar-curso');
@@ -1408,63 +2015,46 @@
             e.preventDefault();
             const cursoId = document.getElementById('edit-curso-id').value;
             if (!cursoId) return;
-
             const btn = document.getElementById('btn-guardar-edicion');
             const orig = btn.innerHTML;
             btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Guardando...';
             btn.disabled = true;
             lucide.createIcons();
-
             try {
                 const nombre = document.getElementById('edit-curso-nombre').value.trim();
                 const carga = document.getElementById('edit-curso-carga').value.trim();
                 const docentes = document.getElementById('edit-curso-docentes').value.trim();
                 const posX = parseInt(document.getElementById('edit-pos-x').value || 50);
                 const posY = parseInt(document.getElementById('edit-pos-y').value || 50);
-
+                const disenoConfig = document.getElementById('edit-diseno-config').value || _editorSerialize('edit');
                 const filePrograma = document.getElementById('edit-curso-file-programa').files[0];
                 const fileAnalitico = document.getElementById('edit-curso-file-analitico').files[0];
                 const fileDiploma = document.getElementById('edit-curso-file-diploma').files[0];
-
                 const ts = Date.now();
                 const bucket = 'renmcycf-documentos';
-
                 const subirArchivo = async (file, prefijo) => {
                     const ext = file.name.split('.').pop();
                     const fileName = `${aliadoId}_${prefijo}_${ts}_${Math.floor(Math.random()*1000)}.${ext}`;
-                    console.log(`[EDIT] Subiendo: ${fileName}`);
-                    const { error: upErr } = await db.storage.from(bucket).upload(fileName, file, {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
+                    const { error: upErr } = await db.storage.from(bucket).upload(fileName, file, { cacheControl: '3600', upsert: false });
                     if (upErr) throw new Error(`Error subiendo ${prefijo}: ${upErr.message}`);
                     return `${PROJECT_URL}/storage/v1/object/public/${bucket}/${fileName}`;
                 };
-
                 const updates = {
                     nombre_curso: nombre,
                     carga_horaria: carga,
                     cuerpo_docente: docentes,
                     pos_x: posX,
-                    pos_y: posY
+                    pos_y: posY,
+                    diseno_config: disenoConfig
                 };
-
                 if (filePrograma) updates.programa_url = await subirArchivo(filePrograma, 'programa');
                 if (fileAnalitico) updates.analitico_url = await subirArchivo(fileAnalitico, 'analitico');
                 if (fileDiploma) updates.diploma_base_url = await subirArchivo(fileDiploma, 'diploma_base');
-
-                console.log('✅ Updates a aplicar:', updates);
-
-                const { error: updErr } = await db.from('renmcycf_aliados_cursos')
-                    .update(updates)
-                    .eq('id', cursoId)
-                    .eq('aliado_id', aliadoId);
+                const { error: updErr } = await db.from('renmcycf_aliados_cursos').update(updates).eq('id', cursoId).eq('aliado_id', aliadoId);
                 if (updErr) throw updErr;
-
                 alert('✅ Curso actualizado correctamente.');
                 cerrarModalEdicion();
                 cargarCursosInstituto();
-
             } catch (err) {
                 console.error('Error al editar curso:', err);
                 alert('Error al guardar los cambios: ' + err.message);
@@ -1478,17 +2068,11 @@
         async function eliminarCurso(cursoId, nombreCurso) {
             const confirm1 = confirm(`⚠️ ¿Estás seguro de que querés ELIMINAR el curso "${nombreCurso}"?\n\nEsta acción no se puede deshacer.`);
             if (!confirm1) return;
-
             const confirm2 = confirm(`¿Confirmás definitivamente la eliminación?`);
             if (!confirm2) return;
-
             try {
-                const { error } = await db.from('renmcycf_aliados_cursos')
-                    .delete()
-                    .eq('id', cursoId)
-                    .eq('aliado_id', aliadoId);
+                const { error } = await db.from('renmcycf_aliados_cursos').delete().eq('id', cursoId).eq('aliado_id', aliadoId);
                 if (error) throw error;
-
                 alert('✅ Curso eliminado correctamente.');
                 cargarCursosInstituto();
             } catch (err) {
@@ -1497,53 +2081,38 @@
             }
         }
 
-        // ==========================================
-        // proponerCurso (ALTA)
-        // ==========================================
         async function proponerCurso(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-proponer-curso');
             const orig = btn.innerHTML;
-
             const nombre = document.getElementById('curso-nombre').value.trim();
             const carga = document.getElementById('curso-carga').value.trim();
             const docentes = document.getElementById('curso-docentes').value.trim();
             const filePrograma = document.getElementById('curso-file-programa').files[0];
             const fileAnalitico = document.getElementById('curso-file-analitico').files[0];
             const fileDiploma = document.getElementById('curso-file-diploma').files[0];
-            
             const posX = parseInt(document.getElementById('pos-x')?.value || 50);
             const posY = parseInt(document.getElementById('pos-y')?.value || 50);
-
-            if (!filePrograma || !fileAnalitico || !fileDiploma) {
-                return alert("Debe adjuntar los 3 archivos respaldatorios: Programa, Analítico y Diploma.");
-            }
-
+            const disenoConfig = document.getElementById('diseno-config').value || _editorSerialize('alta');
+            if (!filePrograma || !fileAnalitico || !fileDiploma) return alert("Debe adjuntar los 3 archivos respaldatorios: Programa, Analítico y Diploma.");
             btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Subiendo archivos... Esto puede demorar';
             btn.disabled = true;
             lucide.createIcons();
-
             try {
                 const ts = Date.now();
                 const bucket = 'renmcycf-documentos';
-
                 const subirArchivo = async (file, prefijo) => {
                     const ext = file.name.split('.').pop();
                     const fileName = `${aliadoId}_${prefijo}_${ts}_${Math.floor(Math.random()*1000)}.${ext}`;
-                    const { error: upErr } = await db.storage.from(bucket).upload(fileName, file, {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
+                    const { error: upErr } = await db.storage.from(bucket).upload(fileName, file, { cacheControl: '3600', upsert: false });
                     if (upErr) throw new Error(`Error subiendo ${prefijo}: ${upErr.message}`);
                     return `${PROJECT_URL}/storage/v1/object/public/${bucket}/${fileName}`;
                 };
-
                 const [programaUrl, analiticoUrl, diplomaBaseUrl] = await Promise.all([
                     subirArchivo(filePrograma, 'programa'),
                     subirArchivo(fileAnalitico, 'analitico'),
                     subirArchivo(fileDiploma, 'diploma_base')
                 ]);
-
                 const payload = {
                     aliado_id: aliadoId,
                     nombre_curso: nombre,
@@ -1554,27 +2123,29 @@
                     diploma_base_url: diplomaBaseUrl,
                     pos_x: posX,
                     pos_y: posY,
+                    diseno_config: disenoConfig,
                     estado: 'PENDIENTE'
                 };
-
                 const { error: dbError } = await db.from('renmcycf_aliados_cursos').insert([payload]);
                 if (dbError) throw dbError;
-
                 alert("✅ Curso propuesto. Los 3 archivos fueron subidos y quedan pendientes de auditoría por el Comité ASARI.");
-                
                 document.getElementById('form-curso-b2b').reset();
                 document.getElementById('constructor-diploma')?.classList.add('hidden');
                 document.getElementById('preview-diploma-upper').style.backgroundImage = '';
                 document.getElementById('preview-placeholder')?.classList.remove('hidden');
-                document.getElementById('slider-pos-x').value = 50;
-                document.getElementById('slider-pos-y').value = 50;
-                document.getElementById('pos-x').value = 50;
-                document.getElementById('pos-y').value = 50;
-                document.getElementById('label-pos-x').textContent = '50%';
-                document.getElementById('label-pos-y').textContent = '50%';
-                
+                // Reset editor state
+                editorState.alta = {
+                    posX: 50, posY: 50,
+                    fontFamily: "'Outfit', sans-serif", fontWeight: 900, fontSize: 16,
+                    fontColor: '#0a1128', textAlign: 'center', lineHeight: 1.1,
+                    autoFit: true, maxWidth: 85,
+                    showNombre: true, showDni: true, showCurso: true, showCarga: true,
+                    showGrid: false, showGuides: false
+                };
+                _editorSyncUI('alta');
+                _editorRenderizar('alta');
+                _editorSyncHidden('alta');
                 cargarCursosInstituto();
-
             } catch (err) {
                 console.error("Error al proponer curso:", err);
                 alert("Error al proponer curso: " + err.message);
@@ -1593,22 +2164,13 @@
             const selectCurso = document.getElementById('cert-curso');
             const aviso = document.getElementById('aviso-sin-cursos');
             const btnEmitir = document.getElementById('btn-emitir');
-
             if (!tbody || !selectCurso) return;
-
             tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">Cargando...</td></tr>';
             selectCurso.innerHTML = '<option value="">-- Seleccionar Curso --</option>';
-
             try {
-                const { data: cursosAprobados, error: errCursos } = await db.from('renmcycf_aliados_cursos')
-                    .select('id, nombre_curso, carga_horaria, diploma_base_url, pos_x, pos_y')
-                    .eq('aliado_id', aliadoId)
-                    .eq('estado', 'APROBADO');
-
+                const { data: cursosAprobados, error: errCursos } = await db.from('renmcycf_aliados_cursos').select('id, nombre_curso, carga_horaria, diploma_base_url, pos_x, pos_y, diseno_config').eq('aliado_id', aliadoId).eq('estado', 'APROBADO');
                 if (errCursos) throw errCursos;
-
                 cursosCargados = cursosAprobados || [];
-
                 if (!cursosAprobados || cursosAprobados.length === 0) {
                     aviso.classList.remove('hidden');
                     selectCurso.disabled = true;
@@ -1619,7 +2181,6 @@
                     selectCurso.disabled = false;
                     btnEmitir.disabled = false;
                     btnEmitir.classList.remove('opacity-50', 'cursor-not-allowed');
-                    
                     cursosAprobados.forEach(c => {
                         const opt = document.createElement('option');
                         opt.value = c.id;
@@ -1628,17 +2189,12 @@
                         opt.dataset.diplomaUrl = c.diploma_base_url || '';
                         opt.dataset.posX = c.pos_x || 50;
                         opt.dataset.posY = c.pos_y || 50;
+                        opt.dataset.disenoConfig = c.diseno_config || '';
                         selectCurso.appendChild(opt);
                     });
                 }
-
-                const { data: certificados, error: errCert } = await db.from('renmcycf_certificados_b2b')
-                    .select('*')
-                    .eq('aliado_id', aliadoId)
-                    .order('created_at', { ascending: false });
-
+                const { data: certificados, error: errCert } = await db.from('renmcycf_certificados_b2b').select('*').eq('aliado_id', aliadoId).order('created_at', { ascending: false });
                 if (errCert) throw errCert;
-
                 if (!certificados || certificados.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">Aún no se emitieron certificados.</td></tr>';
                 } else {
@@ -1648,24 +2204,39 @@
                         <td class="p-3 font-mono text-xs text-slate-300">${cert.alumno_dni}</td>
                         <td class="p-3 text-xs text-slate-400">${cert.curso_nombre || 'S/D'}</td>
                         <td class="p-3 text-[10px] text-slate-400">${cert.created_at ? new Date(cert.created_at).toLocaleDateString('es-AR') : 'S/D'}</td>
-                        <td class="p-3 text-right">
-                            ${cert.pdf_url ? `<a href="${cert.pdf_url}" target="_blank" class="bg-blue-500/20 text-blue-400 p-1.5 rounded hover:bg-blue-500/40 inline-block" title="Descargar PDF"><i data-lucide="download" class="w-4 h-4"></i></a>` : '<span class="text-slate-500 text-[10px]">Sin PDF</span>'}
-                        </td>
+                        <td class="p-3 text-right">${cert.pdf_url ? `<a href="${cert.pdf_url}" target="_blank" class="bg-blue-500/20 text-blue-400 p-1.5 rounded hover:bg-blue-500/40 inline-block" title="Descargar PDF"><i data-lucide="download" class="w-4 h-4"></i></a>` : '<span class="text-slate-500 text-[10px]">Sin PDF</span>'}</td>
                     </tr>`).join('');
                     lucide.createIcons();
                 }
-
             } catch (err) {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`;
             }
         }
 
-        // ==========================================
-        // Helper: Preparar plantilla del PDF
-        // ==========================================
         async function prepararPlantillaPDF(cursoData, alumno) {
             const { nombres, apellidos, dni, hashCert, fechaEmision, urlVerificacion } = alumno;
-            
+
+            // Parsear diseno_config (si existe)
+            let cfg = null;
+            if (cursoData.diseno_config) {
+                try { cfg = typeof cursoData.diseno_config === 'string' ? JSON.parse(cursoData.diseno_config) : cursoData.diseno_config; } catch(e) { cfg = null; }
+            }
+
+            // Fallback a legacy
+            const posX = cfg?.posX ?? cursoData.pos_x ?? 50;
+            const posY = cfg?.posY ?? cursoData.pos_y ?? 50;
+            const fontFamily = cfg?.fontFamily || "'Outfit', sans-serif";
+            const fontWeight = cfg?.fontWeight || 900;
+            const fontSize = cfg?.fontSize || 42; // En el PDF el tamaño es mayor
+            const fontColor = cfg?.fontColor || '#0f172a';
+            const textAlign = cfg?.textAlign || 'center';
+            const lineHeight = cfg?.lineHeight || 1.1;
+            const maxWidth = cfg?.maxWidth || 80;
+            const showNombre = cfg?.showNombre !== false;
+            const showDni = cfg?.showDni !== false;
+            const showCurso = cfg?.showCurso !== false;
+            const showCarga = cfg?.showCarga !== false;
+
             const areaDiploma = document.getElementById('area-diploma-base');
             if (cursoData.diploma_base_url) {
                 areaDiploma.style.backgroundImage = `url('${cursoData.diploma_base_url}')`;
@@ -1675,16 +2246,37 @@
             }
 
             const datosFlotantes = document.getElementById('datos-alumno-flotante');
-            const posY = cursoData.pos_y || 50;
-            const posX = cursoData.pos_x || 50;
             datosFlotantes.style.top = `${posY}%`;
             datosFlotantes.style.left = `${posX}%`;
             datosFlotantes.style.transform = 'translate(-50%, -50%)';
+            datosFlotantes.style.maxWidth = `${maxWidth}%`;
+            datosFlotantes.style.textAlign = textAlign;
 
-            document.getElementById('pdf-alumno').textContent = `${nombres} ${apellidos}`;
-            document.getElementById('pdf-dni').textContent = `DNI: ${dni}`;
-            document.getElementById('pdf-curso').textContent = cursoData.nombre_curso || '';
-            document.getElementById('pdf-carga').textContent = `Carga Horaria: ${cursoData.carga_horaria || 'No especificada'}`;
+            const elNombre = document.getElementById('pdf-alumno');
+            const elDni = document.getElementById('pdf-dni');
+            const elCurso = document.getElementById('pdf-curso');
+            const elCarga = document.getElementById('pdf-carga');
+
+            elNombre.textContent = showNombre ? `${nombres} ${apellidos}` : '';
+            elNombre.style.fontFamily = fontFamily;
+            elNombre.style.fontWeight = fontWeight;
+            elNombre.style.fontSize = (fontSize * 1.3) + 'px';
+            elNombre.style.color = fontColor;
+            elNombre.style.lineHeight = lineHeight;
+            elNombre.style.textAlign = textAlign;
+            elNombre.style.display = showNombre ? 'block' : 'none';
+
+            elDni.textContent = showDni ? `DNI: ${dni}` : '';
+            elDni.style.fontFamily = fontFamily;
+            elDni.style.display = showDni ? 'block' : 'none';
+
+            elCurso.textContent = showCurso ? (cursoData.nombre_curso || '') : '';
+            elCurso.style.fontFamily = fontFamily;
+            elCurso.style.display = showCurso ? 'block' : 'none';
+
+            elCarga.textContent = showCarga ? `Carga Horaria: ${cursoData.carga_horaria || 'No especificada'}` : '';
+            elCarga.style.display = showCarga ? 'block' : 'none';
+
             document.getElementById('pdf-hash').textContent = hashCert;
             document.getElementById('pdf-fecha').textContent = fechaEmision;
 
@@ -1708,9 +2300,7 @@
                 const { data: configRenm } = await db.from('renmcycf_config').select('logo_url').eq('id', 1).maybeSingle();
                 const wrapper = document.querySelector('#faldon-trazabilidad .logo-oficial-wrapper');
                 if (!wrapper) return;
-
                 wrapper.innerHTML = '';
-
                 if (configRenm && configRenm.logo_url) {
                     const imgOficial = document.createElement('img');
                     imgOficial.src = configRenm.logo_url;
@@ -1721,15 +2311,12 @@
                     wrapper.innerHTML = '<i data-lucide="shield-check" style="width: 30px; height: 30px; color: #d4af37;"></i>';
                     lucide.createIcons();
                 }
-            } catch (e) {
-                console.warn('No se pudo inyectar logo oficial:', e);
-            }
+            } catch (e) { console.warn('No se pudo inyectar logo oficial:', e); }
         }
 
         async function emitirCertificado(e) {
             e.preventDefault();
             if (!aliadoId || !institutoActual) return alert("Error: Sesión de instituto no válida.");
-
             const selectCurso = document.getElementById('cert-curso');
             const cursoId = selectCurso.value;
             const optSeleccionada = selectCurso.options[selectCurso.selectedIndex];
@@ -1738,75 +2325,54 @@
             const diplomaUrl = optSeleccionada.dataset.diplomaUrl;
             const posX = parseInt(optSeleccionada.dataset.posX) || 50;
             const posY = parseInt(optSeleccionada.dataset.posY) || 50;
-            
+            const disenoConfig = optSeleccionada.dataset.disenoConfig || '';
             const nombres = document.getElementById('cert-nombre').value.trim();
             const apellidos = document.getElementById('cert-apellidos').value.trim();
             const dni = document.getElementById('cert-dni').value.trim();
-
             if (!cursoId) return alert("Debe seleccionar un curso válido.");
-
             const btn = document.getElementById('btn-emitir');
             const origHTML = btn.innerHTML;
             btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> VALIDANDO SALDO...';
             btn.disabled = true;
             lucide.createIcons();
-
             try {
                 const { data: aliadoDB, error: errAliado } = await db.from('renmcycf_aliados').select('saldo_timbres').eq('id', aliadoId).single();
                 if (errAliado) throw new Error("Error al consultar saldo.");
-                if (!aliadoDB.saldo_timbres || aliadoDB.saldo_timbres <= 0) {
-                    throw new Error("Saldo Insuficiente. Adquiera más Derechos de Emisión para continuar emitiendo.");
-                }
-
+                if (!aliadoDB.saldo_timbres || aliadoDB.saldo_timbres <= 0) throw new Error("Saldo Insuficiente. Adquiera más Derechos de Emisión para continuar emitiendo.");
                 btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> GENERANDO CERTIFICADO...';
-                
                 const hashCert = `ASARI-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
                 const urlVerificacion = `${window.location.origin}${window.location.pathname.replace('instituto.html', '')}certificado.html?hash=${hashCert}`;
                 const fechaEmision = new Date().toLocaleDateString('es-AR');
-
                 await prepararPlantillaPDF(
-                    { nombre_curso: cursoNombre, carga_horaria: cursoCarga, diploma_base_url: diplomaUrl, pos_x: posX, pos_y: posY },
+                    { nombre_curso: cursoNombre, carga_horaria: cursoCarga, diploma_base_url: diplomaUrl, pos_x: posX, pos_y: posY, diseno_config: disenoConfig },
                     { nombres, apellidos, dni, hashCert, fechaEmision, urlVerificacion }
                 );
-
                 const renderZone = document.getElementById('cert-template');
                 const canvas = await html2canvas(renderZone, { scale: 3, useCORS: true, backgroundColor: '#ffffff', logging: false });
-                
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
                 const imgData = canvas.toDataURL('image/jpeg', 0.95);
                 pdf.addImage(imgData, 'JPEG', 0, 0, 297, 210);
-                
                 btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> ENCRIPTANDO Y SUBIENDO...';
                 const pdfBlob = pdf.output('blob');
                 const pdfFileName = `B2B_${hashCert}.pdf`;
                 const { error: uploadError } = await db.storage.from('renmcycf-pdfs').upload(pdfFileName, pdfBlob, { cacheControl: '3600', upsert: true });
                 if (uploadError) throw new Error("Error al guardar el documento en la nube.");
                 const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${pdfFileName}`;
-
                 btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> REGISTRANDO TRAZABILIDAD...';
-                
                 const { error: insertError } = await db.from('renmcycf_certificados_b2b').insert([{
-                    aliado_id: aliadoId,
-                    curso_id: cursoId,
-                    alumno_nombres: nombres,
-                    alumno_apellidos: apellidos,
-                    alumno_dni: dni,
-                    hash_cert: hashCert,
-                    pdf_url: pdfUrl
+                    aliado_id: aliadoId, curso_id: cursoId,
+                    alumno_nombres: nombres, alumno_apellidos: apellidos, alumno_dni: dni,
+                    hash_cert: hashCert, pdf_url: pdfUrl
                 }]);
                 if (insertError) throw new Error("Error al registrar en blockchain/base de datos.");
-
                 const { error: updateError } = await db.from('renmcycf_aliados').update({ saldo_timbres: aliadoDB.saldo_timbres - 1 }).eq('id', aliadoId);
                 if (updateError) throw new Error("Emisión registrada, pero hubo error al descontar el Derecho de Emisión.");
-
                 alert(`✅ CERTIFICADO EMITIDO EXITOSAMENTE\nHash: ${hashCert}\nSaldo actualizado.`);
                 pdf.save(`Certificado_ASARI_${dni}.pdf`);
-                
                 document.getElementById('form-certificado').reset();
                 await cargarDashboardInstituto();
                 cargarCertificadosInstituto();
-
             } catch (err) {
                 alert(err.message);
             } finally {
@@ -1820,11 +2386,7 @@
         // 6. EMISIÓN MASIVA POR EXCEL
         // ==========================================
         function descargarPlantillaExcel() {
-            const ws_data = [
-                ['NOMBRES', 'APELLIDOS', 'DNI'],
-                ['Juan Carlos', 'Pérez', '35123456'],
-                ['María Belén', 'Gómez', '38987654']
-            ];
+            const ws_data = [['NOMBRES', 'APELLIDOS', 'DNI'], ['Juan Carlos', 'Pérez', '35123456'], ['María Belén', 'Gómez', '38987654']];
             const ws = XLSX.utils.aoa_to_sheet(ws_data);
             ws['!cols'] = [{ wch: 25 }, { wch: 25 }, { wch: 15 }];
             const wb = XLSX.utils.book_new();
@@ -1834,7 +2396,6 @@
 
         async function procesarEmisionMasiva() {
             if (!aliadoId || !institutoActual) return alert("Error: Sesión no válida.");
-
             const selectCurso = document.getElementById('cert-curso');
             const cursoId = selectCurso.value;
             const optSeleccionada = selectCurso.options[selectCurso.selectedIndex];
@@ -1843,23 +2404,19 @@
             const diplomaUrl = optSeleccionada?.dataset.diplomaUrl;
             const posX = parseInt(optSeleccionada?.dataset.posX) || 50;
             const posY = parseInt(optSeleccionada?.dataset.posY) || 50;
-
+            const disenoConfig = optSeleccionada?.dataset.disenoConfig || '';
             if (!cursoId) return alert("Por favor, seleccione un curso aprobado en la tarjeta de Emisión Individual.");
-
             const fileInput = document.getElementById('file-excel-masivo');
             if (!fileInput.files.length) return alert("Debe seleccionar un archivo Excel.");
-
             const file = fileInput.files[0];
             const btn = document.getElementById('btn-emitir-masivo');
             const progresoDiv = document.getElementById('progreso-masivo');
             const progresoTexto = document.getElementById('progreso-texto');
             const progresoBarra = document.getElementById('progreso-barra');
             const progresoPorcentaje = document.getElementById('progreso-porcentaje');
-
             btn.disabled = true;
             progresoDiv.classList.remove('hidden');
             progresoTexto.innerText = "Leyendo archivo Excel...";
-
             const reader = new FileReader();
             reader.onload = async function(e) {
                 try {
@@ -1868,100 +2425,69 @@
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
                     const rows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-
                     const alumnosValidos = rows.filter(r => r.NOMBRES && r.APELLIDOS && r.DNI);
                     const total = alumnosValidos.length;
-
                     if (total === 0) throw new Error("No se encontraron alumnos válidos en el archivo. Revise los encabezados.");
-
                     progresoTexto.innerText = "Validando saldo de Derechos de Emisión...";
                     const { data: aliadoDB, error: errAliado } = await db.from('renmcycf_aliados').select('saldo_timbres').eq('id', aliadoId).single();
                     if (errAliado || !aliadoDB) throw new Error("Error al consultar saldo.");
-                    
                     let saldoRestante = aliadoDB.saldo_timbres || 0;
-                    if (saldoRestante < total) {
-                        throw new Error(`Saldo Insuficiente. Intentas emitir ${total} certificados, pero solo tienes ${saldoRestante} Derechos de Emisión.`);
-                    }
-
-                    if(!confirm(`Se procesarán ${total} certificados y se consumirán ${total} Derechos de Emisión.\n¿Desea continuar?`)) {
-                        throw new Error("Proceso cancelado por el usuario.");
-                    }
-
+                    if (saldoRestante < total) throw new Error(`Saldo Insuficiente. Intentas emitir ${total} certificados, pero solo tienes ${saldoRestante} Derechos de Emisión.`);
+                    if(!confirm(`Se procesarán ${total} certificados y se consumirán ${total} Derechos de Emisión.\n¿Desea continuar?`)) throw new Error("Proceso cancelado por el usuario.");
                     const zip = new JSZip();
                     const fechaEmision = new Date().toLocaleDateString('es-AR');
                     let exitosos = 0;
                     const registrosInsert = [];
-
                     for (let i = 0; i < total; i++) {
                         const alumno = alumnosValidos[i];
                         const nombres = alumno.NOMBRES.toString().trim();
                         const apellidos = alumno.APELLIDOS.toString().trim();
                         const dni = alumno.DNI.toString().trim();
-
                         progresoTexto.innerText = `Generando PDF ${i + 1} de ${total}...`;
                         const porcentaje = Math.round(((i) / total) * 100);
                         progresoBarra.style.width = `${porcentaje}%`;
                         progresoPorcentaje.innerText = `${porcentaje}%`;
-
                         const hashCert = `ASARI-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
                         const urlVerificacion = `https://renmcycf.com.ar/certificado.html?hash=${hashCert}`;
-
                         await prepararPlantillaPDF(
-                            { nombre_curso: cursoNombre, carga_horaria: cursoCarga, diploma_base_url: diplomaUrl, pos_x: posX, pos_y: posY },
+                            { nombre_curso: cursoNombre, carga_horaria: cursoCarga, diploma_base_url: diplomaUrl, pos_x: posX, pos_y: posY, diseno_config: disenoConfig },
                             { nombres, apellidos, dni, hashCert, fechaEmision, urlVerificacion }
                         );
-
                         const renderZone = document.getElementById('cert-template');
                         const canvas = await html2canvas(renderZone, { scale: 3, useCORS: true, backgroundColor: '#ffffff', logging: false });
-                        
                         const { jsPDF } = window.jspdf;
                         const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
                         pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 297, 210);
-
                         progresoTexto.innerText = `Subiendo a la nube ${i + 1} de ${total}...`;
                         const pdfBlob = pdf.output('blob');
                         const pdfFileName = `B2B_${hashCert}.pdf`;
                         const { error: uploadError } = await db.storage.from('renmcycf-pdfs').upload(pdfFileName, pdfBlob, { cacheControl: '3600', upsert: true });
                         if (uploadError) throw new Error("Error al guardar en la nube.");
                         const pdfUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-pdfs/${pdfFileName}`;
-
                         const arrayBuffer = await pdfBlob.arrayBuffer();
                         zip.file(`Certificado_${dni}_${nombres.split(' ')[0]}.pdf`, arrayBuffer);
-
                         registrosInsert.push({
-                            aliado_id: aliadoId,
-                            curso_id: cursoId,
-                            alumno_nombres: nombres,
-                            alumno_apellidos: apellidos,
-                            alumno_dni: dni,
-                            hash_cert: hashCert,
-                            pdf_url: pdfUrl
+                            aliado_id: aliadoId, curso_id: cursoId,
+                            alumno_nombres: nombres, alumno_apellidos: apellidos, alumno_dni: dni,
+                            hash_cert: hashCert, pdf_url: pdfUrl
                         });
-
                         exitosos++;
                         saldoRestante--;
                     }
-
                     progresoTexto.innerText = "Registrando en Blockchain...";
                     const { error: insertError } = await db.from('renmcycf_certificados_b2b').insert(registrosInsert);
                     if (insertError) throw new Error("Error al registrar emisiones en la base de datos.");
-
                     const { error: updateError } = await db.from('renmcycf_aliados').update({ saldo_timbres: saldoRestante }).eq('id', aliadoId);
                     if (updateError) console.error("Error descontando Derechos de Emisión, pero los certificados se emitieron.");
-
                     progresoTexto.innerText = "Comprimiendo archivo ZIP...";
                     progresoBarra.style.width = "100%";
                     progresoPorcentaje.innerText = "100%";
-                    
                     const content = await zip.generateAsync({ type: "blob" });
                     saveAs(content, `Certificados_Masivos_${cursoNombre.replace(/[^a-z0-9]/gi, '_')}.zip`);
-
                     alert(`✅ Proceso finalizado. Se generaron ${exitosos} certificados con éxito.\nEl archivo ZIP ha sido descargado.`);
-                    
                     fileInput.value = "";
                     await cargarDashboardInstituto();
                     cargarCertificadosInstituto();
-
                 } catch (err) {
                     alert("Se detuvo el proceso: " + err.message);
                 } finally {
@@ -1970,7 +2496,6 @@
                     progresoBarra.style.width = "0%";
                 }
             };
-
             reader.readAsArrayBuffer(file);
         }
 
@@ -1991,7 +2516,8 @@
                 labelXId: 'label-pos-x',
                 posYInputId: 'pos-y',
                 posXInputId: 'pos-x',
-                textoFlotanteId: 'preview-texto-alumno'
+                textoFlotanteId: 'preview-texto-alumno',
+                editorKey: 'alta'
             });
 
             constructorEdicion = initConstructorVisual({
@@ -2005,7 +2531,8 @@
                 labelXId: 'edit-label-pos-x',
                 posYInputId: 'edit-pos-y',
                 posXInputId: 'edit-pos-x',
-                textoFlotanteId: 'edit-preview-texto-alumno'
+                textoFlotanteId: 'edit-preview-texto-alumno',
+                editorKey: 'edit'
             });
 
             await verificarSesion();
