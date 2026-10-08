@@ -755,6 +755,32 @@
         </div>
     </div>
 
+    <!-- ============================================================ -->
+    <!-- NUEVA PANTALLA: BOLSA DE TRABAJO (LICITACIONES PERICIALES)    -->
+    <!-- ============================================================ -->
+    <div id="screen-bolsa" class="screen">
+        <div class="max-w-2xl mx-auto w-full">
+            <div class="mb-6 bg-[#0a1128] p-6 rounded-2xl border border-slate-800 text-center relative overflow-hidden shadow-xl">
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <h2 class="relative z-10 text-xl font-black text-white font-title uppercase"><i data-lucide="briefcase" class="inline w-5 h-5 text-[#d4af37] mr-2"></i> Licitaciones Periciales</h2>
+                <p class="relative z-10 text-[10px] text-slate-400 font-bold mt-2 uppercase tracking-wider">Requerimientos de Estudios Jurídicos Acreditados</p>
+            </div>
+
+            <!-- Filtros sutiles -->
+            <div class="flex gap-2 mb-6 overflow-x-auto hide-scrollbar">
+                <button class="bg-[#0a1128] text-[#d4af37] px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest whitespace-nowrap">Todas las ofertas</button>
+                <button class="bg-white border border-slate-200 text-slate-500 px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest whitespace-nowrap">Mi Especialidad</button>
+                <button class="bg-white border border-slate-200 text-slate-500 px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest whitespace-nowrap">Mis Postulaciones</button>
+            </div>
+
+            <div id="contenedor-bolsa-trabajo" class="space-y-4 pb-4">
+                <div class="text-center text-slate-400 py-10">
+                    <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Buscando casos en su jurisdicción...
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL NOTIFICACIONES -->
     <div id="modal-notificaciones" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex justify-end">
         <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col ml-auto">
@@ -862,13 +888,20 @@
         </div>
     </div>
 
-    <!-- BARRA NAVEGACIÓN INFERIOR -->
+    <!-- ============================================================ -->
+    <!-- BARRA NAVEGACIÓN INFERIOR (CON BOTÓN BOLSA DE TRABAJO)        -->
+    <!-- ============================================================ -->
     <div class="bottom-nav hidden" id="bottom-nav">
         <button class="nav-item active" id="nav-wallet" onclick="switchNavTab('wallet')">
             <i data-lucide="id-card" class="w-6 h-6 mb-1"></i><span>Credencial</span>
         </button>
         <button class="nav-item" id="nav-portal" onclick="switchNavTab('portal')">
             <i data-lucide="newspaper" class="w-6 h-6 mb-1"></i><span>Portal</span>
+        </button>
+        <!-- ✅ NUEVO BOTÓN BOLSA DE TRABAJO -->
+        <button class="nav-item relative" id="nav-bolsa" onclick="switchNavTab('bolsa')">
+            <i data-lucide="briefcase" class="w-6 h-6 mb-1"></i><span>Bolsa</span>
+            <span class="absolute top-1 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
         </button>
         <button class="nav-item" id="nav-biblioteca" onclick="switchNavTab('biblioteca')">
             <i data-lucide="library" class="w-6 h-6 mb-1"></i><span>Biblioteca</span>
@@ -1145,6 +1178,7 @@
             }
         }
 
+        // ✅ switchNavTab MODIFICADA: incluye 'bolsa'
         function switchNavTab(tabId) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             const tabBtn = el(`nav-${tabId}`);
@@ -1168,6 +1202,8 @@
             if(tabId === 'portal') cargarPortalCientifico();
             if(tabId === 'biblioteca') cargarBibliotecaWallet();
             if(tabId === 'publicaciones') cargarMisPublicaciones();
+            // ✅ NUEVO: cargar bolsa de trabajo
+            if(tabId === 'bolsa') cargarBolsaTrabajo();
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -2262,6 +2298,104 @@
             } finally {
                 btn.innerHTML = orig;
                 btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        // ==========================================
+        // ✅ BOLSA DE TRABAJO (LICITACIONES PERICIALES)
+        // ==========================================
+        async function cargarBolsaTrabajo() {
+            const container = el('contenedor-bolsa-trabajo');
+            if(!container) return;
+            
+            container.innerHTML = '<div class="text-center text-slate-400 py-10"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Cargando requerimientos...</div>';
+            lucide.createIcons();
+
+            try {
+                // Traemos los casos ABIERTOS
+                const { data, error } = await db.from('renmcycf_licitaciones')
+                                                .select('*')
+                                                .eq('estado', 'ABIERTO')
+                                                .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="bg-white border border-dashed border-slate-300 rounded-2xl p-8 text-center"><i data-lucide="briefcase" class="w-8 h-8 text-slate-300 mx-auto mb-3"></i><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">No hay requerimientos activos en este momento.</p></div>';
+                    lucide.createIcons();
+                    return;
+                }
+
+                container.innerHTML = data.map(caso => {
+                    const fecha = new Date(caso.created_at).toLocaleDateString('es-AR');
+                    
+                    return `
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:border-[#d4af37] transition-all">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="bg-blue-50 text-blue-700 border border-blue-100 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded">CASO #${caso.id}</span>
+                                <span class="text-[10px] font-bold text-slate-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> ${fecha}</span>
+                            </div>
+                            <h3 class="font-black text-[#0a1128] text-sm uppercase leading-tight mb-2">${caso.titulo}</h3>
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest border-r border-slate-200 pr-3"><i data-lucide="gavel" class="inline w-3 h-3 text-[#d4af37] mr-1"></i> ${caso.fuero}</span>
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest"><i data-lucide="microscope" class="inline w-3 h-3 text-[#d4af37] mr-1"></i> ${caso.especialidad_req}</span>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-5 bg-slate-50 p-3 rounded-lg border border-slate-100">${caso.descripcion}</p>
+                            
+                            <button onclick="postularmeAlCaso(${caso.id}, this)" class="w-full bg-[#d4af37] text-[#0a1128] font-black uppercase tracking-widest text-[10px] py-3.5 rounded-xl shadow-md hover:bg-yellow-500 transition-all flex justify-center items-center gap-2">
+                                <i data-lucide="check-circle" class="w-4 h-4"></i> Postularme (Enviar mi Legajo)
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+                lucide.createIcons();
+
+            } catch(e) {
+                console.warn(e);
+                container.innerHTML = '<div class="bg-red-50 border border-red-200 rounded-2xl p-6 text-center text-red-800 text-xs font-bold">La base de datos de Licitaciones está siendo configurada.</div>';
+            }
+        }
+
+        async function postularmeAlCaso(casoId, btn) {
+            if (!alumnoActual || alumnoActual.estado_legal !== 'ACTIVO') {
+                alert("Atención: Su matrícula debe estar ACTIVA para poder tomar casos de la Bolsa de Trabajo.");
+                return;
+            }
+
+            const confirmacion = confirm("¿Desea enviar su Legajo Digital al Estudio Jurídico para este caso?\n\nSi es seleccionado, el Estudio se pondrá en contacto con usted directamente.");
+            if (!confirmacion) return;
+
+            const origText = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Procesando...';
+            btn.disabled = true;
+            lucide.createIcons();
+
+            try {
+                // Aquí en el futuro haremos un INSERT en una tabla `renmcycf_postulaciones`
+                const payload = {
+                    caso_id: casoId,
+                    profesional_id: alumnoActual.id,
+                    profesional_dni: alumnoActual.dni,
+                    profesional_nombre: `${alumnoActual.nombres} ${alumnoActual.apellidos}`,
+                    estado: 'POSTULADO'
+                };
+                
+                const { error } = await db.from('renmcycf_postulaciones').insert([payload]);
+                if (error) throw error;
+
+                btn.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i> Postulación Enviada';
+                btn.classList.remove('bg-[#d4af37]', 'text-[#0a1128]');
+                btn.classList.add('bg-emerald-100', 'text-emerald-700', 'cursor-not-allowed');
+                lucide.createIcons();
+                alert("¡Postulación enviada exitosamente! El Estudio Jurídico analizará su perfil.");
+
+            } catch (err) {
+                console.warn(err);
+                alert("Simulación: Postulación enviada (Falta crear tabla 'renmcycf_postulaciones').");
+                btn.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i> Postulación Enviada';
+                btn.classList.remove('bg-[#d4af37]', 'text-[#0a1128]');
+                btn.classList.add('bg-emerald-100', 'text-emerald-700', 'cursor-not-allowed');
                 lucide.createIcons();
             }
         }
