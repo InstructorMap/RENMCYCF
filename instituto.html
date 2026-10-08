@@ -26,82 +26,331 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --neon-blue: #3b82f6; --neon-gold: #fbbf24; --glass-bg: rgba(15, 23, 42, 0.6); --glass-border: rgba(255, 255, 255, 0.08); }
-        body { font-family: 'Outfit', sans-serif; background-color: #030712; color: #e2e8f0; background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.10) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(217, 119, 6, 0.05) 0%, transparent 50%); background-attachment: fixed; }
+        :root {
+            /* Paleta Institucional Forense Premium */
+            --forense-navy: #0a1128;
+            --forense-navy-deep: #050914;
+            --forense-gold: #d4af37;
+            --forense-gold-soft: #b8941f;
+            --forense-slate: #1e293b;
+            --panel-bg: rgba(10, 17, 40, 0.72);
+            --panel-border: rgba(212, 175, 55, 0.15);
+            --panel-border-strong: rgba(212, 175, 55, 0.35);
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--forense-navy-deep);
+            color: #e2e8f0;
+            background-image: radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.04) 0%, transparent 55%);
+            background-attachment: fixed;
+        }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 16px; }
-        .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 12px; transition: all 0.3s ease; }
-        .glass-card:hover { border-color: rgba(255,255,255,0.15); }
-        .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; transition: all 0.3s; color: #94a3b8; cursor: pointer; }
-        .sidebar-link:hover { color: white; background: rgba(255,255,255,0.05); }
-        .sidebar-link.active { color: var(--neon-gold); background: rgba(217, 119, 6, 0.1); border-left: 3px solid var(--neon-gold); }
-        input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="password"], select, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; padding: 10px 12px; color: white; outline: none; transition: all 0.3s; font-size: 0.85rem; }
-        input:focus, select:focus, textarea:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
-        label { display: block; font-size: 0.65rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-        th { background: rgba(0,0,0,0.4); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
-        tr { border-bottom: 1px solid var(--glass-border); }
+
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.10);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover { border-color: rgba(212, 175, 55, 0.28); }
+
+        .sidebar-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; border-radius: 10px;
+            transition: all 0.3s; color: #94a3b8; cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+        .sidebar-link:hover { color: white; background: rgba(212, 175, 55, 0.05); }
+        .sidebar-link.active {
+            color: var(--forense-gold);
+            background: rgba(212, 175, 55, 0.10);
+            border-left: 3px solid var(--forense-gold);
+        }
+
+        input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="password"], select, textarea {
+            width: 100%; background: rgba(0,0,0,0.35);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px; padding: 10px 12px;
+            color: white; outline: none;
+            transition: all 0.3s; font-size: 0.85rem;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--forense-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+        }
+        label {
+            display: block; font-size: 0.65rem; font-weight: 800;
+            color: #94a3b8; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 4px;
+        }
+        th {
+            background: rgba(10, 17, 40, 0.7);
+            text-transform: uppercase; font-size: 0.7rem;
+            letter-spacing: 1px; color: #cbd5e1;
+            border-bottom: 1px solid var(--panel-border);
+        }
+        tr { border-bottom: 1px solid rgba(212, 175, 55, 0.08); }
+
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #020617; } ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-        #login-screen { position: fixed; inset: 0; z-index: 100; background: #030712; display: flex; align-items: center; justify-content: center; }
-        .login-box { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 40px; border-radius: 20px; text-align: center; width: 100%; max-width: 400px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
-        .btn-gold { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #030712; font-weight: 900; transition: all 0.3s; }
-        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050914; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--forense-gold-soft); }
+
+        #login-screen {
+            position: fixed; inset: 0; z-index: 100;
+            background: var(--forense-navy-deep);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .login-box {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--panel-border-strong);
+            padding: 40px; border-radius: 20px;
+            text-align: center; width: 100%; max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 60px rgba(212, 175, 55, 0.05);
+        }
+
+        /* Botón dorado institucional (reemplaza gradiente gamer) */
+        .btn-gold {
+            background: var(--forense-gold);
+            color: var(--forense-navy);
+            font-weight: 900;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+        }
+        .btn-gold:hover {
+            background: #e6c14a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.30);
+        }
         .stat-number { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
 
         /* MODALES */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 100%; max-width: 780px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.6); animation: modalIn 0.3s ease-out; }
+        .modal-content { background: #0a1128; border: 1px solid rgba(212, 175, 55, 0.20); border-radius: 20px; width: 100%; max-width: 780px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.6); animation: modalIn 0.3s ease-out; }
         @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        /* MODO CLARO */
+        /* MODO CLARO INSTITUCIONAL (estilo ministerio) */
         body.light-theme {
-            background-color: #f1f5f9;
-            color: #0f172a;
-            background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(217, 119, 6, 0.06) 0%, transparent 50%);
+            background-color: #fafaf7;
+            color: #0a1128;
+            background-image: none;
         }
-        body.light-theme .glass-panel { background: rgba(255, 255, 255, 0.85); border-color: rgba(0, 0, 0, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); }
-        body.light-theme .glass-card { background: rgba(255, 255, 255, 0.7); border-color: rgba(0, 0, 0, 0.08); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03); }
-        body.light-theme .glass-card:hover { border-color: rgba(59, 130, 246, 0.3); }
-        body.light-theme input[type="text"], body.light-theme input[type="number"], body.light-theme input[type="email"], body.light-theme input[type="url"], body.light-theme input[type="password"], body.light-theme select, body.light-theme textarea { background: #ffffff; border-color: #cbd5e1; color: #0f172a; }
-        body.light-theme input:focus, body.light-theme select:focus, body.light-theme textarea:focus { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
-        body.light-theme th { background: rgba(241, 245, 249, 0.9); color: #475569; }
-        body.light-theme tr { border-color: rgba(0, 0, 0, 0.06); }
-        body.light-theme .sidebar-link { color: #64748b; }
-        body.light-theme .sidebar-link:hover { color: #0f172a; background: rgba(0, 0, 0, 0.04); }
-        body.light-theme .sidebar-link.active { color: #b45309; background: rgba(217, 119, 6, 0.1); }
-        body.light-theme .text-white { color: #0f172a !important; }
+        body.light-theme .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(10, 17, 40, 0.10);
+            box-shadow: 0 10px 30px rgba(10, 17, 40, 0.05);
+        }
+        body.light-theme .glass-card {
+            background: rgba(255, 255, 255, 0.90);
+            border-color: rgba(10, 17, 40, 0.08);
+            box-shadow: 0 4px 15px rgba(10, 17, 40, 0.04);
+        }
+        body.light-theme .glass-card:hover { border-color: rgba(212, 175, 55, 0.45); }
+        body.light-theme input[type="text"], body.light-theme input[type="number"], body.light-theme input[type="email"], body.light-theme input[type="url"], body.light-theme input[type="password"], body.light-theme select, body.light-theme textarea {
+            background: #ffffff; border-color: #cbd5e1; color: #0a1128;
+        }
+        body.light-theme input:focus, body.light-theme select:focus, body.light-theme textarea:focus {
+            border-color: var(--forense-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+        }
+        body.light-theme th { background: rgba(10, 17, 40, 0.05); color: #0a1128; border-bottom: 1px solid rgba(10, 17, 40, 0.10); }
+        body.light-theme tr { border-color: rgba(10, 17, 40, 0.06); }
+        body.light-theme .sidebar-link { color: #475569; }
+        body.light-theme .sidebar-link:hover { color: #0a1128; background: rgba(10, 17, 40, 0.04); }
+        body.light-theme .sidebar-link.active { color: var(--forense-gold-soft); background: rgba(212, 175, 55, 0.12); border-left-color: var(--forense-gold); }
+        body.light-theme .text-white { color: #0a1128 !important; }
         body.light-theme .text-slate-400 { color: #64748b !important; }
-        body.light-theme header { background: rgba(255, 255, 255, 0.5); border-color: rgba(0, 0, 0, 0.06); }
-        body.light-theme .login-box { background: rgba(255, 255, 255, 0.9); border-color: rgba(0, 0, 0, 0.08); }
-        body.light-theme #login-screen { background: #f1f5f9; }
-        body.light-theme .border-white\/5 { border-color: rgba(0, 0, 0, 0.06) !important; }
-        body.light-theme .bg-black\/20 { background: rgba(0, 0, 0, 0.03) !important; }
-        body.light-theme .text-transparent.bg-clip-text { background-image: linear-gradient(to right, #0f172a, #475569) !important; }
-        body.light-theme .modal-content { background: #ffffff; border-color: rgba(0, 0, 0, 0.08); }
-        body.light-theme .modal-content .text-white { color: #0f172a !important; }
+        body.light-theme header { background: rgba(255, 255, 255, 0.85); border-color: rgba(10, 17, 40, 0.08); }
+        body.light-theme .login-box { background: rgba(255, 255, 255, 0.98); border-color: rgba(212, 175, 55, 0.30); }
+        body.light-theme #login-screen { background: #fafaf7; }
+        body.light-theme .border-white\/5 { border-color: rgba(10, 17, 40, 0.08) !important; }
+        body.light-theme .bg-black\/20 { background: rgba(10, 17, 40, 0.04) !important; }
+        body.light-theme .bg-black\/30 { background: rgba(10, 17, 40, 0.05) !important; }
+        body.light-theme .text-transparent.bg-clip-text { background-image: linear-gradient(to right, #0a1128, #475569) !important; }
+        body.light-theme .modal-content { background: #ffffff; border-color: rgba(10, 17, 40, 0.10); }
+        body.light-theme .modal-content .text-white { color: #0a1128 !important; }
 
-        input[type="file"] { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; padding: 8px 12px; color: #94a3b8; outline: none; transition: all 0.3s; font-size: 0.75rem; cursor: pointer; }
-        input[type="file"]::file-selector-button { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; border: 0; border-radius: 6px; padding: 5px 12px; font-weight: 700; font-size: 0.7rem; margin-right: 10px; cursor: pointer; transition: all 0.3s; }
-        input[type="file"]::file-selector-button:hover { background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); }
+        input[type="file"] {
+            width: 100%; background: rgba(0,0,0,0.35);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px; padding: 8px 12px;
+            color: #94a3b8; outline: none;
+            transition: all 0.3s; font-size: 0.75rem; cursor: pointer;
+        }
+        input[type="file"]::file-selector-button {
+            background: var(--forense-navy);
+            color: var(--forense-gold);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            border-radius: 6px; padding: 5px 12px;
+            font-weight: 700; font-size: 0.7rem;
+            margin-right: 10px; cursor: pointer; transition: all 0.3s;
+        }
+        input[type="file"]::file-selector-button:hover {
+            background: #0f1d3d;
+            border-color: var(--forense-gold);
+        }
         body.light-theme input[type="file"] { background: #ffffff; border-color: #cbd5e1; color: #64748b; }
+        body.light-theme input[type="file"]::file-selector-button { background: #0a1128; color: #d4af37; }
 
-        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.4); outline: none; padding: 0; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); cursor: pointer; box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
-        input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); cursor: pointer; border: none; box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
-        body.light-theme input[type="range"] { background: rgba(0,0,0,0.15); }
+        input[type="range"] {
+            -webkit-appearance: none; appearance: none;
+            width: 100%; height: 6px; border-radius: 3px;
+            background: rgba(0,0,0,0.4); outline: none; padding: 0;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: var(--forense-gold);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 16px; height: 16px; border-radius: 50%;
+            background: var(--forense-gold);
+            cursor: pointer; border: none;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+        }
+        body.light-theme input[type="range"] { background: rgba(10, 17, 40, 0.15); }
 
         #faldon-trazabilidad .logo-oficial-wrapper { background: #ffffff !important; }
+
+        /* ═══════════════════════════════════════════════════════════════ */
+        /* PREVIEW WYSIWYG REALISTA (mockup del faldón inmutable)          */
+        /* ═══════════════════════════════════════════════════════════════ */
+        .preview-diploma-container {
+            aspect-ratio: 1.414 / 1;
+            width: 100%;
+            position: relative;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--forense-gold-soft);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        }
+        /* Zona superior: área del diploma base (≈80%) */
+        .preview-diploma-upper {
+            position: relative;
+            flex: 1 1 80%;
+            min-height: 0;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #ffffff;
+            overflow: hidden;
+        }
+        /* Mockup del faldón inmutable (proporcional a 144px reales) */
+        .preview-faldon-mock {
+            flex: 0 0 20%;
+            min-height: 0;
+            background: #0f172a;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 10px;
+            border-top: 2px solid var(--forense-gold);
+            font-family: 'Outfit', sans-serif;
+            position: relative;
+        }
+        .preview-faldon-mock .pfm-left {
+            display: flex; align-items: center; gap: 6px;
+            width: 30%;
+        }
+        .preview-faldon-mock .pfm-shield {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid var(--forense-gold);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .preview-faldon-mock .pfm-brand {
+            font-size: 8px; font-weight: 900;
+            color: var(--forense-gold);
+            letter-spacing: 0.5px; line-height: 1.1;
+            text-transform: uppercase;
+        }
+        .preview-faldon-mock .pfm-brand small {
+            display: block; font-size: 6px;
+            color: #94a3b8; font-weight: 700;
+            letter-spacing: 0.3px; margin-top: 1px;
+        }
+        .preview-faldon-mock .pfm-center {
+            width: 40%; text-align: center;
+        }
+        .preview-faldon-mock .pfm-center .pfm-hash-label {
+            font-size: 6px; color: #64748b;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            font-weight: 700; margin-bottom: 2px;
+        }
+        .preview-faldon-mock .pfm-center .pfm-hash {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px; font-weight: 700;
+            color: #d4af37; line-height: 1.2;
+        }
+        .preview-faldon-mock .pfm-center .pfm-fecha {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 6px; color: #94a3b8;
+            margin-top: 2px;
+        }
+        .preview-faldon-mock .pfm-right {
+            display: flex; align-items: center; justify-content: flex-end;
+            gap: 6px; width: 30%;
+        }
+        .preview-faldon-mock .pfm-qr-mock {
+            width: 34px; height: 34px;
+            background: #ffffff;
+            border: 1.5px solid var(--forense-gold);
+            border-radius: 3px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            padding: 2px; gap: 1px;
+            flex-shrink: 0;
+        }
+        .preview-faldon-mock .pfm-qr-mock span {
+            background: #0f172a;
+            border-radius: 1px;
+        }
+        .preview-faldon-mock .pfm-qr-mock span:nth-child(3n) { background: #ffffff; }
+        .preview-faldon-mock .pfm-qr-mock span:nth-child(7n) { background: #ffffff; }
+        .preview-faldon-mock .pfm-qr-mock span:nth-child(11n) { background: #ffffff; }
+        .preview-faldon-mock .pfm-qr-label {
+            font-size: 6px; color: #d4af37;
+            font-weight: 900; text-transform: uppercase;
+            letter-spacing: 0.5px; text-align: right;
+            line-height: 1.2;
+        }
+        .preview-faldon-mock .pfm-qr-label small {
+            display: block; font-size: 5px;
+            color: #94a3b8; font-weight: 700;
+            margin-top: 1px;
+        }
+        .light-theme .preview-diploma-container { border-color: rgba(10,17,40,0.20); }
+        .light-theme .preview-faldon-mock { background: #0a1128; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
     <!-- LOGIN -->
     <div id="login-screen">
         <div class="login-box">
-            <div class="w-20 h-20 bg-yellow-900/30 border border-yellow-500/50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(251,191,36,0.3)]">
-                <i data-lucide="building-2" class="w-10 h-10 text-yellow-400"></i>
+            <div class="w-20 h-20 bg-[#0a1128] border-2 border-[#d4af37] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(212,175,55,0.25)]">
+                <i data-lucide="building-2" class="w-10 h-10 text-[#d4af37]"></i>
             </div>
             <h1 class="text-2xl font-black text-white mb-2 tracking-widest uppercase">ASARI Core</h1>
             <p class="text-xs text-slate-400 mb-8 uppercase font-bold">Portal Institucional B2B</p>
@@ -117,11 +366,11 @@
     <!-- SIDEBAR -->
     <aside class="w-64 glass-panel m-4 mr-0 flex flex-col z-20 hidden md:flex border-r border-white/5">
         <div class="pt-8 pb-6 px-6 border-b border-white/5 relative flex flex-col items-center text-center gap-3">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-blue-500"></div>
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#d4af37] via-[#0a1128] to-[#d4af37]"></div>
             
-            <div class="w-24 h-24 rounded-full bg-white p-2 flex items-center justify-center overflow-hidden border-2 border-yellow-500/50 shadow-[0_0_20px_rgba(234,179,8,0.15)] shrink-0">
+            <div class="w-24 h-24 rounded-full bg-white p-2 flex items-center justify-center overflow-hidden border-2 border-[#d4af37]/50 shadow-[0_0_20px_rgba(212,175,55,0.15)] shrink-0">
                 <img id="sidebar-logo-img" src="" class="w-full h-full object-contain mix-blend-multiply hidden transition-transform duration-500 hover:scale-110">
-                <i data-lucide="building-2" id="sidebar-logo-icon" class="text-yellow-500 w-10 h-10"></i>
+                <i data-lucide="building-2" id="sidebar-logo-icon" class="text-[#d4af37] w-10 h-10"></i>
             </div>
             
             <div class="min-w-0 w-full mt-2">
@@ -155,10 +404,10 @@
 
                 <div class="text-right">
                     <p class="text-xs font-bold text-white" id="header-instituto">Cargando...</p>
-                    <p class="text-[10px] text-yellow-500 font-mono font-bold" id="header-timbres">Derechos: 0</p>
+                    <p class="text-[10px] text-[#d4af37] font-mono font-bold" id="header-timbres">Derechos: 0</p>
                 </div>
 
-                <div class="w-12 h-12 rounded-full bg-white p-1 border border-yellow-500/40 flex items-center justify-center overflow-hidden shadow-sm shrink-0">
+                <div class="w-12 h-12 rounded-full bg-white p-1 border border-[#d4af37]/40 flex items-center justify-center overflow-hidden shadow-sm shrink-0">
                     <img id="header-logo-img" src="" class="w-full h-full object-contain mix-blend-multiply hidden">
                     <i data-lucide="building" id="header-logo-icon" class="w-5 h-5 text-slate-700"></i>
                 </div>
@@ -170,12 +419,12 @@
             <!-- DASHBOARD -->
             <div id="view-dashboard" class="tab-content active space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass-card p-6 border-yellow-500/30">
+                    <div class="glass-card p-6 border-[#d4af37]/30">
                         <div class="flex items-center justify-between mb-4">
-                            <p class="text-yellow-500/80 text-xs font-bold uppercase tracking-wider">Saldo de Derechos de Emisión</p>
-                            <i data-lucide="stamp" class="w-6 h-6 text-yellow-400"></i>
+                            <p class="text-[#d4af37]/80 text-xs font-bold uppercase tracking-wider">Saldo de Derechos de Emisión</p>
+                            <i data-lucide="stamp" class="w-6 h-6 text-[#d4af37]"></i>
                         </div>
-                        <h3 class="text-4xl font-black text-yellow-400 stat-number" id="stat-timbres">0</h3>
+                        <h3 class="text-4xl font-black text-[#d4af37] stat-number" id="stat-timbres">0</h3>
                         <p class="text-[10px] text-slate-500 mt-2">Cada certificado emitido consume 1 Derecho de Emisión.</p>
                     </div>
                     <div class="glass-card p-6 border-emerald-500/30">
@@ -196,9 +445,9 @@
                     </div>
                 </div>
 
-                <div class="glass-card p-8 border-yellow-500/40 text-center">
-                    <div class="w-20 h-20 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="shopping-cart" class="w-10 h-10 text-yellow-400"></i>
+                <div class="glass-card p-8 border-[#d4af37]/40 text-center">
+                    <div class="w-20 h-20 bg-[#d4af37]/15 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="shopping-cart" class="w-10 h-10 text-[#d4af37]"></i>
                     </div>
                     <h3 class="text-2xl font-black text-white mb-2">¿Necesitás más Derechos de Emisión?</h3>
                     <p class="text-sm text-slate-400 mb-6 max-w-md mx-auto">Adquirí paquetes de derechos de emisión digitales para seguir emitiendo certificaciones con Doble Sello ASARI.</p>
@@ -213,7 +462,7 @@
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
                         <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2 flex items-center gap-2">
-                            <i data-lucide="plus-circle" class="w-5 h-5 text-yellow-400"></i> Proponer Nuevo Curso
+                            <i data-lucide="plus-circle" class="w-5 h-5 text-[#d4af37]"></i> Proponer Nuevo Curso
                         </h3>
                         <form id="form-curso-b2b" onsubmit="proponerCurso(event)" class="space-y-4">
                             <div><label>Nombre del Curso</label><input type="text" id="curso-nombre" required placeholder="Ej: Criminalística Forense Avanzada"></div>
@@ -236,29 +485,61 @@
                                 <p class="text-[9px] text-slate-500 mt-1 italic">Diseño base del diploma institucional (JPG/PNG).</p>
                             </div>
 
-                            <div id="constructor-diploma" class="hidden bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 space-y-4">
-                                <div class="flex items-center gap-2 border-b border-blue-500/30 pb-2">
-                                    <i data-lucide="move" class="w-4 h-4 text-blue-400"></i>
-                                    <p class="text-xs font-bold text-blue-300 uppercase tracking-widest">Vista Previa y Posicionamiento</p>
+                            <div id="constructor-diploma" class="hidden bg-[#0a1128] border border-[#d4af37]/30 rounded-xl p-4 space-y-4">
+                                <div class="flex items-center gap-2 border-b border-[#d4af37]/30 pb-2">
+                                    <i data-lucide="move" class="w-4 h-4 text-[#d4af37]"></i>
+                                    <p class="text-xs font-bold text-[#d4af37] uppercase tracking-widest">Vista Previa Realista (WYSIWYG)</p>
                                 </div>
 
-                                <div id="preview-diploma-container"
-                                     class="aspect-[1.414/1] w-full relative bg-slate-800 rounded-lg overflow-hidden border-2 border-blue-500/30"
-                                     style="background-size: contain; background-position: center; background-repeat: no-repeat;">
-                                    
-                                    <div id="preview-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
-                                        <div class="text-center">
-                                            <i data-lucide="image" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
-                                            <p>Seleccione la imagen base del diploma</p>
+                                <!-- PREVIEW WYSIWYG: Imagen superior + Mockup faldón inferior -->
+                                <div id="preview-diploma-container" class="preview-diploma-container">
+                                    <!-- Zona superior: imagen del diploma -->
+                                    <div id="preview-diploma-upper" class="preview-diploma-upper" style="background-size: contain; background-position: center; background-repeat: no-repeat;">
+                                        <div id="preview-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
+                                            <div class="text-center">
+                                                <i data-lucide="image" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                                                <p>Seleccione la imagen base del diploma</p>
+                                            </div>
+                                        </div>
+
+                                        <div id="preview-texto-alumno"
+                                             class="absolute bg-white/95 backdrop-blur-sm text-slate-900 px-4 py-2 rounded-lg shadow-lg border-2 border-[#d4af37]/60 pointer-events-none"
+                                             style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 85%; text-align: center;">
+                                            <p class="font-black text-sm md:text-base leading-tight">NOMBRE DEL ALUMNO</p>
+                                            <p class="font-mono text-[10px] md:text-xs font-bold text-slate-600">DNI: 12.345.678</p>
+                                            <p class="font-bold text-[9px] md:text-[10px] text-[#0a1128] uppercase mt-1">CRIMINALÍSTICA FORENSE AVANZADA</p>
                                         </div>
                                     </div>
 
-                                    <div id="preview-texto-alumno"
-                                         class="absolute bg-white/80 backdrop-blur-sm text-slate-900 px-4 py-2 rounded-lg shadow-lg border-2 border-yellow-400/60 pointer-events-none"
-                                         style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; text-align: center;">
-                                        <p class="font-black text-sm md:text-base leading-tight">NOMBRE DEL ALUMNO</p>
-                                        <p class="font-mono text-[10px] md:text-xs font-bold text-slate-600">DNI: 12.345.678</p>
-                                        <p class="font-bold text-[9px] md:text-[10px] text-blue-800 uppercase mt-1">CRIMINALÍSTICA FORENSE AVANZADA</p>
+                                    <!-- Zona inferior: mockup del faldón inmutable -->
+                                    <div class="preview-faldon-mock">
+                                        <div class="pfm-left">
+                                            <div class="pfm-shield">
+                                                <i data-lucide="shield-check" style="width: 16px; height: 16px; color: #d4af37;"></i>
+                                            </div>
+                                            <div class="pfm-brand">
+                                                RENMCYCF
+                                                <small>Verificación Inmutable</small>
+                                            </div>
+                                        </div>
+                                        <div class="pfm-center">
+                                            <div class="pfm-hash-label">Certificado con Trazabilidad</div>
+                                            <div class="pfm-hash">HASH: ASARI-XXXXXX</div>
+                                            <div class="pfm-fecha">EMISIÓN: 01/01/2026</div>
+                                        </div>
+                                        <div class="pfm-right">
+                                            <div class="pfm-qr-label">
+                                                Escanear
+                                                <small>renmcycf.com.ar</small>
+                                            </div>
+                                            <div class="pfm-qr-mock">
+                                                <span></span><span></span><span></span><span></span><span></span>
+                                                <span></span><span></span><span></span><span></span><span></span>
+                                                <span></span><span></span><span></span><span></span><span></span>
+                                                <span></span><span></span><span></span><span></span><span></span>
+                                                <span></span><span></span><span></span><span></span><span></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -266,14 +547,14 @@
                                     <div>
                                         <label class="text-[10px] text-slate-400 flex justify-between mb-1">
                                             <span>Eje Y (Vertical)</span>
-                                            <span id="label-pos-y" class="font-mono text-blue-400">50%</span>
+                                            <span id="label-pos-y" class="font-mono text-[#d4af37]">50%</span>
                                         </label>
                                         <input type="range" id="slider-pos-y" min="0" max="100" value="50" class="w-full">
                                     </div>
                                     <div>
                                         <label class="text-[10px] text-slate-400 flex justify-between mb-1">
                                             <span>Eje X (Horizontal)</span>
-                                            <span id="label-pos-x" class="font-mono text-blue-400">50%</span>
+                                            <span id="label-pos-x" class="font-mono text-[#d4af37]">50%</span>
                                         </label>
                                         <input type="range" id="slider-pos-x" min="0" max="100" value="50" class="w-full">
                                     </div>
@@ -282,9 +563,9 @@
                                 <input type="hidden" id="pos-x" value="50">
                                 <input type="hidden" id="pos-y" value="50">
 
-                                <p class="text-[9px] text-blue-300/70 italic text-center">
+                                <p class="text-[9px] text-[#d4af37]/70 italic text-center">
                                     <i data-lucide="info" class="inline w-3 h-3"></i>
-                                    Mueva los deslizadores para posicionar los datos del alumno sobre el diploma.
+                                    El faldón negro inferior es inmutable y se agrega automáticamente al PDF final. Asegurese de que la imagen de su diploma no oculte información importante en esa zona.
                                 </p>
                             </div>
 
@@ -320,9 +601,9 @@
             <div id="view-certificados" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="xl:col-span-1 space-y-6">
-                        <div class="glass-card p-6 border-yellow-500/30">
+                        <div class="glass-card p-6 border-[#d4af37]/30">
                             <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2 flex items-center gap-2">
-                                <i data-lucide="user" class="w-5 h-5 text-yellow-400"></i> Emisión Individual
+                                <i data-lucide="user" class="w-5 h-5 text-[#d4af37]"></i> Emisión Individual
                             </h3>
                             <div id="aviso-sin-cursos" class="hidden bg-amber-900/20 border border-amber-500/30 rounded-xl p-4 mb-4 text-center">
                                 <i data-lucide="alert-triangle" class="w-8 h-8 text-amber-400 mx-auto mb-2"></i>
@@ -339,9 +620,9 @@
                                 <div><label>Nombre del Alumno</label><input type="text" id="cert-nombre" required placeholder="Ej: Juan"></div>
                                 <div><label>Apellidos del Alumno</label><input type="text" id="cert-apellidos" required placeholder="Ej: Pérez"></div>
                                 <div><label>DNI del Alumno</label><input type="text" id="cert-dni" required placeholder="Ej: 30123456"></div>
-                                <div class="bg-black/30 p-3 rounded-lg border border-yellow-500/20 flex items-center gap-3">
-                                    <i data-lucide="info" class="w-5 h-5 text-yellow-400 flex-shrink-0"></i>
-                                    <p class="text-[10px] text-slate-300">Cada emisión consume <strong class="text-yellow-400">1 Derecho de Emisión</strong> de su saldo institucional.</p>
+                                <div class="bg-black/30 p-3 rounded-lg border border-[#d4af37]/20 flex items-center gap-3">
+                                    <i data-lucide="info" class="w-5 h-5 text-[#d4af37] flex-shrink-0"></i>
+                                    <p class="text-[10px] text-slate-300">Cada emisión consume <strong class="text-[#d4af37]">1 Derecho de Emisión</strong> de su saldo institucional.</p>
                                 </div>
                                 <button type="submit" id="btn-emitir" class="btn-gold w-full py-3 rounded-xl uppercase tracking-widest flex items-center justify-center gap-2">
                                     <i data-lucide="award" class="w-5 h-5"></i> Emitir Certificado (Costo: 1 Derecho de Emisión)
@@ -411,7 +692,7 @@
     <!-- MODAL DE EDICIÓN DE CURSO -->
     <div id="modal-editar-curso" class="modal-overlay" onclick="if(event.target===this) cerrarModalEdicion()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="flex items-center justify-between p-6 border-b border-white/10 sticky top-0 bg-[#0f172a] z-10" style="background: inherit;">
+            <div class="flex items-center justify-between p-6 border-b border-white/10 sticky top-0 bg-[#0a1128] z-10" style="background: inherit;">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/40 flex items-center justify-center">
                         <i data-lucide="edit-3" class="w-5 h-5 text-blue-400"></i>
@@ -457,7 +738,7 @@
 
                 <div class="border-t border-white/10 pt-5 space-y-4">
                     <h4 class="text-white font-bold text-sm uppercase tracking-widest flex items-center gap-2">
-                        <i data-lucide="paperclip" class="w-4 h-4 text-yellow-400"></i> Archivos Respaldatorios
+                        <i data-lucide="paperclip" class="w-4 h-4 text-[#d4af37]"></i> Archivos Respaldatorios
                     </h4>
 
                     <div class="bg-white/5 border border-white/10 rounded-xl p-4">
@@ -488,29 +769,61 @@
                     </div>
                 </div>
 
-                <div id="edit-constructor-diploma" class="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 space-y-4">
-                    <div class="flex items-center gap-2 border-b border-blue-500/30 pb-2">
-                        <i data-lucide="move" class="w-4 h-4 text-blue-400"></i>
-                        <p class="text-xs font-bold text-blue-300 uppercase tracking-widest">Ajustar Posición de los Datos</p>
+                <div id="edit-constructor-diploma" class="bg-[#0a1128] border border-[#d4af37]/30 rounded-xl p-4 space-y-4">
+                    <div class="flex items-center gap-2 border-b border-[#d4af37]/30 pb-2">
+                        <i data-lucide="move" class="w-4 h-4 text-[#d4af37]"></i>
+                        <p class="text-xs font-bold text-[#d4af37] uppercase tracking-widest">Vista Previa Realista (WYSIWYG)</p>
                     </div>
 
-                    <div id="edit-preview-diploma-container"
-                         class="aspect-[1.414/1] w-full relative bg-slate-800 rounded-lg overflow-hidden border-2 border-blue-500/30"
-                         style="background-size: contain; background-position: center; background-repeat: no-repeat;">
-                        
-                        <div id="edit-preview-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
-                            <div class="text-center">
-                                <i data-lucide="image" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
-                                <p>Sin imagen base disponible</p>
+                    <!-- PREVIEW WYSIWYG: Imagen superior + Mockup faldón inferior -->
+                    <div id="edit-preview-diploma-container" class="preview-diploma-container">
+                        <!-- Zona superior: imagen del diploma -->
+                        <div id="edit-preview-diploma-upper" class="preview-diploma-upper" style="background-size: contain; background-position: center; background-repeat: no-repeat;">
+                            <div id="edit-preview-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs">
+                                <div class="text-center">
+                                    <i data-lucide="image" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                                    <p>Sin imagen base disponible</p>
+                                </div>
+                            </div>
+
+                            <div id="edit-preview-texto-alumno"
+                                 class="absolute bg-white/95 backdrop-blur-sm text-slate-900 px-4 py-2 rounded-lg shadow-lg border-2 border-[#d4af37]/60 pointer-events-none"
+                                 style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 85%; text-align: center;">
+                                <p class="font-black text-sm md:text-base leading-tight">NOMBRE DEL ALUMNO</p>
+                                <p class="font-mono text-[10px] md:text-xs font-bold text-slate-600">DNI: 12.345.678</p>
+                                <p class="font-bold text-[9px] md:text-[10px] text-[#0a1128] uppercase mt-1">NOMBRE DEL CURSO</p>
                             </div>
                         </div>
 
-                        <div id="edit-preview-texto-alumno"
-                             class="absolute bg-white/80 backdrop-blur-sm text-slate-900 px-4 py-2 rounded-lg shadow-lg border-2 border-yellow-400/60 pointer-events-none"
-                             style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; text-align: center;">
-                            <p class="font-black text-sm md:text-base leading-tight">NOMBRE DEL ALUMNO</p>
-                            <p class="font-mono text-[10px] md:text-xs font-bold text-slate-600">DNI: 12.345.678</p>
-                            <p class="font-bold text-[9px] md:text-[10px] text-blue-800 uppercase mt-1">NOMBRE DEL CURSO</p>
+                        <!-- Zona inferior: mockup del faldón inmutable -->
+                        <div class="preview-faldon-mock">
+                            <div class="pfm-left">
+                                <div class="pfm-shield">
+                                    <i data-lucide="shield-check" style="width: 16px; height: 16px; color: #d4af37;"></i>
+                                </div>
+                                <div class="pfm-brand">
+                                    RENMCYCF
+                                    <small>Verificación Inmutable</small>
+                                </div>
+                            </div>
+                            <div class="pfm-center">
+                                <div class="pfm-hash-label">Certificado con Trazabilidad</div>
+                                <div class="pfm-hash">HASH: ASARI-XXXXXX</div>
+                                <div class="pfm-fecha">EMISIÓN: 01/01/2026</div>
+                            </div>
+                            <div class="pfm-right">
+                                <div class="pfm-qr-label">
+                                    Escanear
+                                    <small>renmcycf.com.ar</small>
+                                </div>
+                                <div class="pfm-qr-mock">
+                                    <span></span><span></span><span></span><span></span><span></span>
+                                    <span></span><span></span><span></span><span></span><span></span>
+                                    <span></span><span></span><span></span><span></span><span></span>
+                                    <span></span><span></span><span></span><span></span><span></span>
+                                    <span></span><span></span><span></span><span></span><span></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -518,14 +831,14 @@
                         <div>
                             <label class="text-[10px] text-slate-400 flex justify-between mb-1">
                                 <span>Eje Y (Vertical)</span>
-                                <span id="edit-label-pos-y" class="font-mono text-blue-400">50%</span>
+                                <span id="edit-label-pos-y" class="font-mono text-[#d4af37]">50%</span>
                             </label>
                             <input type="range" id="edit-slider-pos-y" min="0" max="100" value="50" class="w-full">
                         </div>
                         <div>
                             <label class="text-[10px] text-slate-400 flex justify-between mb-1">
                                 <span>Eje X (Horizontal)</span>
-                                <span id="edit-label-pos-x" class="font-mono text-blue-400">50%</span>
+                                <span id="edit-label-pos-x" class="font-mono text-[#d4af37]">50%</span>
                             </label>
                             <input type="range" id="edit-slider-pos-x" min="0" max="100" value="50" class="w-full">
                         </div>
@@ -1251,7 +1564,7 @@
                 
                 document.getElementById('form-curso-b2b').reset();
                 document.getElementById('constructor-diploma')?.classList.add('hidden');
-                document.getElementById('preview-diploma-container').style.backgroundImage = '';
+                document.getElementById('preview-diploma-upper').style.backgroundImage = '';
                 document.getElementById('preview-placeholder')?.classList.remove('hidden');
                 document.getElementById('slider-pos-x').value = 50;
                 document.getElementById('slider-pos-y').value = 50;
@@ -1670,7 +1983,7 @@
             constructorAlta = initConstructorVisual({
                 inputDiplomaId: 'curso-file-diploma',
                 containerId: 'constructor-diploma',
-                previewContainerId: 'preview-diploma-container',
+                previewContainerId: 'preview-diploma-upper',
                 placeholderId: 'preview-placeholder',
                 sliderYId: 'slider-pos-y',
                 sliderXId: 'slider-pos-x',
@@ -1684,7 +1997,7 @@
             constructorEdicion = initConstructorVisual({
                 inputDiplomaId: 'edit-curso-file-diploma',
                 containerId: 'edit-constructor-diploma',
-                previewContainerId: 'edit-preview-diploma-container',
+                previewContainerId: 'edit-preview-diploma-upper',
                 placeholderId: 'edit-preview-placeholder',
                 sliderYId: 'edit-slider-pos-y',
                 sliderXId: 'edit-slider-pos-x',
