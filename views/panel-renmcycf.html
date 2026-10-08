@@ -1002,6 +1002,12 @@
                                 <div class="permission-checkbox"><input type="checkbox" id="perm-campus" value="mod-campus" class="w-4 h-4"><label for="perm-campus" class="text-sm mb-0">Portal Científico</label></div>
                                 <div class="permission-checkbox"><input type="checkbox" id="perm-biblioteca" value="mod-biblioteca" class="w-4 h-4"><label for="perm-biblioteca" class="text-sm mb-0">Biblioteca</label></div>
                                 <div class="permission-checkbox"><input type="checkbox" id="perm-tesis" value="mod-tesis" class="w-4 h-4"><label for="perm-tesis" class="text-sm mb-0">Tesis</label></div>
+                                <!-- AGREGAR ESTOS 4 CHECKBOXES -->
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-convenios" value="mod-convenios" class="w-4 h-4"><label for="perm-convenios" class="text-sm mb-0">Red Judicial B2B</label></div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-aliados" value="mod-aliados" class="w-4 h-4"><label for="perm-aliados" class="text-sm mb-0">Institutos Aliados</label></div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-cursos-b2b" value="mod-cursos-b2b" class="w-4 h-4"><label for="perm-cursos-b2b" class="text-sm mb-0">Auditoría Cursos</label></div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-empresas" value="mod-empresas" class="w-4 h-4"><label for="perm-empresas" class="text-sm mb-0">Red de Empresas</label></div>
+                                <!-- ESTE YA LO TENÍAS: -->
                                 <div class="permission-checkbox"><input type="checkbox" id="perm-sistema" value="mod-sistema" class="w-4 h-4"><label for="perm-sistema" class="text-sm mb-0">Sistema Completo</label></div>
                             </div>
                         </div>
@@ -1089,7 +1095,12 @@
                 'mod-padron': 'nav-padron',
                 'mod-campus': 'nav-campus',
                 'mod-biblioteca': 'nav-biblioteca',
-                'mod-tesis': 'nav-tesis'
+                'mod-tesis': 'nav-tesis',
+                // NUEVOS PERMISOS INDEPENDIENTES:
+                'mod-convenios': 'nav-convenios',
+                'mod-aliados': 'nav-aliados',
+                'mod-cursos-b2b': 'nav-cursos-b2b',
+                'mod-empresas': 'nav-empresas'
             };
 
             if (rolData.rol === 'superadmin') {
@@ -1098,7 +1109,7 @@
                     const btn = document.getElementById(id);
                     if (btn) btn.style.display = 'flex';
                 });
-                ['nav-aliados', 'nav-cursos-b2b', 'nav-convenios', 'nav-empresas', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'].forEach(id => {
+                ['nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'].forEach(id => {
                     const btn = document.getElementById(id);
                     if (btn) btn.style.display = 'flex';
                 });
@@ -1110,7 +1121,8 @@
                     if (navElement) navElement.style.display = permisos.includes(modulo) ? 'flex' : 'none';
                 });
                 
-                const sistemaButtons = ['nav-aliados', 'nav-cursos-b2b', 'nav-convenios', 'nav-empresas', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'];
+                // LE SACAMOS LOS BOTONES B2B A ESTA LISTA PARA QUE YA NO DEPENDAN DE "mod-sistema"
+                const sistemaButtons = ['nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'];
                 const tienePermisoSistema = permisos.includes('mod-sistema');
                 sistemaButtons.forEach(id => {
                     const el = document.getElementById(id);
@@ -3222,7 +3234,7 @@
                 checkboxes.forEach(cb => permisosSeleccionados.push(cb.value));
                 
                 const modulosFinales = rol === 'superadmin' ? 
-                    ['mod-dashboard', 'mod-solicitudes', 'mod-auditoria', 'mod-padron', 'mod-campus', 'mod-biblioteca', 'mod-tesis', 'mod-sistema'] : 
+                    ['mod-dashboard', 'mod-solicitudes', 'mod-auditoria', 'mod-padron', 'mod-campus', 'mod-biblioteca', 'mod-tesis', 'mod-convenios', 'mod-aliados', 'mod-cursos-b2b', 'mod-empresas', 'mod-sistema'] : 
                     permisosSeleccionados;
                 
                 const dbId = document.getElementById('usr-db-id').value;
