@@ -658,7 +658,7 @@
                         <!-- Paginación / Call to Action -->
                         <div class="mt-12 text-center border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-center gap-6">
                             <p class="text-sm text-slate-400 font-medium">¿Su institución no figura o aparece como Pendiente?</p>
-                            <a href="#" id="btn-reclamar-perfil" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-forenseGold border border-forenseGold/30 px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow flex items-center gap-2">
+                            <a href="alianzas.html" id="btn-reclamar-perfil" class="bg-slate-800 hover:bg-slate-700 text-forenseGold border border-forenseGold/30 px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow flex items-center gap-2">
                                 <i data-lucide="shield-check" class="w-4 h-4"></i> Solicitar Perfil Institucional
                             </a>
                         </div>
@@ -1403,7 +1403,7 @@
                             Vos formás profesionales.<br>
                             <span class="text-transparent bg-clip-text bg-gradient-to-r from-forenseGold via-yellow-200 to-forenseGold">Nosotros hacemos verificable su formación.</span>
                         </h3>
-                        <a href="#" id="btn-convenio-wpp" target="_blank" class="inline-flex items-center gap-3 bg-forenseGold text-forenseNavy hover:bg-yellow-500 font-black uppercase tracking-[0.12em] text-base px-10 py-5 rounded-xl shadow-[0_20px_60px_-15px_rgba(212,175,55,0.6)] hover:shadow-[0_25px_70px_-15px_rgba(212,175,55,0.8)] hover:scale-105 transition-all">
+                        <a href="alianzas.html" id="btn-convenio-wpp" class="inline-flex items-center gap-3 bg-forenseGold text-forenseNavy hover:bg-yellow-500 font-black uppercase tracking-[0.12em] text-base px-10 py-5 rounded-xl shadow-[0_20px_60px_-15px_rgba(212,175,55,0.6)] hover:shadow-[0_25px_70px_-15px_rgba(212,175,55,0.8)] hover:scale-105 transition-all">
                             <i data-lucide="message-square" class="w-6 h-6"></i>
                             Solicitar Perfil Institucional
                         </a>
@@ -2073,8 +2073,7 @@
                     const setHref = (id, url) => { const el = document.getElementById(id); if (el) el.href = url || '#'; };
                     const wppLink = `https://wa.me/${conf.whatsapp || ''}`;
                     const mailLink = `mailto:${conf.email || ''}`;
-                    const wppB2B = `https://wa.me/${conf.whatsapp || ''}?text=Hola%20RENMCYCF.%20Quisiera%20información%20sobre%20Convenios.`;
-                    setHref('btn-convenio-wpp', wppB2B);
+                    // btn-convenio-wpp ahora navega a alianzas.html directamente (fijado en HTML)
                     setHref('float-wpp', wppLink); setHref('float-mail', mailLink);
                     setHref('float-fb', conf.facebook); setHref('float-ig', conf.instagram);
                     setHref('footer-fb', conf.facebook); setHref('footer-ig', conf.instagram);
@@ -2094,8 +2093,7 @@
                     setDisplay('float-wpp', conf.mostrar_wpp); setDisplay('float-mail', conf.mostrar_email);
                     setDisplay('float-fb', conf.mostrar_facebook); setDisplay('float-ig', conf.mostrar_instagram);
 
-                    const wppDirectorio = `https://wa.me/${conf.whatsapp || ''}?text=Hola%20RENMCYCF.%20Solicito%20perfil%20institucional.`;
-                    setHref('btn-reclamar-perfil', wppDirectorio);
+                    // NOTA: btn-reclamar-perfil ahora navega a alianzas.html (fijado en HTML, sin sobreescritura por JS)
                 }
             } catch (err) { console.error(err); }
         }
@@ -2261,7 +2259,7 @@
                         </div>
                         <div class="mt-auto">
                             <span class="bg-amber-500/10 text-amber-500/70 border border-amber-500/20 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest flex items-center gap-1.5 w-max mb-4"><i data-lucide="clock" class="w-3 h-3"></i> Auditoría Pendiente</span>
-                            <a href="#seccion-convenios-b2b" class="w-full bg-forenseGold/10 hover:bg-forenseGold/20 border border-forenseGold/30 text-forenseGold py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">Solicitar Perfil y Auditoría</a>
+                            <a href="alianzas.html" class="w-full bg-forenseGold/10 hover:bg-forenseGold/20 border border-forenseGold/30 text-forenseGold py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">Solicitar Perfil y Auditoría</a>
                         </div>
                     </div>`;
                     return;
