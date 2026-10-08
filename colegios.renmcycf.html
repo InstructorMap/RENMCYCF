@@ -143,8 +143,10 @@
   <header class="header-gold-border bg-white/95 backdrop-blur-md sticky top-0 z-50 shadow-sm">
     <div class="max-w-7xl mx-auto px-5 sm:px-8 py-4 flex items-center justify-between gap-4">
       <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full border-2 border-[#d4af37] flex items-center justify-center bg-[#0a1128]">
-          <i data-lucide="scale" class="w-6 h-6 text-[#d4af37]"></i>
+        <!-- Contenedor del Logo Dinámico -->
+        <div class="w-12 h-12 rounded-full border-2 border-[#d4af37] flex items-center justify-center bg-white overflow-hidden shrink-0 shadow-sm">
+          <i data-lucide="scale" id="default-logo-header" class="w-6 h-6 text-[#0a1128]"></i>
+          <img id="dynamic-logo-header" src="" class="w-full h-full object-contain p-1.5 hidden" alt="Logo">
         </div>
         <div class="leading-tight">
           <span class="font-playfair font-black text-xl tracking-tight text-[#0a1128] block">RENMCYCF</span>
@@ -186,7 +188,7 @@
     </div>
   </section>
 
-  <!-- Propuesta de Valor (El por qué pagan) -->
+  <!-- Propuesta de Valor -->
   <section class="py-20 md:py-28 bg-white">
     <div class="max-w-7xl mx-auto px-5 sm:px-8">
       <div class="text-center max-w-3xl mx-auto mb-16">
@@ -243,7 +245,7 @@
             <span class="text-[10px] font-black tracking-widest text-white uppercase">Solo Estudios Acreditados</span>
           </div>
           <h2 class="font-playfair font-bold text-3xl sm:text-4xl text-white mb-6 leading-tight">
-            El "MercadoLibre" pero de la <span class="text-[#d4af37] italic">Prueba Pericial</span>.
+            El Primer Ecosistema Cerrado de <span class="text-[#d4af37] italic">Licitación Pericial</span>.
           </h2>
           <p class="text-slate-300 text-sm leading-relaxed mb-8">
             Si usted tiene un caso que requiere extracción de datos de un celular en CABA, no busque en Google. Suba el requerimiento a la Bolsa Privada del RENMCYCF. Todos los peritos informáticos de esa zona recibirán la alerta y le enviarán sus presupuestos de honorarios.
@@ -259,7 +261,7 @@
         </div>
         
         <div class="lg:w-1/2 w-full">
-          <div class="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md shadow-2xl">
+          <div class="bg-white/5 border border-white/10 rounded-xl p-6 sm:p-8 backdrop-blur-md shadow-2xl">
             <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
               <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Panel del Estudio</span>
               <span class="bg-[#d4af37]/20 text-[#d4af37] text-[9px] px-2 py-1 rounded border border-[#d4af37]/30 font-bold uppercase tracking-widest">Bolsa Activa</span>
@@ -426,7 +428,11 @@
   <footer class="footer-navy py-10 border-t-[4px] border-[#d4af37]">
     <div class="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-3">
-        <i data-lucide="scale" class="w-8 h-8 text-[#d4af37]"></i>
+        <!-- Logo en el Footer -->
+        <div class="w-8 h-8 rounded-full border border-[#d4af37] flex items-center justify-center bg-white overflow-hidden shrink-0 shadow-sm">
+          <i data-lucide="scale" id="default-logo-footer" class="w-4 h-4 text-[#0a1128]"></i>
+          <img id="dynamic-logo-footer" src="" class="w-full h-full object-contain p-0.5 hidden" alt="Logo">
+        </div>
         <div>
           <span class="text-base font-black tracking-wide text-white block">RENMCYCF</span>
           <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Uso Institucional</span>
@@ -447,7 +453,37 @@
     const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
     const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
 
-    // 2. Lógica de Pestañas
+    // 2. Carga dinámica del logo desde Supabase
+    async function cargarLogo() {
+      try {
+        const { data: config } = await db.from('renmcycf_config').select('logo_url').eq('id', 1).maybeSingle();
+        if (config && config.logo_url) {
+          // Actualiza Header
+          const headerImg = document.getElementById('dynamic-logo-header');
+          const headerIcon = document.getElementById('default-logo-header');
+          if (headerImg && headerIcon) {
+            headerImg.src = config.logo_url;
+            headerImg.classList.remove('hidden');
+            headerIcon.classList.add('hidden');
+          }
+          // Actualiza Footer
+          const footerImg = document.getElementById('dynamic-logo-footer');
+          const footerIcon = document.getElementById('default-logo-footer');
+          if (footerImg && footerIcon) {
+            footerImg.src = config.logo_url;
+            footerImg.classList.remove('hidden');
+            footerIcon.classList.add('hidden');
+          }
+        }
+      } catch (err) {
+        console.error("Error cargando configuración visual", err);
+      }
+    }
+    
+    // Iniciar carga al cargar el DOM
+    window.addEventListener('DOMContentLoaded', cargarLogo);
+
+    // 3. Lógica de Pestañas
     function switchTab(tab) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -456,7 +492,7 @@
       document.getElementById('tab-' + tab).classList.add('active');
     }
 
-    // 3. Envío Inteligente de Solicitudes
+    // 4. Envío Inteligente de Solicitudes
     async function enviarSolicitud(e, tipo) {
       e.preventDefault();
       
@@ -495,7 +531,6 @@
       }
 
       try {
-        // Asumiendo que la tabla renmcycf_convenios fue creada con el SQL anterior
         const { error } = await db.from('renmcycf_convenios').insert([payload]);
         if (error) throw error;
 
