@@ -189,7 +189,6 @@
         @keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
         .animate-marquee:hover { animation-play-state: paused; }
 
-        /* Module plates para el Ecosistema */
         .module-plate { position: relative; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 28px 24px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; text-align: left; cursor: pointer; display: block; text-decoration: none; }
         .module-plate::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, #d4af37, rgba(212,175,55,0.3)); opacity: 0; transition: opacity 0.3s; }
         .module-plate:hover { transform: translateY(-6px); box-shadow: 0 25px 50px -12px rgba(10, 17, 40, 0.15); border-color: #d4af37; }
@@ -199,13 +198,11 @@
         .module-number { font-family: 'JetBrains Mono', monospace; font-weight: 900; font-size: 26px; color: #cbd5e1; line-height: 1; transition: color 0.3s; letter-spacing: -0.05em; }
         .module-arrow { transition: all 0.3s; color: #94a3b8; }
 
-        /* Diagrama de trazabilidad */
         .trace-flow { display: flex; flex-direction: column; align-items: center; gap: 12px; }
         .trace-node { display: flex; align-items: center; justify-content: center; padding: 14px 22px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #0a1128; width: 100%; max-width: 320px; text-align: center; }
         .trace-node.active { background: linear-gradient(145deg, #0a1128, #1e293b); color: #d4af37; border-color: #d4af37; }
         .trace-arrow { color: #d4af37; font-size: 18px; font-weight: 900; }
 
-        /* Especialidad chips alrededor del test */
         .specialty-chip { position: absolute; padding: 6px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 50px; font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.12em; color: #94a3b8; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none; opacity: 0.7; }
         .specialty-chip:hover { opacity: 1; color: #d4af37; border-color: #d4af37; transform: scale(1.08); }
     </style>
@@ -468,7 +465,7 @@
                 </div>
             </section>
 
-            <!-- ═══════════ INYECCIÓN 2: RED DE INSTITUCIONES ADHERIDAS ═══════════ -->
+            <!-- ═══════════ RED DE INSTITUCIONES ADHERIDAS (iconos) ═══════════ -->
             <section class="py-12 md:py-16 bg-white border-b border-slate-200">
                 <div class="max-w-7xl mx-auto px-4">
                     <div class="text-center mb-10 max-w-3xl mx-auto" data-aos="fade-up">
@@ -488,7 +485,6 @@
                         </p>
                     </div>
 
-                    <!-- Iconos representativos (los logos reales se cargan desde la sección alianzas más abajo) -->
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 items-center opacity-80">
                         <div class="text-center">
                             <i data-lucide="landmark" class="w-7 h-7 text-forenseNavy mx-auto mb-2"></i>
@@ -514,6 +510,63 @@
                             <i data-lucide="building-2" class="w-7 h-7 text-forenseNavy mx-auto mb-2"></i>
                             <span class="text-[9px] font-black text-forenseNavy uppercase tracking-wider">Empresas</span>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════ INYECCIÓN 2: DIRECTORIO DE INSTITUCIONES + RED DE EMPRESAS ═══════════ -->
+            <section id="alianzas-estrategicas" class="pt-12 pb-8 bg-slate-900 border-b border-slate-800 overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="text-center mb-8">
+                        <h2 id="alianzas-titulo" class="font-title text-2xl md:text-3xl font-black text-forenseGold mb-3 uppercase tracking-tight">Alianzas Estratégicas del RENMCYCF</h2>
+                        <div class="w-20 h-1 bg-forenseGold mx-auto mb-4"></div>
+                        <p id="alianzas-subtitulo" class="text-slate-400 text-sm max-w-xl mx-auto">Instituciones y Empresas que apoyan nuestra misión.</p>
+                    </div>
+                </div>
+
+                <!-- DIRECTORIO NACIONAL DE INSTITUCIONES -->
+                <div id="directorio-institucional" class="pb-16 pt-8">
+                    <div class="max-w-7xl mx-auto px-4 mb-10">
+                        <div class="text-center mb-8">
+                            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800 text-slate-300 text-[10px] font-bold uppercase tracking-[0.2em] mb-4 border border-slate-700">
+                                <i data-lucide="search" class="w-3 h-3"></i> Buscador Nacional
+                            </div>
+                            <h3 class="text-2xl md:text-4xl font-black text-white uppercase tracking-tight mb-2">Entidades Capacitadoras</h3>
+                            <p class="text-slate-400 text-sm max-w-2xl mx-auto">Verifique el estado de auditoría tecnológica y trazabilidad de las instituciones que imparten Ciencias Forenses en Argentina.</p>
+                        </div>
+
+                        <!-- Barra de Búsqueda -->
+                        <div class="max-w-3xl mx-auto bg-slate-800/80 backdrop-blur-md rounded-2xl p-2 border border-slate-700 shadow-xl flex flex-col md:flex-row gap-2 mb-12">
+                            <div class="relative flex-1">
+                                <i data-lucide="building" class="absolute left-4 top-3.5 w-5 h-5 text-slate-500"></i>
+                                <input type="text" id="dir-search-input" placeholder="Nombre del Instituto o Provincia..." class="w-full bg-transparent border-none text-white px-12 py-3 focus:ring-0 outline-none placeholder-slate-500" onkeyup="filtrarDirectorio()">
+                            </div>
+                            <button onclick="filtrarDirectorio()" class="bg-forenseGold hover:bg-yellow-500 text-forenseNavy font-black uppercase tracking-widest text-xs px-8 py-3 rounded-xl transition-all shadow-md md:w-auto w-full">Buscar</button>
+                        </div>
+
+                        <!-- Grilla de Resultados -->
+                        <div id="directorio-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Los resultados se inyectan aquí -->
+                        </div>
+
+                        <!-- Paginación / Call to Action -->
+                        <div class="mt-12 text-center border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-center gap-6">
+                            <p class="text-sm text-slate-400 font-medium">¿Su institución no figura o aparece como Pendiente?</p>
+                            <a href="#" id="btn-reclamar-perfil" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-forenseGold border border-forenseGold/30 px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow flex items-center gap-2">
+                                <i data-lucide="shield-check" class="w-4 h-4"></i> Solicitar Perfil Institucional
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bloque 2: Red de Empresas -->
+                <div id="bloque-red-empresas" class="pt-4 hidden">
+                    <div class="max-w-7xl mx-auto px-4 mb-6 text-center">
+                        <h3 id="empresas-titulo" class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.25em] mb-1">Red de Empresas</h3>
+                        <p id="empresas-subtitulo" class="text-[10px] text-slate-500 italic">Alianzas estratégicas del sector privado</p>
+                    </div>
+                    <div class="max-w-7xl mx-auto px-4 flex justify-center">
+                        <div id="contenedor-empresas-publicas" class="flex flex-wrap justify-center gap-6 md:gap-8"></div>
                     </div>
                 </div>
             </section>
@@ -812,39 +865,35 @@
 
             <!-- ═══════════ INYECCIÓN VIP: PORTAL ENTIDADES JUDICIALES ═══════════ -->
             <section class="py-24 bg-white relative overflow-hidden border-t border-slate-200">
-                <!-- Fondo sutil de agua -->
                 <div class="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-                
+
                 <div class="max-w-5xl mx-auto px-6 relative z-10">
                     <div class="bg-[#0a1128] rounded-3xl p-1 shadow-2xl relative overflow-hidden group">
-                        <!-- Borde animado sutil (Opcional, da un toque muy premium) -->
                         <div class="absolute inset-0 bg-gradient-to-r from-[#0a1128] via-[#d4af37] to-[#0a1128] opacity-20 group-hover:opacity-40 transition-opacity duration-1000"></div>
-                        
+
                         <div class="bg-[#0a1128] rounded-[22px] p-8 md:p-14 relative h-full flex flex-col md:flex-row items-center gap-10 border border-[#1e293b]">
-                            
-                            <!-- Icono Gigante -->
+
                             <div class="hidden md:flex w-32 h-32 rounded-full border border-[#d4af37]/30 items-center justify-center shrink-0 relative">
                                 <div class="absolute inset-2 border border-dashed border-[#d4af37]/20 rounded-full animate-[spin_60s_linear_infinite]"></div>
                                 <i data-lucide="scale" class="w-14 h-14 text-[#d4af37]"></i>
                             </div>
 
-                            <!-- Contenido -->
                             <div class="flex-1 text-center md:text-left">
                                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/20 mb-4">
                                     <span class="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse"></span>
                                     <span class="text-[10px] font-black text-[#d4af37] uppercase tracking-widest">Acceso Restringido</span>
                                 </div>
-                                
+
                                 <h2 class="text-3xl md:text-4xl font-black text-white font-serif tracking-tight mb-4">
                                     Portal para Entidades Judiciales
                                 </h2>
-                                
+
                                 <p class="text-sm md:text-base text-slate-400 leading-relaxed mb-8 max-w-2xl font-medium">
-                                    Red privada exclusiva para Colegios de Abogados y Estudios Jurídicos acreditados. 
-                                    Acceda a nuestro padrón federal de peritos auditados, valide credenciales en tiempo real y 
+                                    Red privada exclusiva para Colegios de Abogados y Estudios Jurídicos acreditados.
+                                    Acceda a nuestro padrón federal de peritos auditados, valide credenciales en tiempo real y
                                     publique requerimientos periciales (Licitación Privada) con total seguridad jurídica procesal.
                                 </p>
-                                
+
                                 <div class="flex flex-col sm:flex-row items-center gap-4">
                                     <a href="colegios.renmcycf.html" class="w-full sm:w-auto bg-[#d4af37] text-[#0a1128] font-black uppercase tracking-widest text-[11px] px-8 py-4 rounded-xl shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:bg-[#b5952f] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all flex items-center justify-center gap-3">
                                         <i data-lucide="lock" class="w-4 h-4"></i>
@@ -918,7 +967,6 @@
                         </div>
                     </div>
 
-                    <!-- Especialidades orbitando (composición visual) -->
                     <div class="relative h-32 md:h-40 mb-10 hidden md:block" data-aos="fade-in" data-aos-delay="200">
                         <div class="specialty-chip" style="top: 10%; left: 8%;">Criminalística</div>
                         <div class="specialty-chip" style="top: 60%; left: 2%;">Balística</div>
@@ -943,7 +991,7 @@
                 </div>
             </section>
 
-            <!-- ═══════════ INYECCIÓN 4: ECOSISTEMA RENMCYCF (6 placas institucionales) ═══════════ -->
+            <!-- ═══════════ INYECCIÓN 4: ECOSISTEMA RENMCYCF ═══════════ -->
             <section class="py-20 md:py-28 bg-slate-50 border-b border-slate-200">
                 <div class="max-w-7xl mx-auto px-4">
                     <div class="text-center mb-14 max-w-3xl mx-auto" data-aos="fade-up">
@@ -961,7 +1009,6 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" data-aos="fade-up" data-aos-delay="100">
-                        <!-- 01 IDENTIDAD -->
                         <button onclick="switchSection('seccion-institucional')" class="module-plate">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="module-number">01</div>
@@ -974,7 +1021,6 @@
                             </span>
                         </button>
 
-                        <!-- 02 RED NACIONAL -->
                         <button onclick="switchSection('seccion-mapa')" class="module-plate">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="module-number">02</div>
@@ -987,7 +1033,6 @@
                             </span>
                         </button>
 
-                        <!-- 03 ESPECIALIDADES -->
                         <button onclick="switchSection('seccion-categorias')" class="module-plate">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="module-number">03</div>
@@ -1000,7 +1045,6 @@
                             </span>
                         </button>
 
-                        <!-- 04 COMITÉ -->
                         <button onclick="switchSection('seccion-comite')" class="module-plate">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="module-number">04</div>
@@ -1013,7 +1057,6 @@
                             </span>
                         </button>
 
-                        <!-- 05 PORTAL CIENTÍFICO -->
                         <button onclick="switchSection('seccion-portal-divulgacion')" class="module-plate">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="module-number">05</div>
@@ -1026,7 +1069,6 @@
                             </span>
                         </button>
 
-                        <!-- 06 BIBLIOTECA -->
                         <button onclick="switchSection('seccion-biblioteca')" class="module-plate">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="module-number">06</div>
@@ -1042,13 +1084,12 @@
                 </div>
             </section>
 
-            <!-- ═══════════ INYECCIÓN 5: SOLUCIÓN PARA INSTITUTOS (B2B reescrito) ═══════════ -->
+            <!-- ═══════════ INYECCIÓN 5: SOLUCIÓN PARA INSTITUTOS (B2B) ═══════════ -->
             <section id="seccion-convenios-b2b" class="relative py-20 md:py-28 bg-[#050914] overflow-hidden border-y border-white/10">
                 <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:20px_20px]"></div>
                 <div class="absolute right-0 top-1/3 -translate-y-1/2 w-[600px] h-[600px] bg-forenseGold/5 blur-[120px] rounded-full pointer-events-none"></div>
 
                 <div class="max-w-7xl mx-auto px-4 relative z-10">
-                    <!-- Encabezado -->
                     <div class="text-center mb-16 max-w-4xl mx-auto" data-aos="fade-up">
                         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 text-forenseGold text-[10px] font-bold uppercase tracking-[0.2em] mb-6 border border-white/10">
                             <i data-lucide="building" class="w-4 h-4"></i>
@@ -1063,7 +1104,6 @@
                         </p>
                     </div>
 
-                    <!-- Dolor del director -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16" data-aos="fade-up" data-aos-delay="100">
                         <div class="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10">
                             <div class="inline-flex items-center gap-2 text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] mb-4">
@@ -1115,7 +1155,6 @@
                             </div>
                         </div>
 
-                        <!-- Diagrama de trazabilidad -->
                         <div class="flex flex-col justify-center">
                             <div class="inline-flex items-center gap-2 text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] mb-4">
                                 <i data-lucide="route" class="w-4 h-4"></i>
@@ -1145,7 +1184,6 @@
                         </div>
                     </div>
 
-                    <!-- Ejemplo visual del certificado -->
                     <div class="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12 mb-16" data-aos="fade-up" data-aos-delay="200">
                         <div class="text-center mb-10">
                             <div class="inline-flex items-center gap-2 text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] mb-3">
@@ -1190,7 +1228,6 @@
                         </div>
                     </div>
 
-                    <!-- 4 beneficios reenfocados -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16" data-aos="fade-up" data-aos-delay="300">
                         <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-forenseGold/50 transition-all">
                             <div class="w-10 h-10 rounded-lg bg-forenseGold/10 flex items-center justify-center mb-4">
@@ -1222,7 +1259,6 @@
                         </div>
                     </div>
 
-                    <!-- Marca sigue siendo marca -->
                     <div class="max-w-3xl mx-auto text-center mb-16" data-aos="fade-up" data-aos-delay="400">
                         <div class="bg-gradient-to-br from-forenseGold/10 to-transparent border-2 border-forenseGold/40 rounded-3xl p-8 md:p-10">
                             <div class="w-14 h-14 mx-auto rounded-2xl bg-forenseGold/20 flex items-center justify-center mb-5 border border-forenseGold/40">
@@ -1237,7 +1273,6 @@
                         </div>
                     </div>
 
-                    <!-- CTA final del bloque -->
                     <div class="text-center max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="500">
                         <h3 class="font-title text-2xl md:text-4xl font-black text-white uppercase tracking-tight mb-6 leading-tight">
                             Vos formás profesionales.<br>
