@@ -13,31 +13,127 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --neon-blue: #3b82f6; --neon-gold: #fbbf24; --glass-bg: rgba(15, 23, 42, 0.6); --glass-border: rgba(255, 255, 255, 0.08); }
-        body { font-family: 'Outfit', sans-serif; background-color: #030712; color: #e2e8f0; background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.10) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(217, 119, 6, 0.05) 0%, transparent 50%); background-attachment: fixed; }
+        :root {
+            /* Paleta institucional forense premium */
+            --forense-navy: #0a1128;
+            --forense-navy-deep: #050914;
+            --forense-gold: #d4af37;
+            --forense-gold-soft: #b8941f;
+            --forense-slate: #1e293b;
+            --panel-bg: rgba(10, 17, 40, 0.72);
+            --panel-border: rgba(212, 175, 55, 0.15);
+            --panel-border-strong: rgba(212, 175, 55, 0.35);
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--forense-navy-deep);
+            color: #e2e8f0;
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.06) 0%, transparent 55%),
+                radial-gradient(circle at 85% 30%, rgba(30, 58, 138, 0.10) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 16px; }
-        .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 12px; transition: all 0.3s ease; }
-        .glass-card:hover { border-color: rgba(255,255,255,0.15); }
-        .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 10px; transition: all 0.3s; color: #94a3b8; cursor: pointer; }
-        .sidebar-link:hover { color: white; background: rgba(255,255,255,0.05); }
-        .sidebar-link.active { color: var(--neon-gold); background: rgba(217, 119, 6, 0.1); border-left: 3px solid var(--neon-gold); }
-        input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="password"], input[type="date"], input[type="color"], input[type="tel"], select, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 8px; padding: 10px 12px; color: white; outline: none; transition: all 0.3s; font-size: 0.85rem; }
-        input:focus, select:focus, textarea:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
-        label { display: block; font-size: 0.65rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-        th { background: rgba(0,0,0,0.4); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
-        tr { border-bottom: 1px solid var(--glass-border); }
+        .font-title { font-family: 'Montserrat', sans-serif; }
+
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.10);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover { border-color: rgba(212, 175, 55, 0.28); }
+
+        .sidebar-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; border-radius: 10px;
+            transition: all 0.3s; color: #94a3b8; cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+        .sidebar-link:hover { color: white; background: rgba(212, 175, 55, 0.05); }
+        .sidebar-link.active {
+            color: var(--forense-gold);
+            background: rgba(212, 175, 55, 0.10);
+            border-left: 3px solid var(--forense-gold);
+        }
+
+        input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="password"], input[type="date"], input[type="color"], input[type="tel"], select, textarea {
+            width: 100%; background: rgba(0,0,0,0.35);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px; padding: 10px 12px;
+            color: white; outline: none;
+            transition: all 0.3s; font-size: 0.85rem;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--forense-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+        }
+        label {
+            display: block; font-size: 0.65rem; font-weight: 800;
+            color: #94a3b8; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 4px;
+        }
+        th {
+            background: rgba(10, 17, 40, 0.7);
+            text-transform: uppercase; font-size: 0.7rem;
+            letter-spacing: 1px; color: #cbd5e1;
+            border-bottom: 1px solid var(--panel-border);
+        }
+        tr { border-bottom: 1px solid rgba(212, 175, 55, 0.08); }
+        tr:hover { background: rgba(212, 175, 55, 0.03); }
+
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #020617; } ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-        .upload-zone { border: 2px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s; }
-        .upload-zone:hover { border-color: var(--neon-blue); background: rgba(59,130,246,0.05); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050914; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--forense-gold-soft); }
+
+        .upload-zone {
+            border: 2px dashed rgba(212, 175, 55, 0.25);
+            border-radius: 12px; padding: 20px;
+            text-align: center; cursor: pointer; transition: all 0.3s;
+        }
+        .upload-zone:hover { border-color: var(--forense-gold); background: rgba(212, 175, 55, 0.04); }
         .preview-img { max-width: 200px; max-height: 150px; border-radius: 8px; margin-top: 10px; }
-        .editor-group { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
-        .editor-group-title { font-size: 0.75rem; font-weight: 800; color: var(--neon-gold); text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-        #login-screen { position: fixed; inset: 0; z-index: 100; background: #030712; display: flex; align-items: center; justify-content: center; }
-        .login-box { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 40px; border-radius: 20px; text-align: center; width: 100%; max-width: 400px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+
+        .editor-group {
+            background: rgba(0,0,0,0.25);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px; padding: 12px; margin-bottom: 12px;
+        }
+        .editor-group-title {
+            font-size: 0.75rem; font-weight: 800;
+            color: var(--forense-gold); text-transform: uppercase;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            padding-bottom: 5px;
+        }
+
+        #login-screen {
+            position: fixed; inset: 0; z-index: 100;
+            background: var(--forense-navy-deep);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .login-box {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--panel-border-strong);
+            padding: 40px; border-radius: 20px;
+            text-align: center; width: 100%; max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 60px rgba(212, 175, 55, 0.05);
+        }
+
         @media print {
             body * { visibility: hidden; }
             #modal-expediente, #modal-expediente * { visibility: visible; }
@@ -45,30 +141,89 @@
             .print\:hidden { display: none !important; }
             .print-container { width: 100%; padding: 0 !important; box-shadow: none !important; margin: 0 !important; }
         }
-        .badge-aceptado { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .badge-rechazado { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
-        .permission-checkbox { display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px; border: 1px solid var(--glass-border); }
+
+        .badge-aceptado {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .badge-rechazado {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .permission-checkbox {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px; background: rgba(0,0,0,0.3);
+            border-radius: 6px; border: 1px solid var(--panel-border);
+        }
         .permission-checkbox label { margin-bottom: 0; color: #e2e8f0; }
         input[readonly] { background: rgba(0,0,0,0.5); cursor: not-allowed; opacity: 0.6; }
-        /* Grilla de diplomas en el modal */
+
         .diploma-card { transition: all 0.2s ease; }
         .diploma-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15); }
+
+        /* Botones institucionales */
+        .btn-primary {
+            background: var(--forense-navy);
+            color: var(--forense-gold);
+            border: 1px solid var(--panel-border-strong);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: #0f1d3d;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.20);
+            transform: translateY(-1px);
+        }
+        .btn-gold {
+            background: var(--forense-gold);
+            color: var(--forense-navy);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: all 0.3s ease;
+        }
+        .btn-gold:hover {
+            background: #e6c14a;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+            transform: translateY(-1px);
+        }
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.28);
+        }
+        .btn-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .btn-success:hover {
+            background: rgba(16, 185, 129, 0.28);
+        }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
     <!-- LOGIN -->
     <div id="login-screen">
         <div class="login-box">
-            <div class="w-20 h-20 bg-blue-900/30 border border-blue-500/50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(59,130,246,0.3)]">
-                <i data-lucide="shield-check" class="w-10 h-10 text-blue-400"></i>
+            <div class="w-20 h-20 bg-forenseNavy border-2 border-[#d4af37] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(212,175,55,0.25)]">
+                <i data-lucide="shield-check" class="w-10 h-10 text-[#d4af37]"></i>
             </div>
-            <h1 class="text-2xl font-black text-white mb-2 tracking-widest uppercase">ASARI Core</h1>
-            <p class="text-xs text-slate-400 mb-8 uppercase font-bold">Control de Acceso Restringido</p>
+            <h1 class="text-2xl font-black text-white mb-2 tracking-widest uppercase font-title">ASARI Core</h1>
+            <p class="text-xs text-slate-400 mb-8 uppercase font-bold tracking-widest">Control de Acceso Restringido</p>
             <form onsubmit="iniciarSesion(event)" class="space-y-4">
                 <div><input type="email" id="login-email" placeholder="Correo Electrónico" required class="text-center"></div>
                 <div><input type="password" id="login-password" placeholder="Clave de Seguridad" required class="text-center"></div>
                 <div id="login-error" class="text-red-400 text-xs font-bold hidden bg-red-900/20 p-2 rounded border border-red-500/30"></div>
-                <button type="submit" id="btn-login" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black uppercase tracking-widest py-3 rounded-lg shadow-lg shadow-blue-900/50 transition-all">INGRESAR</button>
+                <button type="submit" id="btn-login" class="btn-gold w-full py-3 rounded-lg shadow-lg">INGRESAR</button>
             </form>
         </div>
     </div>
@@ -134,9 +289,9 @@
 
     <!-- MODAL CLASES -->
     <div id="modal-clases" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-[#0f172a] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-            <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="layers" class="text-blue-400"></i> Materiales: <span id="modal-curso-titulo" class="text-yellow-500 font-normal"></span></h3>
+        <div class="bg-[#0a1128] border border-[#d4af37]/20 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="p-5 border-b border-[#d4af37]/15 flex justify-between items-center bg-black/40">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="layers" class="text-[#d4af37]"></i> Materiales: <span id="modal-curso-titulo" class="text-[#d4af37] font-normal"></span></h3>
                 <button onclick="cerrarModalClases()" class="text-slate-400 hover:text-red-400 transition-colors"><i data-lucide="x-circle" class="w-6 h-6"></i></button>
             </div>
             <div class="p-6 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -147,7 +302,7 @@
                         <div><label>Tipo</label><select id="clase-tipo" onchange="toggleClaseInput()"><option value="VIDEO">Video (YouTube)</option><option value="ZOOM">Web / Link Externo</option><option value="PDF">Documento PDF</option></select></div>
                         <div id="clase-input-url"><label>Link URL</label><input type="url" id="clase-url"></div>
                         <div id="clase-input-file" class="hidden"><label>Subir PDF</label><input type="file" id="clase-file" accept=".pdf"></div>
-                        <button type="submit" id="btn-subir-clase" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl mt-4">GUARDAR MATERIAL</button>
+                        <button type="submit" id="btn-subir-clase" class="btn-success w-full py-3 rounded-xl mt-4">GUARDAR MATERIAL</button>
                     </form>
                 </div>
                 <div class="md:col-span-2">
@@ -159,15 +314,15 @@
 
     <!-- MODAL EDICIÓN MATRICULADO -->
     <div id="modal-editar-padron" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-[#0f172a] border border-white/10 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40 sticky top-0 z-10">
-                <h3 class="text-lg font-bold text-white"><i data-lucide="user-pen" class="text-yellow-400 inline mr-2"></i> Editar Perfil Completo</h3>
+        <div class="bg-[#0a1128] border border-[#d4af37]/20 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="p-5 border-b border-[#d4af37]/15 flex justify-between items-center bg-black/40 sticky top-0 z-10">
+                <h3 class="text-lg font-bold text-white"><i data-lucide="user-pen" class="text-[#d4af37] inline mr-2"></i> Editar Perfil Completo</h3>
                 <button onclick="cerrarModalEdicion()" class="text-slate-400 hover:text-red-400"><i data-lucide="x-circle" class="w-6 h-6"></i></button>
             </div>
             <form onsubmit="guardarEdicionMatriculado(event)" class="p-6 space-y-4">
                 <input type="hidden" id="edit-padron-id">
                 <div class="flex justify-center mb-4">
-                    <div class="w-24 h-24 rounded-full border-2 border-dashed border-white/20 overflow-hidden bg-black/30 flex items-center justify-center relative group cursor-pointer" onclick="document.getElementById('edit-foto-file').click()">
+                    <div class="w-24 h-24 rounded-full border-2 border-dashed border-[#d4af37]/40 overflow-hidden bg-black/30 flex items-center justify-center relative group cursor-pointer" onclick="document.getElementById('edit-foto-file').click()">
                         <img id="edit-foto-preview" src="" class="w-full h-full object-cover">
                         <input type="file" id="edit-foto-file" accept="image/*" class="hidden" onchange="previewFotoEdicion(this)">
                     </div>
@@ -183,15 +338,15 @@
                     <div><label>Especialidades (Separar con comas)</label><input type="text" id="edit-especialidades"></div>
                 </div>
                 <div><label>Profesión / Título</label><input type="text" id="edit-profesion"></div>
-                <div class="bg-black/20 p-4 rounded-xl border border-white/5">
-                    <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Redes Sociales del Profesional</h4>
+                <div class="bg-black/20 p-4 rounded-xl border border-[#d4af37]/10">
+                    <h4 class="text-[#d4af37] font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Redes Sociales del Profesional</h4>
                     <div class="grid grid-cols-1 gap-4">
                         <div><label>Facebook URL</label><input type="url" id="edit-facebook" placeholder="https://facebook.com/usuario"></div>
                         <div><label>Instagram URL</label><input type="url" id="edit-instagram" placeholder="https://instagram.com/usuario"></div>
                         <div><label>LinkedIn URL</label><input type="url" id="edit-linkedin" placeholder="https://linkedin.com/in/usuario"></div>
                     </div>
                 </div>
-                <div class="bg-black/30 p-4 rounded-xl border border-white/10 flex items-center gap-3">
+                <div class="bg-black/30 p-4 rounded-xl border border-[#d4af37]/15 flex items-center gap-3">
                     <input type="checkbox" id="edit-directorio" class="w-5 h-5">
                     <label for="edit-directorio" class="text-sm font-bold text-white mb-0 cursor-pointer">Visible en el Directorio Público Nacional (Mapa)</label>
                 </div>
@@ -211,16 +366,16 @@
                     <div><label>Estado Legal</label><select id="edit-estado"><option value="ACTIVO">ACTIVO</option><option value="SUSPENDIDO">SUSPENDIDO</option><option value="REVOCADO">REVOCADO</option><option value="PENDIENTE">PENDIENTE</option></select></div>
                 </div>
                 <div><label>Fecha Vencimiento Matrícula</label><input type="date" id="edit-vencimiento"></div>
-                <button type="submit" class="w-full bg-yellow-600 text-black font-bold py-3 rounded-xl mt-4">GUARDAR CAMBIOS</button>
+                <button type="submit" class="btn-gold w-full py-3 rounded-xl mt-4">GUARDAR CAMBIOS</button>
             </form>
         </div>
     </div>
 
     <!-- SIDEBAR -->
-    <aside class="w-64 glass-panel m-4 mr-0 flex flex-col z-20 hidden md:flex border-r border-white/5">
-        <div class="h-28 flex flex-col justify-center px-6 border-b border-white/5 relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-yellow-500"></div>
-            <div class="flex items-center gap-2 text-white font-black tracking-widest text-2xl"><i data-lucide="shield-check" class="text-yellow-500"></i> RENMCYCF</div>
+    <aside class="w-64 glass-panel m-4 mr-0 flex flex-col z-20 hidden md:flex border-r border-[#d4af37]/10">
+        <div class="h-28 flex flex-col justify-center px-6 border-b border-[#d4af37]/10 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#d4af37] via-[#0a1128] to-[#d4af37]"></div>
+            <div class="flex items-center gap-2 text-white font-black tracking-widest text-2xl font-title"><i data-lucide="shield-check" class="text-[#d4af37]"></i> RENMCYCF</div>
             <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">Centro de Comando</span>
         </div>
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
@@ -231,10 +386,13 @@
             <button onclick="showTab('padron')" id="nav-padron" class="sidebar-link w-full"><i data-lucide="database" class="w-4 h-4"></i> Padrón Oficial</button>
             
             <div id="menu-admin-section">
-                <div class="px-2 py-2 text-[9px] font-bold text-blue-400 uppercase tracking-widest mt-6">Divulgación & Ciencia</div>
+                <div class="px-2 py-2 text-[9px] font-bold text-[#d4af37] uppercase tracking-widest mt-6">Divulgación & Ciencia</div>
                 <button onclick="showTab('campus')" id="nav-campus" class="sidebar-link w-full"><i data-lucide="book-open" class="w-4 h-4"></i> Portal Científico</button>
                 <button onclick="showTab('biblioteca')" id="nav-biblioteca" class="sidebar-link w-full"><i data-lucide="library" class="w-4 h-4"></i> Biblioteca</button>
                 <button onclick="showTab('tesis')" id="nav-tesis" class="sidebar-link w-full"><i data-lucide="microscope" class="w-4 h-4"></i> Auditoría Tesis</button>
+
+                <div class="px-2 py-2 text-[9px] font-bold text-[#d4af37] uppercase tracking-widest mt-6">Red Judicial (B2B)</div>
+                <button onclick="showTab('convenios')" id="nav-convenios" class="sidebar-link w-full"><i data-lucide="scale" class="w-4 h-4"></i> Solicitudes de Entidades</button>
 
                 <div class="px-2 py-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-6">Sistema</div>
                 <button onclick="showTab('aliados')" id="nav-aliados" class="sidebar-link w-full"><i data-lucide="award" class="w-4 h-4"></i> Gestión Aliados</button>
@@ -255,10 +413,10 @@
     </aside>
 
     <main class="flex-1 flex flex-col min-w-0 relative">
-        <header class="h-20 flex justify-between items-center px-8 z-10 border-b border-white/5 bg-black/20">
-            <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400" id="page-title">Dashboard</h2>
+        <header class="h-20 flex justify-between items-center px-8 z-10 border-b border-[#d4af37]/10 bg-black/30">
+            <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-[#d4af37]" id="page-title">Dashboard</h2>
             <div class="flex items-center gap-4">
-                <span class="text-xs font-bold text-yellow-500 bg-yellow-500/10 px-3 py-1 rounded-lg uppercase tracking-wider" id="header-user-role">Conectando...</span>
+                <span class="text-xs font-bold text-[#d4af37] bg-[#d4af37]/10 px-3 py-1 rounded-lg uppercase tracking-wider border border-[#d4af37]/20" id="header-user-role">Conectando...</span>
                 <button onclick="cerrarSesion()" class="text-slate-400 hover:text-red-400 transition-colors flex items-center gap-2 border border-slate-700/50 hover:border-red-500/50 px-3 py-1.5 rounded-lg" title="Cerrar Sesión">
                     <span class="text-xs font-bold hidden md:inline">SALIR</span>
                     <i data-lucide="log-out" class="w-4 h-4"></i>
@@ -275,7 +433,7 @@
                     <div class="glass-card p-4 md:p-6 col-span-1"><p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase">Pendientes</p><h3 class="text-2xl md:text-3xl font-black text-blue-400 mt-2 font-mono" id="stat-pendientes">0</h3></div>
                     <div class="glass-card p-4 md:p-6 col-span-1 border-purple-500/30"><p class="text-purple-400 text-[10px] md:text-xs font-bold uppercase">Visitas Web</p><h3 class="text-2xl md:text-3xl font-black text-purple-300 mt-2 font-mono" id="stat-visitas">0</h3></div>
                     <div class="glass-card p-4 md:p-6 col-span-1"><p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase">Arancel A1</p><h3 class="text-2xl md:text-3xl font-black text-emerald-400 mt-2 font-mono" id="stat-arancel">$0</h3></div>
-                    <div class="glass-card p-4 md:p-6 col-span-2 lg:col-span-1 border-yellow-500/30"><p class="text-yellow-500/80 text-[10px] md:text-xs font-bold uppercase">Proyección Caja</p><h3 class="text-2xl md:text-3xl font-black text-yellow-400 mt-2 font-mono" id="stat-caja">$0</h3></div>
+                    <div class="glass-card p-4 md:p-6 col-span-2 lg:col-span-1 border-yellow-500/30"><p class="text-[#d4af37]/80 text-[10px] md:text-xs font-bold uppercase">Proyección Caja</p><h3 class="text-2xl md:text-3xl font-black text-[#d4af37] mt-2 font-mono" id="stat-caja">$0</h3></div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="glass-card p-6">
@@ -288,7 +446,7 @@
                     </div>
                 </div>
                 <div class="flex justify-end">
-                    <button onclick="descargarReporteExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2"><i data-lucide="download" class="w-5 h-5"></i> DESCARGAR REPORTE EXCEL</button>
+                    <button onclick="descargarReporteExcel()" class="btn-success font-bold px-6 py-3 rounded-xl flex items-center gap-2"><i data-lucide="download" class="w-5 h-5"></i> DESCARGAR REPORTE EXCEL</button>
                 </div>
             </div>
 
@@ -310,9 +468,9 @@
 
             <!-- PADRÓN -->
             <div id="view-padron" class="tab-content space-y-6">
-                <div class="flex justify-between items-center bg-black/20 p-4 rounded-xl border border-white/5">
+                <div class="flex justify-between items-center bg-black/20 p-4 rounded-xl border border-[#d4af37]/10">
                     <div class="relative w-full max-w-md"><i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-slate-400"></i><input type="text" id="search-padron" placeholder="Buscar por DNI o Nombre..." class="w-full pl-9 bg-black/50" onkeyup="if(event.key==='Enter')buscarPadron()"></div>
-                    <button onclick="descargarReporteExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg flex items-center gap-2 ml-4"><i data-lucide="download" class="w-4 h-4"></i> EXCEL</button>
+                    <button onclick="descargarReporteExcel()" class="btn-success font-bold px-4 py-2 rounded-lg flex items-center gap-2 ml-4"><i data-lucide="download" class="w-4 h-4"></i> EXCEL</button>
                 </div>
                 <div class="glass-card overflow-hidden">
                     <div class="overflow-x-auto">
@@ -325,7 +483,7 @@
             <div id="view-aliados" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
-                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nuevo Aliado</h3>
+                        <h3 class="text-white font-bold mb-4 border-b border-[#d4af37]/15 pb-2">Nuevo Aliado</h3>
                         <form id="form-aliado" onsubmit="crearAliado(event)" class="space-y-4">
                             <input type="hidden" id="aliado-id">
                             <div><label>Nombre de la Institución</label><input type="text" id="aliado-nombre" required></div>
@@ -348,11 +506,11 @@
                             </div>
                             <div><label>Enlace Web Oficial</label><input type="url" id="aliado-web" placeholder="https://..." class="text-slate-400"></div>
                             <div><label>Logo de la Institución</label><input type="file" id="aliado-logo" accept="image/*" class="text-slate-400"></div>
-                            <div class="bg-black/30 p-4 rounded-xl border border-white/10 flex items-center gap-3">
+                            <div class="bg-black/30 p-4 rounded-xl border border-[#d4af37]/15 flex items-center gap-3">
                                 <input type="checkbox" id="aliado-activo" checked class="w-5 h-5">
                                 <label for="aliado-activo" class="text-sm font-bold text-white mb-0 cursor-pointer">Visible en el Directorio Público</label>
                             </div>
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">GUARDAR INSTITUCIÓN</button>
+                            <button type="submit" class="btn-primary w-full py-3 rounded-xl">GUARDAR INSTITUCIÓN</button>
                             <button type="button" onclick="resetFormAliado()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs">CANCELAR EDICIÓN</button>
                         </form>
                     </div>
@@ -383,11 +541,67 @@
                 </div>
             </div>
 
+            <!-- RED JUDICIAL B2B - CONVENIOS -->
+            <div id="view-convenios" class="tab-content space-y-6">
+                <div class="glass-card p-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b border-[#d4af37]/15">
+                        <div>
+                            <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                                <i data-lucide="scale" class="text-[#d4af37] w-5 h-5"></i>
+                                Solicitudes de Entidades Judiciales
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Colegios de Abogados y Estudios Jurídicos que solicitan acceso al padrón federal de peritos.</p>
+                        </div>
+                        <button onclick="cargarConveniosPanel()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-colors">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> REFRESCAR
+                        </button>
+                    </div>
+
+                    <!-- KPIs de convenios -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div class="glass-card p-4 border-l-4 border-amber-500/60">
+                            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Pendientes</p>
+                            <h3 class="text-2xl font-black text-amber-400 mt-1 font-mono" id="stat-conv-pendientes">0</h3>
+                        </div>
+                        <div class="glass-card p-4 border-l-4 border-emerald-500/60">
+                            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Aprobados</p>
+                            <h3 class="text-2xl font-black text-emerald-400 mt-1 font-mono" id="stat-conv-aprobados">0</h3>
+                        </div>
+                        <div class="glass-card p-4 border-l-4 border-red-500/60">
+                            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Rechazados</p>
+                            <h3 class="text-2xl font-black text-red-400 mt-1 font-mono" id="stat-conv-rechazados">0</h3>
+                        </div>
+                        <div class="glass-card p-4 border-l-4 border-[#d4af37]/60">
+                            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Total</p>
+                            <h3 class="text-2xl font-black text-[#d4af37] mt-1 font-mono" id="stat-conv-total">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr>
+                                    <th class="p-3">Institución / Estudio</th>
+                                    <th class="p-3">Tipo</th>
+                                    <th class="p-3">Autoridad Solicitante</th>
+                                    <th class="p-3">Email</th>
+                                    <th class="p-3">Estado</th>
+                                    <th class="p-3 text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="convenios-body">
+                                <tr><td colspan="6" class="p-4 text-center text-slate-400">Cargando solicitudes...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <!-- RED DE EMPRESAS -->
             <div id="view-empresas" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
-                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nueva Empresa</h3>
+                        <h3 class="text-white font-bold mb-4 border-b border-[#d4af37]/15 pb-2">Nueva Empresa</h3>
                         <form id="form-empresa" onsubmit="crearEmpresa(event)" class="space-y-4">
                             <input type="hidden" id="empresa-id">
                             <div><label>Nombre de la Empresa</label><input type="text" id="empresa-nombre" required></div>
@@ -395,11 +609,11 @@
                             <div><label>Descripción Corta (opcional)</label><textarea id="empresa-desc" rows="2" placeholder="Rubro o servicio"></textarea></div>
                             <div><label>Logo</label><input type="file" id="empresa-logo" accept="image/*" class="text-slate-400"></div>
                             <div><label>Orden (menor = primero)</label><input type="number" id="empresa-orden" value="0"></div>
-                            <div class="bg-black/30 p-4 rounded-xl border border-white/10 flex items-center gap-3">
+                            <div class="bg-black/30 p-4 rounded-xl border border-[#d4af37]/15 flex items-center gap-3">
                                 <input type="checkbox" id="empresa-activo" checked class="w-5 h-5">
                                 <label for="empresa-activo" class="text-sm font-bold text-white mb-0 cursor-pointer">Visible en el Index Público</label>
                             </div>
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">GUARDAR EMPRESA</button>
+                            <button type="submit" class="btn-primary w-full py-3 rounded-xl">GUARDAR EMPRESA</button>
                             <button type="button" onclick="resetFormEmpresa()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs">CANCELAR EDICIÓN</button>
                         </form>
                     </div>
@@ -415,18 +629,18 @@
             <div id="view-comite" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
-                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nuevo Miembro del Comité</h3>
+                        <h3 class="text-white font-bold mb-4 border-b border-[#d4af37]/15 pb-2">Nuevo Miembro del Comité</h3>
                         <form id="form-comite" onsubmit="guardarMiembroComite(event)" class="space-y-4">
                             <input type="hidden" id="comite-id">
                             <div><label>Nombre Completo</label><input type="text" id="comite-nombre" required></div>
                             <div><label>Título / Profesión</label><input type="text" id="comite-titulo" required></div>
                             <div><label>Breve Reseña</label><textarea id="comite-resena" rows="3"></textarea></div>
                             <div><label>Foto de Perfil</label><input type="file" id="comite-foto" accept="image/*" class="text-slate-400"></div>
-                            <div class="bg-black/30 p-4 rounded-xl border border-white/10 flex items-center gap-3">
+                            <div class="bg-black/30 p-4 rounded-xl border border-[#d4af37]/15 flex items-center gap-3">
                                 <input type="checkbox" id="comite-activo" checked class="w-5 h-5">
                                 <label for="comite-activo" class="text-sm font-bold text-white mb-0 cursor-pointer">Miembro Activo</label>
                             </div>
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">GUARDAR MIEMBRO</button>
+                            <button type="submit" class="btn-primary w-full py-3 rounded-xl">GUARDAR MIEMBRO</button>
                         </form>
                     </div>
                     <div class="glass-card p-6 xl:col-span-2">
@@ -438,11 +652,11 @@
 
             <!-- CARGA MASIVA -->
             <div id="view-masiva" class="tab-content space-y-6">
-                <div class="glass-card p-8 max-w-2xl mx-auto text-center border-blue-500/30">
-                    <h3 class="text-xl font-black text-white mb-2"><i data-lucide="upload-cloud" class="inline-block w-6 h-6 text-blue-400 mb-1"></i> Inyección Masiva</h3>
-                    <input type="file" id="input-excel" accept=".xlsx,.xls" class="block w-full text-sm mb-6 text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white" onchange="procesarExcel()">
-                    <div id="preview-area" class="hidden text-left bg-black/30 p-4 rounded-xl border border-white/5">
-                        <div class="flex justify-between items-center mb-2"><span class="text-sm font-bold text-white">Detectados: <span id="count-preview" class="text-blue-400">0</span></span><button onclick="confirmarCargaMasiva()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded-lg font-bold text-xs"><i data-lucide="check" class="w-3 h-3"></i> EJECUTAR</button></div>
+                <div class="glass-card p-8 max-w-2xl mx-auto text-center border-[#d4af37]/30">
+                    <h3 class="text-xl font-black text-white mb-2"><i data-lucide="upload-cloud" class="inline-block w-6 h-6 text-[#d4af37] mb-1"></i> Inyección Masiva</h3>
+                    <input type="file" id="input-excel" accept=".xlsx,.xls" class="block w-full text-sm mb-6 text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#0a1128] file:text-[#d4af37]" onchange="procesarExcel()">
+                    <div id="preview-area" class="hidden text-left bg-black/30 p-4 rounded-xl border border-[#d4af37]/10">
+                        <div class="flex justify-between items-center mb-2"><span class="text-sm font-bold text-white">Detectados: <span id="count-preview" class="text-[#d4af37]">0</span></span><button onclick="confirmarCargaMasiva()" class="btn-success px-4 py-1.5 rounded-lg font-bold text-xs"><i data-lucide="check" class="w-3 h-3"></i> EJECUTAR</button></div>
                         <div class="max-h-40 overflow-y-auto"><table class="w-full text-xs font-mono"><tbody id="tabla-preview"></tbody></table></div>
                     </div>
                 </div>
@@ -452,7 +666,7 @@
             <div id="view-campus" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
-                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nueva Publicación</h3>
+                        <h3 class="text-white font-bold mb-4 border-b border-[#d4af37]/15 pb-2">Nueva Publicación</h3>
                         <form id="form-curso" onsubmit="crearNoticia(event)" class="space-y-4">
                             <div><label>Título / Noticia</label><input type="text" id="camp-titulo" required></div>
                             <div><label>Descripción / Bajada</label><textarea id="camp-desc" rows="3"></textarea></div>
@@ -465,7 +679,7 @@
                             </div>
                             <div><label>Imagen Portada</label><input type="file" id="camp-portada" accept="image/*" class="text-slate-400"></div>
                             <div><label>Enlace Externo (Red Social / Web)</label><input type="url" id="camp-link" placeholder="https://..." class="text-slate-400"></div>
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">PUBLICAR</button>
+                            <button type="submit" class="btn-primary w-full py-3 rounded-xl">PUBLICAR</button>
                         </form>
                     </div>
                     <div class="glass-card p-6 xl:col-span-2">
@@ -479,14 +693,14 @@
             <div id="view-biblioteca" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
-                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Subir Material</h3>
+                        <h3 class="text-white font-bold mb-4 border-b border-[#d4af37]/15 pb-2">Subir Material</h3>
                         <form id="form-biblioteca" onsubmit="subirLibro(event)" class="space-y-4">
                             <div><label>Título</label><input type="text" id="bib-titulo" required></div>
                             <div><label>Autor</label><input type="text" id="bib-autor"></div>
                             <div><label>Tipo Acceso</label><select id="bib-acceso"><option value="GRATUITO">Público</option><option value="PREMIUM">Premium (Solo Matriculados)</option></select></div>
                             <div><label>Portada (Opcional)</label><input type="file" id="bib-portada" accept="image/*" class="text-slate-400"></div>
                             <div><label>Archivo PDF</label><input type="file" id="bib-pdf" accept=".pdf" required class="text-slate-400"></div>
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">PUBLICAR</button>
+                            <button type="submit" class="btn-primary w-full py-3 rounded-xl">PUBLICAR</button>
                         </form>
                     </div>
                     <div class="glass-card p-6 xl:col-span-2">
@@ -508,21 +722,21 @@
             <div id="view-diseno" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
                     <div class="glass-card p-6 xl:col-span-4 h-[750px] overflow-y-auto flex flex-col">
-                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Calibración Visual</h3>
+                        <h3 class="text-white font-bold mb-4 border-b border-[#d4af37]/15 pb-2">Calibración Visual</h3>
                         <div class="flex bg-black/30 rounded-lg p-1 mb-5">
-                            <button class="flex-1 py-2 text-xs font-bold uppercase rounded-md text-white bg-blue-600 shadow" id="btn-tab-frente" onclick="switchEditorTab('frente')">Frente</button>
+                            <button class="flex-1 py-2 text-xs font-bold uppercase rounded-md text-white bg-[#0a1128] shadow" id="btn-tab-frente" onclick="switchEditorTab('frente')">Frente</button>
                             <button class="flex-1 py-2 text-xs font-bold uppercase rounded-md text-slate-400 hover:text-white" id="btn-tab-dorso" onclick="switchEditorTab('dorso')">Dorso</button>
                         </div>
-                        <div class="mb-5 space-y-3 p-4 bg-black/20 rounded-xl border border-white/5">
+                        <div class="mb-5 space-y-3 p-4 bg-black/20 rounded-xl border border-[#d4af37]/10">
                             <div><label class="text-xs text-slate-400">Fondo Frente</label><input type="file" accept="image/*" class="w-full text-[10px] text-slate-400" onchange="subirFondoCredencial(this, 'frente')"></div>
                             <div><label class="text-xs text-slate-400">Fondo Dorso</label><input type="file" accept="image/*" class="w-full text-[10px] text-slate-400" onchange="subirFondoCredencial(this, 'dorso')"></div>
                             <div><label class="text-xs text-slate-400">Roseta (Transparente)</label><input type="file" accept="image/png" class="w-full text-[10px] text-slate-400" onchange="subirRoseta(this)"></div>
                         </div>
                         <div id="editor-controles" class="space-y-4 flex-1 overflow-y-auto pr-2"></div>
-                        <button onclick="guardarDiseno()" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl">GUARDAR DISEÑO</button>
+                        <button onclick="guardarDiseno()" class="btn-success w-full mt-4 py-3 rounded-xl">GUARDAR DISEÑO</button>
                     </div>
                     <div class="glass-card p-6 xl:col-span-8 flex items-center justify-center bg-black/40 overflow-hidden relative" style="min-height: 500px;">
-                        <div class="absolute top-4 right-4 bg-black/50 px-3 py-1 rounded text-xs font-mono text-slate-400" id="preview-indicator">VISTA: FRENTE</div>
+                        <div class="absolute top-4 right-4 bg-black/50 px-3 py-1 rounded text-xs font-mono text-slate-400 border border-[#d4af37]/20" id="preview-indicator">VISTA: FRENTE</div>
                         <div id="preview-wrapper" style="transform: scale(0.65); transform-origin: center;">
                             <div id="card-preview-frente" style="position: relative; width: 1000px; height: 630px; background-size: 1000px 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
                                 <div id="pre-foto" style="position:absolute; overflow:hidden;"><img src="https://ui-avatars.com/api/?name=F+P&background=0a1128&color=fff" style="width:100%;height:100%;object-fit:cover;"></div>
@@ -546,11 +760,11 @@
 
             <!-- CONFIGURACIÓN CORE -->
             <div id="view-configuracion" class="tab-content space-y-6">
-                <div class="glass-card p-8 border-yellow-500/30">
-                    <h3 class="text-white font-bold mb-6 border-b border-white/10 pb-2">Parámetros del Sistema</h3>
+                <div class="glass-card p-8 border-[#d4af37]/30">
+                    <h3 class="text-white font-bold mb-6 border-b border-[#d4af37]/15 pb-2">Parámetros del Sistema</h3>
                     <form id="form-config" class="space-y-6" onsubmit="guardarConfiguracion(event)">
-                        <div class="bg-black/20 p-4 rounded-xl border border-white/5">
-                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="dollar-sign" class="w-4 h-4"></i> Aranceles de Matriculación</h4>
+                        <div class="bg-black/20 p-4 rounded-xl border border-[#d4af37]/10">
+                            <h4 class="text-[#d4af37] font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="dollar-sign" class="w-4 h-4"></i> Aranceles de Matriculación</h4>
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <div><label>Arancel A1 (ARS)</label><input type="number" id="conf-arancel-a1" required></div>
                                 <div><label>Arancel A2 (ARS)</label><input type="number" id="conf-arancel-a2" required></div>
@@ -558,9 +772,9 @@
                                 <div><label>Arancel A4 (ARS)</label><input type="number" id="conf-arancel-a4" required></div>
                             </div>
                         </div>
-                        <div class="bg-black/20 p-4 rounded-xl border border-white/5">
-                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="contact" class="w-4 h-4"></i> Pago y Contacto</h4>
-                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2 mt-6 border-t border-white/10 pt-4"><i data-lucide="landmark" class="w-4 h-4"></i> Datos de Transferencia Bancaria</h4>
+                        <div class="bg-black/20 p-4 rounded-xl border border-[#d4af37]/10">
+                            <h4 class="text-[#d4af37] font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="contact" class="w-4 h-4"></i> Pago y Contacto</h4>
+                            <h4 class="text-[#d4af37] font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2 mt-6 border-t border-[#d4af37]/10 pt-4"><i data-lucide="landmark" class="w-4 h-4"></i> Datos de Transferencia Bancaria</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div><label>Alias</label><input type="text" id="conf-alias-cbu" placeholder="Ej: renmcycf.pagos"></div>
                                 <div><label>CBU (22 dígitos)</label><input type="text" id="conf-cbu" maxlength="22" placeholder="Ej: 0070099530004512345678"></div>
@@ -573,29 +787,29 @@
                                 <div><label>Email de Contacto</label><input type="email" id="conf-email"></div>
                             </div>
                         </div>
-                        <div class="bg-black/20 p-4 rounded-xl border border-white/5">
-                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4"></i> Visibilidad de Botones de Contacto</h4>
+                        <div class="bg-black/20 p-4 rounded-xl border border-[#d4af37]/10">
+                            <h4 class="text-[#d4af37] font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4"></i> Visibilidad de Botones de Contacto</h4>
                             <p class="text-xs text-slate-400 mb-4">Controla qué botones de contacto aparecen en el sitio público (menú flotante y secciones).</p>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-black/30 p-3 rounded-lg border border-white/10 flex items-center gap-3">
+                                <div class="bg-black/30 p-3 rounded-lg border border-[#d4af37]/15 flex items-center gap-3">
                                     <input type="checkbox" id="conf-mostrar-wpp" class="w-5 h-5 rounded text-emerald-500 focus:ring-emerald-500 border-slate-600">
                                     <label for="conf-mostrar-wpp" class="text-sm font-bold text-white mb-0 cursor-pointer flex items-center gap-2">
                                         <i data-lucide="message-circle" class="w-5 h-5 text-green-500"></i> Mostrar WhatsApp
                                     </label>
                                 </div>
-                                <div class="bg-black/30 p-3 rounded-lg border border-white/10 flex items-center gap-3">
+                                <div class="bg-black/30 p-3 rounded-lg border border-[#d4af37]/15 flex items-center gap-3">
                                     <input type="checkbox" id="conf-mostrar-email" class="w-5 h-5 rounded text-sky-500 focus:ring-sky-500 border-slate-600">
                                     <label for="conf-mostrar-email" class="text-sm font-bold text-white mb-0 cursor-pointer flex items-center gap-2">
                                         <i data-lucide="mail" class="w-5 h-5 text-sky-500"></i> Mostrar Email
                                     </label>
                                 </div>
-                                <div class="bg-black/30 p-3 rounded-lg border border-white/10 flex items-center gap-3">
+                                <div class="bg-black/30 p-3 rounded-lg border border-[#d4af37]/15 flex items-center gap-3">
                                     <input type="checkbox" id="conf-mostrar-facebook" class="w-5 h-5 rounded text-blue-500 focus:ring-blue-500 border-slate-600">
                                     <label for="conf-mostrar-facebook" class="text-sm font-bold text-white mb-0 cursor-pointer flex items-center gap-2">
                                         <i data-lucide="globe" class="w-5 h-5 text-blue-500"></i> Mostrar Facebook
                                     </label>
                                 </div>
-                                <div class="bg-black/30 p-3 rounded-lg border border-white/10 flex items-center gap-3">
+                                <div class="bg-black/30 p-3 rounded-lg border border-[#d4af37]/15 flex items-center gap-3">
                                     <input type="checkbox" id="conf-mostrar-instagram" class="w-5 h-5 rounded text-pink-500 focus:ring-pink-500 border-slate-600">
                                     <label for="conf-mostrar-instagram" class="text-sm font-bold text-white mb-0 cursor-pointer flex items-center gap-2">
                                         <i data-lucide="camera" class="w-5 h-5 text-pink-500"></i> Mostrar Instagram
@@ -603,8 +817,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-black/20 p-4 rounded-xl border border-white/5">
-                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="image" class="w-4 h-4"></i> Identidad Visual</h4>
+                        <div class="bg-black/20 p-4 rounded-xl border border-[#d4af37]/10">
+                            <h4 class="text-[#d4af37] font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="image" class="w-4 h-4"></i> Identidad Visual</h4>
                             <div>
                                 <label>Imagen de Fondo del Hero</label>
                                 <div class="upload-zone" onclick="document.getElementById('input-hero-image').click()">
@@ -626,8 +840,8 @@
                                 <input type="hidden" id="conf-logo-url">
                             </div>
                         </div>
-                        <div class="bg-black/20 p-4 rounded-xl border border-white/5">
-                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Redes Sociales</h4>
+                        <div class="bg-black/20 p-4 rounded-xl border border-[#d4af37]/10">
+                            <h4 class="text-[#d4af37] font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Redes Sociales</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div><label>Facebook URL</label><input type="url" id="conf-facebook"></div>
                                 <div><label>Instagram URL</label><input type="url" id="conf-instagram"></div>
@@ -636,7 +850,7 @@
                             </div>
                         </div>
                         <div class="flex justify-end pt-4">
-                            <button type="submit" class="bg-yellow-600 hover:bg-yellow-500 text-black font-black px-6 py-3 rounded-xl">ACTUALIZAR CONFIGURACIÓN</button>
+                            <button type="submit" class="btn-gold px-6 py-3 rounded-xl">ACTUALIZAR CONFIGURACIÓN</button>
                         </div>
                     </form>
                 </div>
@@ -644,8 +858,8 @@
 
             <!-- CONTENIDO DEL SITIO -->
             <div id="view-contenido" class="tab-content space-y-6">
-                <div class="glass-card p-8 border-blue-500/30">
-                    <h3 class="text-white font-bold mb-6 border-b border-white/10 pb-2">Editar Contenido</h3>
+                <div class="glass-card p-8 border-[#d4af37]/30">
+                    <h3 class="text-white font-bold mb-6 border-b border-[#d4af37]/15 pb-2">Editar Contenido</h3>
                     <form id="form-contenido" class="space-y-6" onsubmit="guardarContenido(event)">
                         <div><label>Badge del Hero</label><input type="text" id="cont-hero-badge-text"></div>
                         <div><label>Título del Hero</label><input type="text" id="cont-hero-title"></div>
@@ -662,8 +876,8 @@
                         <div><label>Descripción Categoría A4</label><textarea id="cont-cat-a4-desc" rows="3"></textarea></div>
                         <div><label>Texto Footer</label><textarea id="cont-footer-texto" rows="2"></textarea></div>
 
-                        <div class="bg-black/20 p-4 rounded-xl border border-white/5 mt-4">
-                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="landmark" class="w-4 h-4"></i> Sección Institucional</h4>
+                        <div class="bg-black/20 p-4 rounded-xl border border-[#d4af37]/10 mt-4">
+                            <h4 class="text-[#d4af37] font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="landmark" class="w-4 h-4"></i> Sección Institucional</h4>
                             <div class="space-y-4">
                                 <div><label>Título "Nuestra Misión"</label><input type="text" id="cont-mision-titulo"></div>
                                 <div><label>Texto "Nuestra Misión"</label><textarea id="cont-mision-texto" rows="3"></textarea></div>
@@ -675,8 +889,8 @@
                             </div>
                         </div>
 
-                        <div class="bg-black/20 p-4 rounded-xl border border-white/5 mt-4">
-                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4"></i> El Valor de la Confianza</h4>
+                        <div class="bg-black/20 p-4 rounded-xl border border-[#d4af37]/10 mt-4">
+                            <h4 class="text-[#d4af37] font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4"></i> El Valor de la Confianza</h4>
                             <div class="space-y-4">
                                 <div><label>Párrafo 1</label><textarea id="cont-inst-p1" rows="3"></textarea></div>
                                 <div><label>Párrafo 2</label><textarea id="cont-inst-p2" rows="3"></textarea></div>
@@ -685,8 +899,8 @@
                             </div>
                         </div>
 
-                        <div class="bg-black/20 p-4 rounded-xl border border-white/5 mt-4">
-                            <h4 class="text-yellow-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="award" class="w-4 h-4"></i> Alianzas y Newsletter</h4>
+                        <div class="bg-black/20 p-4 rounded-xl border border-[#d4af37]/10 mt-4">
+                            <h4 class="text-[#d4af37] font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="award" class="w-4 h-4"></i> Alianzas y Newsletter</h4>
                             <div class="space-y-4">
                                 <div><label>Título "Alianzas Estratégicas"</label><input type="text" id="cont-alianzas-titulo"></div>
                                 <div><label>Subtítulo "Alianzas"</label><input type="text" id="cont-alianzas-subtitulo"></div>
@@ -698,7 +912,7 @@
                         </div>
 
                         <div class="flex justify-end pt-4">
-                            <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-6 py-3 rounded-xl">ACTUALIZAR TEXTOS</button>
+                            <button type="submit" class="btn-primary px-6 py-3 rounded-xl">ACTUALIZAR TEXTOS</button>
                         </div>
                     </form>
                 </div>
@@ -708,18 +922,18 @@
             <div id="view-beneficios" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
-                        <h3 class="text-white font-bold mb-4 border-b border-white/10 pb-2">Nuevo / Editar Beneficio</h3>
+                        <h3 class="text-white font-bold mb-4 border-b border-[#d4af37]/15 pb-2">Nuevo / Editar Beneficio</h3>
                         <form id="form-beneficio" onsubmit="guardarBeneficio(event)" class="space-y-4">
                             <input type="hidden" id="beneficio-id">
                             <div><label>Título</label><input type="text" id="beneficio-titulo" required></div>
                             <div><label>Descripción</label><textarea id="beneficio-desc" rows="3"></textarea></div>
                             <div><label>Ícono (nombre Lucide)</label><input type="text" id="beneficio-icono" placeholder="Ej: shield-check, award, qr-code" value="check-circle"></div>
                             <div><label>Orden</label><input type="number" id="beneficio-orden" value="0"></div>
-                            <div class="bg-black/30 p-4 rounded-xl border border-white/10 flex items-center gap-3">
+                            <div class="bg-black/30 p-4 rounded-xl border border-[#d4af37]/15 flex items-center gap-3">
                                 <input type="checkbox" id="beneficio-activo" checked class="w-5 h-5">
                                 <label for="beneficio-activo" class="text-sm font-bold text-white mb-0 cursor-pointer">Visible en el Index</label>
                             </div>
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl">GUARDAR BENEFICIO</button>
+                            <button type="submit" class="btn-primary w-full py-3 rounded-xl">GUARDAR BENEFICIO</button>
                             <button type="button" onclick="resetFormBeneficio()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs">CANCELAR EDICIÓN</button>
                         </form>
                     </div>
@@ -741,7 +955,7 @@
                         </div>
                         <div class="flex gap-2">
                             <button onclick="cargarSuscriptoresPanel()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2"><i data-lucide="refresh-cw" class="w-4 h-4"></i> REFRESCAR</button>
-                            <button onclick="exportarSuscriptores()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> EXPORTAR EXCEL</button>
+                            <button onclick="exportarSuscriptores()" class="btn-success px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> EXPORTAR EXCEL</button>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -778,7 +992,7 @@
                             <input type="text" id="usr-uid" placeholder="Ej: dd057f27-a081-4c3a-8810-10152c712f3a" class="font-mono text-sm text-blue-400">
                             <p class="text-[9px] text-slate-400 mt-1">Copia el User UID desde Supabase > Authentication > Users.</p>
                         </div>
-                        <div class="border-t border-white/10 pt-4">
+                        <div class="border-t border-[#d4af37]/10 pt-4">
                             <label class="text-emerald-400 text-sm font-bold uppercase tracking-widest mb-3">Permisos de Acceso (Módulos)</label>
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                 <div class="permission-checkbox"><input type="checkbox" id="perm-dashboard" value="mod-dashboard" class="w-4 h-4"><label for="perm-dashboard" class="text-sm mb-0">Dashboard</label></div>
@@ -792,7 +1006,7 @@
                             </div>
                         </div>
                         <div class="flex justify-end">
-                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition-transform active:scale-95">CREAR USUARIO</button>
+                            <button type="submit" class="btn-success px-6 py-3 rounded-xl text-sm transition-transform active:scale-95">CREAR USUARIO</button>
                         </div>
                     </form>
                     
@@ -884,7 +1098,7 @@
                     const btn = document.getElementById(id);
                     if (btn) btn.style.display = 'flex';
                 });
-                ['nav-aliados', 'nav-cursos-b2b', 'nav-empresas', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'].forEach(id => {
+                ['nav-aliados', 'nav-cursos-b2b', 'nav-convenios', 'nav-empresas', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'].forEach(id => {
                     const btn = document.getElementById(id);
                     if (btn) btn.style.display = 'flex';
                 });
@@ -896,7 +1110,7 @@
                     if (navElement) navElement.style.display = permisos.includes(modulo) ? 'flex' : 'none';
                 });
                 
-                const sistemaButtons = ['nav-aliados', 'nav-cursos-b2b', 'nav-empresas', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'];
+                const sistemaButtons = ['nav-aliados', 'nav-cursos-b2b', 'nav-convenios', 'nav-empresas', 'nav-comite', 'nav-masiva', 'nav-diseno', 'nav-configuracion', 'nav-contenido', 'nav-usuarios', 'nav-beneficios', 'nav-suscriptores'];
                 const tienePermisoSistema = permisos.includes('mod-sistema');
                 sistemaButtons.forEach(id => {
                     const el = document.getElementById(id);
@@ -975,6 +1189,7 @@
                 'padron':'Padrón Nacional', 
                 'aliados':'Gestión de Aliados', 
                 'cursos-b2b':'Auditoría de Cursos B2B',
+                'convenios':'Red Judicial (B2B) · Solicitudes de Entidades',
                 'empresas':'Red de Empresas', 
                 'comite':'Comité Evaluador', 
                 'campus':'Portal Científico', 
@@ -996,6 +1211,7 @@
             if(id === 'padron') cargarPadron();
             if(id === 'aliados') cargarAliadosPanel();
             if(id === 'cursos-b2b') cargarCursosB2BPanel();
+            if(id === 'convenios') cargarConveniosPanel();
             if(id === 'empresas') cargarEmpresasPanel();
             if(id === 'comite') cargarComitePanel();
             if(id === 'campus') cargarNoticiasPanel();
@@ -1079,10 +1295,10 @@
                             labels: catLabels,
                             datasets: [{
                                 data: catData,
-                                backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6']
+                                backgroundColor: ['#d4af37', '#0a1128', '#1e3a8a', '#64748b', '#b8941f', '#334155', '#94a3b8']
                             }]
                         },
-                        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+                        options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#cbd5e1' } } } }
                     });
                     
                     const ctxEvo = document.getElementById('chart-evolucion').getContext('2d');
@@ -1093,8 +1309,8 @@
                             datasets: [{
                                 label: 'Altas',
                                 data: anosData,
-                                borderColor: '#3b82f6',
-                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                borderColor: '#d4af37',
+                                backgroundColor: 'rgba(212, 175, 55, 0.15)',
                                 fill: true,
                                 tension: 0.4
                             }]
@@ -1169,8 +1385,8 @@
                             </td>
                             <td class="p-3 text-right">
                                 <div class="flex justify-end gap-2">
-                                    <button onclick="aprobarNuevoDiploma('${p.id}', '${p.dni}', '${p.diploma_url}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors shadow-md flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> Aprobar</button>
-                                    <button onclick="rechazarSolicitudSimple('${p.id}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors shadow-md flex items-center gap-1"><i data-lucide="x-circle" class="w-3 h-3"></i> Rechazar</button>
+                                    <button onclick="aprobarNuevoDiploma('${p.id}', '${p.dni}', '${p.diploma_url}')" class="btn-success px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> Aprobar</button>
+                                    <button onclick="rechazarSolicitudSimple('${p.id}')" class="btn-danger px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1"><i data-lucide="x-circle" class="w-3 h-3"></i> Rechazar</button>
                                 </div>
                             </td>
                         </tr>`;
@@ -1188,7 +1404,7 @@
                                 <a href="${p.comprobante_url}" target="_blank" class="hover:underline flex items-center gap-1"><i data-lucide="receipt" class="w-3 h-3"></i> Ver Comprobante</a>
                             </td>
                             <td class="p-3 text-right">
-                                <button onclick="aprobarRenovacion('${p.id}', '${p.dni}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors shadow-md flex items-center gap-1 ml-auto"><i data-lucide="check-circle" class="w-3 h-3"></i> Renovar 1 Año</button>
+                                <button onclick="aprobarRenovacion('${p.id}', '${p.dni}')" class="btn-success px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1 ml-auto"><i data-lucide="check-circle" class="w-3 h-3"></i> Renovar 1 Año</button>
                             </td>
                         </tr>`;
                     }
@@ -1198,7 +1414,7 @@
                     return `
                     <tr class="transition-colors border-b ${bg}">
                         <td class="p-3"><div class="font-bold text-white">${p.nombres} ${p.apellidos} ${tag}</div><div class="text-[10px] text-slate-400">DNI: ${p.dni}</div></td>
-                        <td class="p-3"><span class="px-2 py-1 bg-slate-800 rounded text-[10px] font-bold text-yellow-400">${p.categoria}</span></td>
+                        <td class="p-3"><span class="px-2 py-1 bg-slate-800 rounded text-[10px] font-bold text-[#d4af37]">${p.categoria}</span></td>
                         <td class="p-3 text-xs text-blue-400"><a href="${p.diploma_url}" target="_blank" class="hover:underline flex items-center gap-1"><i data-lucide="award" class="w-3 h-3"></i> Título</a></td>
                         <td class="p-3 text-right">
                             <button onclick='abrirExpediente(${JSON.stringify(p).replace(/'/g, "&#39;")})' class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors shadow-md flex items-center gap-1 ml-auto"><i data-lucide="folder-search" class="w-3 h-3"></i> Evaluar</button>
@@ -1287,7 +1503,7 @@
                 tbody.innerHTML = data.map(p => `
                 <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                     <td class="p-3"><div class="font-bold text-white">${p.nombres} ${p.apellidos}</div><div class="text-[10px] text-slate-400">DNI: ${p.dni}</div></td>
-                    <td class="p-3"><span class="px-2 py-1 bg-slate-800 rounded text-[10px] font-bold text-yellow-400">${p.categoria}</span></td>
+                    <td class="p-3"><span class="px-2 py-1 bg-slate-800 rounded text-[10px] font-bold text-[#d4af37]">${p.categoria}</span></td>
                     <td class="p-3 text-xs text-blue-400"><a href="${p.diploma_url}" target="_blank" class="hover:underline flex items-center gap-1"><i data-lucide="award" class="w-3 h-3"></i> Título</a></td>
                     <td class="p-3 text-right">
                         <button onclick='abrirExpediente(${JSON.stringify(p).replace(/'/g, "&#39;")})' class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors shadow-md flex items-center gap-1 ml-auto"><i data-lucide="folder-search" class="w-3 h-3"></i> Auditar</button>
@@ -1988,7 +2204,7 @@
                 if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400">Sin registros.</td></tr>'; return; }
                 
                 tbody.innerHTML = data.map(p => {
-                    const estadoColor = p.estado_legal === 'ACTIVO' ? 'text-emerald-400 bg-emerald-400/10 border border-emerald-400/20' : (p.estado_legal === 'SUSPENDIDO' ? 'text-yellow-400 bg-yellow-400/10 border border-yellow-400/20' : 'text-red-400 bg-red-400/10 border border-red-400/20');
+                    const estadoColor = p.estado_legal === 'ACTIVO' ? 'text-emerald-400 bg-emerald-400/10 border border-emerald-400/20' : (p.estado_legal === 'SUSPENDIDO' ? 'text-[#d4af37] bg-[#d4af37]/10 border border-[#d4af37]/20' : 'text-red-400 bg-red-400/10 border border-red-400/20');
                     const numDiplomas = extraerDiplomasDeItem(p).length;
                     return `
                     <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
@@ -2131,7 +2347,7 @@
                     </td>
                     <td class="p-3 text-center">
                         <div class="flex items-center justify-center gap-2">
-                            <span class="text-lg font-mono font-black text-forenseGold">${a.saldo_timbres || 0}</span>
+                            <span class="text-lg font-mono font-black text-[#d4af37]">${a.saldo_timbres || 0}</span>
                             <div class="flex flex-col gap-1">
                                 <button onclick="modificarTimbres('${a.id}', 10, '${a.nombre.replace(/'/g, "\\'")}')" class="bg-emerald-500/20 text-emerald-400 p-1 rounded hover:bg-emerald-500/40" title="Cargar 10 Timbres"><i data-lucide="plus" class="w-3 h-3"></i></button>
                                 <button onclick="modificarTimbres('${a.id}', -1, '${a.nombre.replace(/'/g, "\\'")}')" class="bg-red-500/20 text-red-400 p-1 rounded hover:bg-red-500/40" title="Restar 1 Timbre"><i data-lucide="minus" class="w-3 h-3"></i></button>
@@ -2340,7 +2556,7 @@
                 <tr class="border-b border-white/5 hover:bg-white/5">
                     <td class="p-3">
                         <div class="flex items-center gap-3">
-                            <img src="${m.foto_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nombre)}&background=0a1128&color=fff`}" class="w-12 h-12 rounded-lg object-cover object-top border border-white/20">
+                            <img src="${m.foto_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nombre)}&background=0a1128&color=fff`}" class="w-12 h-12 rounded-lg object-cover object-top border border-[#d4af37]/30">
                             <span class="text-white font-bold block">${m.nombre}</span>
                         </div>
                     </td>
@@ -2458,7 +2674,7 @@
                 <tr class="border-b border-white/5 hover:bg-white/5">
                     <td class="p-3">
                         <div class="flex items-center gap-3">
-                            <img src="${c.portada_url || 'https://via.placeholder.com/150x80/0f172a/3b82f6?text=POST'}" class="w-16 h-10 rounded object-cover border border-white/10">
+                            <img src="${c.portada_url || 'https://via.placeholder.com/150x80/0f172a/d4af37?text=POST'}" class="w-16 h-10 rounded object-cover border border-[#d4af37]/20">
                             <div>
                                 <span class="text-white font-bold block text-xs">${c.titulo}</span>
                                 <span class="text-[9px] text-slate-400 truncate block max-w-[200px]">${c.descripcion || ''}</span>
@@ -2466,7 +2682,7 @@
                             </div>
                         </div>
                     </td>
-                    <td class="p-3"><span class="bg-blue-900/30 text-blue-400 px-2 py-1 rounded text-[9px] font-bold uppercase">${c.categoria_requerida}</span></td>
+                    <td class="p-3"><span class="bg-[#0a1128] text-[#d4af37] px-2 py-1 rounded text-[9px] font-bold uppercase border border-[#d4af37]/20">${c.categoria_requerida}</span></td>
                     <td class="p-3 text-right">
                         <div class="flex justify-end gap-1 items-center">
                             <button class="bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded hover:bg-emerald-500/40 text-[10px] font-bold uppercase tracking-wider transition-colors" onclick="abrirModalClases('${c.id}', '${c.titulo.replace(/'/g, "\\'")}')"><i data-lucide="folder-open" class="w-3 h-3 inline mr-1"></i> Adjuntos</button>
@@ -2548,7 +2764,7 @@
             try {
                 const { data } = await db.from('renmcycf_biblioteca').select('*').order('created_at', { ascending: false });
                 if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="text-center text-slate-500">Biblioteca vacía.</td></tr>'; return; }
-                tbody.innerHTML = data.map(b => `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3"><div class="flex items-center gap-3"><img src="${b.portada_url || 'https://via.placeholder.com/50x70/0f172a/3b82f6?text=PDF'}" class="w-10 h-14 object-cover rounded border border-white/10"><div><span class="font-bold text-white block text-xs">${b.titulo}</span><span class="text-[10px] text-slate-400">${b.autor || 'Sin autor'}</span></div></div></td><td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${b.tipo_acceso==='PREMIUM'?'bg-yellow-500/20 text-yellow-500':'bg-blue-500/20 text-blue-400'}">${b.tipo_acceso}</span></td><td class="p-3 text-right"><button onclick="eliminarLibro('${b.id}')" class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td></tr>`).join('');
+                tbody.innerHTML = data.map(b => `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3"><div class="flex items-center gap-3"><img src="${b.portada_url || 'https://via.placeholder.com/50x70/0f172a/d4af37?text=PDF'}" class="w-10 h-14 object-cover rounded border border-[#d4af37]/20"><div><span class="font-bold text-white block text-xs">${b.titulo}</span><span class="text-[10px] text-slate-400">${b.autor || 'Sin autor'}</span></div></div></td><td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${b.tipo_acceso==='PREMIUM'?'bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/30':'bg-blue-500/20 text-blue-400'}">${b.tipo_acceso}</span></td><td class="p-3 text-right"><button onclick="eliminarLibro('${b.id}')" class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td></tr>`).join('');
                 lucide.createIcons();
             } catch (err) {}
         }
@@ -2575,7 +2791,7 @@
             try {
                 const { data } = await db.from('renmcycf_publicaciones').select('*').order('created_at', { ascending: false });
                 if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="text-center text-slate-400">No hay tesis.</td></tr>'; return; }
-                tbody.innerHTML = data.map(t => `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3 text-xs font-bold text-white">${t.autor_nombre}</td><td class="p-3 text-xs"><a href="${t.pdf_url}" target="_blank" class="text-blue-400 hover:underline"><i data-lucide="file-text" class="w-3 h-3 inline mr-1"></i>${t.titulo}</a></td><td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${t.estado==='PENDIENTE'?'text-yellow-400 bg-yellow-400/10':(t.estado==='APROBADO'?'text-emerald-400 bg-emerald-400/10':'text-red-400 bg-red-400/10')}">${t.estado}</span></td><td class="p-3 text-right"><button onclick="auditarTesis('${t.id}','APROBADO')" class="bg-emerald-500/20 text-emerald-400 p-1.5 rounded mx-1"><i data-lucide="check" class="w-4 h-4"></i></button><button onclick="auditarTesis('${t.id}','RECHAZADO')" class="bg-red-500/20 text-red-400 p-1.5 rounded"><i data-lucide="x" class="w-4 h-4"></i></button></td></tr>`).join('');
+                tbody.innerHTML = data.map(t => `<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3 text-xs font-bold text-white">${t.autor_nombre}</td><td class="p-3 text-xs"><a href="${t.pdf_url}" target="_blank" class="text-blue-400 hover:underline"><i data-lucide="file-text" class="w-3 h-3 inline mr-1"></i>${t.titulo}</a></td><td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${t.estado==='PENDIENTE'?'text-[#d4af37] bg-[#d4af37]/10':(t.estado==='APROBADO'?'text-emerald-400 bg-emerald-400/10':'text-red-400 bg-red-400/10')}">${t.estado}</span></td><td class="p-3 text-right"><button onclick="auditarTesis('${t.id}','APROBADO')" class="bg-emerald-500/20 text-emerald-400 p-1.5 rounded mx-1"><i data-lucide="check" class="w-4 h-4"></i></button><button onclick="auditarTesis('${t.id}','RECHAZADO')" class="bg-red-500/20 text-red-400 p-1.5 rounded"><i data-lucide="x" class="w-4 h-4"></i></button></td></tr>`).join('');
                 lucide.createIcons();
             } catch (err) {}
         }
@@ -2754,7 +2970,7 @@
                 }
                 tbody.innerHTML = data.map(b => `
                 <tr class="border-b border-white/5 hover:bg-white/5">
-                    <td class="p-3 text-center"><i data-lucide="${b.icono || 'check-circle'}" class="w-5 h-5 text-yellow-400 inline"></i></td>
+                    <td class="p-3 text-center"><i data-lucide="${b.icono || 'check-circle'}" class="w-5 h-5 text-[#d4af37] inline"></i></td>
                     <td class="p-3">
                         <span class="text-white font-bold block">${b.titulo}</span>
                         <span class="text-[10px] text-slate-400">${b.descripcion || 'Sin descripción'}</span>
@@ -2933,7 +3149,7 @@
                     return `
                     <tr class="border-b border-white/5 hover:bg-white/5">
                         <td class="p-3 text-xs text-slate-300">${u.email||'N/D'}<br><span class="text-[10px] text-slate-500">${u.nombres||''} ${u.apellidos||''}</span></td>
-                        <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase bg-blue-900/30 text-blue-400">${u.rol}</span></td>
+                        <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase bg-[#0a1128] text-[#d4af37] border border-[#d4af37]/20">${u.rol}</span></td>
                         <td class="p-3">${permisosHTML}</td>
                         <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${u.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">${u.activo?'ACTIVO':'INACTIVO'}</span></td>
                         <td class="p-3 text-right">
@@ -3075,8 +3291,8 @@
 
         function switchEditorTab(tab) {
             currentEditorTab = tab;
-            document.getElementById('btn-tab-frente').className = tab === 'frente' ? "flex-1 py-2 text-xs font-bold uppercase rounded-md text-white bg-blue-600 shadow" : "flex-1 py-2 text-xs font-bold uppercase rounded-md text-slate-400 hover:text-white";
-            document.getElementById('btn-tab-dorso').className = tab === 'dorso' ? "flex-1 py-2 text-xs font-bold uppercase rounded-md text-white bg-blue-600 shadow" : "flex-1 py-2 text-xs font-bold uppercase rounded-md text-slate-400 hover:text-white";
+            document.getElementById('btn-tab-frente').className = tab === 'frente' ? "flex-1 py-2 text-xs font-bold uppercase rounded-md text-white bg-[#0a1128] shadow border border-[#d4af37]/30" : "flex-1 py-2 text-xs font-bold uppercase rounded-md text-slate-400 hover:text-white";
+            document.getElementById('btn-tab-dorso').className = tab === 'dorso' ? "flex-1 py-2 text-xs font-bold uppercase rounded-md text-white bg-[#0a1128] shadow border border-[#d4af37]/30" : "flex-1 py-2 text-xs font-bold uppercase rounded-md text-slate-400 hover:text-white";
             document.getElementById('card-preview-frente').style.display = tab === 'frente' ? 'block' : 'none';
             document.getElementById('card-preview-dorso').style.display = tab === 'dorso' ? 'block' : 'none';
             document.getElementById('preview-indicator').innerText = `VISTA: ${tab.toUpperCase()}`;
@@ -3262,6 +3478,101 @@
                 await db.from('renmcycf_aliados_cursos').update({ estado: estado }).eq('id', id);
                 cargarCursosB2BPanel();
             } catch(err) { alert("Error: " + err.message); }
+        }
+
+        // ==========================================
+        // 18. RED JUDICIAL B2B - CONVENIOS
+        // ==========================================
+        async function cargarConveniosPanel() {
+            const tbody = document.getElementById('convenios-body');
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">Cargando solicitudes...</td></tr>';
+
+            try {
+                const { data, error } = await db.from('renmcycf_convenios').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+
+                // KPIs
+                const total = (data || []).length;
+                const pendientes = (data || []).filter(c => !c.estado || c.estado === 'PENDIENTE').length;
+                const aprobados = (data || []).filter(c => c.estado === 'APROBADO').length;
+                const rechazados = (data || []).filter(c => c.estado === 'RECHAZADO').length;
+                const statTotal = document.getElementById('stat-conv-total');
+                const statPend = document.getElementById('stat-conv-pendientes');
+                const statAprob = document.getElementById('stat-conv-aprobados');
+                const statRech = document.getElementById('stat-conv-rechazados');
+                if (statTotal) statTotal.innerText = total;
+                if (statPend) statPend.innerText = pendientes;
+                if (statAprob) statAprob.innerText = aprobados;
+                if (statRech) statRech.innerText = rechazados;
+
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-center text-slate-400"><i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-slate-600"></i>No hay solicitudes de entidades judiciales.</td></tr>';
+                    lucide.createIcons();
+                    return;
+                }
+
+                tbody.innerHTML = data.map(c => {
+                    const estado = c.estado || 'PENDIENTE';
+                    const estadoClass = estado === 'APROBADO'
+                        ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-500/30'
+                        : estado === 'RECHAZADO'
+                            ? 'bg-red-900/30 text-red-400 border border-red-500/30'
+                            : 'bg-amber-900/30 text-amber-400 border border-amber-500/30';
+                    const tipoClass = (c.tipo === 'ESTUDIO_JURIDICO' || (c.tipo || '').toLowerCase().includes('estudio'))
+                        ? 'bg-purple-900/30 text-purple-300 border border-purple-500/30'
+                        : 'bg-blue-900/30 text-blue-300 border border-blue-500/30';
+                    const tipoLabel = (c.tipo || '').toLowerCase().includes('estudio') ? 'Estudio Jurídico' : (c.tipo || '').toLowerCase().includes('colegio') ? 'Colegio' : (c.tipo || 'Entidad');
+                    const fecha = c.created_at ? new Date(c.created_at).toLocaleDateString('es-AR') : '—';
+
+                    return `
+                    <tr class="border-b border-white/5 hover:bg-[#d4af37]/[0.02]">
+                        <td class="p-3">
+                            <span class="text-white font-bold block">${c.institucion || c.nombre_institucion || 'S/D'}</span>
+                            <span class="text-[10px] text-slate-400">Solicitud del ${fecha}</span>
+                        </td>
+                        <td class="p-3">
+                            <span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${tipoClass}">${tipoLabel}</span>
+                        </td>
+                        <td class="p-3 text-xs text-slate-300">${c.autoridad || c.autoridad_solicitante || 'S/D'}</td>
+                        <td class="p-3 text-xs font-mono text-slate-400">
+                            ${c.email ? `<a href="mailto:${c.email}" class="hover:text-[#d4af37] transition-colors">${c.email}</a>` : '—'}
+                        </td>
+                        <td class="p-3">
+                            <span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${estadoClass}">${estado}</span>
+                        </td>
+                        <td class="p-3 text-right">
+                            <div class="flex justify-end gap-1.5 flex-wrap">
+                                ${estado !== 'APROBADO' ? `<button onclick="auditarConvenio('${c.id}', 'APROBADO')" class="btn-success px-3 py-1.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition-colors"><i data-lucide="check" class="w-3 h-3"></i> Aprobar</button>` : ''}
+                                ${estado !== 'RECHAZADO' ? `<button onclick="auditarConvenio('${c.id}', 'RECHAZADO')" class="btn-danger px-3 py-1.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition-colors"><i data-lucide="x" class="w-3 h-3"></i> Rechazar</button>` : ''}
+                                ${estado !== 'PENDIENTE' ? `<button onclick="auditarConvenio('${c.id}', 'PENDIENTE')" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition-colors"><i data-lucide="rotate-ccw" class="w-3 h-3"></i> Revertir</button>` : ''}
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('');
+                lucide.createIcons();
+            } catch (err) {
+                console.warn('Error cargando convenios:', err);
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-amber-400 text-xs font-bold"><i data-lucide="database" class="w-6 h-6 mx-auto mb-2"></i>Tabla 'renmcycf_convenios' en configuración.</td></tr>`;
+                lucide.createIcons();
+            }
+        }
+
+        async function auditarConvenio(id, estado) {
+            const confirmMsg = estado === 'APROBADO'
+                ? '¿Aprobar esta solicitud de convenio B2B? La entidad tendrá acceso al padrón federal de peritos.'
+                : estado === 'RECHAZADO'
+                    ? '¿Rechazar esta solicitud? La entidad no tendrá acceso al padrón.'
+                    : '¿Revertir a estado PENDIENTE? La entidad deberá ser re-evaluada.';
+            if (!confirm(confirmMsg)) return;
+            try {
+                const { error } = await db.from('renmcycf_convenios').update({ estado: estado }).eq('id', id);
+                if (error) throw error;
+                alert(`✅ Convenio marcado como ${estado}.`);
+                cargarConveniosPanel();
+            } catch (err) {
+                alert('Error al actualizar convenio: ' + err.message);
+            }
         }
 
         // ==========================================
