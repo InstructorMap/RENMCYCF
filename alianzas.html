@@ -10,6 +10,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -48,6 +49,20 @@
 
         .font-title { font-family: 'Playfair Display', serif; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* ── Hero con imagen dinámica ── */
+        .alianzas-hero-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.25;
+            filter: brightness(0.4) saturate(1.2);
+            pointer-events: none;
+            display: none;
+        }
+        .alianzas-hero-bg.loaded { display: block; }
 
         /* ── Patrones de fondo sutiles ── */
         .bg-grid-subtle {
@@ -323,8 +338,9 @@
     <nav class="sticky top-0 z-50 bg-forenseDeep/95 backdrop-blur-md border-b border-forenseGold/10">
         <div class="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
             <a href="index.renmcycf.html" class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-xl bg-forenseNavy border-2 border-forenseGold flex items-center justify-center">
-                    <i data-lucide="fingerprint" class="w-5 h-5 text-forenseGold"></i>
+                <div class="w-11 h-11 rounded-xl bg-forenseNavy border-2 border-forenseGold flex items-center justify-center overflow-hidden">
+                    <i data-lucide="fingerprint" id="nav-logo-icon" class="w-5 h-5 text-forenseGold"></i>
+                    <img id="nav-logo-img" src="" class="w-full h-full object-contain p-1.5 hidden" alt="Logo RENMCYCF">
                 </div>
                 <div class="leading-tight hidden sm:block">
                     <span class="font-title font-black text-lg block text-white tracking-tight">RENMCYCF</span>
@@ -343,7 +359,12 @@
     <!-- HERO SECTION                                                         -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <header class="relative overflow-hidden bg-forenseDeep border-b border-forenseGold/15">
-        <div class="absolute inset-0 bg-grid-subtle opacity-40 pointer-events-none"></div>
+        <!-- Imagen de fondo dinámica desde Supabase -->
+        <img id="hero-bg-img" src="" class="alianzas-hero-bg" alt="Fondo institucional">
+        <!-- Overlay para legibilidad -->
+        <div class="absolute inset-0 bg-gradient-to-br from-forenseDeep/95 via-forenseNavy/85 to-forenseDeep/95 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-grid-subtle opacity-30 pointer-events-none"></div>
+
         <div class="hero-glow bg-forenseGold/15" style="width: 500px; height: 500px; top: -200px; left: -150px;"></div>
         <div class="hero-glow bg-blue-900/20" style="width: 400px; height: 400px; bottom: -150px; right: -100px;"></div>
 
@@ -397,8 +418,9 @@
                         <!-- Certificado demo -->
                         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
                             <div class="bg-forenseNavy p-6 border-b-4 border-forenseGold text-center">
-                                <div class="w-14 h-14 mx-auto rounded-full bg-white border-2 border-forenseGold flex items-center justify-center mb-2">
-                                    <i data-lucide="award" class="w-6 h-6 text-forenseNavy"></i>
+                                <div class="w-14 h-14 mx-auto rounded-full bg-white border-2 border-forenseGold flex items-center justify-center mb-2 overflow-hidden">
+                                    <i data-lucide="award" id="cert-logo-icon" class="w-6 h-6 text-forenseNavy"></i>
+                                    <img id="cert-logo-img" src="" class="w-full h-full object-contain p-1 hidden" alt="Logo">
                                 </div>
                                 <p class="text-[9px] font-black text-forenseGold uppercase tracking-[0.25em]">Certificado Verificado</p>
                             </div>
@@ -773,8 +795,9 @@
                     <div class="relative z-10">
                         <!-- Encabezado del doc -->
                         <div class="text-center mb-8 pb-6 border-b-2 border-forenseNavy/15">
-                            <div class="w-16 h-16 mx-auto rounded-full bg-forenseNavy flex items-center justify-center mb-3 shadow-md">
-                                <i data-lucide="fingerprint" class="w-8 h-8 text-forenseGold"></i>
+                            <div class="w-16 h-16 mx-auto rounded-full bg-forenseNavy flex items-center justify-center mb-3 shadow-md overflow-hidden">
+                                <i data-lucide="fingerprint" id="doc-logo-icon" class="w-8 h-8 text-forenseGold"></i>
+                                <img id="doc-logo-img" src="" class="w-full h-full object-contain p-2 hidden" alt="Logo">
                             </div>
                             <h3 class="font-title text-xl md:text-2xl font-black text-forenseNavy uppercase tracking-wider mb-1">
                                 Pre-Acuerdo de Vinculación Institucional
@@ -867,7 +890,7 @@
                     <button type="button" onclick="volverAlFormulario()" class="btn-outline flex-1 py-4 rounded-xl text-sm inline-flex items-center justify-center gap-2">
                         <i data-lucide="arrow-left" class="w-4 h-4"></i> Editar Datos
                     </button>
-                    <button type="button" onclick="firmarYEnviar()" class="btn-gold flex-1 py-4 rounded-xl text-base inline-flex items-center justify-center gap-3">
+                    <button type="button" onclick="firmarYEnviar(event)" id="btn-firmar-enviar" class="btn-gold flex-1 py-4 rounded-xl text-base inline-flex items-center justify-center gap-3">
                         <i data-lucide="signature" class="w-5 h-5"></i>
                         Firmar y Enviar Solicitud
                     </button>
@@ -889,8 +912,9 @@
         <div class="max-w-7xl mx-auto px-4 md:px-6">
             <div class="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-forenseNavy border border-forenseGold/30 flex items-center justify-center">
-                        <i data-lucide="fingerprint" class="w-5 h-5 text-forenseGold"></i>
+                    <div class="w-10 h-10 rounded-xl bg-forenseNavy border border-forenseGold/30 flex items-center justify-center overflow-hidden">
+                        <i data-lucide="fingerprint" id="footer-logo-icon" class="w-5 h-5 text-forenseGold"></i>
+                        <img id="footer-logo-img" src="" class="w-full h-full object-contain p-1 hidden" alt="Logo">
                     </div>
                     <div class="leading-tight">
                         <p class="font-title font-black text-white text-sm tracking-tight">RENMCYCF</p>
@@ -908,39 +932,115 @@
     <!-- JAVASCRIPT                                                           -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <script>
-        // Configuración WhatsApp (Mesa Directiva)
-        const WHATSAPP_MESA_DIRECTIVA = '5490000000000';
+        // ==========================================
+        // CONFIGURACIÓN SUPABASE
+        // ==========================================
+        const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
+        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
+        const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
 
-        // Init AOS y Lucide
+        // WhatsApp fallback por si no está configurado en Supabase
+        let WHATSAPP_MESA_DIRECTIVA = '5490000000000';
+
+        // ==========================================
+        // INIT
+        // ==========================================
         AOS.init({ once: true, duration: 700, easing: 'ease-out-cubic' });
         lucide.createIcons();
 
-        // Estado global del formulario
+        // Estado global
         let datosConvenio = {
             instituto: '',
             director: '',
             provincia: ''
         };
 
-        /**
-         * Genera el Pre-Acuerdo al enviar el formulario.
-         * Oculta el formulario y muestra la vista del contrato.
-         */
+        // ==========================================
+        // CARGA DE IDENTIDAD INSTITUCIONAL DESDE SUPABASE
+        // ==========================================
+        async function cargarIdentidadInstitucional() {
+            try {
+                const { data: conf } = await db.from('renmcycf_config')
+                    .select('logo_url, hero_image_url, whatsapp')
+                    .eq('id', 1)
+                    .maybeSingle();
+
+                if (!conf) return;
+
+                // 1. Logo en Navbar
+                if (conf.logo_url) {
+                    const navLogoImg = document.getElementById('nav-logo-img');
+                    const navLogoIcon = document.getElementById('nav-logo-icon');
+                    if (navLogoImg && navLogoIcon) {
+                        navLogoImg.src = conf.logo_url;
+                        navLogoImg.classList.remove('hidden');
+                        navLogoIcon.classList.add('hidden');
+                    }
+
+                    // 2. Logo en el certificado de demostración del hero
+                    const certLogoImg = document.getElementById('cert-logo-img');
+                    const certLogoIcon = document.getElementById('cert-logo-icon');
+                    if (certLogoImg && certLogoIcon) {
+                        certLogoImg.src = conf.logo_url;
+                        certLogoImg.classList.remove('hidden');
+                        certLogoIcon.classList.add('hidden');
+                    }
+
+                    // 3. Logo en el documento del Pre-Acuerdo
+                    const docLogoImg = document.getElementById('doc-logo-img');
+                    const docLogoIcon = document.getElementById('doc-logo-icon');
+                    if (docLogoImg && docLogoIcon) {
+                        docLogoImg.src = conf.logo_url;
+                        docLogoImg.classList.remove('hidden');
+                        docLogoIcon.classList.add('hidden');
+                    }
+
+                    // 4. Logo en el footer
+                    const footerLogoImg = document.getElementById('footer-logo-img');
+                    const footerLogoIcon = document.getElementById('footer-logo-icon');
+                    if (footerLogoImg && footerLogoIcon) {
+                        footerLogoImg.src = conf.logo_url;
+                        footerLogoImg.classList.remove('hidden');
+                        footerLogoIcon.classList.add('hidden');
+                    }
+                }
+
+                // 5. Imagen hero de fondo
+                if (conf.hero_image_url) {
+                    const heroBg = document.getElementById('hero-bg-img');
+                    if (heroBg) {
+                        heroBg.src = conf.hero_image_url;
+                        heroBg.classList.add('loaded');
+                    }
+                }
+
+                // 6. WhatsApp oficial de la Mesa Directiva
+                if (conf.whatsapp) {
+                    WHATSAPP_MESA_DIRECTIVA = String(conf.whatsapp).replace(/\D/g, '');
+                }
+
+                lucide.createIcons();
+            } catch (err) {
+                console.warn('No se pudo cargar la identidad institucional:', err);
+                // Fallback silencioso: se mantienen los íconos Lucide y el WhatsApp por defecto
+            }
+        }
+
+        // ==========================================
+        // GENERAR PRE-ACUERDO
+        // ==========================================
         function generarPreAcuerdo(event) {
             event.preventDefault();
 
-            // Capturar datos
             const instituto = document.getElementById('inst-nombre').value.trim();
             const director = document.getElementById('inst-director').value.trim();
             const provincia = document.getElementById('inst-provincia').value.trim();
 
-            // Validar
             if (!instituto || !director || !provincia) {
                 alert('Por favor, complete todos los campos obligatorios.');
                 return;
             }
 
-            // Guardar en estado global
             datosConvenio = { instituto, director, provincia };
 
             // Autocompletar el documento
@@ -949,27 +1049,23 @@
             document.getElementById('doc-provincia').textContent = provincia;
             document.getElementById('firma-director').textContent = director;
 
-            // Fecha actual en formato largo
             const hoy = new Date();
             const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
             document.getElementById('doc-fecha').textContent = `Emitido el ${hoy.toLocaleDateString('es-AR', opciones)}`;
 
-            // Ocultar formulario, mostrar pre-acuerdo
             document.getElementById('bloque-formulario').classList.add('hidden');
             document.getElementById('bloque-preacuerdo').classList.remove('hidden');
 
-            // Scroll hacia arriba suavemente
             setTimeout(() => {
                 document.getElementById('solicitud').scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
 
-            // Refrescar iconos
             lucide.createIcons();
         }
 
-        /**
-         * Vuelve al formulario para editar datos.
-         */
+        // ==========================================
+        // VOLVER AL FORMULARIO
+        // ==========================================
         function volverAlFormulario() {
             document.getElementById('bloque-preacuerdo').classList.add('hidden');
             document.getElementById('bloque-formulario').classList.remove('hidden');
@@ -979,10 +1075,10 @@
             lucide.createIcons();
         }
 
-        /**
-         * Abre WhatsApp con el mensaje pre-cargado hacia la Mesa Directiva.
-         */
-        function firmarYEnviar() {
+        // ==========================================
+        // FIRMAR Y ENVIAR (INSERT EN SUPABASE + WHATSAPP)
+        // ==========================================
+        async function firmarYEnviar(event) {
             const { instituto, director, provincia } = datosConvenio;
 
             if (!instituto || !director || !provincia) {
@@ -990,10 +1086,40 @@
                 return;
             }
 
-            // Construir mensaje
+            const boton = document.getElementById('btn-firmar-enviar');
+            const textoOriginal = boton.innerHTML;
+            boton.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Registrando solicitud...';
+            boton.disabled = true;
+            lucide.createIcons();
+
+            // 1) INSERT en Supabase (tabla renmcycf_convenios)
+            let idConvenio = null;
+            try {
+                const { data: insertData, error } = await db
+                    .from('renmcycf_convenios')
+                    .insert([{
+                        institucion: instituto,
+                        director: director,
+                        provincia: provincia,
+                        estado: 'PENDIENTE',
+                        fecha_solicitud: new Date().toISOString()
+                    }])
+                    .select('id')
+                    .single();
+
+                if (error) throw error;
+                idConvenio = insertData?.id || null;
+                console.log('✅ Solicitud registrada en Supabase. ID:', idConvenio);
+            } catch (err) {
+                console.warn('⚠️ No se pudo registrar en Supabase:', err.message);
+                // No bloqueamos: igual abrimos WhatsApp para no perder el lead
+            }
+
+            // 2) Abrir WhatsApp con el mensaje pre-armado
             const mensaje = `Hola Mesa Directiva, soy ${director} de ${instituto} en la provincia de ${provincia}. He leído la propuesta de valores y solicito avanzar con el Convenio de Alianza B2B.
 
 Confirmo haber revisado el Pre-Acuerdo de Vinculación Institucional y acepto las tarifas vigentes del RENMCYCF (Visibilidad Institucional + Emisión de Certificados con Doble Sello ASARI).
+${idConvenio ? `\nN° de Solicitud: ${idConvenio.substring(0, 8).toUpperCase()}` : ''}
 
 Quedo a disposición para coordinar los siguientes pasos.
 
@@ -1001,23 +1127,15 @@ Saludos cordiales,
 ${director}
 ${instituto} · ${provincia}`;
 
-            // Codificar para URL
             const mensajeCodificado = encodeURIComponent(mensaje);
             const urlWhatsApp = `https://wa.me/${WHATSAPP_MESA_DIRECTIVA}?text=${mensajeCodificado}`;
 
-            // Feedback visual: cambiar el botón temporalmente
-            const boton = event.target.closest('button');
-            const textoOriginal = boton.innerHTML;
-            boton.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Abriendo WhatsApp...';
-            boton.disabled = true;
-            lucide.createIcons();
-
-            // Abrir WhatsApp
             window.open(urlWhatsApp, '_blank');
 
-            // Restaurar después de 2 segundos
+            // 3) Feedback visual
             setTimeout(() => {
                 boton.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> ¡Solicitud Enviada!';
+                lucide.createIcons();
                 setTimeout(() => {
                     boton.innerHTML = textoOriginal;
                     boton.disabled = false;
@@ -1026,7 +1144,9 @@ ${instituto} · ${provincia}`;
             }, 800);
         }
 
-        // Smooth scroll para los anchors internos
+        // ==========================================
+        // SMOOTH SCROLL
+        // ==========================================
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 const target = document.querySelector(this.getAttribute('href'));
@@ -1035,6 +1155,13 @@ ${instituto} · ${provincia}`;
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
+        });
+
+        // ==========================================
+        // ARRANQUE
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            cargarIdentidadInstitucional();
         });
     </script>
 </body>
