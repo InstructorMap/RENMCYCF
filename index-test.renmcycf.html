@@ -274,6 +274,152 @@
             background: #ffffff; border: 3px double #d4af37; color: #0a1128;
             font-family: 'JetBrains Mono', monospace; font-weight: 900; font-size: 20px;
         }
+
+        /* ── FLOATING RED DE EMPRESAS BUTTON ── */
+        .float-red-empresas {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 115;
+            background: linear-gradient(145deg, #0a1128, #1e293b);
+            border: 2px solid #d4af37;
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+            padding: 14px 16px;
+            color: #d4af37;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        .float-red-empresas:hover {
+            background: linear-gradient(145deg, #d4af37, #b8941f);
+            color: #0a1128;
+            padding-right: 22px;
+            box-shadow: 6px 0 30px rgba(212,175,55,0.4);
+        }
+        .float-red-empresas i {
+            writing-mode: horizontal-tb;
+            font-size: 18px;
+        }
+
+        /* ── MOCKUP DIPLOMA + CREDENCIAL ── */
+        .mockup-diploma-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 0 80px;
+        }
+        .mockup-diploma {
+            position: relative;
+            background: linear-gradient(135deg, #fefefe 0%, #f8f5ee 50%, #fefefe 100%);
+            border: 6px double #d4af37;
+            border-radius: 8px;
+            padding: 40px 48px;
+            box-shadow: 0 30px 80px -20px rgba(0,0,0,0.5), inset 0 0 60px rgba(212,175,55,0.08);
+            aspect-ratio: 1.4 / 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        .mockup-diploma::before {
+            content: 'RENMCYCF';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-25deg);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 120px;
+            color: rgba(212,175,55,0.07);
+            letter-spacing: 0.1em;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .mockup-diploma .diploma-seal {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #d4af37, #b8941f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 20px rgba(212,175,55,0.5);
+            border: 3px solid #fefefe;
+        }
+        .mockup-diploma .diploma-line {
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+            margin: 10px auto;
+        }
+        .mockup-credencial {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 260px;
+            background: linear-gradient(145deg, #0a1128 0%, #1a2744 50%, #0a1128 100%);
+            border: 2px solid #d4af37;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 40px 80px -15px rgba(0,0,0,0.8), 0 0 40px rgba(212,175,55,0.2);
+            transform: translate(20px, 40px) rotate(-3deg);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 10;
+        }
+        .mockup-credencial:hover {
+            transform: translate(10px, 20px) rotate(0deg) scale(1.05);
+        }
+        .mockup-credencial .cred-photo {
+            width: 60px;
+            height: 72px;
+            border-radius: 6px;
+            background: linear-gradient(145deg, #334155, #1e293b);
+            border: 2px solid #d4af37;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .mockup-credencial .cred-qr {
+            width: 64px;
+            height: 64px;
+            background: #ffffff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(212,175,55,0.6), 0 0 40px rgba(212,175,55,0.3);
+            animation: qrGlow 2s ease-in-out infinite alternate;
+        }
+        @keyframes qrGlow {
+            from { box-shadow: 0 0 15px rgba(212,175,55,0.5), 0 0 30px rgba(212,175,55,0.2); }
+            to { box-shadow: 0 0 25px rgba(212,175,55,0.8), 0 0 50px rgba(212,175,55,0.4); }
+        }
+
+        @media (max-width: 640px) {
+            .mockup-diploma { padding: 24px 20px; aspect-ratio: 1.2 / 1; }
+            .mockup-diploma::before { font-size: 60px; }
+            .mockup-credencial { width: 200px; padding: 12px; transform: translate(10px, 30px) rotate(-3deg); }
+            .mockup-credencial .cred-qr { width: 48px; height: 48px; }
+            .float-red-empresas { padding: 10px 12px; font-size: 9px; }
+            .float-red-empresas i { font-size: 14px; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans bg-white">
@@ -283,6 +429,12 @@
         <span class="relative z-10">Registro Nacional de Matriculados en Criminalística y Ciencias Forenses</span>
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-forenseGold/10 to-transparent animate-pulse"></div>
     </div>
+
+    <!-- FLOATING RED DE EMPRESAS BUTTON -->
+    <button class="float-red-empresas" onclick="document.getElementById('seccion-red-empresas').scrollIntoView({behavior:'smooth'})" title="Red de Empresas">
+        <i data-lucide="building-2"></i>
+        <span>Red de Empresas</span>
+    </button>
 
     <!-- NAVBAR -->
     <nav class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-sm h-24">
@@ -620,7 +772,7 @@
                 </div>
             </section>
 
-            <!-- ═══════════ DIRECTORIO DE INSTITUCIONES + RED DE EMPRESAS ═══════════ -->
+            <!-- ═══════════ DIRECTORIO DE INSTITUCIONES ═══════════ -->
             <section id="alianzas-estrategicas" class="pt-12 pb-8 bg-slate-900 border-b border-slate-800 overflow-hidden">
                 <div class="max-w-7xl mx-auto px-4">
                     <div class="text-center mb-8">
@@ -664,14 +816,29 @@
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <!-- Bloque 2: Red de Empresas -->
-                <div id="bloque-red-empresas" class="pt-4 hidden">
-                    <div class="max-w-7xl mx-auto px-4 mb-6 text-center">
-                        <h3 id="empresas-titulo" class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.25em] mb-1">Red de Empresas</h3>
-                        <p id="empresas-subtitulo" class="text-[10px] text-slate-500 italic">Alianzas estratégicas del sector privado</p>
+            <!-- ═══════════ SECCIÓN RED DE EMPRESAS (PROMINENTE) ═══════════ -->
+            <section id="seccion-red-empresas" class="relative py-20 md:py-28 bg-gradient-to-br from-forenseNavy via-slate-900 to-forenseNavy overflow-hidden border-y-4 border-forenseGold">
+                <div class="absolute inset-0 opacity-[0.06] bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:24px_24px]"></div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-forenseGold/5 blur-[140px] rounded-full pointer-events-none"></div>
+
+                <div class="max-w-7xl mx-auto px-4 relative z-10">
+                    <div class="text-center mb-12" data-aos="fade-up">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] mb-5 border border-white/10">
+                            <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                            Alianzas Estratégicas
+                        </div>
+                        <h2 id="empresas-titulo" class="font-title text-3xl md:text-5xl font-black text-white uppercase tracking-tight mb-4 leading-tight">
+                            Red de Empresas
+                        </h2>
+                        <div class="divider-gold mb-5"></div>
+                        <p id="empresas-subtitulo" class="text-slate-300 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+                            Organizaciones del sector privado que apoyan la profesionalización y verificabilidad del ámbito forense.
+                        </p>
                     </div>
-                    <div class="max-w-7xl mx-auto px-4 flex justify-center">
+
+                    <div class="flex justify-center" data-aos="fade-up" data-aos-delay="100">
                         <div id="contenedor-empresas-publicas" class="flex flex-wrap justify-center gap-6 md:gap-8"></div>
                     </div>
                 </div>
@@ -875,7 +1042,17 @@
                             <span class="inline-flex items-center gap-1 text-[10px] font-black text-forenseGold uppercase tracking-widest">Categoría A2 <i data-lucide="arrow-right" class="w-3 h-3"></i></span>
                         </div>
 
+                        <!-- CORRECCIÓN 2: Tarjeta Categoría A3 agregada -->
                         <div class="group relative bg-white border border-slate-200 rounded-2xl p-7 hover:border-forenseGold hover:shadow-premium transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+                            <div class="w-14 h-14 bg-gradient-to-br from-teal-500 to-teal-700 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                <i data-lucide="book-marked" class="w-7 h-7 text-white"></i>
+                            </div>
+                            <h3 class="font-black text-sm text-forenseNavy uppercase tracking-wider mb-3">Auxiliares y Diplomados</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-4">Auxiliares y Diplomados en disciplinas afines a la criminalística y ciencias forenses.</p>
+                            <span class="inline-flex items-center gap-1 text-[10px] font-black text-forenseGold uppercase tracking-widest">Categoría A3 <i data-lucide="arrow-right" class="w-3 h-3"></i></span>
+                        </div>
+
+                        <div class="group relative bg-white border border-slate-200 rounded-2xl p-7 hover:border-forenseGold hover:shadow-premium transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
                             <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                                 <i data-lucide="briefcase" class="w-7 h-7 text-white"></i>
                             </div>
@@ -884,7 +1061,7 @@
                             <span class="inline-flex items-center gap-1 text-[10px] font-black text-forenseGold uppercase tracking-widest">Categoría A4 <i data-lucide="arrow-right" class="w-3 h-3"></i></span>
                         </div>
 
-                        <div class="group relative bg-white border border-slate-200 rounded-2xl p-7 hover:border-forenseGold hover:shadow-premium transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
+                        <div class="group relative bg-white border border-slate-200 rounded-2xl p-7 hover:border-forenseGold hover:shadow-premium transition-all duration-300" data-aos="fade-up" data-aos-delay="400">
                             <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-700 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                                 <i data-lucide="shield" class="w-7 h-7 text-white"></i>
                             </div>
@@ -895,7 +1072,8 @@
                     </div>
 
                     <div class="text-center mt-12">
-                        <button onclick="trackCTA('ver-categorias'); switchSection('seccion-categorias')" class="inline-flex items-center gap-2 text-forenseNavy hover:text-forenseGold font-bold uppercase tracking-[0.15em] text-xs transition-colors border-b-2 border-dashed border-forenseNavy/30 hover:border-forenseGold pb-1">
+                        <!-- CORRECCIÓN 2: botón ahora llama a switchSection('seccion-aranceles') -->
+                        <button onclick="trackCTA('ver-categorias'); switchSection('seccion-aranceles')" class="inline-flex items-center gap-2 text-forenseNavy hover:text-forenseGold font-bold uppercase tracking-[0.15em] text-xs transition-colors border-b-2 border-dashed border-forenseNavy/30 hover:border-forenseGold pb-1">
                             Ver todas las categorías y aranceles
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
@@ -994,9 +1172,10 @@
                                     Portal para Entidades Judiciales
                                 </h2>
 
+                                <!-- CORRECCIÓN 3: "Red privada exclusiva" → "Red exclusiva" -->
                                 <p class="text-sm md:text-base text-slate-400 leading-relaxed mb-8 max-w-2xl font-medium">
-                                    Red privada exclusiva para Colegios de Abogados y Estudios Jurídicos acreditados.
-                                    Acceda a nuestro padrón federal de peritos auditados, valide credenciales en tiempo real y
+                                    Red exclusiva para Colegios de Abogados y Estudios Jurídicos acreditados.
+                                    Acceda a nuestro padrón nacional de peritos auditados, valide credenciales en tiempo real y
                                     publique requerimientos periciales (Licitación Privada) con total seguridad jurídica procesal.
                                 </p>
 
@@ -1015,15 +1194,16 @@
                 </div>
             </section>
 
-            <!-- ARANCELES PÚBLICOS -->
-            <section class="py-20 md:py-28 bg-white">
+            <!-- CORRECCIÓN 2 y 4: SECCIÓN ARANCELES con id y título actualizado -->
+            <section id="seccion-aranceles" class="page-section py-20 md:py-28 bg-white">
                 <div class="max-w-7xl mx-auto px-4">
                     <div class="text-center mb-14 max-w-3xl mx-auto">
                         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em] mb-5 border border-emerald-100">
                             <i data-lucide="calculator" class="w-3.5 h-3.5"></i> Transparencia Total
                         </div>
+                        <!-- CORRECCIÓN 4: Título cambiado a "Aranceles de Matriculación" -->
                         <h2 class="font-title text-3xl md:text-5xl font-black text-forenseNavy mb-4 uppercase tracking-tight leading-[1.1]">
-                            Aranceles públicos
+                            Aranceles de Matriculación
                         </h2>
                         <div class="divider-gold mb-5"></div>
                         <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
@@ -1309,6 +1489,7 @@
                         </div>
                     </div>
 
+                    <!-- CORRECCIÓN 6: Mockup hiperrealista reemplaza los 3 cuadros con flechitas -->
                     <div class="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12 mb-16" data-aos="fade-up" data-aos-delay="200">
                         <div class="text-center mb-10">
                             <div class="inline-flex items-center gap-2 text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] mb-3">
@@ -1319,36 +1500,50 @@
                                 Qué ve tu egresado cuando emite su certificado
                             </h3>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-                            <div class="bg-white rounded-2xl p-5 text-center border-2 border-forenseGold/30">
-                                <div class="text-[9px] font-black text-forenseGold uppercase tracking-widest mb-2">Tu Instituto</div>
-                                <div class="w-16 h-16 mx-auto rounded-lg bg-slate-100 flex items-center justify-center mb-3">
-                                    <i data-lucide="landmark" class="w-8 h-8 text-slate-400"></i>
+                        <!-- Mockup Diploma + Credencial -->
+                        <div class="mockup-diploma-wrap">
+                            <!-- Diploma -->
+                            <div class="mockup-diploma">
+                                <div class="diploma-seal">
+                                    <i data-lucide="award" class="w-8 h-8 text-white"></i>
                                 </div>
-                                <p class="text-[10px] font-bold text-forenseNavy uppercase">Curso</p>
-                                <p class="text-[11px] text-slate-700 font-bold">Instructorado en Criminalística</p>
-                                <p class="text-[10px] font-bold text-forenseNavy uppercase mt-2">Alumno</p>
-                                <p class="text-[11px] text-slate-700 font-bold">Juan Pérez</p>
+                                <p class="text-[10px] font-black text-forenseGold uppercase tracking-[0.3em] mb-1">Certificado Oficial</p>
+                                <h4 class="font-title font-black text-forenseNavy text-lg md:text-2xl uppercase tracking-tight mb-2">Instructorado en Criminalística</h4>
+                                <div class="diploma-line"></div>
+                                <p class="text-xs text-slate-500 mt-2">Otorgado a</p>
+                                <p class="font-black text-forenseNavy text-base md:text-xl">Juan Pérez</p>
+                                <p class="text-[10px] text-slate-400 mt-2">Por haber completado satisfactoriamente el programa de estudios</p>
+                                <div class="mt-4 flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded bg-slate-100 border border-slate-200 flex items-center justify-center">
+                                        <i data-lucide="landmark" class="w-6 h-6 text-slate-400"></i>
+                                    </div>
+                                    <div class="text-left">
+                                        <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Institución</p>
+                                        <p class="text-[10px] font-bold text-forenseNavy">Tu Instituto de Formación</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="hidden md:flex justify-center"><i data-lucide="arrow-right" class="w-6 h-6 text-forenseGold"></i></div>
-                            <div class="bg-white rounded-2xl p-5 text-center border-2 border-forenseGold">
-                                <div class="text-[9px] font-black text-forenseGold uppercase tracking-widest mb-2">Certificado</div>
-                                <div class="flex items-center justify-center gap-2 mb-3">
-                                    <div class="w-10 h-10 rounded bg-slate-100 flex items-center justify-center"><i data-lucide="landmark" class="w-5 h-5 text-slate-400"></i></div>
-                                    <span class="text-[8px] font-black text-forenseGold">+</span>
-                                    <div class="w-10 h-10 rounded bg-forenseNavy flex items-center justify-center"><i data-lucide="fingerprint" class="w-5 h-5 text-forenseGold"></i></div>
+                            <!-- Credencial flotante -->
+                            <div class="mockup-credencial">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="cred-photo">
+                                        <i data-lucide="user" class="w-6 h-6 text-slate-400"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-[8px] font-black text-forenseGold uppercase tracking-[0.2em]">RENMCYCF</p>
+                                        <p class="text-[10px] font-bold text-white leading-tight">Juan Pérez</p>
+                                        <p class="text-[8px] text-slate-400">Cat. A3 · Instructor</p>
+                                    </div>
+                                    <div class="cred-qr">
+                                        <i data-lucide="qr-code" class="w-8 h-8 text-forenseNavy"></i>
+                                    </div>
                                 </div>
-                                <p class="text-[10px] text-slate-600 leading-relaxed">Logo instituto + tecnología de verificación</p>
-                            </div>
-                            <div class="hidden md:flex justify-center"><i data-lucide="arrow-right" class="w-6 h-6 text-forenseGold"></i></div>
-                            <div class="bg-gradient-to-br from-forenseNavy to-slate-900 rounded-2xl p-5 text-center border-2 border-forenseGold">
-                                <div class="text-[9px] font-black text-forenseGold uppercase tracking-widest mb-2">Verificación</div>
-                                <div class="w-14 h-14 mx-auto bg-white rounded-lg flex items-center justify-center mb-3">
-                                    <i data-lucide="qr-code" class="w-8 h-8 text-forenseNavy"></i>
+                                <div class="border-t border-white/10 pt-2 flex items-center justify-between">
+                                    <span class="text-[7px] text-slate-400 font-mono">ID: RN-2026-XXXX</span>
+                                    <span class="text-[7px] text-emerald-400 font-bold flex items-center gap-1">
+                                        <i data-lucide="check-circle" class="w-2.5 h-2.5"></i> VÁLIDO
+                                    </span>
                                 </div>
-                                <p class="text-[10px] text-emerald-400 font-bold flex items-center justify-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> Certificado válido</p>
-                                <p class="text-[10px] text-slate-300 mt-2">Emitido por: <strong class="text-white">Instituto X</strong></p>
-                                <p class="text-[10px] text-slate-300">Registro: <strong class="text-white font-mono">XXXXX</strong></p>
                             </div>
                         </div>
                     </div>
@@ -1680,8 +1875,8 @@
             </div>
         </section>
 
-        <!-- ═══════════ COMITÉ ═══════════ -->
-        <section id="seccion-comite" class="page-section py-16 md:py-24 bg-slate-50" style="display: none;">
+        <!-- CORRECCIÓN 5: SECCIÓN COMITÉ - style="display: none;" ELIMINADO -->
+        <section id="seccion-comite" class="page-section py-16 md:py-24 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-14">
                     <h2 class="font-title text-2xl md:text-4xl font-black text-forenseNavy mb-3 uppercase">
@@ -2367,7 +2562,7 @@
 
         async function cargarEmpresasPublicas() {
             const contenedor = document.getElementById('contenedor-empresas-publicas');
-            const bloque = document.getElementById('bloque-red-empresas');
+            const bloque = document.getElementById('seccion-red-empresas');
             if (!contenedor || !bloque) return;
             try {
                 const { data } = await db.from('renmcycf_empresas').select('*').eq('activo', true).order('orden').order('nombre');
