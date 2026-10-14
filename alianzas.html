@@ -1302,107 +1302,62 @@
 
         // ==========================================
         // CARGA DE IDENTIDAD INSTITUCIONAL
-        // Filtra por tenant_id (NO por id=1)
         // ==========================================
         async function cargarIdentidadInstitucional() {
             try {
-                if (!window.currentTenantId) {
-                    console.warn('⚠️ [alianzas.html] window.currentTenantId no disponible aún. Reintentando en 500ms...');
-                    await new Promise(r => setTimeout(r, 500));
-                }
-
-                if (!window.currentTenantId) {
-                    console.error('❌ [alianzas.html] No se pudo resolver el tenant.');
-                    return;
-                }
-
-                console.log('🔍 [alianzas.html] Cargando identidad para tenant:', window.currentTenantId);
-
-                const { data: conf, error } = await window.db
+                // Volvemos a la consulta original infalible (id = 1) usando el db local
+                const { data: conf, error } = await db
                     .from('renmcycf_config')
                     .select('logo_url, hero_image_url, whatsapp')
-                    .eq('tenant_id', window.currentTenantId)
+                    .eq('id', 1)
                     .maybeSingle();
 
-                if (error) {
-                    console.warn('⚠️ Error al leer renmcycf_config:', error.message);
-                    aplicarFallbackTenant();
-                    return;
-                }
-
+                if (error) throw error;
                 if (!conf) {
-                    console.warn('⚠️ No hay fila en renmcycf_config para este tenant. Usando fallback.');
-                    aplicarFallbackTenant();
+                    console.warn('⚠️ No se encontró configuración en renmcycf_config (id=1)');
                     return;
                 }
 
-                console.log('✅ [alianzas.html] Config cargada:', { logo: !!conf.logo_url, wpp: !!conf.whatsapp });
-
+                // 1. Cargar Logos
                 const logos = [
                     { icon: 'nav-logo-icon',                img: 'nav-logo-img' },
-                    { icon: 'mockup-diploma-logo-icon',    img: 'mockup-diploma-logo-img' },
-                    { icon: 'mockup-credencial-logo-icon', img: 'mockup-credencial-logo-img' },
+                    { icon: 'mockup-diploma-logo-icon',     img: 'mockup-diploma-logo-img' },
+                    { icon: 'mockup-credencial-logo-icon',  img: 'mockup-credencial-logo-img' },
                     { icon: 'doc-logo-icon',                img: 'doc-logo-img' },
                     { icon: 'footer-logo-icon',             img: 'footer-logo-img' }
                 ];
 
-                const logoFinal = conf.logo_url || (window._saasTenantFallback && window._saasTenantFallback.logo_url);
-
-                if (logoFinal) {
-                    LOGO_URL_GLOBAL = logoFinal;
+                if (conf.logo_url) {
+                    LOGO_URL_GLOBAL = conf.logo_url;
                     logos.forEach(({ icon, img }) => {
                         const imgEl = document.getElementById(img);
                         const iconEl = document.getElementById(icon);
                         if (imgEl && iconEl) {
-                            imgEl.src = logoFinal;
+                            imgEl.src = conf.logo_url;
                             imgEl.classList.remove('hidden');
                             iconEl.classList.add('hidden');
                         }
                     });
                 }
 
-                const heroFinal = conf.hero_image_url || (window._saasTenantFallback && window._saasTenantFallback.hero_image_url);
-                if (heroFinal) {
+                // 2. Cargar Fondo Hero
+                if (conf.hero_image_url) {
                     const heroBg = document.getElementById('hero-bg-img');
                     if (heroBg) {
-                        heroBg.src = heroFinal;
+                        heroBg.src = conf.hero_image_url;
                         heroBg.classList.add('loaded');
                     }
                 }
 
+                // 3. Cargar WhatsApp
                 if (conf.whatsapp && String(conf.whatsapp).trim() !== '') {
                     WHATSAPP_MESA_DIRECTIVA = String(conf.whatsapp).replace(/\D/g, '');
-                    console.log('📱 [alianzas.html] WhatsApp de la Mesa Directiva:', WHATSAPP_MESA_DIRECTIVA);
-                } else {
-                    console.warn('⚠️ [alianzas.html] No hay whatsapp configurado. Usando fallback:', WHATSAPP_MESA_DIRECTIVA);
                 }
 
                 lucide.createIcons();
             } catch (err) {
-                console.warn('⚠️ [alianzas.html] Error cargando identidad institucional:', err);
-                aplicarFallbackTenant();
+                console.error('❌ Error cargando identidad institucional:', err);
             }
-        }
-
-        function aplicarFallbackTenant() {
-            const tenant = window.tenantConfigGlobal;
-            if (!tenant) return;
-            if (tenant.logo_url) {
-                LOGO_URL_GLOBAL = tenant.logo_url;
-                ['nav-logo-img', 'mockup-diploma-logo-img', 'mockup-credencial-logo-img', 'doc-logo-img', 'footer-logo-img'].forEach(id => {
-                    const img = document.getElementById(id);
-                    const icon = document.getElementById(id.replace('-img', '-icon'));
-                    if (img && icon) {
-                        img.src = tenant.logo_url;
-                        img.classList.remove('hidden');
-                        icon.classList.add('hidden');
-                    }
-                });
-            }
-            if (tenant.whatsapp) {
-                WHATSAPP_MESA_DIRECTIVA = String(tenant.whatsapp).replace(/\D/g, '');
-            }
-            lucide.createIcons();
         }
 
         // ==========================================
@@ -1848,9 +1803,7 @@ ${datosConvenio.nombre} · ${datosConvenio.ciudad}, ${datosConvenio.provincia}`;
         // ARRANQUE
         // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                cargarIdentidadInstitucional();
-            }, 100);
+            cargarIdentidadInstitucional();
         });
     </script>
 </body>
