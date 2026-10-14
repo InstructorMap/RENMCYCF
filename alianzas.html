@@ -11,11 +11,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- ✅ Core del SaaS: define window.db y window.currentTenantId -->
-    <script src="saas-core.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -363,6 +360,23 @@
         .terminos-scroll::-webkit-scrollbar-track { background: #0a1128; }
         .terminos-scroll::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
 
+        /* Watermark para PDFs sin pago */
+        .watermark-pago {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 78px;
+            color: rgba(220, 38, 38, 0.10);
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 1;
+            text-align: center;
+            line-height: 1.1;
+        }
+
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #050914; }
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
@@ -380,7 +394,7 @@
     <!-- NAVBAR -->
     <nav class="sticky top-0 z-50 bg-forenseDeep/95 backdrop-blur-md border-b border-forenseGold/10">
         <div class="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-3">
+            <a href="index.renmcycf.html" class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-xl bg-forenseNavy border-2 border-forenseGold flex items-center justify-center overflow-hidden">
                     <i data-lucide="fingerprint" id="nav-logo-icon" class="w-5 h-5 text-forenseGold"></i>
                     <img id="nav-logo-img" src="" class="w-full h-full object-contain p-1.5 hidden" alt="Logo RENMCYCF">
@@ -1020,10 +1034,98 @@
                         </div>
                     </div>
 
-                    <!-- BLOQUE 5: TÉRMINOS -->
+                    <!-- BLOQUE 5: FORMA DE PAGO -->
                     <div class="bloque-form">
                         <div class="bloque-form-titulo">
                             <div class="bloque-form-num">05</div>
+                            <div>
+                                <h3 class="font-title text-lg font-black text-white leading-tight">Forma de Pago</h3>
+                                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Transferencia bancaria</p>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="form-label mb-3">¿Cómo desea abonar? *</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="forma_pago" value="AHORA" class="radio-gold peer hidden" required onchange="toggleFormaPago()">
+                                    <div class="p-5 rounded-xl border-2 border-forenseGold/15 bg-black/30 peer-checked:border-forenseGold peer-checked:bg-forenseGold/10 transition-all">
+                                        <div class="flex items-center gap-3 mb-2">
+                                            <i data-lucide="credit-card" class="w-5 h-5 text-forenseGold"></i>
+                                            <span class="font-black text-white text-sm uppercase tracking-wider">Pagar Ahora</span>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400 uppercase tracking-wider">Transferencia inmediata + comprobante</p>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="forma_pago" value="DESPUES" class="radio-gold peer hidden" required onchange="toggleFormaPago()">
+                                    <div class="p-5 rounded-xl border-2 border-forenseGold/15 bg-black/30 peer-checked:border-forenseGold peer-checked:bg-forenseGold/10 transition-all">
+                                        <div class="flex items-center gap-3 mb-2">
+                                            <i data-lucide="clock" class="w-5 h-5 text-forenseGold"></i>
+                                            <span class="font-black text-white text-sm uppercase tracking-wider">Pagar Después</span>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400 uppercase tracking-wider">Reservo mi lugar · válido 72hs</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Panel Pagar Ahora -->
+                        <div id="panel-pagar-ahora" class="hidden">
+                            <div id="datos-bancarios-bloque" class="bg-gradient-to-br from-forenseNavy/80 to-forenseDeep/80 border-2 border-forenseGold/40 rounded-2xl p-6 mb-5">
+                                <div class="flex items-center justify-center gap-3 mb-5">
+                                    <div class="w-12 h-12 rounded-2xl bg-forenseGold/15 border border-forenseGold/40 flex items-center justify-center">
+                                        <i data-lucide="landmark" class="w-6 h-6 text-forenseGold"></i>
+                                    </div>
+                                    <div class="text-center">
+                                        <h4 class="font-black text-base text-forenseGold uppercase tracking-widest">Datos para Transferencia</h4>
+                                        <p class="text-[10px] text-slate-400 uppercase tracking-wider">Realice el pago y suba el comprobante</p>
+                                    </div>
+                                </div>
+
+                                <div id="bancarios-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <!-- Inyectado por JS -->
+                                </div>
+
+                                <!-- Mensaje si no están cargados -->
+                                <div id="bancarios-vacio" class="hidden bg-red-500/10 border-2 border-red-500/40 rounded-xl p-5 text-center">
+                                    <i data-lucide="alert-triangle" class="w-8 h-8 text-red-400 mx-auto mb-2"></i>
+                                    <p class="text-red-300 font-black text-sm uppercase tracking-wider mb-1">Datos bancarios no disponibles</p>
+                                    <p class="text-red-200/70 text-xs leading-relaxed">
+                                        Los datos de transferencia están en actualización. Por favor, seleccione la opción
+                                        <strong class="text-white">"Pagar Después"</strong> y solicite los datos por WhatsApp a la Mesa Directiva.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div id="panel-comprobante" class="bg-black/30 border border-forenseGold/20 rounded-2xl p-5 mb-5">
+                                <label class="form-label mb-3">Subir Comprobante de Transferencia *</label>
+                                <input type="file" id="input-comprobante" accept="image/*,application/pdf"
+                                       class="w-full text-xs text-slate-300 file:bg-forenseGold file:text-forenseNavy file:border-0 file:rounded-lg file:px-4 file:py-2 file:font-black file:uppercase file:tracking-widest file:text-[10px] file:cursor-pointer">
+                                <p class="text-[10px] text-slate-500 mt-2 italic">Formatos aceptados: JPG, PNG, PDF. Tamaño máximo: 5 MB.</p>
+                            </div>
+                        </div>
+
+                        <!-- Panel Pagar Después -->
+                        <div id="panel-pagar-despues" class="hidden">
+                            <div class="bg-amber-500/10 border-2 border-amber-500/40 rounded-2xl p-5 flex items-start gap-3">
+                                <i data-lucide="clock" class="w-6 h-6 text-amber-400 shrink-0 mt-0.5"></i>
+                                <div>
+                                    <p class="font-black text-amber-300 text-sm uppercase tracking-wider mb-1">Pre-Acuerdo Condicional</p>
+                                    <p class="text-amber-100/80 text-xs leading-relaxed">
+                                        Al elegir "Pagar Después", se generará un <strong class="text-white">Pre-Acuerdo Condicional válido por 72 horas</strong>.
+                                        Si no se acredita el pago en ese plazo, los datos del registro serán eliminados automáticamente.
+                                        Recibirá los datos bancarios por WhatsApp junto con el documento.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BLOQUE 6: TÉRMINOS -->
+                    <div class="bloque-form">
+                        <div class="bloque-form-titulo">
+                            <div class="bloque-form-num">06</div>
                             <div>
                                 <h3 class="font-title text-lg font-black text-white leading-tight">Términos y Condiciones</h3>
                                 <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Lectura obligatoria</p>
@@ -1049,14 +1151,17 @@
                             <p class="font-black text-forenseGold uppercase tracking-wider text-[10px] mb-2">6. Plazo y Rescisión</p>
                             <p class="mb-3">El Plan de Visibilidad tiene una duración de 6 o 12 meses según elección. Cualquiera de las partes puede rescindir el presente acuerdo con un preaviso de 30 días, sin penalidad, salvo obligaciones pendientes de pago por certificados ya emitidos.</p>
 
-                            <p class="font-black text-forenseGold uppercase tracking-wider text-[10px] mb-2">7. Jurisdicción</p>
+                            <p class="font-black text-forenseGold uppercase tracking-wider text-[10px] mb-2">7. Validez del Pre-Acuerdo</p>
+                            <p class="mb-3">El presente Pre-Acuerdo tiene una validez de <strong>setenta y dos (72) horas corridas</strong> desde su emisión. Si en ese plazo la institución no acredita el pago del Plan de Visibilidad elegido, los datos del registro serán eliminados automáticamente sin posibilidad de recuperación. La institución deberá iniciar el trámite nuevamente si desea continuar.</p>
+
+                            <p class="font-black text-forenseGold uppercase tracking-wider text-[10px] mb-2">8. Jurisdicción</p>
                             <p>Para cualquier controversia derivada del presente acuerdo, las partes se someten a la jurisdicción de los Tribunales Ordinarios de la Ciudad de Córdoba, República Argentina.</p>
                         </div>
 
                         <label class="flex items-start gap-3 cursor-pointer p-4 rounded-xl bg-forenseGold/5 border border-forenseGold/25 hover:border-forenseGold/50 transition-all">
                             <input type="checkbox" id="acepto-terminos" class="checkbox-gold mt-0.5" required>
                             <span class="text-xs text-slate-300 leading-relaxed">
-                                He leído y acepto los <strong class="text-forenseGold">Términos y Condiciones</strong> del Convenio de Vinculación Institucional, así como la política de uso de datos, publicación en el Directorio Nacional y emisión de certificados con trazabilidad ASARI Core. *
+                                He leído y acepto los <strong class="text-forenseGold">Términos y Condiciones</strong> del Convenio de Vinculación Institucional, la política de uso de datos, la publicación en el Directorio Nacional y la <strong class="text-forenseGold">cláusula de validez de 72 horas</strong>. *
                             </span>
                         </label>
                     </div>
@@ -1078,12 +1183,13 @@
                         Revise el Documento
                     </h2>
                     <p class="text-slate-400 text-sm max-w-xl mx-auto">
-                        Descargue el PDF con los colores del Registro y envíelo por WhatsApp a la Mesa Directiva.
+                        Descargue el PDF y envíelo por WhatsApp a la Mesa Directiva.
                     </p>
                 </div>
 
                 <div id="pdf-contenedor" class="contrato-doc p-8 md:p-12 relative">
                     <i data-lucide="shield-check" class="contrato-watermark w-72 h-72 text-forenseNavy"></i>
+                    <div id="watermark-pago-pdf" class="watermark-pago hidden"></div>
 
                     <div class="relative z-10">
                         <div class="text-center mb-8 pb-6 border-b-2 border-forenseNavy/15">
@@ -1099,6 +1205,21 @@
                             </p>
                             <p class="text-[10px] font-mono text-slate-400 mt-2" id="doc-fecha"></p>
                             <p class="text-[10px] font-mono text-forenseGold font-bold mt-1">Nº <span id="doc-numero">—</span></p>
+                        </div>
+
+                        <!-- Alerta 72hs (si pagar después) -->
+                        <div id="doc-alerta-72hs" class="hidden mb-6 bg-red-50 border-2 border-red-400 rounded-xl p-4">
+                            <div class="flex items-start gap-3">
+                                <i data-lucide="clock" class="w-6 h-6 text-red-600 shrink-0 mt-0.5"></i>
+                                <div>
+                                    <p class="font-black text-red-700 text-sm uppercase tracking-wider mb-1">Documento Condicional</p>
+                                    <p class="text-red-600 text-xs leading-relaxed">
+                                        Este Pre-Acuerdo es <strong>condicional y tiene validez por 72 horas</strong>.
+                                        Si no se acredita el pago del Plan de Visibilidad en ese plazo,
+                                        <strong>los datos del registro serán eliminados automáticamente</strong>.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 pb-6 border-b border-dashed border-forenseNavy/15">
@@ -1131,7 +1252,7 @@
 
                         <div class="mb-6 pb-6 border-b border-dashed border-forenseNavy/15">
                             <p class="text-[10px] font-black text-forenseNavy uppercase tracking-[0.25em] mb-3">
-                                <i data-lucide="user-tie" class="inline w-3.5 h-3.5 mr-1"></i> Director / Autoridad
+                                <i data-lucide="briefcase-business" class="inline w-3.5 h-3.5 mr-1"></i> Director / Autoridad
                             </p>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-xs">
                                 <p class="text-slate-600"><strong class="text-forenseNavy">Nombre:</strong> <span id="doc-dir-nombre">—</span></p>
@@ -1156,6 +1277,8 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-xs">
                                 <p class="text-slate-600"><strong class="text-forenseNavy">Plan:</strong> <span id="doc-plan" class="font-bold text-forenseGold">—</span></p>
                                 <p class="text-slate-600"><strong class="text-forenseNavy">Monto:</strong> <span id="doc-plan-monto">—</span></p>
+                                <p class="text-slate-600"><strong class="text-forenseNavy">Forma de pago:</strong> <span id="doc-forma-pago">—</span></p>
+                                <p class="text-slate-600"><strong class="text-forenseNavy">Válido hasta:</strong> <span id="doc-valido-hasta" class="font-bold text-red-600">—</span></p>
                             </div>
                             <div class="mt-3">
                                 <p class="text-xs text-slate-600 mb-1"><strong class="text-forenseNavy">Niveles:</strong></p>
@@ -1168,6 +1291,20 @@
                             <p class="text-xs text-slate-600 mt-3"><strong class="text-forenseNavy">Certificados estimados/mes:</strong> <span id="doc-cert-mes">—</span></p>
                         </div>
 
+                        <!-- Datos bancarios en el doc (si eligió pagar ahora) -->
+                        <div id="doc-bancarios-bloque" class="mb-6 pb-6 border-b border-dashed border-forenseNavy/15 hidden">
+                            <p class="text-[10px] font-black text-forenseNavy uppercase tracking-[0.25em] mb-3">
+                                <i data-lucide="landmark" class="inline w-3.5 h-3.5 mr-1"></i> Datos para Transferencia
+                            </p>
+                            <div class="bg-forenseNavy/5 border border-forenseNavy/15 rounded-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-xs">
+                                <p class="text-slate-600"><strong class="text-forenseNavy">Banco:</strong> <span id="doc-banco">—</span></p>
+                                <p class="text-slate-600"><strong class="text-forenseNavy">Titular:</strong> <span id="doc-titular">—</span></p>
+                                <p class="text-slate-600"><strong class="text-forenseNavy">Alias:</strong> <span id="doc-alias" class="font-mono">—</span></p>
+                                <p class="text-slate-600"><strong class="text-forenseNavy">CBU:</strong> <span id="doc-cbu" class="font-mono">—</span></p>
+                            </div>
+                        </div>
+
+                        <!-- Cláusulas -->
                         <div class="mb-6">
                             <p class="text-[10px] font-black text-forenseNavy uppercase tracking-[0.25em] mb-3">
                                 <i data-lucide="scroll-text" class="inline w-3.5 h-3.5 mr-1"></i> Cláusulas del Acuerdo
@@ -1175,29 +1312,57 @@
                             <div class="clausula">
                                 <div class="clausula-num">I</div>
                                 <div>
-                                    <p class="font-black text-[11px] text-forenseNavy uppercase tracking-wider mb-0.5">Aceptación de Tarifas</p>
-                                    <p class="text-[11px] text-slate-600 leading-relaxed">La institución acepta las tarifas vigentes publicadas, sujetas a modificación según IPC.</p>
+                                    <p class="font-black text-[11px] text-forenseNavy uppercase tracking-wider mb-0.5">Objeto</p>
+                                    <p class="text-[11px] text-slate-600 leading-relaxed">Vinculación a la Red Nacional de Capacitación Auditada del RENMCYCF para emitir certificaciones profesionales con doble sello y trazabilidad tecnológica ASARI Core.</p>
                                 </div>
                             </div>
                             <div class="clausula">
                                 <div class="clausula-num">II</div>
                                 <div>
-                                    <p class="font-black text-[11px] text-forenseNavy uppercase tracking-wider mb-0.5">Preservación de Identidad</p>
-                                    <p class="text-[11px] text-slate-600 leading-relaxed">RENMCYCF preserva íntegramente la marca, logos y firmas de la institución.</p>
+                                    <p class="font-black text-[11px] text-forenseNavy uppercase tracking-wider mb-0.5">Aceptación de Tarifas</p>
+                                    <p class="text-[11px] text-slate-600 leading-relaxed">La institución acepta las tarifas vigentes publicadas, sujetas a modificación según IPC (INDEC).</p>
                                 </div>
                             </div>
                             <div class="clausula">
                                 <div class="clausula-num">III</div>
                                 <div>
-                                    <p class="font-black text-[11px] text-forenseNavy uppercase tracking-wider mb-0.5">Infraestructura y Trazabilidad</p>
-                                    <p class="text-[11px] text-slate-600 leading-relaxed">Acceso a ASARI Core: QR único, Hash inmutable, analítico, programa y CV docente.</p>
+                                    <p class="font-black text-[11px] text-forenseNavy uppercase tracking-wider mb-0.5">Preservación de Identidad</p>
+                                    <p class="text-[11px] text-slate-600 leading-relaxed">RENMCYCF preserva íntegramente la marca, logos, firmas y propuesta académica de la institución.</p>
                                 </div>
                             </div>
                             <div class="clausula">
                                 <div class="clausula-num">IV</div>
                                 <div>
-                                    <p class="font-black text-[11px] text-forenseNavy uppercase tracking-wider mb-0.5">Auditoría y Adhesión</p>
-                                    <p class="text-[11px] text-slate-600 leading-relaxed">Sujeta a auditoría del Comité Evaluador. Pre-Acuerdo ratificado por Convenio definitivo.</p>
+                                    <p class="font-black text-[11px] text-forenseNavy uppercase tracking-wider mb-0.5">Auditoría y Trazabilidad</p>
+                                    <p class="text-[11px] text-slate-600 leading-relaxed">Cada certificado emitido recibe un Hash criptográfico único inmutable y un código QR de verificación pública.</p>
+                                </div>
+                            </div>
+                            <div class="clausula">
+                                <div class="clausula-num">V</div>
+                                <div>
+                                    <p class="font-black text-[11px] text-forenseNavy uppercase tracking-wider mb-0.5">Uso de Datos</p>
+                                    <p class="text-[11px] text-slate-600 leading-relaxed">La institución autoriza la publicación de su nombre, logo, domicilio, teléfono y cursos en el Directorio Nacional del Registro.</p>
+                                </div>
+                            </div>
+                            <div class="clausula">
+                                <div class="clausula-num">VI</div>
+                                <div>
+                                    <p class="font-black text-[11px] text-forenseNavy uppercase tracking-wider mb-0.5">Plazo y Rescisión</p>
+                                    <p class="text-[11px] text-slate-600 leading-relaxed">El Plan de Visibilidad tiene duración de 6 o 12 meses. Rescindible con preaviso de 30 días sin penalidad, salvo obligaciones pendientes.</p>
+                                </div>
+                            </div>
+                            <div class="clausula">
+                                <div class="clausula-num">VII</div>
+                                <div>
+                                    <p class="font-black text-[11px] text-forenseNavy uppercase tracking-wider mb-0.5">Validez del Pre-Acuerdo</p>
+                                    <p class="text-[11px] text-slate-600 leading-relaxed">Este Pre-Acuerdo tiene validez de <strong>setenta y dos (72) horas corridas</strong> desde su emisión. Si en ese plazo no se acredita el pago del Plan de Visibilidad, los datos del registro serán eliminados automáticamente sin posibilidad de recuperación.</p>
+                                </div>
+                            </div>
+                            <div class="clausula">
+                                <div class="clausula-num">VIII</div>
+                                <div>
+                                    <p class="font-black text-[11px] text-forenseNavy uppercase tracking-wider mb-0.5">Jurisdicción</p>
+                                    <p class="text-[11px] text-slate-600 leading-relaxed">Las partes se someten a los Tribunales Ordinarios de la Ciudad de Córdoba, República Argentina.</p>
                                 </div>
                             </div>
                         </div>
@@ -1282,33 +1447,32 @@
 
     <script>
         // ==========================================
-        // NOTA: window.db y window.currentTenantId ya vienen de saas-core.js
-        // Este script usa esas variables globales. NO redefinir PROJECT_URL ni supabase.
+        // CONFIGURACIÓN SUPABASE (proyecto RENMCYCF)
         // ==========================================
-
-        (function() {
-            if (!window.db) {
-                console.error('❌ [alianzas.html] window.db no está disponible. Asegurate de cargar saas-core.js ANTES de este script.');
-            }
-        })();
+        lucide.createIcons();
+        const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
+        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
+        const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
 
         let WHATSAPP_MESA_DIRECTIVA = '5490000000000';
-        let LOGO_URL_GLOBAL = null;
+        let CONFIG_GLOBAL = {};
+        let DATOS_BANCARIOS_OK = false;
 
         AOS.init({ once: true, duration: 700, easing: 'ease-out-cubic' });
         lucide.createIcons();
 
         let datosConvenio = {};
+        let responsablesCount = 0;
+        const MAX_RESPONSABLES = 3;
 
         // ==========================================
-        // CARGA DE IDENTIDAD INSTITUCIONAL
+        // CARGA DE IDENTIDAD INSTITUCIONAL (id = 1)
         // ==========================================
         async function cargarIdentidadInstitucional() {
             try {
-                // Volvemos a la consulta original infalible (id = 1) usando el db local
                 const { data: conf, error } = await db
                     .from('renmcycf_config')
-                    .select('logo_url, hero_image_url, whatsapp')
+                    .select('logo_url, hero_image_url, whatsapp, banco, alias_cbu, cbu, titular_cuenta')
                     .eq('id', 1)
                     .maybeSingle();
 
@@ -1318,17 +1482,18 @@
                     return;
                 }
 
-                // 1. Cargar Logos
+                CONFIG_GLOBAL = conf;
+
+                // 1. Logos
                 const logos = [
                     { icon: 'nav-logo-icon',                img: 'nav-logo-img' },
-                    { icon: 'mockup-diploma-logo-icon',     img: 'mockup-diploma-logo-img' },
-                    { icon: 'mockup-credencial-logo-icon',  img: 'mockup-credencial-logo-img' },
+                    { icon: 'mockup-diploma-logo-icon',    img: 'mockup-diploma-logo-img' },
+                    { icon: 'mockup-credencial-logo-icon', img: 'mockup-credencial-logo-img' },
                     { icon: 'doc-logo-icon',                img: 'doc-logo-img' },
                     { icon: 'footer-logo-icon',             img: 'footer-logo-img' }
                 ];
 
                 if (conf.logo_url) {
-                    LOGO_URL_GLOBAL = conf.logo_url;
                     logos.forEach(({ icon, img }) => {
                         const imgEl = document.getElementById(img);
                         const iconEl = document.getElementById(icon);
@@ -1340,7 +1505,7 @@
                     });
                 }
 
-                // 2. Cargar Fondo Hero
+                // 2. Hero
                 if (conf.hero_image_url) {
                     const heroBg = document.getElementById('hero-bg-img');
                     if (heroBg) {
@@ -1349,10 +1514,19 @@
                     }
                 }
 
-                // 3. Cargar WhatsApp
+                // 3. WhatsApp
                 if (conf.whatsapp && String(conf.whatsapp).trim() !== '') {
                     WHATSAPP_MESA_DIRECTIVA = String(conf.whatsapp).replace(/\D/g, '');
                 }
+
+                // 4. Datos bancarios
+                const tieneAlias = conf.alias_cbu && String(conf.alias_cbu).trim() !== '';
+                const tieneCbu   = conf.cbu       && String(conf.cbu).trim() !== '';
+                const tieneBanco = conf.banco     && String(conf.banco).trim() !== '';
+                const tieneTitular = conf.titular_cuenta && String(conf.titular_cuenta).trim() !== '';
+                DATOS_BANCARIOS_OK = tieneAlias || tieneCbu;
+
+                renderBancarios();
 
                 lucide.createIcons();
             } catch (err) {
@@ -1360,12 +1534,77 @@
             }
         }
 
+        function renderBancarios() {
+            const grid = document.getElementById('bancarios-grid');
+            const vacio = document.getElementById('bancarios-vacio');
+            const panelComprobante = document.getElementById('panel-comprobante');
+            if (!grid || !vacio) return;
+
+            if (!DATOS_BANCARIOS_OK) {
+                grid.innerHTML = '';
+                grid.classList.add('hidden');
+                vacio.classList.remove('hidden');
+                if (panelComprobante) panelComprobante.classList.add('hidden');
+                return;
+            }
+
+            grid.classList.remove('hidden');
+            vacio.classList.add('hidden');
+            if (panelComprobante) panelComprobante.classList.remove('hidden');
+
+            const items = [
+                { label: 'Banco', value: CONFIG_GLOBAL.banco || '—', icon: 'landmark', mono: false },
+                { label: 'Titular', value: CONFIG_GLOBAL.titular_cuenta || '—', icon: 'user-check', mono: false },
+                { label: 'Alias', value: CONFIG_GLOBAL.alias_cbu || '—', icon: 'at-sign', mono: true },
+                { label: 'CBU', value: CONFIG_GLOBAL.cbu || '—', icon: 'hash', mono: true }
+            ];
+
+            grid.innerHTML = items.map(it => `
+                <div class="bg-black/40 border border-forenseGold/25 rounded-xl p-4 flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-forenseGold/15 border border-forenseGold/30 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="${it.icon}" class="w-4 h-4 text-forenseGold"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-[9px] font-black text-forenseGold uppercase tracking-widest mb-1">${it.label}</p>
+                        <p class="${it.mono ? 'font-mono' : ''} text-white text-sm font-bold break-all">${it.value}</p>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // TOGGLE FORMA DE PAGO
+        // ==========================================
+        function toggleFormaPago() {
+            const valor = document.querySelector('input[name="forma_pago"]:checked')?.value;
+            const panelAhora = document.getElementById('panel-pagar-ahora');
+            const panelDespues = document.getElementById('panel-pagar-despues');
+            const inputComprobante = document.getElementById('input-comprobante');
+
+            if (valor === 'AHORA') {
+                panelAhora.classList.remove('hidden');
+                panelDespues.classList.add('hidden');
+                if (DATOS_BANCARIOS_OK) {
+                    inputComprobante.setAttribute('required', 'required');
+                } else {
+                    inputComprobante.removeAttribute('required');
+                }
+            } else if (valor === 'DESPUES') {
+                panelAhora.classList.add('hidden');
+                panelDespues.classList.remove('hidden');
+                inputComprobante.removeAttribute('required');
+            } else {
+                panelAhora.classList.add('hidden');
+                panelDespues.classList.add('hidden');
+                inputComprobante.removeAttribute('required');
+            }
+            lucide.createIcons();
+        }
+
         // ==========================================
         // RESPONSABLES DINÁMICOS
         // ==========================================
-        let responsablesCount = 0;
-        const MAX_RESPONSABLES = 3;
-
         function agregarResponsable() {
             if (responsablesCount >= MAX_RESPONSABLES) {
                 alert(`Máximo ${MAX_RESPONSABLES} responsables adicionales.`);
@@ -1509,6 +1748,24 @@
 
             const areas = Array.from(document.querySelectorAll('input[name="areas"]:checked')).map(el => el.value);
 
+            const formaPagoEl = document.querySelector('input[name="forma_pago"]:checked');
+            if (!formaPagoEl) { alert('Seleccione una forma de pago.'); return; }
+            const formaPago = formaPagoEl.value;
+
+            // Validar comprobante si es "AHORA"
+            let comprobanteFile = null;
+            if (formaPago === 'AHORA' && DATOS_BANCARIOS_OK) {
+                comprobanteFile = document.getElementById('input-comprobante').files[0];
+                if (!comprobanteFile) {
+                    alert('Debe subir el comprobante de transferencia para elegir "Pagar Ahora".');
+                    return;
+                }
+                if (comprobanteFile.size > 5 * 1024 * 1024) {
+                    alert('El comprobante no debe superar los 5 MB.');
+                    return;
+                }
+            }
+
             if (!document.getElementById('acepto-terminos').checked) {
                 alert('Debe aceptar los Términos y Condiciones.');
                 return;
@@ -1516,6 +1773,10 @@
 
             const hash = generarHash();
             const numero = hash.replace('REN-', '').substring(0, 10);
+
+            // Fechas
+            const hoy = new Date();
+            const expira = new Date(hoy.getTime() + (72 * 60 * 60 * 1000));
 
             datosConvenio = {
                 ...inst, ...dir,
@@ -1525,10 +1786,14 @@
                 montoPlan,
                 niveles,
                 areas,
+                formaPago,
+                comprobanteFile,
                 hash,
-                numero
+                numero,
+                expiraEn: expira.toISOString()
             };
 
+            // ── Autocompletar el documento ──
             document.getElementById('doc-numero').textContent = numero;
             document.getElementById('doc-hash').textContent = hash;
             document.getElementById('doc-instituto').textContent = inst.nombre;
@@ -1563,6 +1828,8 @@
 
             document.getElementById('doc-plan').textContent = plan === 'ANUAL' ? 'Plan Anual (12 meses)' : 'Plan Semestral (6 meses)';
             document.getElementById('doc-plan-monto').textContent = '$' + montoPlan.toLocaleString('es-AR') + ' ARS';
+            document.getElementById('doc-forma-pago').textContent = formaPago === 'AHORA' ? 'Transferencia inmediata' : 'Pago diferido (72hs)';
+            document.getElementById('doc-valido-hasta').textContent = expira.toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
             document.getElementById('doc-niveles').innerHTML = niveles.map(n =>
                 `<span class="inline-block bg-forenseGold/15 border border-forenseGold/40 text-forenseNavy text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md">${n}</span>`
@@ -1574,6 +1841,30 @@
 
             document.getElementById('doc-cert-mes').textContent = inst.certMes || '—';
 
+            // Alertas y datos bancarios en el doc
+            const alerta72 = document.getElementById('doc-alerta-72hs');
+            const bloqueBancarios = document.getElementById('doc-bancarios-bloque');
+            const watermark = document.getElementById('watermark-pago-pdf');
+
+            if (formaPago === 'DESPUES') {
+                alerta72.classList.remove('hidden');
+                bloqueBancarios.classList.add('hidden');
+                watermark.classList.remove('hidden');
+                watermark.innerHTML = 'PRE-ACUERDO CONDICIONAL<br>VÁLIDO POR 72HS<br>PENDIENTE DE PAGO';
+            } else {
+                alerta72.classList.add('hidden');
+                watermark.classList.add('hidden');
+                if (DATOS_BANCARIOS_OK) {
+                    bloqueBancarios.classList.remove('hidden');
+                    document.getElementById('doc-banco').textContent = CONFIG_GLOBAL.banco || '—';
+                    document.getElementById('doc-titular').textContent = CONFIG_GLOBAL.titular_cuenta || '—';
+                    document.getElementById('doc-alias').textContent = CONFIG_GLOBAL.alias_cbu || '—';
+                    document.getElementById('doc-cbu').textContent = CONFIG_GLOBAL.cbu || '—';
+                } else {
+                    bloqueBancarios.classList.add('hidden');
+                }
+            }
+
             const bloqueObs = document.getElementById('doc-observaciones-bloque');
             if (inst.observaciones) {
                 bloqueObs.classList.remove('hidden');
@@ -1583,10 +1874,7 @@
             }
 
             document.getElementById('firma-director').textContent = dir.nombre;
-
-            const hoy = new Date();
-            const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
-            document.getElementById('doc-fecha').textContent = `Emitido el ${hoy.toLocaleDateString('es-AR', opciones)}`;
+            document.getElementById('doc-fecha').textContent = `Emitido el ${hoy.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}`;
 
             document.getElementById('bloque-formulario').classList.add('hidden');
             document.getElementById('bloque-preacuerdo').classList.remove('hidden');
@@ -1608,7 +1896,7 @@
         }
 
         // ==========================================
-        // GENERAR PDF
+        // DESCARGAR PDF
         // ==========================================
         async function descargarPDF() {
             const boton = document.getElementById('btn-descargar-pdf');
@@ -1635,6 +1923,7 @@
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
 
+                // Header bandas
                 pdf.setFillColor(10, 17, 40);
                 pdf.rect(0, 0, pageWidth, 22, 'F');
                 pdf.setFillColor(212, 175, 55);
@@ -1656,6 +1945,7 @@
 
                 pdf.addImage(imgData, 'PNG', 10, startY, imgWidth, imgHeight);
 
+                // Footer
                 pdf.setFillColor(10, 17, 40);
                 pdf.rect(0, pageHeight - 10, pageWidth, 10, 'F');
                 pdf.setFillColor(212, 175, 55);
@@ -1697,12 +1987,26 @@
             boton.disabled = true;
             lucide.createIcons();
 
-            let idConvenio = null;
-            try {
-                if (!window.currentTenantId) throw new Error('Tenant no resuelto');
+            let comprobanteUrl = null;
 
+            try {
+                // Subir comprobante si eligió pagar ahora
+                if (datosConvenio.formaPago === 'AHORA' && datosConvenio.comprobanteFile) {
+                    const file = datosConvenio.comprobanteFile;
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    const nombreArchivo = `comprobantes/convenio_${datosConvenio.numero}_${Date.now()}.${ext}`;
+
+                    const { error: upErr } = await db.storage
+                        .from('renmcycf-documentos')
+                        .upload(nombreArchivo, file, { cacheControl: '3600', upsert: false });
+
+                    if (upErr) throw upErr;
+
+                    comprobanteUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${nombreArchivo}`;
+                }
+
+                // Insert en Supabase
                 const payload = {
-                    tenant_id: window.currentTenantId,
                     institucion: datosConvenio.nombre,
                     cuit: datosConvenio.cuit,
                     tipo_institucion: datosConvenio.tipo,
@@ -1718,8 +2022,8 @@
                     director_nombre: datosConvenio.director_nombre,
                     director_dni: datosConvenio.dni,
                     director_cargo: datosConvenio.cargo,
-                    director_email: datosConvenio.email || null,
-                    director_telefono: datosConvenio.telefono || null,
+                    director_email: datosConvenio.email,
+                    director_telefono: datosConvenio.telefono,
                     director_linkedin: datosConvenio.linkedin,
                     plan_elegido: datosConvenio.plan,
                     monto_plan: datosConvenio.montoPlan,
@@ -1728,24 +2032,37 @@
                     cert_estimados_mes: parseInt(datosConvenio.certMes) || null,
                     responsables: JSON.stringify(datosConvenio.responsables),
                     observaciones: datosConvenio.observaciones,
+                    forma_pago: datosConvenio.formaPago,
+                    comprobante_url: comprobanteUrl,
+                    expira_en: datosConvenio.expiraEn,
+                    acepta_terminos: true,
                     estado: 'PENDIENTE',
                     terminos_aceptados: true,
                     hash_verificacion: datosConvenio.hash,
                     fecha_solicitud: new Date().toISOString()
                 };
 
-                const { data, error } = await window.db
+                const { data, error } = await db
                     .from('renmcycf_convenios')
                     .insert([payload])
                     .select('id')
                     .single();
 
-                if (error) throw error;
-                idConvenio = data?.id || null;
-                console.log('✅ Solicitud registrada. ID:', idConvenio);
+                if (error) {
+                    console.warn('⚠️ Error insert Supabase:', error.message);
+                } else {
+                    console.log('✅ Solicitud registrada. ID:', data?.id);
+                }
+
             } catch (err) {
-                console.warn('⚠️ No se pudo registrar en Supabase:', err.message);
+                console.warn('⚠️ No se pudo registrar completamente en Supabase:', err.message);
+                // No bloqueamos: igual mandamos el WhatsApp
             }
+
+            // Mensaje WhatsApp
+            const estadoPagoTexto = datosConvenio.formaPago === 'AHORA'
+                ? '✅ Pago acreditado (comprobante adjunto en el sistema)'
+                : '⏳ Pago diferido — válido 72hs';
 
             const mensaje = `Hola Mesa Directiva RENMCYCF,
 
@@ -1756,6 +2073,7 @@ He completado el formulario de solicitud de Convenio de Vinculación Institucion
 📋 *RESUMEN DE LA SOLICITUD*
 • Plan elegido: ${datosConvenio.plan === 'ANUAL' ? 'Plan Anual (12 meses)' : 'Plan Semestral (6 meses)'}
 • Monto del plan: $${datosConvenio.montoPlan.toLocaleString('es-AR')} ARS
+• Forma de pago: ${estadoPagoTexto}
 • Niveles a certificar: ${datosConvenio.niveles.join(', ')}
 • Áreas temáticas: ${datosConvenio.areas.length > 0 ? datosConvenio.areas.join(', ') : 'No especificadas'}
 • Certificados estimados/mes: ${datosConvenio.certMes || 'No especificado'}
@@ -1765,6 +2083,7 @@ He completado el formulario de solicitud de Convenio de Vinculación Institucion
 
 🔐 *Hash de verificación:* ${datosConvenio.hash}
 📄 *Nº de solicitud:* ${datosConvenio.numero}
+⏱ *Válido hasta:* ${new Date(datosConvenio.expiraEn).toLocaleString('es-AR')}
 
 Quedo a disposición para coordinar los siguientes pasos.
 
