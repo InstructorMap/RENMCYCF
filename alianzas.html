@@ -360,12 +360,11 @@
         .terminos-scroll::-webkit-scrollbar-track { background: #0a1128; }
         .terminos-scroll::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
 
-        /* Watermark para PDFs sin pago */
         .watermark-pago {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%) rotate(-30deg);
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Playfair Display', serif;
             font-weight: 900;
             font-size: 78px;
             color: rgba(220, 38, 38, 0.10);
@@ -1087,7 +1086,6 @@
                                     <!-- Inyectado por JS -->
                                 </div>
 
-                                <!-- Mensaje si no están cargados -->
                                 <div id="bancarios-vacio" class="hidden bg-red-500/10 border-2 border-red-500/40 rounded-xl p-5 text-center">
                                     <i data-lucide="alert-triangle" class="w-8 h-8 text-red-400 mx-auto mb-2"></i>
                                     <p class="text-red-300 font-black text-sm uppercase tracking-wider mb-1">Datos bancarios no disponibles</p>
@@ -1207,7 +1205,6 @@
                             <p class="text-[10px] font-mono text-forenseGold font-bold mt-1">Nº <span id="doc-numero">—</span></p>
                         </div>
 
-                        <!-- Alerta 72hs (si pagar después) -->
                         <div id="doc-alerta-72hs" class="hidden mb-6 bg-red-50 border-2 border-red-400 rounded-xl p-4">
                             <div class="flex items-start gap-3">
                                 <i data-lucide="clock" class="w-6 h-6 text-red-600 shrink-0 mt-0.5"></i>
@@ -1291,7 +1288,6 @@
                             <p class="text-xs text-slate-600 mt-3"><strong class="text-forenseNavy">Certificados estimados/mes:</strong> <span id="doc-cert-mes">—</span></p>
                         </div>
 
-                        <!-- Datos bancarios en el doc (si eligió pagar ahora) -->
                         <div id="doc-bancarios-bloque" class="mb-6 pb-6 border-b border-dashed border-forenseNavy/15 hidden">
                             <p class="text-[10px] font-black text-forenseNavy uppercase tracking-[0.25em] mb-3">
                                 <i data-lucide="landmark" class="inline w-3.5 h-3.5 mr-1"></i> Datos para Transferencia
@@ -1304,7 +1300,6 @@
                             </div>
                         </div>
 
-                        <!-- Cláusulas -->
                         <div class="mb-6">
                             <p class="text-[10px] font-black text-forenseNavy uppercase tracking-[0.25em] mb-3">
                                 <i data-lucide="scroll-text" class="inline w-3.5 h-3.5 mr-1"></i> Cláusulas del Acuerdo
@@ -1446,7 +1441,7 @@
     </footer>
 
     <script>
-        // ==========================================
+                // ==========================================
         // CONFIGURACIÓN SUPABASE (proyecto RENMCYCF)
         // ==========================================
         lucide.createIcons();
@@ -1484,7 +1479,6 @@
 
                 CONFIG_GLOBAL = conf;
 
-                // 1. Logos
                 const logos = [
                     { icon: 'nav-logo-icon',                img: 'nav-logo-img' },
                     { icon: 'mockup-diploma-logo-icon',    img: 'mockup-diploma-logo-img' },
@@ -1505,7 +1499,6 @@
                     });
                 }
 
-                // 2. Hero
                 if (conf.hero_image_url) {
                     const heroBg = document.getElementById('hero-bg-img');
                     if (heroBg) {
@@ -1514,16 +1507,12 @@
                     }
                 }
 
-                // 3. WhatsApp
                 if (conf.whatsapp && String(conf.whatsapp).trim() !== '') {
                     WHATSAPP_MESA_DIRECTIVA = String(conf.whatsapp).replace(/\D/g, '');
                 }
 
-                // 4. Datos bancarios
                 const tieneAlias = conf.alias_cbu && String(conf.alias_cbu).trim() !== '';
                 const tieneCbu   = conf.cbu       && String(conf.cbu).trim() !== '';
-                const tieneBanco = conf.banco     && String(conf.banco).trim() !== '';
-                const tieneTitular = conf.titular_cuenta && String(conf.titular_cuenta).trim() !== '';
                 DATOS_BANCARIOS_OK = tieneAlias || tieneCbu;
 
                 renderBancarios();
@@ -1752,7 +1741,6 @@
             if (!formaPagoEl) { alert('Seleccione una forma de pago.'); return; }
             const formaPago = formaPagoEl.value;
 
-            // Validar comprobante si es "AHORA"
             let comprobanteFile = null;
             if (formaPago === 'AHORA' && DATOS_BANCARIOS_OK) {
                 comprobanteFile = document.getElementById('input-comprobante').files[0];
@@ -1774,7 +1762,6 @@
             const hash = generarHash();
             const numero = hash.replace('REN-', '').substring(0, 10);
 
-            // Fechas
             const hoy = new Date();
             const expira = new Date(hoy.getTime() + (72 * 60 * 60 * 1000));
 
@@ -1793,7 +1780,6 @@
                 expiraEn: expira.toISOString()
             };
 
-            // ── Autocompletar el documento ──
             document.getElementById('doc-numero').textContent = numero;
             document.getElementById('doc-hash').textContent = hash;
             document.getElementById('doc-instituto').textContent = inst.nombre;
@@ -1841,7 +1827,6 @@
 
             document.getElementById('doc-cert-mes').textContent = inst.certMes || '—';
 
-            // Alertas y datos bancarios en el doc
             const alerta72 = document.getElementById('doc-alerta-72hs');
             const bloqueBancarios = document.getElementById('doc-bancarios-bloque');
             const watermark = document.getElementById('watermark-pago-pdf');
@@ -1923,7 +1908,6 @@
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
 
-                // Header bandas
                 pdf.setFillColor(10, 17, 40);
                 pdf.rect(0, 0, pageWidth, 22, 'F');
                 pdf.setFillColor(212, 175, 55);
@@ -1945,7 +1929,6 @@
 
                 pdf.addImage(imgData, 'PNG', 10, startY, imgWidth, imgHeight);
 
-                // Footer
                 pdf.setFillColor(10, 17, 40);
                 pdf.rect(0, pageHeight - 10, pageWidth, 10, 'F');
                 pdf.setFillColor(212, 175, 55);
@@ -1978,19 +1961,20 @@
         }
 
         // ==========================================
-        // FIRMAR Y ENVIAR
+        // FIRMAR Y ENVIAR (V2 - PDF + UPLOAD + WHATSAPP)
         // ==========================================
         async function firmarYEnviar(event) {
             const boton = document.getElementById('btn-firmar-enviar');
             const textoOriginal = boton.innerHTML;
-            boton.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Registrando solicitud...';
+            boton.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Procesando Solicitud...';
             boton.disabled = true;
             lucide.createIcons();
 
             let comprobanteUrl = null;
+            let pdfPublicUrl = null;
 
             try {
-                // Subir comprobante si eligió pagar ahora
+                // 1. SUBIR COMPROBANTE DE PAGO (si aplica)
                 if (datosConvenio.formaPago === 'AHORA' && datosConvenio.comprobanteFile) {
                     const file = datosConvenio.comprobanteFile;
                     const ext = file.name.split('.').pop().toLowerCase();
@@ -2001,15 +1985,65 @@
                         .upload(nombreArchivo, file, { cacheControl: '3600', upsert: false });
 
                     if (upErr) throw upErr;
-
                     comprobanteUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${nombreArchivo}`;
                 }
 
-                // Insert en Supabase
+                // 2. GENERAR PDF DEL PRE-ACUERDO
+                boton.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Generando PDF Oficial...';
+                lucide.createIcons();
+
+                const elemento = document.getElementById('pdf-contenedor');
+                const canvas = await html2canvas(elemento, {
+                    scale: 2, useCORS: true, backgroundColor: '#ffffff',
+                    windowWidth: elemento.scrollWidth, windowHeight: elemento.scrollHeight
+                });
+
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+
+                pdf.setFillColor(10, 17, 40); pdf.rect(0, 0, pageWidth, 22, 'F');
+                pdf.setFillColor(212, 175, 55); pdf.rect(0, 22, pageWidth, 2, 'F');
+                pdf.setTextColor(212, 175, 55); pdf.setFont('helvetica', 'bold'); pdf.setFontSize(11);
+                pdf.text('RENMCYCF', 15, 10);
+                pdf.setFontSize(7); pdf.setTextColor(255, 255, 255); pdf.setFont('helvetica', 'normal');
+                pdf.text('Registro Nacional de Matriculados en Criminalística y Ciencias Forenses', 15, 15);
+                pdf.text('Pre-Acuerdo de Vinculación Institucional', 15, 19);
+
+                const imgWidth = pageWidth - 20;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 10, 28, imgWidth, imgHeight);
+
+                pdf.setFillColor(10, 17, 40); pdf.rect(0, pageHeight - 10, pageWidth, 10, 'F');
+                pdf.setFillColor(212, 175, 55); pdf.rect(0, pageHeight - 12, pageWidth, 2, 'F');
+                pdf.setTextColor(255, 255, 255); pdf.setFontSize(7);
+                pdf.text('© 2026 RENMCYCF · Tecnología ASARI Core', 10, pageHeight - 5);
+                pdf.text(`Hash: ${datosConvenio.hash || '—'}`, pageWidth - 70, pageHeight - 5);
+
+                // 3. SUBIR PDF A SUPABASE STORAGE
+                boton.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Guardando en Servidor...';
+                lucide.createIcons();
+
+                const pdfBlob = pdf.output('blob');
+                const pdfFileName = `acuerdos/PreAcuerdo_${datosConvenio.numero}_${Date.now()}.pdf`;
+
+                const { error: pdfUpErr } = await db.storage
+                    .from('renmcycf-documentos')
+                    .upload(pdfFileName, pdfBlob, { cacheControl: '3600', contentType: 'application/pdf' });
+
+                if (pdfUpErr) throw pdfUpErr;
+                pdfPublicUrl = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${pdfFileName}`;
+
+                // 4. INSERT EN BASE DE DATOS
+                boton.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Registrando en Sistema...';
+                lucide.createIcons();
+
                 const payload = {
                     institucion: datosConvenio.nombre,
                     cuit: datosConvenio.cuit,
-                    tipo_institucion: datosConvenio.tipo,
+                    tipo: datosConvenio.tipo,
                     provincia: datosConvenio.provincia,
                     ciudad: datosConvenio.ciudad,
                     domicilio: datosConvenio.domicilio,
@@ -2031,55 +2065,44 @@
                     areas_tematicas: JSON.stringify(datosConvenio.areas),
                     cert_estimados_mes: parseInt(datosConvenio.certMes) || null,
                     responsables: JSON.stringify(datosConvenio.responsables),
-                    observaciones: datosConvenio.observaciones,
+                    observaciones_internas: datosConvenio.observaciones,
                     forma_pago: datosConvenio.formaPago,
                     comprobante_url: comprobanteUrl,
+                    pdf_url: pdfPublicUrl,
                     expira_en: datosConvenio.expiraEn,
                     acepta_terminos: true,
-                    estado: 'PENDIENTE',
                     terminos_aceptados: true,
-                    hash_verificacion: datosConvenio.hash,
-                    fecha_solicitud: new Date().toISOString()
+                    estado: 'PENDIENTE',
+                    hash_verificacion: datosConvenio.hash
                 };
 
-                const { data, error } = await db
-                    .from('renmcycf_convenios')
-                    .insert([payload])
-                    .select('id')
-                    .single();
+                const { error } = await db.from('renmcycf_convenios').insert([payload]);
+                if (error) throw error;
 
-                if (error) {
-                    console.warn('⚠️ Error insert Supabase:', error.message);
-                } else {
-                    console.log('✅ Solicitud registrada. ID:', data?.id);
-                }
+                // 5. WHATSAPP CON LINK AL PDF
+                const estadoPagoTexto = datosConvenio.formaPago === 'AHORA'
+                    ? '✅ Pago acreditado (comprobante adjunto en el sistema)'
+                    : '⏳ Pago diferido — válido 72hs';
 
-            } catch (err) {
-                console.warn('⚠️ No se pudo registrar completamente en Supabase:', err.message);
-                // No bloqueamos: igual mandamos el WhatsApp
-            }
-
-            // Mensaje WhatsApp
-            const estadoPagoTexto = datosConvenio.formaPago === 'AHORA'
-                ? '✅ Pago acreditado (comprobante adjunto en el sistema)'
-                : '⏳ Pago diferido — válido 72hs';
-
-            const mensaje = `Hola Mesa Directiva RENMCYCF,
+                const mensaje = `Hola Mesa Directiva RENMCYCF,
 
 Soy *${datosConvenio.director_nombre}*, ${datosConvenio.cargo || 'Director'} de *${datosConvenio.nombre}* (${datosConvenio.ciudad}, ${datosConvenio.provincia}).
 
-He completado el formulario de solicitud de Convenio de Vinculación Institucional y generado el Pre-Acuerdo.
+He generado el Pre-Acuerdo de Vinculación Institucional.
+
+📄 *Ver y descargar documento original:*
+${pdfPublicUrl}
 
 📋 *RESUMEN DE LA SOLICITUD*
-• Plan elegido: ${datosConvenio.plan === 'ANUAL' ? 'Plan Anual (12 meses)' : 'Plan Semestral (6 meses)'}
-• Monto del plan: $${datosConvenio.montoPlan.toLocaleString('es-AR')} ARS
-• Forma de pago: ${estadoPagoTexto}
-• Niveles a certificar: ${datosConvenio.niveles.join(', ')}
-• Áreas temáticas: ${datosConvenio.areas.length > 0 ? datosConvenio.areas.join(', ') : 'No especificadas'}
-• Certificados estimados/mes: ${datosConvenio.certMes || 'No especificado'}
-• CUIT: ${datosConvenio.cuit}
-• Email institucional: ${datosConvenio.email}
-• Teléfono: ${datosConvenio.telefono}
+- Plan elegido: ${datosConvenio.plan === 'ANUAL' ? 'Plan Anual (12 meses)' : 'Plan Semestral (6 meses)'}
+- Monto del plan: $${datosConvenio.montoPlan.toLocaleString('es-AR')} ARS
+- Forma de pago: ${estadoPagoTexto}
+- Niveles a certificar: ${datosConvenio.niveles.join(', ')}
+- Áreas temáticas: ${datosConvenio.areas.length > 0 ? datosConvenio.areas.join(', ') : 'No especificadas'}
+- Certificados estimados/mes: ${datosConvenio.certMes || 'No especificado'}
+- CUIT: ${datosConvenio.cuit}
+- Email institucional: ${datosConvenio.email}
+- Teléfono: ${datosConvenio.telefono}
 
 🔐 *Hash de verificación:* ${datosConvenio.hash}
 📄 *Nº de solicitud:* ${datosConvenio.numero}
@@ -2091,18 +2114,26 @@ Saludos cordiales,
 *${datosConvenio.director_nombre}*
 ${datosConvenio.nombre} · ${datosConvenio.ciudad}, ${datosConvenio.provincia}`;
 
-            const urlWhatsApp = `https://wa.me/${WHATSAPP_MESA_DIRECTIVA}?text=${encodeURIComponent(mensaje)}`;
-            window.open(urlWhatsApp, '_blank');
+                const urlWhatsApp = `https://wa.me/${WHATSAPP_MESA_DIRECTIVA}?text=${encodeURIComponent(mensaje)}`;
+                window.open(urlWhatsApp, '_blank');
 
-            setTimeout(() => {
-                boton.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> ¡Solicitud Enviada!';
+                boton.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> ¡Solicitud Enviada con Éxito!';
                 lucide.createIcons();
+
                 setTimeout(() => {
                     boton.innerHTML = textoOriginal;
                     boton.disabled = false;
                     lucide.createIcons();
-                }, 2500);
-            }, 800);
+                    window.location.reload();
+                }, 4000);
+
+            } catch (err) {
+                console.error('Error procesando solicitud:', err);
+                alert("Error: " + err.message);
+                boton.innerHTML = textoOriginal;
+                boton.disabled = false;
+                lucide.createIcons();
+            }
         }
 
         // ==========================================
