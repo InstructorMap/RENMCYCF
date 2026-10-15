@@ -1881,7 +1881,7 @@
         }
 
         // ==========================================
-        // DESCARGAR PDF
+        // DESCARGAR PDF (Optimizado: JPEG 80% + FAST)
         // ==========================================
         async function descargarPDF() {
             const boton = document.getElementById('btn-descargar-pdf');
@@ -1902,7 +1902,8 @@
                 });
 
                 const { jsPDF } = window.jspdf;
-                const imgData = canvas.toDataURL('image/png');
+                // ✅ JPEG al 80% de calidad → reduce drásticamente el peso
+                const imgData = canvas.toDataURL('image/jpeg', 0.8);
 
                 const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
                 const pageWidth = pdf.internal.pageSize.getWidth();
@@ -1927,7 +1928,8 @@
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
                 const startY = 28;
 
-                pdf.addImage(imgData, 'PNG', 10, startY, imgWidth, imgHeight);
+                // ✅ addImage con compresión 'FAST' → PDF más liviano y rápido
+                pdf.addImage(imgData, 'JPEG', 10, startY, imgWidth, imgHeight, undefined, 'FAST');
 
                 pdf.setFillColor(10, 17, 40);
                 pdf.rect(0, pageHeight - 10, pageWidth, 10, 'F');
@@ -1961,7 +1963,7 @@
         }
 
         // ==========================================
-        // FIRMAR Y ENVIAR (V2 - PDF + UPLOAD + WHATSAPP)
+        // FIRMAR Y ENVIAR (V2 - PDF optimizado + UPLOAD + WHATSAPP)
         // ==========================================
         async function firmarYEnviar(event) {
             const boton = document.getElementById('btn-firmar-enviar');
@@ -1999,7 +2001,8 @@
                 });
 
                 const { jsPDF } = window.jspdf;
-                const imgData = canvas.toDataURL('image/png');
+                // ✅ JPEG al 80% de calidad → reduce drásticamente el peso
+                const imgData = canvas.toDataURL('image/jpeg', 0.8);
                 const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
@@ -2014,7 +2017,8 @@
 
                 const imgWidth = pageWidth - 20;
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                pdf.addImage(imgData, 'PNG', 10, 28, imgWidth, imgHeight);
+                // ✅ addImage con compresión 'FAST' → PDF más liviano y rápido
+                pdf.addImage(imgData, 'JPEG', 10, 28, imgWidth, imgHeight, undefined, 'FAST');
 
                 pdf.setFillColor(10, 17, 40); pdf.rect(0, pageHeight - 10, pageWidth, 10, 'F');
                 pdf.setFillColor(212, 175, 55); pdf.rect(0, pageHeight - 12, pageWidth, 2, 'F');
