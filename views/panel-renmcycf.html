@@ -429,8 +429,10 @@
                 <button onclick="showTab('biblioteca')" id="nav-biblioteca" class="sidebar-link"><i data-lucide="library" class="w-4 h-4"></i> Biblioteca</button>
                 <button onclick="showTab('tesis')" id="nav-tesis" class="sidebar-link"><i data-lucide="microscope" class="w-4 h-4"></i> Auditoría Tesis</button>
 
-                <div class="px-2 py-2 text-[9px] font-bold text-[#d4af37] uppercase tracking-widest mt-6">Red Judicial (B2B)</div>
-                <button onclick="showTab('convenios')" id="nav-convenios" class="sidebar-link"><i data-lucide="scale" class="w-4 h-4"></i> Solicitudes de Entidades</button>
+                <!-- ============ EXPANSIÓN B2B (Actualizado) ============ -->
+                <div class="px-2 py-2 text-[9px] font-bold text-[#d4af37] uppercase tracking-widest mt-6">Expansión B2B</div>
+                <button onclick="showTab('convenios')" id="nav-convenios" class="sidebar-link w-full"><i data-lucide="handshake" class="w-4 h-4"></i> Alianzas (Institutos)</button>
+                <button onclick="showTab('red-judicial')" id="nav-red-judicial" class="sidebar-link w-full"><i data-lucide="scale" class="w-4 h-4"></i> Red Judicial (Abogados)</button>
 
                 <div class="px-2 py-2 text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-6">Sistema</div>
                 <button onclick="showTab('aliados')" id="nav-aliados" class="sidebar-link"><i data-lucide="award" class="w-4 h-4"></i> Gestión Aliados</button>
@@ -451,7 +453,7 @@
         </nav>
     </aside>
 
-    <!-- ============ MENÚ MÓVIL (Entregable 3.1) ============ -->
+    <!-- ============ MENÚ MÓVIL ============ -->
     <div id="menu-movil-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden md:hidden" onclick="toggleMenuMovil(false)"></div>
     <aside id="menu-movil" class="fixed top-0 left-0 h-full w-72 glass-panel m-0 rounded-none z-50 hidden md:hidden flex-col transition-transform duration-300 -translate-x-full">
         <div class="h-24 flex items-center justify-between px-6 border-b border-[#d4af37]/10">
@@ -468,7 +470,8 @@
             <button onclick="showTab('auditoria'); toggleMenuMovil(false)" class="sidebar-link"><i data-lucide="clipboard-check" class="w-4 h-4"></i> Auditoría</button>
             <button onclick="showTab('padron'); toggleMenuMovil(false)" class="sidebar-link"><i data-lucide="database" class="w-4 h-4"></i> Padrón Oficial</button>
             <button onclick="showTab('financiero'); toggleMenuMovil(false)" class="sidebar-link"><i data-lucide="wallet" class="w-4 h-4"></i> Cierre de Caja</button>
-            <button onclick="showTab('convenios'); toggleMenuMovil(false)" class="sidebar-link"><i data-lucide="scale" class="w-4 h-4"></i> Solicitudes Entidades</button>
+            <button onclick="showTab('convenios'); toggleMenuMovil(false)" class="sidebar-link"><i data-lucide="handshake" class="w-4 h-4"></i> Alianzas (Institutos)</button>
+            <button onclick="showTab('red-judicial'); toggleMenuMovil(false)" class="sidebar-link"><i data-lucide="scale" class="w-4 h-4"></i> Red Judicial</button>
             <button onclick="showTab('papelera'); toggleMenuMovil(false)" class="sidebar-link"><i data-lucide="trash-2" class="w-4 h-4"></i> Papelera</button>
         </nav>
     </aside>
@@ -535,7 +538,6 @@
                     </div>
                 </div>
 
-                <!-- ============ EMBUDO DE CONVERSIÓN (Entregable 3.2) ============ -->
                 <div class="glass-card p-6 border-l-4 border-emerald-500/60">
                     <div class="flex justify-between items-center mb-5">
                         <div class="flex items-center gap-2">
@@ -807,93 +809,66 @@
                 </div>
             </div>
 
-            <!-- CONVENIOS -->
+            <!-- ============ ALIANZAS EDUCATIVAS (Institutos) - Simplificada ============ -->
             <div id="view-convenios" class="tab-content space-y-6">
                 <div class="glass-card p-6">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b border-[#d4af37]/15">
                         <div>
                             <h3 class="font-bold text-lg text-white flex items-center gap-2">
-                                <i data-lucide="scale" class="text-[#d4af37] w-5 h-5"></i>
-                                Solicitudes de Entidades Judiciales
+                                <i data-lucide="handshake" class="text-[#d4af37] w-5 h-5"></i> Solicitudes de Alianzas (Institutos)
                             </h3>
-                            <p class="text-xs text-slate-400 mt-1">Colegios de Abogados y Estudios Jurídicos.</p>
+                            <p class="text-xs text-slate-400 mt-1">Instituciones que completaron el Pre-Acuerdo para emitir diplomas.</p>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="exportarConveniosFiltrados()" class="btn-success px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2">
-                                <i data-lucide="download" class="w-4 h-4"></i> EXPORTAR
-                            </button>
-                            <button onclick="cargarConveniosPanel()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-colors">
-                                <i data-lucide="refresh-cw" class="w-4 h-4"></i> REFRESCAR
-                            </button>
-                        </div>
+                        <button onclick="cargarConveniosPanel()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> REFRESCAR
+                        </button>
                     </div>
-
-                    <!-- ============ FILTROS CONVENIOS B2B (Restaurado) ============ -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6 p-4 bg-black/20 rounded-xl border border-[#d4af37]/10">
-                        <div>
-                            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1 block">Buscar</label>
-                            <input type="text" id="conv-filtro-buscar" placeholder="Institución, autoridad, CUIT..."
-                                   class="text-sm" oninput="aplicarFiltrosConvenios()">
-                        </div>
-                        <div>
-                            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1 block">Estado</label>
-                            <select id="conv-filtro-estado" class="text-sm" onchange="aplicarFiltrosConvenios()">
-                                <option value="">Todos</option>
-                                <option value="PENDIENTE">Pendiente</option>
-                                <option value="APROBADO">Aprobado</option>
-                                <option value="RECHAZADO">Rechazado</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1 block">Tipo Entidad</label>
-                            <select id="conv-filtro-tipo" class="text-sm" onchange="aplicarFiltrosConvenios()">
-                                <option value="">Todos</option>
-                                <option value="COLEGIO">Colegio</option>
-                                <option value="ESTUDIO_JURIDICO">Estudio Jurídico</option>
-                                <option value="OTRO">Otro</option>
-                            </select>
-                        </div>
-                        <div class="flex items-end">
-                            <button onclick="limpiarFiltrosConvenios()"
-                                    class="w-full bg-slate-700 hover:bg-slate-600 text-white py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-2">
-                                <i data-lucide="filter-x" class="w-4 h-4"></i> Limpiar
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                        <div class="glass-card p-4 border-l-4 border-amber-500/60">
-                            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Pendientes</p>
-                            <h3 class="text-2xl font-black text-amber-400 mt-1 font-mono" id="stat-conv-pendientes">0</h3>
-                        </div>
-                        <div class="glass-card p-4 border-l-4 border-emerald-500/60">
-                            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Aprobados</p>
-                            <h3 class="text-2xl font-black text-emerald-400 mt-1 font-mono" id="stat-conv-aprobados">0</h3>
-                        </div>
-                        <div class="glass-card p-4 border-l-4 border-red-500/60">
-                            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Rechazados</p>
-                            <h3 class="text-2xl font-black text-red-400 mt-1 font-mono" id="stat-conv-rechazados">0</h3>
-                        </div>
-                        <div class="glass-card p-4 border-l-4 border-[#d4af37]/60">
-                            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Total</p>
-                            <h3 class="text-2xl font-black text-[#d4af37] mt-1 font-mono" id="stat-conv-total">0</h3>
-                        </div>
-                    </div>
-
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
                             <thead>
                                 <tr>
-                                    <th class="p-3">Institución / Estudio</th>
-                                    <th class="p-3">Tipo</th>
-                                    <th class="p-3">Autoridad Solicitante</th>
-                                    <th class="p-3">Email</th>
+                                    <th class="p-3">Instituto</th>
+                                    <th class="p-3">Plan Elegido</th>
+                                    <th class="p-3">Pre-Acuerdo PDF</th>
                                     <th class="p-3">Estado</th>
                                     <th class="p-3 text-right">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="convenios-body">
-                                <tr><td colspan="6" class="p-4 text-center text-slate-400">Cargando solicitudes...</td></tr>
+                                <tr><td colspan="5" class="p-4 text-center text-slate-400">Cargando...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============ RED JUDICIAL (Abogados y Juzgados) ============ -->
+            <div id="view-red-judicial" class="tab-content space-y-6">
+                <div class="glass-card p-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b border-[#d4af37]/15">
+                        <div>
+                            <h3 class="font-bold text-lg text-white flex items-center gap-2">
+                                <i data-lucide="scale" class="text-[#d4af37] w-5 h-5"></i> Entidades Judiciales
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Estudios, Colegios y Juzgados que solicitan acceso al padrón de peritos.</p>
+                        </div>
+                        <button onclick="cargarRedJudicialPanel()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> REFRESCAR
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr>
+                                    <th class="p-3">Entidad / Estudio</th>
+                                    <th class="p-3">Autoridad</th>
+                                    <th class="p-3">Contacto</th>
+                                    <th class="p-3">Estado</th>
+                                    <th class="p-3 text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="red-judicial-body">
+                                <tr><td colspan="5" class="p-4 text-center text-slate-400">Cargando...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1290,7 +1265,8 @@
                                 <div class="permission-checkbox"><input type="checkbox" id="perm-campus" value="mod-campus" class="w-4 h-4"><label for="perm-campus" class="text-sm mb-0">Portal Científico</label></div>
                                 <div class="permission-checkbox"><input type="checkbox" id="perm-biblioteca" value="mod-biblioteca" class="w-4 h-4"><label for="perm-biblioteca" class="text-sm mb-0">Biblioteca</label></div>
                                 <div class="permission-checkbox"><input type="checkbox" id="perm-tesis" value="mod-tesis" class="w-4 h-4"><label for="perm-tesis" class="text-sm mb-0">Tesis</label></div>
-                                <div class="permission-checkbox"><input type="checkbox" id="perm-convenios" value="mod-convenios" class="w-4 h-4"><label for="perm-convenios" class="text-sm mb-0">Red Judicial B2B</label></div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-convenios" value="mod-convenios" class="w-4 h-4"><label for="perm-convenios" class="text-sm mb-0">Alianzas Institutos</label></div>
+                                <div class="permission-checkbox"><input type="checkbox" id="perm-red-judicial" value="mod-red-judicial" class="w-4 h-4"><label for="perm-red-judicial" class="text-sm mb-0">Red Judicial</label></div>
                                 <div class="permission-checkbox"><input type="checkbox" id="perm-aliados" value="mod-aliados" class="w-4 h-4"><label for="perm-aliados" class="text-sm mb-0">Institutos Aliados</label></div>
                                 <div class="permission-checkbox"><input type="checkbox" id="perm-cursos-b2b" value="mod-cursos-b2b" class="w-4 h-4"><label for="perm-cursos-b2b" class="text-sm mb-0">Auditoría Cursos</label></div>
                                 <div class="permission-checkbox"><input type="checkbox" id="perm-empresas" value="mod-empresas" class="w-4 h-4"><label for="perm-empresas" class="text-sm mb-0">Red de Empresas</label></div>
@@ -1613,7 +1589,7 @@
                     let html = '';
                     if (pendientes > 0) html += `<div onclick="showTab('solicitudes'); toggleNotificaciones();" class="p-3 rounded-lg hover:bg-[#d4af37]/10 cursor-pointer border-l-2 border-blue-500 mb-1.5"><p class="text-white font-bold text-xs">📥 ${pendientes} trámite(s) nuevo(s)</p><p class="text-slate-400 text-[10px] mt-0.5">Requieren revisión</p></div>`;
                     if (observados > 0) html += `<div onclick="showTab('solicitudes'); toggleNotificaciones();" class="p-3 rounded-lg hover:bg-[#d4af37]/10 cursor-pointer border-l-2 border-red-500 mb-1.5"><p class="text-white font-bold text-xs">⚠️ ${observados} observado(s)</p><p class="text-slate-400 text-[10px] mt-0.5">Esperando corrección</p></div>`;
-                    if (conveniosPend > 0) html += `<div onclick="showTab('convenios'); toggleNotificaciones();" class="p-3 rounded-lg hover:bg-[#d4af37]/10 cursor-pointer border-l-2 border-purple-500 mb-1.5"><p class="text-white font-bold text-xs">📜 ${conveniosPend} convenio(s) B2B pendiente(s)</p><p class="text-slate-400 text-[10px] mt-0.5">Aguardando aprobación</p></div>`;
+                    if (conveniosPend > 0) html += `<div onclick="showTab('convenios'); toggleNotificaciones();" class="p-3 rounded-lg hover:bg-[#d4af37]/10 cursor-pointer border-l-2 border-purple-500 mb-1.5"><p class="text-white font-bold text-xs">📜 ${conveniosPend} alianza(s) B2B pendiente(s)</p><p class="text-slate-400 text-[10px] mt-0.5">Aguardando aprobación</p></div>`;
                     if (html === '') html = `<div class="p-6 text-center text-slate-500 text-xs"><i data-lucide="check-circle" class="w-6 h-6 mx-auto mb-2 text-emerald-500 opacity-60"></i><p>Sin notificaciones</p></div>`;
                     lista.innerHTML = html;
                     lucide.createIcons();
@@ -1691,8 +1667,8 @@
                     html += solicitudes.map(x => `<div onclick="cerrarOmnibox(); abrirExpedientePorId('${x.id}', 'solicitudes')" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-500/10 cursor-pointer transition-colors"><div class="w-9 h-9 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center flex-shrink-0"><i data-lucide="inbox" class="w-4 h-4 text-blue-400"></i></div><div class="flex-1 min-w-0"><p class="text-white text-sm font-bold truncate">${x.nombres} ${x.apellidos}</p><p class="text-[10px] text-slate-400 font-mono">DNI ${x.dni} · ${x.estado}</p></div></div>`).join('');
                 }
                 if (convenios.length > 0) {
-                    html += `<div class="px-3 py-2 text-[10px] font-black text-purple-400 uppercase tracking-widest bg-black/30 rounded-md mb-1 mt-2">Convenios (${convenios.length})</div>`;
-                    html += convenios.map(x => `<div onclick="cerrarOmnibox(); showTab('convenios')" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-purple-500/10 cursor-pointer transition-colors"><div class="w-9 h-9 rounded-lg bg-purple-500/15 border border-purple-500/30 flex items-center justify-center flex-shrink-0"><i data-lucide="scale" class="w-4 h-4 text-purple-400"></i></div><div class="flex-1 min-w-0"><p class="text-white text-sm font-bold truncate">${x.institucion}</p><p class="text-[10px] text-slate-400 font-mono">${x.director_nombre || '—'} · ${x.estado}</p></div></div>`).join('');
+                    html += `<div class="px-3 py-2 text-[10px] font-black text-purple-400 uppercase tracking-widest bg-black/30 rounded-md mb-1 mt-2">Alianzas (${convenios.length})</div>`;
+                    html += convenios.map(x => `<div onclick="cerrarOmnibox(); showTab('convenios')" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-purple-500/10 cursor-pointer transition-colors"><div class="w-9 h-9 rounded-lg bg-purple-500/15 border border-purple-500/30 flex items-center justify-center flex-shrink-0"><i data-lucide="handshake" class="w-4 h-4 text-purple-400"></i></div><div class="flex-1 min-w-0"><p class="text-white text-sm font-bold truncate">${x.institucion}</p><p class="text-[10px] text-slate-400 font-mono">${x.director_nombre || '—'} · ${x.estado}</p></div></div>`).join('');
                 }
                 r.innerHTML = html;
                 lucide.createIcons();
@@ -1900,14 +1876,14 @@
                     }).join('');
                 }
                 if (tc > 0) {
-                    if (tp > 0) html += `<div class="text-[9px] font-black text-purple-400 uppercase tracking-widest px-2 pt-3 pb-1">Convenios B2B</div>`;
+                    if (tp > 0) html += `<div class="text-[9px] font-black text-purple-400 uppercase tracking-widest px-2 pt-3 pb-1">Alianzas B2B</div>`;
                     html += cv.map(cv2 => {
                         const h = Math.ceil((new Date(cv2.expira_en) - hoy) / 3600000);
                         const c = h <= 24 ? 'text-red-400' : h <= 48 ? 'text-amber-400' : 'text-purple-400';
                         const wa = (cv2.director_telefono || '').replace(/\D/g, '');
                         const msg = encodeURIComponent(`Hola ${cv2.director_nombre}, el Pre-Acuerdo de ${cv2.institucion} vence en ${h}hs.`);
                         return `<div class="flex items-center gap-3 p-3 rounded-lg bg-black/20 border border-purple-500/20 hover:border-purple-500/40 transition-all">
-                            <div class="w-9 h-9 rounded-lg bg-purple-500/15 border border-purple-500/30 flex items-center justify-center flex-shrink-0"><i data-lucide="scale" class="w-4 h-4 text-purple-400"></i></div>
+                            <div class="w-9 h-9 rounded-lg bg-purple-500/15 border border-purple-500/30 flex items-center justify-center flex-shrink-0"><i data-lucide="handshake" class="w-4 h-4 text-purple-400"></i></div>
                             <div class="flex-1 min-w-0"><p class="text-white text-xs font-bold truncate">${cv2.institucion}</p><p class="text-[10px] text-slate-400 truncate">${cv2.director_nombre || '—'}</p></div>
                             <div class="text-right flex-shrink-0"><p class="text-[10px] font-bold ${c}">${h}h</p></div>
                             ${wa ? `<a href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener" class="bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 p-2 rounded-lg transition-colors flex-shrink-0"><i data-lucide="message-circle" class="w-4 h-4"></i></a>` : ''}
@@ -1963,6 +1939,7 @@
                 'mod-auditoria': 'nav-auditoria', 'mod-padron': 'nav-padron',
                 'mod-campus': 'nav-campus', 'mod-biblioteca': 'nav-biblioteca',
                 'mod-tesis': 'nav-tesis', 'mod-convenios': 'nav-convenios',
+                'mod-red-judicial': 'nav-red-judicial',
                 'mod-aliados': 'nav-aliados', 'mod-cursos-b2b': 'nav-cursos-b2b',
                 'mod-empresas': 'nav-empresas'
             };
@@ -2056,7 +2033,9 @@
                 'auditoria':'Auditoría Comité', 'padron':'Padrón Nacional',
                 'financiero':'Cierre de Caja y Financiero', 'papelera':'Papelera',
                 'aliados':'Gestión de Aliados', 'cursos-b2b':'Auditoría de Cursos B2B',
-                'convenios':'Red Judicial (B2B)', 'empresas':'Red de Empresas',
+                'convenios':'Alianzas (Institutos)',
+                'red-judicial':'Red Judicial (Abogados)',
+                'empresas':'Red de Empresas',
                 'comite':'Comité Evaluador', 'campus':'Portal Científico',
                 'biblioteca':'Biblioteca', 'tesis':'Auditoría de Tesis',
                 'masiva':'Inyección Masiva', 'diseno':'Calibrador de Credenciales',
@@ -2074,6 +2053,7 @@
             if(id === 'aliados') cargarAliadosPanel();
             if(id === 'cursos-b2b') cargarCursosB2BPanel();
             if(id === 'convenios') cargarConveniosPanel();
+            if(id === 'red-judicial') cargarRedJudicialPanel();
             if(id === 'empresas') cargarEmpresasPanel();
             if(id === 'comite') cargarComitePanel();
             if(id === 'campus') cargarNoticiasPanel();
@@ -2088,7 +2068,7 @@
         }
 
         // ==========================================
-        // MENÚ MÓVIL (Entregable 3.1)
+        // MENÚ MÓVIL
         // ==========================================
         function toggleMenuMovil(abrir) {
             const overlay = document.getElementById('menu-movil-overlay');
@@ -2144,9 +2124,6 @@
             } catch (err) { console.error("Error Dashboard:", err); }
         }
 
-        // ==========================================
-        // EMBUDO DE CONVERSIÓN (Entregable 3.2)
-        // ==========================================
         async function cargarEmbudo() {
             try {
                 const [confRes, solRes, padRes] = await Promise.all([
@@ -2214,9 +2191,6 @@
             } catch (err) { console.error("Error gráficos:", err); }
         }
 
-        // ==========================================
-        // EXPORTACIÓN PARCIAL · PADRÓN (Entregable 4)
-        // ==========================================
         async function descargarReporteExcel() {
             try {
                 let padron = (padronCompleto && padronCompleto.length > 0) ? padronCompleto : null;
@@ -2374,7 +2348,7 @@
         }
 
         // ==========================================
-        // ABRIR EXPEDIENTE (con lock — Entregable 2)
+        // ABRIR EXPEDIENTE (con lock)
         // ==========================================
         async function abrirExpediente(item) {
             itemDossierActual = item;
@@ -2498,7 +2472,7 @@
         }
 
         // ==========================================
-        // LOCK MULTI-USUARIO (Entregable 2)
+        // LOCK MULTI-USUARIO
         // ==========================================
         async function intentarAdquirirLock(item) {
             const banner = document.getElementById('banner-bloqueo');
@@ -3585,9 +3559,6 @@
             } catch (err) { tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
         }
 
-        // ==========================================
-        // FILTROS DE SUSCRIPTORES (Restaurado)
-        // ==========================================
         function aplicarFiltrosSuscriptores() {
             const q = (document.getElementById('subs-buscar')?.value || '').toLowerCase().trim();
             const tbody = document.getElementById('suscriptores-body');
@@ -3625,9 +3596,6 @@
         async function toggleSuscriptor(id, estado) { await db.from('renmcycf_suscriptores').update({ activo: estado }).eq('id', id); cargarSuscriptoresPanel(); }
         async function eliminarSuscriptor(id) { if (!confirm("¿Eliminar?")) return; await db.from('renmcycf_suscriptores').delete().eq('id', id); cargarSuscriptoresPanel(); }
 
-        // ==========================================
-        // EXPORTACIÓN PARCIAL · SUSCRIPTORES (Entregable 4)
-        // ==========================================
         function exportarSuscriptores() {
             if (!suscriptoresCache || suscriptoresCache.length === 0) {
                 mostrarToast('No hay suscriptores para exportar', 'warning'); return;
@@ -3725,7 +3693,7 @@
                 const apellidos = document.getElementById('usr-apellidos').value.trim();
                 const permisos = [];
                 document.querySelectorAll('#form-usuarios input[type="checkbox"]:checked').forEach(cb => permisos.push(cb.value));
-                const modulos = rol === 'superadmin' ? ['mod-dashboard','mod-solicitudes','mod-auditoria','mod-padron','mod-campus','mod-biblioteca','mod-tesis','mod-convenios','mod-aliados','mod-cursos-b2b','mod-empresas','mod-sistema'] : permisos;
+                const modulos = rol === 'superadmin' ? ['mod-dashboard','mod-solicitudes','mod-auditoria','mod-padron','mod-campus','mod-biblioteca','mod-tesis','mod-convenios','mod-red-judicial','mod-aliados','mod-cursos-b2b','mod-empresas','mod-sistema'] : permisos;
                 const dbId = document.getElementById('usr-db-id').value;
                 const uid = document.getElementById('usr-uid').value.trim();
                 if (dbId) {
@@ -3920,145 +3888,119 @@
         }
 
         // ==========================================
-        // CONVENIOS
+        // ALIANZAS EDUCATIVAS (Institutos) — Simplificada
         // ==========================================
         async function cargarConveniosPanel() {
             const tbody = document.getElementById('convenios-body');
             if (!tbody) return;
-            tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">Cargando...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400"><i data-lucide="loader-2" class="animate-spin w-5 h-5 mx-auto"></i></td></tr>';
+            lucide.createIcons();
             try {
                 const { data, error } = await db.from('renmcycf_convenios').select('*').is('deleted_at', null).order('created_at', { ascending: false });
                 if (error) throw error;
                 conveniosCache = data || [];
-                const total = (data || []).length;
-                const pend = (data || []).filter(c => !c.estado || c.estado === 'PENDIENTE').length;
-                const aprob = (data || []).filter(c => c.estado === 'APROBADO').length;
-                const rech = (data || []).filter(c => c.estado === 'RECHAZADO').length;
-                if (document.getElementById('stat-conv-total')) document.getElementById('stat-conv-total').innerText = total;
-                if (document.getElementById('stat-conv-pendientes')) document.getElementById('stat-conv-pendientes').innerText = pend;
-                if (document.getElementById('stat-conv-aprobados')) document.getElementById('stat-conv-aprobados').innerText = aprob;
-                if (document.getElementById('stat-conv-rechazados')) document.getElementById('stat-conv-rechazados').innerText = rech;
                 if (!data || data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-center text-slate-400"><i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-slate-600"></i>No hay solicitudes.</td></tr>';
-                    lucide.createIcons(); return;
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-slate-400">No hay solicitudes de alianzas.</td></tr>';
+                    return;
                 }
-                aplicarFiltrosConvenios();
+                tbody.innerHTML = data.map(c => {
+                    const estado = c.estado || 'PENDIENTE';
+                    const ec = estado === 'APROBADO' ? 'bg-emerald-900/30 text-emerald-400' : estado === 'RECHAZADO' ? 'bg-red-900/30 text-red-400' : 'bg-amber-900/30 text-amber-400';
+                    const pdfBtn = c.pdf_url ? `<a href="${c.pdf_url}" target="_blank" class="flex items-center gap-1 text-blue-400 hover:text-blue-300 font-bold"><i data-lucide="file-text" class="w-4 h-4"></i> Ver Acuerdo</a>` : '<span class="text-slate-500 text-xs">Sin PDF</span>';
+                    const compBtn = c.comprobante_url ? `<a href="${c.comprobante_url}" target="_blank" class="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-bold mt-1 text-[10px]"><i data-lucide="receipt" class="w-3 h-3"></i> Comprobante</a>` : '';
+
+                    return `
+                    <tr class="border-b border-white/5 hover:bg-[#d4af37]/[0.02]">
+                        <td class="p-3">
+                            <span class="text-white font-bold block">${c.institucion || c.nombre_institucion || 'S/D'}</span>
+                            <span class="text-[10px] text-slate-400">${c.director_nombre || ''} · ${c.tel_institucional || ''}</span>
+                        </td>
+                        <td class="p-3">
+                            <span class="text-white font-bold text-xs">${c.plan_elegido === 'ANUAL' ? '12 Meses' : '6 Meses'}</span>
+                            <span class="text-[10px] block text-slate-400">${c.forma_pago || ''}</span>
+                        </td>
+                        <td class="p-3 text-xs">${pdfBtn}${compBtn}</td>
+                        <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${ec} border border-current">${estado}</span></td>
+                        <td class="p-3 text-right">
+                            <div class="flex justify-end gap-1.5 flex-wrap">
+                                ${estado !== 'APROBADO' ? `<button onclick="auditarConvenio('${c.id}', 'APROBADO')" class="btn-success px-3 py-1.5 rounded text-[10px] font-bold uppercase"><i data-lucide="check" class="w-3 h-3 inline mr-1"></i> Aprobar</button>` : ''}
+                                ${estado !== 'RECHAZADO' ? `<button onclick="auditarConvenio('${c.id}', 'RECHAZADO')" class="btn-danger px-3 py-1.5 rounded text-[10px] font-bold uppercase"><i data-lucide="x" class="w-3 h-3 inline mr-1"></i> Rechazar</button>` : ''}
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('');
+                lucide.createIcons();
             } catch (err) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-amber-400 text-xs font-bold"><i data-lucide="database" class="w-6 h-6 mx-auto mb-2"></i>Tabla 'renmcycf_convenios' en configuración.</td></tr>`;
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-amber-400 text-xs font-bold"><i data-lucide="database" class="w-6 h-6 mx-auto mb-2"></i>Tabla 'renmcycf_convenios' en configuración.</td></tr>`;
                 lucide.createIcons();
             }
         }
 
-        // ==========================================
-        // FILTROS DE CONVENIOS B2B (Restaurado)
-        // ==========================================
-        function aplicarFiltrosConvenios() {
-            const q = (document.getElementById('conv-filtro-buscar')?.value || '').toLowerCase().trim();
-            const estado = document.getElementById('conv-filtro-estado')?.value || '';
-            const tipo = document.getElementById('conv-filtro-tipo')?.value || '';
-
-            let lista = conveniosCache || [];
-
-            if (q) {
-                lista = lista.filter(c =>
-                    (c.institucion || c.nombre_institucion || '').toLowerCase().includes(q) ||
-                    (c.autoridad || c.autoridad_solicitante || '').toLowerCase().includes(q) ||
-                    (c.email || '').toLowerCase().includes(q) ||
-                    (c.cuit || '').toLowerCase().includes(q)
-                );
-            }
-            if (estado) {
-                lista = lista.filter(c => (c.estado || 'PENDIENTE') === estado);
-            }
-            if (tipo) {
-                lista = lista.filter(c => (c.tipo || '').toUpperCase().includes(tipo));
-            }
-
-            renderConveniosTabla(lista);
-        }
-
-        function limpiarFiltrosConvenios() {
-            const a = document.getElementById('conv-filtro-buscar'); if (a) a.value = '';
-            const b = document.getElementById('conv-filtro-estado'); if (b) b.value = '';
-            const c = document.getElementById('conv-filtro-tipo'); if (c) c.value = '';
-            aplicarFiltrosConvenios();
-        }
-
-        function renderConveniosTabla(lista) {
-            const tbody = document.getElementById('convenios-body');
-            if (!tbody) return;
-            if (!lista || lista.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-center text-slate-400"><i data-lucide="search-x" class="w-8 h-8 mx-auto mb-2 text-slate-600"></i>Sin resultados con los filtros aplicados.</td></tr>';
-                lucide.createIcons(); return;
-            }
-            tbody.innerHTML = lista.map(c => {
-                const estado = c.estado || 'PENDIENTE';
-                const ec = estado === 'APROBADO' ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-500/30'
-                         : estado === 'RECHAZADO' ? 'bg-red-900/30 text-red-400 border border-red-500/30'
-                         : 'bg-amber-900/30 text-amber-400 border border-amber-500/30';
-                const tc = (c.tipo === 'ESTUDIO_JURIDICO' || (c.tipo || '').toLowerCase().includes('estudio'))
-                         ? 'bg-purple-900/30 text-purple-300 border border-purple-500/30'
-                         : 'bg-blue-900/30 text-blue-300 border border-blue-500/30';
-                const tl = (c.tipo || '').toLowerCase().includes('estudio') ? 'Estudio Jurídico'
-                         : (c.tipo || '').toLowerCase().includes('colegio') ? 'Colegio' : (c.tipo || 'Entidad');
-                const fecha = c.created_at ? new Date(c.created_at).toLocaleDateString('es-AR') : '—';
-                return `<tr class="border-b border-white/5 hover:bg-[#d4af37]/[0.02]">
-                    <td class="p-3"><span class="text-white font-bold block">${c.institucion || c.nombre_institucion || 'S/D'}</span><span class="text-[10px] text-slate-400">${fecha}</span></td>
-                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${tc}">${tl}</span></td>
-                    <td class="p-3 text-xs text-slate-300">${c.autoridad || c.autoridad_solicitante || 'S/D'}</td>
-                    <td class="p-3 text-xs font-mono text-slate-400">${c.email ? `<a href="mailto:${c.email}" class="hover:text-[#d4af37]">${c.email}</a>` : '—'}</td>
-                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${ec}">${estado}</span></td>
-                    <td class="p-3 text-right">
-                        <div class="flex justify-end gap-1.5 flex-wrap">
-                            ${estado !== 'APROBADO' ? `<button onclick="auditarConvenio('${c.id}', 'APROBADO')" class="btn-success px-3 py-1.5 rounded text-[10px] font-bold uppercase"><i data-lucide="check" class="w-3 h-3 inline mr-1"></i> Aprobar</button>` : ''}
-                            ${estado !== 'RECHAZADO' ? `<button onclick="auditarConvenio('${c.id}', 'RECHAZADO')" class="btn-danger px-3 py-1.5 rounded text-[10px] font-bold uppercase"><i data-lucide="x" class="w-3 h-3 inline mr-1"></i> Rechazar</button>` : ''}
-                            ${estado !== 'PENDIENTE' ? `<button onclick="auditarConvenio('${c.id}', 'PENDIENTE')" class="bg-slate-700 text-white px-3 py-1.5 rounded text-[10px] font-bold uppercase"><i data-lucide="rotate-ccw" class="w-3 h-3 inline mr-1"></i> Revertir</button>` : ''}
-                        </div>
-                    </td>
-                </tr>`;
-            }).join('');
-            lucide.createIcons();
-        }
-        window.aplicarFiltrosConvenios = aplicarFiltrosConvenios;
-        window.limpiarFiltrosConvenios = limpiarFiltrosConvenios;
-        window.renderConveniosTabla = renderConveniosTabla;
-
         async function auditarConvenio(id, estado) {
-            const msg = estado === 'APROBADO' ? '¿Aprobar convenio?' : estado === 'RECHAZADO' ? '¿Rechazar convenio?' : '¿Revertir a PENDIENTE?';
-            if (!confirm(msg)) return;
+            if (!confirm(`¿Mover alianza a estado ${estado}?`)) return;
             await db.from('renmcycf_convenios').update({ estado }).eq('id', id);
             await logAccion(`CONVENIO_${estado}`, 'convenios', id, { estado });
-            mostrarToast(`Convenio: ${estado}`, 'success');
+            mostrarToast(`Alianza: ${estado}`, 'success');
             cargarConveniosPanel();
         }
 
         // ==========================================
-        // EXPORTACIÓN PARCIAL · CONVENIOS (Entregable 4)
+        // RED JUDICIAL (Abogados y Juzgados)
         // ==========================================
-        function exportarConveniosFiltrados() {
-            if (!conveniosCache || conveniosCache.length === 0) {
-                mostrarToast('No hay convenios para exportar', 'warning'); return;
+        async function cargarRedJudicialPanel() {
+            const tbody = document.getElementById('red-judicial-body');
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400"><i data-lucide="loader-2" class="animate-spin w-5 h-5 mx-auto"></i></td></tr>';
+            lucide.createIcons();
+            try {
+                const { data, error } = await db.from('renmcycf_red_judicial').select('*').is('deleted_at', null).order('created_at', { ascending: false });
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-slate-400">No hay solicitudes de entidades judiciales.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.map(r => {
+                    const estado = r.estado || 'PENDIENTE';
+                    const ec = estado === 'APROBADO' ? 'bg-emerald-900/30 text-emerald-400' : estado === 'RECHAZADO' ? 'bg-red-900/30 text-red-400' : 'bg-amber-900/30 text-amber-400';
+                    return `
+                    <tr class="border-b border-white/5 hover:bg-purple-900/10">
+                        <td class="p-3">
+                            <span class="text-white font-bold block">${r.entidad}</span>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-purple-900/30 text-purple-300">${r.tipo || 'Entidad'}</span>
+                        </td>
+                        <td class="p-3 text-xs text-slate-300">${r.autoridad || '—'}<br><span class="text-[10px] text-slate-500">Mat: ${r.matricula_autoridad || '—'}</span></td>
+                        <td class="p-3 text-xs text-slate-400">${r.email ? `<a href="mailto:${r.email}" class="text-blue-400 hover:underline">${r.email}</a>` : '—'}<br>${r.telefono || ''}</td>
+                        <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${ec} border border-current">${estado}</span></td>
+                        <td class="p-3 text-right">
+                            <div class="flex justify-end gap-1.5 flex-wrap">
+                                ${estado !== 'APROBADO' ? `<button onclick="auditarRedJudicial('${r.id}', 'APROBADO')" class="btn-success px-3 py-1.5 rounded text-[10px] font-bold uppercase"><i data-lucide="check" class="w-3 h-3 inline mr-1"></i> Aprobar Acceso</button>` : ''}
+                                ${estado !== 'RECHAZADO' ? `<button onclick="auditarRedJudicial('${r.id}', 'RECHAZADO')" class="btn-danger px-3 py-1.5 rounded text-[10px] font-bold uppercase"><i data-lucide="x" class="w-3 h-3 inline mr-1"></i> Denegar</button>` : ''}
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('');
+                lucide.createIcons();
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-amber-400 text-xs font-bold"><i data-lucide="database" class="w-6 h-6 mx-auto mb-2"></i>Tabla 'renmcycf_red_judicial' en configuración.</td></tr>`;
+                lucide.createIcons();
             }
-            const data = conveniosCache.map(c => ({
-                'Institución': c.institucion || c.nombre_institucion || '',
-                'Tipo': c.tipo || '', 'Autoridad': c.autoridad || c.autoridad_solicitante || '',
-                'Email': c.email || '', 'Estado': c.estado || 'PENDIENTE',
-                'CUIT': c.cuit || '', 'Fecha': c.created_at ? new Date(c.created_at).toLocaleDateString('es-AR') : ''
-            }));
-            const ws = XLSX.utils.json_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Convenios');
-            XLSX.writeFile(wb, `convenios_${new Date().toISOString().split('T')[0]}.xlsx`);
-            mostrarToast(`Exportados ${data.length} convenios`, 'success');
         }
-        window.exportarConveniosFiltrados = exportarConveniosFiltrados;
+        async function auditarRedJudicial(id, estado) {
+            const msj = estado === 'APROBADO' ? '¿Aprobar acceso al padrón para esta entidad?' : '¿Rechazar solicitud?';
+            if (!confirm(msj)) return;
+            await db.from('renmcycf_red_judicial').update({ estado }).eq('id', id);
+            await logAccion(`RED_JUDICIAL_${estado}`, 'red-judicial', id, { estado });
+            mostrarToast(`Red Judicial: ${estado}`, 'success');
+            cargarRedJudicialPanel();
+        }
 
         // ==========================================
         // INIT
         // ==========================================
         window.addEventListener('DOMContentLoaded', async () => {
             await verificarSesion();
-            // ✅ FIX: validar sobre el input REAL del panel (edit-dni)
             asociarValidacionInput('edit-dni', validarDni);
             setTimeout(() => {
                 asociarValidacionInput('edit-dni', validarDni);
