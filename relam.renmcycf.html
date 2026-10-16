@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELAM · Red Latinoamericana de Matriculados</title>
+    <title>RELAM · Red Latinoamericana de Acreditación y Validación</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -75,11 +75,10 @@
                 </div>
                 <div class="leading-tight">
                     <span class="font-title font-black text-xl text-white tracking-tight">RELAM</span>
-                    <span class="block text-[8px] text-forenseGold font-bold uppercase tracking-[0.25em]">Impulsado por RENMCYCF</span>
+                    <span class="block text-[8px] text-forenseGold font-bold uppercase tracking-[0.25em]">Tecnología RENMCYCF</span>
                 </div>
             </div>
             <div class="hidden md:flex gap-6 items-center">
-                <a href="#paises" class="text-xs font-bold text-slate-300 hover:text-forenseGold uppercase tracking-widest transition">Países</a>
                 <a href="#academias" class="text-xs font-bold text-slate-300 hover:text-forenseGold uppercase tracking-widest transition">Academias B2B</a>
                 <a href="#profesionales" class="btn-gold px-6 py-2.5 rounded-lg text-[10px]">Acreditación B2C</a>
             </div>
@@ -145,45 +144,65 @@
 
             <div class="grid md:grid-cols-2 gap-8">
                 <!-- B2B -->
-                <div id="academias" class="bg-slate-50 border border-slate-200 rounded-3xl p-10 hover:shadow-2xl hover:border-forenseGold/50 transition-all" data-aos="fade-right">
+                <div id="academias" class="bg-slate-50 border border-slate-200 rounded-3xl p-10 hover:shadow-2xl hover:border-forenseGold/50 transition-all flex flex-col" data-aos="fade-right">
                     <div class="w-14 h-14 bg-forenseNavy rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                         <i data-lucide="building" class="w-7 h-7 text-forenseGold"></i>
                     </div>
                     <h3 class="font-title text-2xl font-black text-forenseNavy uppercase mb-3">Para Academias e Institutos</h3>
-                    <p class="text-slate-600 mb-8 leading-relaxed">Emita certificaciones con un <strong>doble sello de prestigio internacional</strong>. Usted aporta la currícula y su identidad visual; nosotros aportamos el Hash criptográfico, el QR y la página de verificación alojada en nuestros servidores.</p>
+                    <p class="text-slate-600 mb-8 leading-relaxed">Asóciese con nuestra plataforma mediante un Convenio de Alianza Estratégica Internacional. Usted aporta la currícula; nosotros aportamos el Hash criptográfico, el QR y la página de verificación.</p>
                     
-                    <ul class="space-y-4 mb-10">
+                    <ul class="space-y-4 mb-10 flex-1">
                         <li class="flex items-start gap-3 text-sm text-slate-700 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i> Cobros simplificados en USD vía Stripe.</li>
                         <li class="flex items-start gap-3 text-sm text-slate-700 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i> Formularios dinámicos adaptados a identificaciones fiscales locales (RUT, NIT, RFC).</li>
-                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i> Posicionamiento en el Directorio Académico Latinoamericano.</li>
+                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i> Inclusión en el Directorio de Aliados Internacionales.</li>
                     </ul>
 
-                    <button class="w-full bg-forenseNavy text-white hover:bg-slate-800 font-black uppercase tracking-widest text-xs px-6 py-4 rounded-xl transition-colors">
-                        Solicitar Convenio Internacional
+                    <button class="w-full bg-forenseNavy text-white hover:bg-slate-800 font-black uppercase tracking-widest text-xs px-6 py-4 rounded-xl transition-colors mt-auto">
+                        Solicitar Convenio Institucional
                     </button>
                 </div>
 
                 <!-- B2C -->
-                <div id="profesionales" class="bg-forenseNavy border border-forenseNavy rounded-3xl p-10 hover:shadow-2xl hover:shadow-forenseGold/20 hover:border-forenseGold/50 transition-all relative overflow-hidden" data-aos="fade-left">
+                <div id="profesionales" class="bg-forenseNavy border border-forenseNavy rounded-3xl p-10 hover:shadow-2xl hover:shadow-forenseGold/20 hover:border-forenseGold/50 transition-all relative overflow-hidden flex flex-col" data-aos="fade-left">
                     <div class="absolute inset-0 bg-gradient-to-br from-forenseGold/5 to-transparent pointer-events-none"></div>
-                    <div class="relative z-10">
+                    <div class="relative z-10 flex flex-col h-full">
                         <div class="w-14 h-14 bg-forenseGold/20 border border-forenseGold/40 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                             <i data-lucide="user-badge" class="w-7 h-7 text-forenseGold"></i>
                         </div>
                         <h3 class="font-title text-2xl font-black text-white uppercase mb-3">Para Profesionales Forenses</h3>
                         <p class="text-slate-300 mb-8 leading-relaxed">No importa si en su país es "Licenciado", "Tecnólogo" o "Perito". Homologamos su perfil mediante una tabla de equivalencias regional y le otorgamos una <strong>Acreditación Privada Internacional</strong>.</p>
                         
-                        <ul class="space-y-4 mb-10">
-                            <li class="flex items-start gap-3 text-sm text-slate-300 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0"></i> Credencial Digital y Legajo en la nube 24/7.</li>
-                            <li class="flex items-start gap-3 text-sm text-slate-300 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0"></i> Alta en el Padrón Continental consultado por aseguradoras.</li>
-                            <li class="flex items-start gap-3 text-sm text-slate-300 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0"></i> Pago de arancel anual seguro y en su moneda local.</li>
+                        <ul class="space-y-4 mb-8 flex-1">
+                            <li class="flex items-start gap-3 text-sm text-slate-300 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0"></i> Credencial Digital privada.</li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0"></i> Alta en el Directorio Continental.</li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0"></i> Auditoría técnica segura (pago no reembolsable en USD).</li>
                         </ul>
 
-                        <button class="w-full btn-gold px-6 py-4 rounded-xl text-xs">
-                            Iniciar Acreditación Internacional
-                        </button>
+                        <div class="mt-auto">
+                            <!-- Fricción Legal UX -->
+                            <div class="mb-3 text-[9px] text-slate-400 text-center leading-tight px-4 opacity-80">
+                                Al iniciar el proceso, acepta los Términos y Condiciones y se somete a la jurisdicción de Córdoba, Argentina.
+                            </div>
+                            <button class="w-full btn-gold px-6 py-4 rounded-xl text-xs">
+                                Iniciar Acreditación Internacional
+                            </button>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AVISO LEGAL PRE-FOOTER -->
+    <section class="py-12 bg-slate-100 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm">
+                <h4 class="text-xs font-black text-forenseNavy uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <i data-lucide="scale" class="w-4 h-4 text-forenseGold"></i> Aviso Legal para Postulantes y Entidades Internacionales
+                </h4>
+                <p class="text-xs text-slate-600 leading-relaxed text-justify">
+                    RENMCYCF y su red RELAM constituyen un sistema de validación privada de antecedentes académicos, operado tecnológicamente por ASARI S.A.S. desde la República Argentina. La credencial emitida acredita la revisión técnica del perfil, pero no sustituye, reemplaza ni otorga la colegiatura, matriculación estatal ni las habilitaciones procesales u operativas exigidas por los Ministerios o Poderes Judiciales de los respectivos países de residencia. Todos los aranceles corresponden al proceso de auditoría y resultan estrictamente no reembolsables.
+                </p>
             </div>
         </div>
     </section>
@@ -198,8 +217,8 @@
                     <p class="text-[8px] text-slate-500 uppercase tracking-widest">Tecnología ASARI Core</p>
                 </div>
             </div>
-            <p class="text-[10px] text-slate-500 uppercase tracking-widest text-center">
-                Un proyecto de expansión de RENMCYCF Argentina.
+            <p class="text-[10px] text-slate-500 uppercase tracking-widest text-center md:text-right">
+                Tecnología y Soporte ASARI S.A.S. - Todos los derechos de software reservados.
             </p>
         </div>
     </footer>
