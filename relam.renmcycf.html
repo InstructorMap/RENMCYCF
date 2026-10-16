@@ -82,6 +82,11 @@
                 <a href="#academias" class="text-xs font-bold text-slate-300 hover:text-forenseGold uppercase tracking-widest transition">Academias B2B</a>
                 <a href="#profesionales" class="btn-gold px-6 py-2.5 rounded-lg text-[10px]">Acreditación B2C</a>
             </div>
+            <!-- Selector Geo activo (lo pinta el Cerebro Geo-IP) -->
+            <div class="hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3 py-1.5">
+                <span id="geo-bandera-activa" class="text-base">🇦🇷</span>
+                <span id="geo-pais-activo" class="text-[10px] font-bold text-white uppercase tracking-widest">Argentina</span>
+            </div>
         </div>
     </nav>
 
@@ -157,6 +162,15 @@
                         <li class="flex items-start gap-3 text-sm text-slate-700 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i> Inclusión en el Directorio de Aliados Internacionales.</li>
                     </ul>
 
+                    <!-- Pasarela Transferencia (visible sólo en AR por el Cerebro Geo-IP) -->
+                    <div id="metodo-transferencia" class="mb-4 text-[10px] text-slate-500 text-center uppercase tracking-widest">
+                        Pago local por transferencia bancaria (ARS)
+                    </div>
+                    <!-- Pasarela Stripe (visible en el resto de LATAM por el Cerebro Geo-IP) -->
+                    <div id="metodo-stripe" class="hidden mb-4 text-[10px] text-slate-500 text-center uppercase tracking-widest">
+                        Pago internacional con tarjeta vía Stripe (USD)
+                    </div>
+
                     <button class="w-full bg-forenseNavy text-white hover:bg-slate-800 font-black uppercase tracking-widest text-xs px-6 py-4 rounded-xl transition-colors mt-auto">
                         Solicitar Convenio Institucional
                     </button>
@@ -226,6 +240,197 @@
     <script>
         AOS.init({ duration: 800, once: true });
         lucide.createIcons();
+    </script>
+
+    <!-- ============================================================
+         🧠 CEREBRO GEO-IP · RELAM
+         ============================================================ -->
+    <script>
+    /* ============================================================
+       🧠 CEREBRO GEO-IP · RELAM
+       Detección de país vía IP + mutación de DOM para adaptar
+       variables legales, impositivas y de pago.
+       Vanilla JS · Cero backend · Fallback silencioso a AR
+       ============================================================ */
+    (function () {
+        'use strict';
+
+        /* ------------------------------------------------------------
+           1. MAPA DE CONFIGURACIÓN POR PAÍS (ISO 2)
+           ------------------------------------------------------------ */
+        const GEO_MAP = {
+            AR: { pais: 'Argentina', bandera: '🇦🇷', moneda: 'ARS', pasarela: 'TRANSFERENCIA', fiscal: 'CUIT', documento: 'DNI',        prefijo: '+54'  },
+            UY: { pais: 'Uruguay',   bandera: '🇺🇾', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RUT',  documento: 'CI',         prefijo: '+598' },
+            PY: { pais: 'Paraguay',  bandera: '🇵🇾', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RUC',  documento: 'CI',         prefijo: '+595' },
+            BO: { pais: 'Bolivia',   bandera: '🇧🇴', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'NIT',  documento: 'CI',         prefijo: '+591' },
+            PE: { pais: 'Perú',      bandera: '🇵🇪', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RUC',  documento: 'DNI',        prefijo: '+51'  },
+            MX: { pais: 'México',    bandera: '🇲🇽', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RFC',  documento: 'CURP / INE', prefijo: '+52'  }
+        };
+
+        const PAIS_FALLBACK = 'AR';
+        const API_URL = 'https://ipapi.co/json/';
+
+        /* Estado global del cerebro (accesible para debugging) */
+        window.RELAM_GEO = {
+            codigo: PAIS_FALLBACK,
+            config: GEO_MAP[PAIS_FALLBACK],
+            origen: 'default'
+        };
+
+        /* ------------------------------------------------------------
+           2. HELPERS DE MUTACIÓN DEL DOM
+           ------------------------------------------------------------ */
+
+        function setTexto(selector, valor) {
+            const nodos = document.querySelectorAll(selector);
+            nodos.forEach(function (el) {
+                const tieneAsterisco = /\*\s*$/.test(el.textContent || '');
+                el.textContent = tieneAsterisco ? valor + ' *' : valor;
+            });
+        }
+
+        function aplicarContextoGeo(codigoPais) {
+            const cfg = GEO_MAP[codigoPais] || GEO_MAP[PAIS_FALLBACK];
+
+            /* 2.1 — Labels fiscales (CUIT / RUT / RUC / NIT / RFC) */
+            setTexto('[data-geo="fiscal"]', cfg.fiscal);
+            setTexto('label[data-geo="fiscal"]', cfg.fiscal);
+            document.querySelectorAll('label').forEach(function (lbl) {
+                if (/^\s*CUIT\s*\*?\s*$/.test(lbl.textContent)) {
+                    lbl.textContent = cfg.fiscal + ' *';
+                }
+            });
+
+            /* 2.2 — Labels de documento (DNI / CI / CURP / INE) */
+            setTexto('[data-geo="documento"]', cfg.documento);
+            setTexto('label[data-geo="documento"]', cfg.documento);
+            document.querySelectorAll('label').forEach(function (lbl) {
+                if (/^\s*DNI\s*\*?\s*$/.test(lbl.textContent)) {
+                    lbl.textContent = cfg.documento + ' *';
+                }
+            });
+
+            /* 2.3 — Prefijos telefónicos en inputs y placeholders */
+            document.querySelectorAll('[data-geo="prefijo"]').forEach(function (input) {
+                if (input.tagName === 'INPUT' || input.tagName === 'TEXTAREA') {
+                    if (!input.value) {
+                        input.placeholder = cfg.prefijo + ' ...';
+                    }
+                    input.dataset.prefijo = cfg.prefijo;
+                } else {
+                    input.textContent = cfg.prefijo;
+                }
+            });
+
+            /* 2.4 — Reemplazo de prefijos +54 hardcodeados en placeholders */
+            document.querySelectorAll('input[type="tel"], input[placeholder*="+54"]').forEach(function (inp) {
+                if (inp.placeholder && inp.placeholder.indexOf('+54') === 0) {
+                    inp.placeholder = inp.placeholder.replace(/^\+54/, cfg.prefijo);
+                }
+            });
+
+            /* 2.5 — Mostrar / Ocultar pasarelas de pago */
+            const divTransferencia = document.getElementById('metodo-transferencia');
+            const divStripe        = document.getElementById('metodo-stripe');
+
+            if (cfg.pasarela === 'TRANSFERENCIA') {
+                if (divTransferencia) divTransferencia.classList.remove('hidden');
+                if (divStripe)        divStripe.classList.add('hidden');
+            } else {
+                if (divTransferencia) divTransferencia.classList.add('hidden');
+                if (divStripe)        divStripe.classList.remove('hidden');
+            }
+
+            /* 2.6 — Símbolo de moneda en precios (si el DOM lo expone) */
+            document.querySelectorAll('[data-geo="moneda"]').forEach(function (el) {
+                el.textContent = cfg.moneda;
+            });
+
+            /* 2.7 — Selector manual en el navbar */
+            const banderaActiva = document.getElementById('geo-bandera-activa');
+            const paisActivo    = document.getElementById('geo-pais-activo');
+            if (banderaActiva) banderaActiva.textContent = cfg.bandera;
+            if (paisActivo)    paisActivo.textContent    = cfg.pais;
+
+            /* 2.8 — Atributo en <html> para estilos condicionales por país */
+            document.documentElement.setAttribute('data-geo-pais', codigoPais);
+            document.documentElement.setAttribute('data-geo-moneda', cfg.moneda);
+            document.documentElement.setAttribute('data-geo-pasarela', cfg.pasarela);
+
+            /* 2.9 — Actualiza estado global para debugging */
+            window.RELAM_GEO.codigo = codigoPais;
+            window.RELAM_GEO.config = cfg;
+        }
+
+        /* ------------------------------------------------------------
+           3. LECTURA DE OVERRIDE POR URL (?country=MX)
+           ------------------------------------------------------------ */
+        function getOverridePorURL() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const override = (params.get('country') || '').toUpperCase().trim();
+                return GEO_MAP[override] ? override : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        /* ------------------------------------------------------------
+           4. DETECCIÓN VÍA IP (Fetch + Fallback silencioso)
+           ------------------------------------------------------------ */
+        function detectarPais() {
+            const override = getOverridePorURL();
+            if (override) {
+                window.RELAM_GEO.origen = 'url';
+                aplicarContextoGeo(override);
+                return;
+            }
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(function () { controller.abort(); }, 5000);
+
+            fetch(API_URL, { signal: controller.signal })
+                .then(function (res) {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.json();
+                })
+                .then(function (data) {
+                    clearTimeout(timeoutId);
+                    const codigo = (data && data.country_code ? String(data.country_code).toUpperCase() : '')
+                        || PAIS_FALLBACK;
+
+                    const codigoFinal = GEO_MAP[codigo] ? codigo : PAIS_FALLBACK;
+
+                    window.RELAM_GEO.origen = GEO_MAP[codigo] ? 'ip' : 'ip-no-mapeado';
+                    aplicarContextoGeo(codigoFinal);
+                })
+                .catch(function () {
+                    clearTimeout(timeoutId);
+                    window.RELAM_GEO.origen = 'fallback';
+                    aplicarContextoGeo(PAIS_FALLBACK);
+                });
+        }
+
+        /* ------------------------------------------------------------
+           5. API PÚBLICA PARA REUTILIZAR DESDE OTROS SCRIPTS
+           ------------------------------------------------------------ */
+        window.RELAM_GEO.aplicarPais = function (codigo) {
+            if (GEO_MAP[codigo]) {
+                window.RELAM_GEO.origen = 'manual';
+                aplicarContextoGeo(codigo);
+            }
+        };
+
+        /* ------------------------------------------------------------
+           6. ARRANQUE
+           ------------------------------------------------------------ */
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', detectarPais);
+        } else {
+            detectarPais();
+        }
+
+    })();
     </script>
 </body>
 </html>
