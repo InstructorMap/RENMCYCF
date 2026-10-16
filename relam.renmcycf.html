@@ -57,6 +57,8 @@
             border: 1px solid rgba(212, 175, 55, 0.15); border-radius: 16px; transition: all 0.4s ease;
         }
         .country-card:hover { border-color: #d4af37; transform: translateY(-5px); box-shadow: 0 20px 40px -10px rgba(212, 175, 55, 0.2); }
+        /* Banderas como imagen, consistente en Windows/Mac/Linux */
+        .flag-img { display: inline-block; width: 24px; height: 18px; border-radius: 3px; vertical-align: middle; object-fit: cover; }
     </style>
 </head>
 <body class="antialiased selection:bg-forenseGold selection:text-forenseNavy">
@@ -82,9 +84,11 @@
                 <a href="#academias" class="text-xs font-bold text-slate-300 hover:text-forenseGold uppercase tracking-widest transition">Academias B2B</a>
                 <a href="#profesionales" class="btn-gold px-6 py-2.5 rounded-lg text-[10px]">Acreditación B2C</a>
             </div>
-            <!-- Selector Geo activo (lo pinta el Cerebro Geo-IP) -->
+            <!-- Selector Geo activo (lo pinta el Cerebro Geo-IP con imagen SVG) -->
             <div class="hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3 py-1.5">
-                <span id="geo-bandera-activa" class="text-base">🇦🇷</span>
+                <span id="geo-bandera-activa" class="inline-flex items-center">
+                    <img src="https://flagcdn.com/24x18/ar.png" srcset="https://flagcdn.com/48x36/ar.png 2x" alt="Argentina" class="flag-img">
+                </span>
                 <span id="geo-pais-activo" class="text-[10px] font-bold text-white uppercase tracking-widest">Argentina</span>
             </div>
         </div>
@@ -97,25 +101,31 @@
         <div class="hero-glow bg-blue-900/20 w-[500px] h-[500px] bottom-[-200px] left-[-100px]"></div>
 
         <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
-            <!-- Badges Países -->
+            <!-- Badges Países (banderas como imágenes PNG) -->
             <div class="inline-flex flex-wrap justify-center gap-3 mb-8" data-aos="fade-down">
                 <div class="bg-white/5 border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2">
-                    <span class="text-lg">🇦🇷</span><span class="text-[10px] font-bold text-white uppercase tracking-widest">Argentina</span>
+                    <img src="https://flagcdn.com/24x18/ar.png" srcset="https://flagcdn.com/48x36/ar.png 2x" alt="Argentina" class="flag-img">
+                    <span class="text-[10px] font-bold text-white uppercase tracking-widest">Argentina</span>
                 </div>
                 <div class="bg-white/5 border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2">
-                    <span class="text-lg">🇺🇾</span><span class="text-[10px] font-bold text-white uppercase tracking-widest">Uruguay</span>
+                    <img src="https://flagcdn.com/24x18/uy.png" srcset="https://flagcdn.com/48x36/uy.png 2x" alt="Uruguay" class="flag-img">
+                    <span class="text-[10px] font-bold text-white uppercase tracking-widest">Uruguay</span>
                 </div>
                 <div class="bg-white/5 border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2">
-                    <span class="text-lg">🇵🇾</span><span class="text-[10px] font-bold text-white uppercase tracking-widest">Paraguay</span>
+                    <img src="https://flagcdn.com/24x18/py.png" srcset="https://flagcdn.com/48x36/py.png 2x" alt="Paraguay" class="flag-img">
+                    <span class="text-[10px] font-bold text-white uppercase tracking-widest">Paraguay</span>
                 </div>
                 <div class="bg-white/5 border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2">
-                    <span class="text-lg">🇧🇴</span><span class="text-[10px] font-bold text-white uppercase tracking-widest">Bolivia</span>
+                    <img src="https://flagcdn.com/24x18/bo.png" srcset="https://flagcdn.com/48x36/bo.png 2x" alt="Bolivia" class="flag-img">
+                    <span class="text-[10px] font-bold text-white uppercase tracking-widest">Bolivia</span>
                 </div>
                 <div class="bg-white/5 border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2">
-                    <span class="text-lg">🇵🇪</span><span class="text-[10px] font-bold text-white uppercase tracking-widest">Perú</span>
+                    <img src="https://flagcdn.com/24x18/pe.png" srcset="https://flagcdn.com/48x36/pe.png 2x" alt="Perú" class="flag-img">
+                    <span class="text-[10px] font-bold text-white uppercase tracking-widest">Perú</span>
                 </div>
                 <div class="bg-white/5 border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2">
-                    <span class="text-lg">🇲🇽</span><span class="text-[10px] font-bold text-white uppercase tracking-widest">México</span>
+                    <img src="https://flagcdn.com/24x18/mx.png" srcset="https://flagcdn.com/48x36/mx.png 2x" alt="México" class="flag-img">
+                    <span class="text-[10px] font-bold text-white uppercase tracking-widest">México</span>
                 </div>
             </div>
 
@@ -251,20 +261,22 @@
        Detección de país vía IP + mutación de DOM para adaptar
        variables legales, impositivas y de pago.
        Vanilla JS · Cero backend · Fallback silencioso a AR
+       Banderas como imágenes PNG (compatibles con Windows).
        ============================================================ */
     (function () {
         'use strict';
 
         /* ------------------------------------------------------------
            1. MAPA DE CONFIGURACIÓN POR PAÍS (ISO 2)
+           `bandera` guarda el código ISO en minúscula para flagcdn.com
            ------------------------------------------------------------ */
         const GEO_MAP = {
-            AR: { pais: 'Argentina', bandera: '🇦🇷', moneda: 'ARS', pasarela: 'TRANSFERENCIA', fiscal: 'CUIT', documento: 'DNI',        prefijo: '+54'  },
-            UY: { pais: 'Uruguay',   bandera: '🇺🇾', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RUT',  documento: 'CI',         prefijo: '+598' },
-            PY: { pais: 'Paraguay',  bandera: '🇵🇾', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RUC',  documento: 'CI',         prefijo: '+595' },
-            BO: { pais: 'Bolivia',   bandera: '🇧🇴', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'NIT',  documento: 'CI',         prefijo: '+591' },
-            PE: { pais: 'Perú',      bandera: '🇵🇪', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RUC',  documento: 'DNI',        prefijo: '+51'  },
-            MX: { pais: 'México',    bandera: '🇲🇽', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RFC',  documento: 'CURP / INE', prefijo: '+52'  }
+            AR: { pais: 'Argentina', bandera: 'ar', moneda: 'ARS', pasarela: 'TRANSFERENCIA', fiscal: 'CUIT', documento: 'DNI',        prefijo: '+54'  },
+            UY: { pais: 'Uruguay',   bandera: 'uy', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RUT',  documento: 'CI',         prefijo: '+598' },
+            PY: { pais: 'Paraguay',  bandera: 'py', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RUC',  documento: 'CI',         prefijo: '+595' },
+            BO: { pais: 'Bolivia',   bandera: 'bo', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'NIT',  documento: 'CI',         prefijo: '+591' },
+            PE: { pais: 'Perú',      bandera: 'pe', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RUC',  documento: 'DNI',        prefijo: '+51'  },
+            MX: { pais: 'México',    bandera: 'mx', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RFC',  documento: 'CURP / INE', prefijo: '+52'  }
         };
 
         const PAIS_FALLBACK = 'AR';
@@ -287,6 +299,18 @@
                 const tieneAsterisco = /\*\s*$/.test(el.textContent || '');
                 el.textContent = tieneAsterisco ? valor + ' *' : valor;
             });
+        }
+
+        /**
+         * Genera el HTML de una bandera como <img> (compatible con Windows).
+         * Usa flagcdn.com con srcset 2x para pantallas retina.
+         */
+        function htmlBandera(codigoIso, altPais) {
+            return '<img ' +
+                'src="https://flagcdn.com/24x18/' + codigoIso + '.png" ' +
+                'srcset="https://flagcdn.com/48x36/' + codigoIso + '.png 2x" ' +
+                'alt="' + (altPais || '') + '" ' +
+                'class="flag-img">';
         }
 
         function aplicarContextoGeo(codigoPais) {
@@ -346,11 +370,13 @@
                 el.textContent = cfg.moneda;
             });
 
-            /* 2.7 — Selector manual en el navbar */
+            /* 2.7 — Selector manual en el navbar (bandera como IMAGEN PNG) */
             const banderaActiva = document.getElementById('geo-bandera-activa');
             const paisActivo    = document.getElementById('geo-pais-activo');
-            if (banderaActiva) banderaActiva.textContent = cfg.bandera;
-            if (paisActivo)    paisActivo.textContent    = cfg.pais;
+            if (banderaActiva) {
+                banderaActiva.innerHTML = htmlBandera(cfg.bandera, cfg.pais);
+            }
+            if (paisActivo) paisActivo.textContent = cfg.pais;
 
             /* 2.8 — Atributo en <html> para estilos condicionales por país */
             document.documentElement.setAttribute('data-geo-pais', codigoPais);
