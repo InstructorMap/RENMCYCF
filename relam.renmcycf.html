@@ -46,7 +46,8 @@
             background: #d4af37; color: #0a1128; font-weight: 900; text-transform: uppercase;
             letter-spacing: 0.1em; transition: all 0.3s ease; box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.4);
         }
-        .btn-gold:hover { background: #e6c14a; transform: translateY(-2px); box-shadow: 0 15px 40px -10px rgba(212, 175, 55, 0.6); }
+        .btn-gold:hover:not(:disabled) { background: #e6c14a; transform: translateY(-2px); box-shadow: 0 15px 40px -10px rgba(212, 175, 55, 0.6); }
+        .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
         .btn-outline {
             border: 1.5px solid rgba(212, 175, 55, 0.4); color: #d4af37; font-weight: 800; text-transform: uppercase;
             letter-spacing: 0.1em; transition: all 0.3s ease;
@@ -84,7 +85,7 @@
                 <a href="#academias" class="text-xs font-bold text-slate-300 hover:text-forenseGold uppercase tracking-widest transition">Academias B2B</a>
                 <a href="#profesionales" class="btn-gold px-6 py-2.5 rounded-lg text-[10px]">Acreditación B2C</a>
             </div>
-            <!-- Selector Geo activo (lo pinta el Cerebro Geo-IP con imagen SVG) -->
+            <!-- Selector Geo activo (lo pinta el Cerebro Geo-IP con imagen PNG) -->
             <div class="hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3 py-1.5">
                 <span id="geo-bandera-activa" class="inline-flex items-center">
                     <img src="https://flagcdn.com/24x18/ar.png" srcset="https://flagcdn.com/48x36/ar.png 2x" alt="Argentina" class="flag-img">
@@ -203,11 +204,14 @@
                         </ul>
 
                         <div class="mt-auto">
-                            <!-- Fricción Legal UX -->
-                            <div class="mb-3 text-[9px] text-slate-400 text-center leading-tight px-4 opacity-80">
-                                Al iniciar el proceso, acepta los Términos y Condiciones y se somete a la jurisdicción de Córdoba, Argentina.
-                            </div>
-                            <button class="w-full btn-gold px-6 py-4 rounded-xl text-xs">
+                            <!-- Fricción Legal UX (Clickwrap) -->
+                            <label class="flex items-start gap-3 cursor-pointer p-4 rounded-xl bg-black/20 border border-forenseGold/20 hover:border-forenseGold/50 transition-all mb-4">
+                                <input type="checkbox" id="acepto-terminos-b2c" class="appearance-none w-5 h-5 border-[1.5px] border-forenseGold/40 rounded bg-black/30 checked:bg-forenseGold checked:border-forenseGold transition-colors cursor-pointer shrink-0 mt-0.5 relative after:content-[''] after:absolute after:hidden checked:after:block after:left-[6px] after:top-[2px] after:w-[5px] after:h-[10px] after:border-solid after:border-[#0a1128] after:border-b-2 after:border-r-2 after:rotate-45" required onchange="document.getElementById('btn-b2c-acreditar').disabled = !this.checked;">
+                                <span class="text-[9px] text-slate-400 leading-relaxed">
+                                    Al iniciar el proceso, acepto los <strong class="text-forenseGold">Términos y Condiciones</strong>, declaro comprender el carácter privado de la validación y me someto a la jurisdicción de Córdoba, Argentina. *
+                                </span>
+                            </label>
+                            <button id="btn-b2c-acreditar" class="w-full btn-gold px-6 py-4 rounded-xl text-xs disabled:opacity-50 disabled:cursor-not-allowed transition-all" disabled>
                                 Iniciar Acreditación Internacional
                             </button>
                         </div>
