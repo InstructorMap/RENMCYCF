@@ -732,10 +732,33 @@
 </head>
 <body class="min-h-screen flex flex-col font-sans bg-white">
 
+    <!-- BANNER GEO-IP RELAM (Oculto por defecto, se activa solo para IPs extranjeras) -->
+    <div id="relam-geo-banner" class="hidden bg-gradient-to-r from-forenseNavy via-slate-900 to-forenseNavy border-b-2 border-forenseGold text-white px-4 py-3 z-[100] relative shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div class="flex items-center gap-3">
+                <span id="relam-flag" class="text-2xl drop-shadow-md">🌎</span>
+                <div>
+                    <p class="text-xs md:text-sm font-bold leading-tight">Parece que nos visitás desde <span id="relam-country-name" class="text-forenseGold font-black uppercase">Latinoamérica</span>.</p>
+                    <p class="text-[10px] md:text-xs text-slate-300 mt-0.5">Conocé RELAM, nuestra plataforma exclusiva de acreditación internacional.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <a href="relam.renmcycf.html" class="flex-1 sm:flex-none bg-forenseGold hover:bg-yellow-500 text-forenseNavy text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-lg shadow-md transition-colors whitespace-nowrap text-center">Ir a RELAM <i data-lucide="arrow-right" class="inline w-3 h-3 ml-1"></i></a>
+                <button onclick="document.getElementById('relam-geo-banner').style.display='none'" class="p-2 text-slate-400 hover:text-white transition-colors bg-white/5 rounded-lg border border-white/10" aria-label="Cerrar"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+    </div>
+
     <!-- TOP BAR -->
-    <div class="bg-forenseNavy text-white text-[9px] md:text-[11px] py-3 px-4 text-center font-black tracking-[0.18em] md:tracking-[0.25em] uppercase z-50 shadow-lg relative overflow-hidden">
-        <span class="relative z-10">Registro Nacional de Matriculados en Criminalística y Ciencias Forenses</span>
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-forenseGold/10 to-transparent animate-pulse"></div>
+    <div class="bg-forenseNavy text-white text-[9px] md:text-[11px] py-3 px-4 flex items-center justify-between z-50 shadow-lg relative overflow-hidden">
+        <span class="font-black tracking-[0.18em] md:tracking-[0.25em] uppercase relative z-10 hidden sm:inline-block">Registro Nacional de Matriculados en Criminalística y Ciencias Forenses</span>
+        <span class="font-black tracking-[0.18em] uppercase relative z-10 sm:hidden">RENMCYCF</span>
+        
+        <a href="relam.renmcycf.html" class="relative z-10 flex items-center gap-1.5 bg-forenseGold/20 hover:bg-forenseGold/40 text-forenseGold px-3 py-1 rounded-full transition-colors border border-forenseGold/30">
+            <i data-lucide="globe-2" class="w-3 h-3"></i>
+            <span class="font-bold tracking-widest uppercase">Intl / RELAM</span>
+        </a>
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-forenseGold/10 to-transparent animate-pulse pointer-events-none"></div>
     </div>
 
     <!-- FLOATING RED DE EMPRESAS BUTTON -->
@@ -785,6 +808,16 @@
                     </div>
                 </div>
 
+                <!-- ============ BLOQUE NUEVO: Internacional (Desktop) ============ -->
+                <div class="nav-group">
+                    <span class="nav-label">Internacional</span>
+                    <div class="flex items-center gap-1">
+                        <a href="relam.renmcycf.html" class="hover:text-forenseGold transition-colors flex items-center gap-1 px-2 py-1 text-forenseBlue">
+                            <i data-lucide="globe-2" class="w-3.5 h-3.5"></i> Red RELAM
+                        </a>
+                    </div>
+                </div>
+
                 <div class="nav-group">
                     <span class="nav-label">Quiero Verificar</span>
                     <div class="flex items-center gap-1">
@@ -829,6 +862,10 @@
         <div class="text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 pb-2 mb-2 mt-4">Soy Institución</div>
         <button onclick="switchSection('seccion-convenios-b2b'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="building-2" class="w-5 h-5 text-forenseGold"></i> Institutos</button>
         <a href="colegios.renmcycf.html" onclick="toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="scale" class="w-5 h-5 text-forenseGold"></i> Red Judicial</a>
+
+        <!-- ============ BLOQUE NUEVO: Internacional (Mobile, antes de Experiencias) ============ -->
+        <div class="text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 pb-2 mb-2 mt-4">Internacional</div>
+        <a href="relam.renmcycf.html" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="globe-2" class="w-5 h-5 text-forenseGold"></i> Plataforma RELAM</a>
 
         <div class="text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 pb-2 mb-2 mt-4">Quiero Verificar</div>
         <button onclick="switchSection('seccion-verificacion'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="search" class="w-5 h-5 text-forenseGold"></i> Ver Matrícula</button>
@@ -2480,9 +2517,12 @@
                             <p class="text-[10px] text-forenseGold font-bold uppercase tracking-widest">Registro Institucional</p>
                         </div>
                     </div>
-                    <p class="text-xs text-slate-400 leading-relaxed mb-6 max-w-md">
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4 max-w-md">
                         Registro Nacional de Matriculados en Criminalística y Ciencias Forenses. Plataforma de matriculación, verificación y legajo digital.
                     </p>
+                    <a href="relam.renmcycf.html" class="inline-flex items-center gap-2 mb-6 text-[10px] font-bold uppercase tracking-widest text-forenseGold hover:text-white transition-colors border border-forenseGold/30 rounded-lg px-4 py-2 bg-forenseGold/5 w-max">
+                        <i data-lucide="globe-2" class="w-4 h-4"></i> Acceso Internacional (RELAM)
+                    </a>
                     <div class="flex gap-3">
                         <a href="#" id="footer-fb" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-forenseGold hover:text-forenseNavy transition flex items-center justify-center" aria-label="Facebook">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"/></svg>
@@ -4062,5 +4102,60 @@
         });
     </script>
 
+    <!-- ============================================================
+         🧠 CEREBRO GEO-IP LIGHT · ENRUTADOR RELAM
+         ============================================================ -->
+    <script>
+        /* ============================================================
+           🧠 CEREBRO GEO-IP LIGHT · ENRUTADOR RELAM
+           Detecta IP extranjera y activa el banner de redirección.
+           No interfiere con el flujo ARS/CUIT del index actual.
+           ============================================================ */
+        (function() {
+            // Países objetivo de la expansión con sus banderas
+            const RELAM_TARGETS = {
+                'UY': { nombre: 'Uruguay', bandera: '🇺🇾' },
+                'PY': { nombre: 'Paraguay', bandera: '🇵🇾' },
+                'BO': { nombre: 'Bolivia', bandera: '🇧🇴' },
+                'PE': { nombre: 'Perú', bandera: '🇵🇪' },
+                'MX': { nombre: 'México', bandera: '🇲🇽' },
+                'CO': { nombre: 'Colombia', bandera: '🇨🇴' },
+                'CL': { nombre: 'Chile', bandera: '🇨🇱' },
+                'EC': { nombre: 'Ecuador', bandera: '🇪🇨' }
+            };
+
+            const triggerBanner = (countryCode) => {
+                if (countryCode && countryCode !== 'AR' && RELAM_TARGETS[countryCode]) {
+                    const banner = document.getElementById('relam-geo-banner');
+                    if (banner) {
+                        document.getElementById('relam-country-name').textContent = RELAM_TARGETS[countryCode].nombre;
+                        document.getElementById('relam-flag').textContent = RELAM_TARGETS[countryCode].bandera;
+                        banner.classList.remove('hidden');
+                        lucide.createIcons();
+                    }
+                }
+            };
+
+            // Override manual para pruebas desde Argentina (?country=MX)
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const override = params.get('country');
+                if (override) {
+                    triggerBanner(override.toUpperCase());
+                    return;
+                }
+            } catch(e) {}
+
+            // Ejecución asíncrona rápida sin bloquear render
+            fetch('https://ipapi.co/json/')
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.country_code) {
+                        triggerBanner(data.country_code);
+                    }
+                })
+                .catch(err => console.warn('Cerebro Geo-IP Light (Fallback AR):', err));
+        })();
+    </script>
 </body>
 </html>
