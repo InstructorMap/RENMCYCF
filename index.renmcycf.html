@@ -754,9 +754,9 @@
         <span class="font-black tracking-[0.18em] md:tracking-[0.25em] uppercase relative z-10 hidden sm:inline-block">Registro Nacional de Matriculados en Criminalística y Ciencias Forenses</span>
         <span class="font-black tracking-[0.18em] uppercase relative z-10 sm:hidden">RENMCYCF</span>
         
-        <a href="relam.renmcycf.html" class="relative z-10 flex items-center gap-1.5 bg-forenseGold/20 hover:bg-forenseGold/40 text-forenseGold px-3 py-1 rounded-full transition-colors border border-forenseGold/30">
-            <i data-lucide="globe-2" class="w-3 h-3"></i>
-            <span class="font-bold tracking-widest uppercase">Intl / RELAM</span>
+        <a href="relam.renmcycf.html" class="relative z-10 flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-forenseGold px-3 py-1 rounded-full transition-colors border border-forenseGold/30 shadow-md">
+            <span class="text-[10px]">🇲🇽 🇵🇪 🇺🇾</span>
+            <span class="font-bold tracking-widest uppercase ml-1">RELAM</span>
         </a>
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-forenseGold/10 to-transparent animate-pulse pointer-events-none"></div>
     </div>
@@ -808,12 +808,17 @@
                     </div>
                 </div>
 
-                <!-- ============ BLOQUE NUEVO: Internacional (Desktop) ============ -->
+                <!-- ============ BLOQUE MODIFICADO: Internacional (Desktop) con stack de banderas ============ -->
                 <div class="nav-group">
                     <span class="nav-label">Internacional</span>
-                    <div class="flex items-center gap-1">
-                        <a href="relam.renmcycf.html" class="hover:text-forenseGold transition-colors flex items-center gap-1 px-2 py-1 text-forenseBlue">
-                            <i data-lucide="globe-2" class="w-3.5 h-3.5"></i> Red RELAM
+                    <div class="flex items-center gap-1 mt-0.5">
+                        <a href="relam.renmcycf.html" class="flex items-center gap-2 bg-slate-800/80 hover:bg-slate-800 border border-forenseGold/40 px-3 py-1.5 rounded-full transition-all shadow-md group">
+                            <div class="flex -space-x-1.5">
+                                <span class="text-xs z-30 drop-shadow-md group-hover:-translate-y-0.5 transition-transform">🇲🇽</span>
+                                <span class="text-xs z-20 drop-shadow-md group-hover:-translate-y-0.5 transition-transform delay-75">🇵🇪</span>
+                                <span class="text-xs z-10 drop-shadow-md group-hover:-translate-y-0.5 transition-transform delay-150">🇺🇾</span>
+                            </div>
+                            <span class="text-[9px] font-black text-forenseGold uppercase tracking-widest pl-1">Red RELAM</span>
                         </a>
                     </div>
                 </div>
@@ -863,7 +868,7 @@
         <button onclick="switchSection('seccion-convenios-b2b'); toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="building-2" class="w-5 h-5 text-forenseGold"></i> Institutos</button>
         <a href="colegios.renmcycf.html" onclick="toggleMobileMenu();" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="scale" class="w-5 h-5 text-forenseGold"></i> Red Judicial</a>
 
-        <!-- ============ BLOQUE NUEVO: Internacional (Mobile, antes de Experiencias) ============ -->
+        <!-- ============ BLOQUE NUEVO: Internacional (Mobile) ============ -->
         <div class="text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 pb-2 mb-2 mt-4">Internacional</div>
         <a href="relam.renmcycf.html" class="text-white text-sm font-bold uppercase tracking-widest hover:text-forenseGold text-left flex items-center gap-3"><i data-lucide="globe-2" class="w-5 h-5 text-forenseGold"></i> Plataforma RELAM</a>
 
@@ -1351,6 +1356,59 @@
                             <span class="flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4 text-emerald-400"></i> Datos encriptados</span>
                             <span class="flex items-center gap-2"><i data-lucide="refresh-cw" class="w-4 h-4 text-emerald-400"></i> Corrección gratuita</span>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════ SECCIÓN DEDICADA RELAM ═══════════ -->
+            <section class="py-16 md:py-20 bg-forenseDeep border-y-2 border-forenseGold relative overflow-hidden">
+                <!-- Efectos de fondo -->
+                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:20px_20px]"></div>
+                <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-forenseGold/10 blur-[100px] pointer-events-none"></div>
+
+                <div class="max-w-7xl mx-auto px-4 relative z-10">
+                    <div class="flex flex-col lg:flex-row items-center justify-between gap-10">
+                        
+                        <!-- Textos -->
+                        <div class="flex-1 text-center lg:text-left" data-aos="fade-right">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-forenseGold text-[10px] font-black uppercase tracking-[0.2em] mb-4">
+                                <i data-lucide="globe-2" class="w-3.5 h-3.5"></i> Expansión Continental
+                            </div>
+                            <h2 class="font-title text-3xl md:text-5xl font-black text-white uppercase tracking-tight mb-4 leading-tight">
+                                RENMCYCF <span class="text-transparent bg-clip-text bg-gradient-to-r from-forenseGold to-yellow-200">cruza fronteras</span>
+                            </h2>
+                            <p class="text-slate-300 text-sm md:text-base leading-relaxed max-w-xl mx-auto lg:mx-0 mb-6">
+                                Nuestra infraestructura tecnológica ahora valida y acredita a instituciones y profesionales forenses en toda Latinoamérica a través de la Red RELAM.
+                            </p>
+                            <a href="relam.renmcycf.html" class="inline-flex items-center gap-3 bg-forenseGold text-forenseNavy hover:bg-yellow-500 font-black uppercase tracking-widest text-xs px-8 py-3.5 rounded-xl shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all hover:scale-105">
+                                Visitar Portal Internacional <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+
+                        <!-- Banderas estilo RELAM -->
+                        <div class="flex-1 flex flex-wrap justify-center lg:justify-end gap-3 lg:gap-4" data-aos="fade-left">
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center min-w-[100px] hover:border-forenseGold hover:bg-white/10 transition-colors">
+                                <span class="text-3xl mb-2 drop-shadow-lg">🇺🇾</span>
+                                <span class="text-[9px] font-bold text-slate-300 uppercase tracking-widest">Uruguay</span>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center min-w-[100px] hover:border-forenseGold hover:bg-white/10 transition-colors">
+                                <span class="text-3xl mb-2 drop-shadow-lg">🇵🇾</span>
+                                <span class="text-[9px] font-bold text-slate-300 uppercase tracking-widest">Paraguay</span>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center min-w-[100px] hover:border-forenseGold hover:bg-white/10 transition-colors">
+                                <span class="text-3xl mb-2 drop-shadow-lg">🇧🇴</span>
+                                <span class="text-[9px] font-bold text-slate-300 uppercase tracking-widest">Bolivia</span>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center min-w-[100px] hover:border-forenseGold hover:bg-white/10 transition-colors">
+                                <span class="text-3xl mb-2 drop-shadow-lg">🇵🇪</span>
+                                <span class="text-[9px] font-bold text-slate-300 uppercase tracking-widest">Perú</span>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center min-w-[100px] hover:border-forenseGold hover:bg-white/10 transition-colors">
+                                <span class="text-3xl mb-2 drop-shadow-lg">🇲🇽</span>
+                                <span class="text-[9px] font-bold text-slate-300 uppercase tracking-widest">México</span>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </section>
