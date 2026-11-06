@@ -60,10 +60,8 @@
             border: 1px solid rgba(212, 175, 55, 0.15); border-radius: 16px; transition: all 0.4s ease;
         }
         .country-card:hover { border-color: #d4af37; transform: translateY(-5px); box-shadow: 0 20px 40px -10px rgba(212, 175, 55, 0.2); }
-        /* Banderas como imagen, consistente en Windows/Mac/Linux */
         .flag-img { display: inline-block; width: 24px; height: 18px; border-radius: 3px; vertical-align: middle; object-fit: cover; }
 
-        /* Inputs del formulario B2B */
         .form-input {
             width: 100%;
             background: rgba(0,0,0,0.35);
@@ -82,65 +80,35 @@
             letter-spacing: 1px; margin-bottom: 6px;
         }
 
-        /* ============================================
-           LOGO INSTITUCIONAL · Presencia imponente
-           ============================================ */
+        /* LOGO INSTITUCIONAL */
         .logo-escudo {
             position: relative;
-            width: 96px;
-            height: 96px;
-            flex-shrink: 0;
-            border-radius: 20px;
-            padding: 6px;
+            width: 96px; height: 96px; flex-shrink: 0;
+            border-radius: 20px; padding: 6px;
             background: linear-gradient(145deg, #ffffff 0%, #f4f1e8 100%);
             border: 2px solid rgba(212, 175, 55, 0.55);
-            box-shadow:
-                0 8px 24px -6px rgba(212, 175, 55, 0.45),
-                0 0 0 1px rgba(212, 175, 55, 0.15) inset;
+            box-shadow: 0 8px 24px -6px rgba(212, 175, 55, 0.45), 0 0 0 1px rgba(212, 175, 55, 0.15) inset;
             transition: all 0.35s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            z-index: 0;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; z-index: 0;
         }
-        .logo-escudo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            object-position: center;
-            display: block;
-        }
-        /* Halo dorado detrás del logo (refuerza la presencia) */
+        .logo-escudo img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; }
         .logo-escudo::before {
-            content: '';
-            position: absolute;
-            inset: -6px;
-            border-radius: 26px;
+            content: ''; position: absolute; inset: -6px; border-radius: 26px;
             background: radial-gradient(circle, rgba(212,175,55,0.22) 0%, transparent 70%);
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.35s ease;
+            z-index: -1; opacity: 0; transition: opacity 0.35s ease;
         }
         article.group:hover .logo-escudo {
-            border-color: #d4af37;
-            transform: translateY(-2px) scale(1.02);
-            box-shadow:
-                0 12px 32px -6px rgba(212, 175, 55, 0.65),
-                0 0 0 1px rgba(212, 175, 55, 0.3) inset;
+            border-color: #d4af37; transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 32px -6px rgba(212, 175, 55, 0.65), 0 0 0 1px rgba(212, 175, 55, 0.3) inset;
         }
-        article.group:hover .logo-escudo::before {
-            opacity: 1;
+        article.group:hover .logo-escudo::before { opacity: 1; }
+        @media (min-width: 768px) {
+            .logo-escudo { width: 128px; height: 128px; border-radius: 26px; padding: 8px; }
         }
 
-        @media (min-width: 768px) {
-            .logo-escudo {
-                width: 128px;
-                height: 128px;
-                border-radius: 26px;
-                padding: 8px;
-            }
-        }
+        /* MODAL SCROLL INTERNO */
+        .modal-scroll { max-height: 92vh; overflow-y: auto; }
     </style>
 </head>
 <body class="antialiased selection:bg-forenseGold selection:text-forenseNavy">
@@ -163,9 +131,8 @@
                 </div>
             </div>
             <div class="hidden md:flex gap-6 items-center">
-                <a href="#academias" class="text-xs font-bold text-slate-300 hover:text-forenseGold uppercase tracking-widest transition">Academias B2B</a>
+                <a href="#elegir-camino" class="text-xs font-bold text-slate-300 hover:text-forenseGold uppercase tracking-widest transition">Acreditación</a>
                 <a href="#directorio-convenios-relam" class="text-xs font-bold text-slate-300 hover:text-forenseGold uppercase tracking-widest transition">Directorio</a>
-                <a href="#profesionales" class="btn-gold px-6 py-2.5 rounded-lg text-[10px]">Acreditación B2C</a>
             </div>
             <div class="hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3 py-1.5">
                 <span id="geo-bandera-activa" class="inline-flex items-center">
@@ -183,7 +150,6 @@
         <div class="hero-glow bg-blue-900/20 w-[500px] h-[500px] bottom-[-200px] left-[-100px]"></div>
 
         <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
-            <!-- Badges Países -->
             <div class="inline-flex flex-wrap justify-center gap-3 mb-8" data-aos="fade-down">
                 <div class="bg-white/5 border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2">
                     <img src="https://flagcdn.com/24x18/ar.png" srcset="https://flagcdn.com/48x36/ar.png 2x" alt="Argentina" class="flag-img">
@@ -220,106 +186,153 @@
             </p>
 
             <div class="flex flex-col sm:flex-row justify-center gap-4" data-aos="fade-up" data-aos-delay="300">
-                <a href="#academias" class="btn-gold px-8 py-4 rounded-xl text-sm flex items-center justify-center gap-2">
-                    <i data-lucide="building-2" class="w-5 h-5"></i> Soy Institución (B2B)
+                <a href="#elegir-camino" class="btn-gold px-8 py-4 rounded-xl text-sm flex items-center justify-center gap-2">
+                    <i data-lucide="badge-check" class="w-5 h-5"></i> Quiero acreditarme
                 </a>
-                <a href="#profesionales" class="btn-outline px-8 py-4 rounded-xl text-sm flex items-center justify-center gap-2 bg-forenseDeep/50 backdrop-blur-sm">
-                    <i data-lucide="user-check" class="w-5 h-5"></i> Soy Profesional (B2C)
+                <a href="#directorio-convenios-relam" class="btn-outline px-8 py-4 rounded-xl text-sm flex items-center justify-center gap-2 bg-forenseDeep/50 backdrop-blur-sm">
+                    <i data-lucide="building-2" class="w-5 h-5"></i> Ver directorio
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- PROPUESTA DE VALOR DUAL -->
-    <section class="py-24 bg-white relative">
+    <!-- ============================================ -->
+    <!-- SECCIÓN: ¿SOS PROFESIONAL O INSTITUCIÓN?     -->
+    <!-- ============================================ -->
+    <section id="elegir-camino" class="py-24 bg-white relative">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="font-title text-3xl md:text-5xl font-black text-forenseNavy uppercase mb-4">Un Hub Regional. Dos Soluciones.</h2>
+
+            <div class="text-center mb-14" data-aos="fade-up">
+                <span class="inline-block text-forenseGold text-xs font-bold tracking-[0.25em] uppercase mb-3">
+                    Elegí tu camino
+                </span>
+                <h2 class="font-title text-3xl md:text-5xl font-black text-forenseNavy uppercase mb-4">
+                    ¿Sos <span class="text-forenseGold">profesional</span> o <span class="text-forenseGold">institución</span>?
+                </h2>
                 <div class="w-16 h-1.5 bg-forenseGold mx-auto mb-6"></div>
-                <p class="text-slate-600 max-w-2xl mx-auto">Adaptamos nuestra infraestructura ASARI Core para resolver problemas transnacionales.</p>
+                <p class="text-slate-600 max-w-2xl mx-auto">
+                    Los dos caminos llevan al mismo estándar RELAM. Elegí el que corresponde a tu perfil.
+                </p>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- B2B · Copy reescrito desde el beneficio del instituto -->
-                <div id="academias" class="bg-slate-50 border border-slate-200 rounded-3xl p-10 hover:shadow-2xl hover:border-forenseGold/50 transition-all flex flex-col" data-aos="fade-right">
-                    <div class="w-14 h-14 bg-forenseNavy rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                        <i data-lucide="building" class="w-7 h-7 text-forenseGold"></i>
-                    </div>
-                    <h3 class="font-title text-2xl font-black text-forenseNavy uppercase mb-3">Para Academias e Institutos Internacionales</h3>
-                    <p class="text-slate-600 mb-8 leading-relaxed">
-                        Su institución suma un sello de validación internacional reconocido en toda LATAM. Usted conserva la currícula y la autonomía académica; RELAM aporta la infraestructura tecnológica de <strong>trazabilidad inmutable, verificación QR y una página pública de verificación</strong> que sus egresados pueden mostrar en cualquier país.
-                    </p>
+            <div class="grid lg:grid-cols-3 gap-6 md:gap-8">
 
-                    <ul class="space-y-4 mb-10 flex-1">
-                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i>
-                            <span><strong>Presencia regional inmediata:</strong> su institución aparece en el Directorio de Aliados Internacionales de RELAM, visible para profesionales y empleadores de 6 países.</span>
-                        </li>
-                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i>
-                            <span><strong>Credenciales verificables:</strong> cada certificado que emita lleva hash criptográfico + QR de verificación público, sin que usted tenga que montar infraestructura propia.</span>
-                        </li>
-                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i>
-                            <span><strong>Cobros sin fricción:</strong> facturación internacional simplificada en USD, con formularios adaptados a la identificación fiscal local de cada país (RUT, NIT, RFC, RUC, CUIT).</span>
-                        </li>
-                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i>
-                            <span><strong>Respaldo tecnológico ASARI Core:</strong> la misma infraestructura que usa RENMCYCF Argentina, sin costo de desarrollo ni mantenimiento para su institución.</span>
-                        </li>
-                    </ul>
+                <!-- PROTAGONISTA: PROFESIONALES (2/3) -->
+                <div id="profesionales" class="lg:col-span-2 bg-forenseNavy rounded-3xl p-8 md:p-10 relative overflow-hidden flex flex-col shadow-2xl shadow-forenseNavy/30" data-aos="fade-up">
+                    <div class="absolute -top-32 -right-32 w-96 h-96 bg-forenseGold/15 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -bottom-32 -left-32 w-96 h-96 bg-blue-900/20 rounded-full blur-3xl pointer-events-none"></div>
 
-                    <!-- Pasarela Transferencia (visible sólo en AR por el Cerebro Geo-IP) -->
-                    <div id="metodo-transferencia" class="mb-4 text-[10px] text-slate-500 text-center uppercase tracking-widest">
-                        Pago local por transferencia bancaria (ARS)
-                    </div>
-                    <!-- Pasarela Stripe (visible en el resto de LATAM por el Cerebro Geo-IP) -->
-                    <div id="metodo-stripe" class="hidden mb-4 text-[10px] text-slate-500 text-center uppercase tracking-widest">
-                        Pago internacional con tarjeta vía Stripe (USD)
-                    </div>
-
-                    <button onclick="abrirModalConvenio()" class="w-full bg-forenseNavy text-white hover:bg-slate-800 font-black uppercase tracking-widest text-xs px-6 py-4 rounded-xl transition-colors mt-auto flex items-center justify-center gap-2">
-                        <i data-lucide="handshake" class="w-4 h-4"></i>
-                        Quiero sumar mi institución a RELAM
-                    </button>
-                </div>
-
-                <!-- B2C -->
-                <div id="profesionales" class="bg-forenseNavy border border-forenseNavy rounded-3xl p-10 hover:shadow-2xl hover:shadow-forenseGold/20 hover:border-forenseGold/50 transition-all relative overflow-hidden flex flex-col" data-aos="fade-left">
-                    <div class="absolute inset-0 bg-gradient-to-br from-forenseGold/5 to-transparent pointer-events-none"></div>
                     <div class="relative z-10 flex flex-col h-full">
-                        <div class="w-14 h-14 bg-forenseGold/20 border border-forenseGold/40 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                            <i data-lucide="user-badge" class="w-7 h-7 text-forenseGold"></i>
+                        <div class="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full bg-forenseGold/15 border border-forenseGold/40 mb-6">
+                            <i data-lucide="user-badge" class="w-4 h-4 text-forenseGold"></i>
+                            <span class="text-[10px] font-black text-forenseGold uppercase tracking-widest">Profesionales</span>
                         </div>
-                        <h3 class="font-title text-2xl font-black text-white uppercase mb-3">Para Profesionales Forenses</h3>
-                        <p class="text-slate-300 mb-8 leading-relaxed">No importa si en su país es "Licenciado", "Tecnólogo" o "Perito". Homologamos su perfil mediante una tabla de equivalencias regional y le otorgamos una <strong>Acreditación Privada Internacional</strong>.</p>
 
-                        <ul class="space-y-4 mb-8 flex-1">
-                            <li class="flex items-start gap-3 text-sm text-slate-300 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0"></i> Credencial Digital privada.</li>
-                            <li class="flex items-start gap-3 text-sm text-slate-300 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0"></i> Alta en el Directorio Continental.</li>
-                            <li class="flex items-start gap-3 text-sm text-slate-300 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0"></i> Auditoría técnica segura (pago no reembolsable en USD).</li>
+                        <h3 class="font-title text-3xl md:text-4xl font-black text-white leading-tight mb-4">
+                            Acreditación internacional<br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-forenseGold to-yellow-200">para peritos, licenciados y técnicos</span>
+                        </h3>
+                        <p class="text-slate-300 mb-8 leading-relaxed max-w-xl">
+                            Homologamos tu título con la tabla de equivalencias regional y te damos una credencial con QR verificable en <strong class="text-white">6 países</strong>.
+                        </p>
+
+                        <ul class="space-y-3 mb-8 max-w-xl">
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0 mt-0.5"></i>
+                                <span>Credencial digital privada con QR de verificación.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0 mt-0.5"></i>
+                                <span>Alta en el Directorio Continental RELAM.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0 mt-0.5"></i>
+                                <span>Homologación de tu título por tabla de equivalencias regional.</span>
+                            </li>
                         </ul>
+
+                        <div id="contador-acreditados" class="hidden inline-flex items-center gap-3 self-start px-4 py-2 rounded-full bg-black/30 border border-white/10 mb-6">
+                            <span class="relative flex h-2.5 w-2.5">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                            </span>
+                            <span class="text-xs text-slate-300">
+                                Ya son <strong id="contador-numero" class="text-white">—</strong> profesionales acreditados en 6 países
+                            </span>
+                        </div>
 
                         <div class="mt-auto">
                             <label class="flex items-start gap-3 cursor-pointer p-4 rounded-xl bg-black/20 border border-forenseGold/20 hover:border-forenseGold/50 transition-all mb-4">
-                                <input type="checkbox" id="acepto-terminos-b2c" class="appearance-none w-5 h-5 border-[1.5px] border-forenseGold/40 rounded bg-black/30 checked:bg-forenseGold checked:border-forenseGold transition-colors cursor-pointer shrink-0 mt-0.5 relative after:content-[''] after:absolute after:hidden checked:after:block after:left-[6px] after:top-[2px] after:w-[5px] after:h-[10px] after:border-solid after:border-[#0a1128] after:border-b-2 after:border-r-2 after:rotate-45" required onchange="document.getElementById('btn-b2c-acreditar').disabled = !this.checked;">
-                                <span class="text-[9px] text-slate-400 leading-relaxed">
-                                    Al iniciar el proceso, acepto los <strong class="text-forenseGold">Términos y Condiciones</strong>, declaro comprender el carácter privado de la validación y me someto a la jurisdicción de Córdoba, Argentina. *
+                                <input type="checkbox" id="acepto-terminos-b2c"
+                                       class="appearance-none w-5 h-5 border-[1.5px] border-forenseGold/40 rounded bg-black/30 checked:bg-forenseGold checked:border-forenseGold transition-colors cursor-pointer shrink-0 mt-0.5 relative after:content-[''] after:absolute after:hidden checked:after:block after:left-[6px] after:top-[2px] after:w-[5px] after:h-[10px] after:border-solid after:border-[#0a1128] after:border-b-2 after:border-r-2 after:rotate-45"
+                                       required
+                                       onchange="document.getElementById('btn-b2c-acreditar').disabled = !this.checked;">
+                                <span class="text-[10px] text-slate-400 leading-relaxed">
+                                    Acepto los
+                                    <button type="button" onclick="event.preventDefault(); abrirTerminos()" class="text-forenseGold underline hover:text-yellow-300 transition-colors font-bold">Términos y Condiciones</button>,
+                                    declaro comprender el carácter privado de la validación y me someto a la jurisdicción de Córdoba, Argentina. *
                                 </span>
                             </label>
-                            <button id="btn-b2c-acreditar" class="w-full btn-gold px-6 py-4 rounded-xl text-xs disabled:opacity-50 disabled:cursor-not-allowed transition-all" disabled>
-                                Iniciar Acreditación Internacional
+
+                            <button id="btn-b2c-acreditar"
+                                    onclick="abrirModalAcreditacion()"
+                                    class="w-full btn-gold px-6 py-4 rounded-xl text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                                    disabled>
+                                <i data-lucide="badge-check" class="w-5 h-5"></i>
+                                Iniciar mi acreditación
                             </button>
+
+                            <p class="text-[10px] text-slate-500 leading-relaxed mt-4 text-center">
+                                <strong class="text-slate-400">Toma 5 minutos.</strong>
+                                Primero verificás identidad y subís tu título; después pagás la auditoría (USD 90). Si rechazamos tu solicitud por un error nuestro, te devolvemos el 100%.
+                            </p>
                         </div>
                     </div>
                 </div>
+
+                <!-- SECUNDARIO: INSTITUCIONES (1/3) -->
+                <div id="academias" class="bg-slate-50 border border-slate-200 rounded-3xl p-8 flex flex-col hover:shadow-2xl hover:border-forenseGold/50 transition-all" data-aos="fade-up" data-aos-delay="150">
+
+                    <div class="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full bg-forenseNavy/5 border border-forenseNavy/15 mb-6">
+                        <i data-lucide="building-2" class="w-4 h-4 text-forenseNavy"></i>
+                        <span class="text-[10px] font-black text-forenseNavy uppercase tracking-widest">Instituciones</span>
+                    </div>
+
+                    <h3 class="font-title text-2xl font-black text-forenseNavy leading-tight mb-3">
+                        Sumá tu oferta al <span class="text-forenseGold">directorio internacional</span>
+                    </h3>
+                    <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                        Aparecés en el directorio que consultan egresados y empleadores de LATAM. Tus certificados salen con hash + QR sin que montes infraestructura.
+                    </p>
+
+                    <ul class="space-y-3 mb-8 flex-1">
+                        <li class="flex items-start gap-2.5 text-xs text-slate-700">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i>
+                            <span><strong>Presencia regional:</strong> visible en 6 países.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5 text-xs text-slate-700">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i>
+                            <span><strong>Credenciales verificables:</strong> hash + QR público.</span>
+                        </li>
+                    </ul>
+
+                    <button onclick="abrirModalConvenio()"
+                            class="w-full bg-forenseNavy text-white hover:bg-slate-800 font-black uppercase tracking-widest text-xs px-6 py-4 rounded-xl transition-colors flex items-center justify-center gap-2">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                        Solicitar información
+                    </button>
+
+                    <p class="text-[10px] text-slate-500 text-center mt-3">
+                        Te escribimos en menos de 48 hs hábiles.
+                    </p>
+                </div>
+
             </div>
         </div>
     </section>
 
     <!-- ============================================ -->
-    <!-- DIRECTORIO DE CONVENIOS INTERNACIONALES -->
-    <!-- Conectado a Supabase (renmcycf_aliados)     -->
+    <!-- DIRECTORIO DE CONVENIOS INTERNACIONALES     -->
     <!-- ============================================ -->
     <section id="directorio-convenios-relam" class="py-24 bg-forenseDeep relative overflow-hidden border-t border-white/5">
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-forenseGold/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -378,17 +391,206 @@
     </footer>
 
     <!-- ============================================ -->
-    <!-- MODAL · SOLICITUD DE CONVENIO B2B (RELAM)   -->
+    <!-- MODAL · TÉRMINOS Y CONDICIONES                -->
+    <!-- ============================================ -->
+    <div id="modal-terminos" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[210] hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-forenseNavy border border-forenseGold/30 rounded-2xl w-full max-w-2xl shadow-2xl my-auto">
+            <div class="p-5 border-b border-forenseGold/15 flex justify-between items-center bg-black/40 rounded-t-2xl">
+                <h3 class="text-lg font-black text-white uppercase tracking-wider flex items-center gap-2">
+                    <i data-lucide="scale" class="w-5 h-5 text-forenseGold"></i>
+                    Términos y Condiciones
+                </h3>
+                <button onclick="cerrarTerminos()" class="text-slate-400 hover:text-red-400 transition-colors">
+                    <i data-lucide="x-circle" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div id="terminos-contenido" class="p-6 max-h-[70vh] overflow-y-auto text-sm text-slate-300 leading-relaxed space-y-4">
+                <p class="text-slate-500 italic">Cargando…</p>
+            </div>
+            <div class="p-5 border-t border-forenseGold/15 bg-black/30 rounded-b-2xl flex justify-end">
+                <button onclick="cerrarTerminos()" class="btn-gold px-6 py-3 rounded-xl text-xs">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- MODAL · ACREDITACIÓN PROFESIONAL (3 PASOS)   -->
+    <!-- ============================================ -->
+    <div id="modal-acreditacion" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[200] hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-forenseNavy border border-forenseGold/30 rounded-2xl w-full max-w-2xl shadow-2xl my-auto flex flex-col modal-scroll">
+
+            <div class="p-5 border-b border-forenseGold/15 bg-black/40 rounded-t-2xl flex-shrink-0">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-black text-white uppercase tracking-wider flex items-center gap-2">
+                            <i data-lucide="badge-check" class="w-5 h-5 text-forenseGold"></i>
+                            Iniciar acreditación
+                        </h3>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-0.5">Paso <span id="acr-step-num">1</span> de 3</p>
+                    </div>
+                    <button onclick="cerrarModalAcreditacion()" class="text-slate-400 hover:text-red-400 transition-colors">
+                        <i data-lucide="x-circle" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                <div class="mt-4 flex gap-1.5">
+                    <div id="acr-bar-1" class="flex-1 h-1 bg-forenseGold rounded-full transition-all"></div>
+                    <div id="acr-bar-2" class="flex-1 h-1 bg-white/10 rounded-full transition-all"></div>
+                    <div id="acr-bar-3" class="flex-1 h-1 bg-white/10 rounded-full transition-all"></div>
+                </div>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1">
+
+                <!-- PASO 1: IDENTIDAD -->
+                <div id="acr-paso-1" class="space-y-4">
+                    <h4 class="text-sm font-black text-white uppercase tracking-wider mb-2">Tus datos</h4>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="md:col-span-2">
+                            <label class="form-label">Nombre completo *</label>
+                            <input type="text" id="acr-nombre" required class="form-input" placeholder="Nombre y apellido">
+                        </div>
+                        <div>
+                            <label class="form-label" id="acr-doc-label">DNI / Documento *</label>
+                            <input type="text" id="acr-documento" required class="form-input" placeholder="Número de documento">
+                        </div>
+                        <div>
+                            <label class="form-label">País de residencia *</label>
+                            <select id="acr-pais" required class="form-input">
+                                <option value="AR">Argentina</option>
+                                <option value="UY">Uruguay</option>
+                                <option value="PY">Paraguay</option>
+                                <option value="BO">Bolivia</option>
+                                <option value="PE">Perú</option>
+                                <option value="MX">México</option>
+                                <option value="CL">Chile</option>
+                                <option value="CO">Colombia</option>
+                                <option value="EC">Ecuador</option>
+                                <option value="ES">España</option>
+                                <option value="BR">Brasil</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="form-label">Email *</label>
+                            <input type="email" id="acr-email" required class="form-input" placeholder="tucorreo@ejemplo.com">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="form-label">Teléfono / WhatsApp *</label>
+                            <input type="tel" id="acr-telefono" required class="form-input" placeholder="+54 9 000 000 0000">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PASO 2: TÍTULO Y PERFIL -->
+                <div id="acr-paso-2" class="space-y-4 hidden">
+                    <h4 class="text-sm font-black text-white uppercase tracking-wider mb-2">Tu título profesional</h4>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="md:col-span-2">
+                            <label class="form-label">Profesión / Título declarado *</label>
+                            <input type="text" id="acr-profesion" required class="form-input" placeholder="Ej: Licenciado en Criminalística">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="form-label">Categoría sugerida *</label>
+                            <select id="acr-categoria" required class="form-input">
+                                <option value="A1">A.1 · Profesional con título de grado</option>
+                                <option value="A2">A.2 · Profesional con especialización</option>
+                                <option value="A3">A.3 · Profesional con maestría/doctorado</option>
+                                <option value="A4">A.4 · Profesional con trayectoria destacada</option>
+                                <option value="B1">B.1 · Técnico Superior</option>
+                                <option value="B2">B.2 · Lic./Téc. en Seguridad</option>
+                                <option value="B3">B.3 · Perito auxiliar de justicia</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="form-label">Foto de perfil *</label>
+                            <input type="file" id="acr-foto" accept="image/*" required class="form-input text-slate-300">
+                            <p class="text-[10px] text-slate-500 mt-1">JPG o PNG, máx 5 MB.</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="form-label">Título (PDF o imagen) *</label>
+                            <input type="file" id="acr-titulo" accept="image/*,application/pdf" required class="form-input text-slate-300">
+                            <p class="text-[10px] text-slate-500 mt-1">PDF, JPG o PNG, máx 10 MB.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PASO 3: PAGO -->
+                <div id="acr-paso-3" class="space-y-4 hidden">
+                    <h4 class="text-sm font-black text-white uppercase tracking-wider mb-2">Pago de auditoría</h4>
+
+                    <div class="bg-forenseGold/10 border border-forenseGold/30 rounded-xl p-4 mb-4">
+                        <div class="flex justify-between items-baseline">
+                            <span class="text-xs text-slate-300 uppercase tracking-wider">Monto</span>
+                            <span class="text-3xl font-black text-forenseGold font-mono">USD <span id="acr-monto">90</span></span>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-2">
+                            Arancel de auditoría técnica. <strong class="text-white">No reembolsable</strong> salvo error administrativo comprobado.
+                        </p>
+                    </div>
+
+                    <!-- AR: transferencia -->
+                    <div id="acr-pago-transferencia" class="space-y-3">
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Transferí el equivalente en ARS al siguiente alias y luego subí el comprobante:
+                        </p>
+                        <div class="bg-black/40 border border-white/10 rounded-xl p-3 font-mono text-xs text-slate-200 break-all">
+                            <span class="text-slate-500">Alias:</span> <strong class="text-forenseGold">relam.pagos</strong><br>
+                            <span class="text-slate-500">Titular:</span> ASARI S.A.S.<br>
+                            <span class="text-slate-500">CUIT:</span> 30-00000000-0
+                        </div>
+                        <div>
+                            <label class="form-label">Comprobante de transferencia *</label>
+                            <input type="file" id="acr-comprobante" accept="image/*,application/pdf" class="form-input text-slate-300">
+                        </div>
+                    </div>
+
+                    <!-- No-AR: Stripe (pendiente configuración) -->
+                    <div id="acr-pago-stripe" class="space-y-3 hidden">
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Al confirmar, te enviamos un <strong class="text-white">link de pago seguro (Stripe)</strong> al email que declaraste. Una vez que el pago se acredite, tu solicitud entra en auditoría.
+                        </p>
+                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-xl p-3 text-[11px] text-blue-200">
+                            <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i>
+                            El proceso de pago se completa fuera de esta página. Te avisamos por email cuando esté acreditado.
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3 p-3 rounded-lg bg-black/30 border border-white/10 mt-4">
+                        <input type="checkbox" id="acr-acepta-final" required class="w-5 h-5 mt-0.5 accent-forenseGold">
+                        <label for="acr-acepta-final" class="text-[10px] text-slate-400 leading-relaxed cursor-pointer">
+                            Confirmo que los datos y documentos son veraces y acepto los <button type="button" onclick="event.preventDefault(); abrirTerminos()" class="text-forenseGold underline font-bold">Términos y Condiciones</button>. *
+                        </label>
+                    </div>
+                </div>
+
+                <div id="acr-error" class="hidden bg-red-900/30 border border-red-500/40 text-red-300 text-xs font-bold p-3 rounded-lg mt-4"></div>
+            </div>
+
+            <div class="p-5 border-t border-forenseGold/15 bg-black/30 rounded-b-2xl flex justify-between flex-shrink-0">
+                <button type="button" id="acr-btn-atras" onclick="acrAtras()" class="bg-slate-700 hover:bg-slate-600 text-white px-5 py-3 rounded-xl text-xs font-bold uppercase hidden">
+                    ← Atrás
+                </button>
+                <div></div>
+                <button type="button" id="acr-btn-siguiente" onclick="acrSiguiente()" class="btn-gold px-6 py-3 rounded-xl text-xs flex items-center gap-2">
+                    Siguiente <span id="acr-btn-label">→</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- MODAL · INSTITUCIÓN (SIMPLIFICADO)           -->
     <!-- ============================================ -->
     <div id="modal-convenio" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[200] hidden items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-forenseNavy border border-forenseGold/30 rounded-2xl w-full max-w-2xl shadow-2xl my-auto">
+        <div class="bg-forenseNavy border border-forenseGold/30 rounded-2xl w-full max-w-xl shadow-2xl my-auto">
             <div class="p-5 border-b border-forenseGold/15 flex justify-between items-center bg-black/40 rounded-t-2xl">
                 <div>
                     <h3 class="text-lg font-black text-white uppercase tracking-wider flex items-center gap-2">
-                        <i data-lucide="handshake" class="w-5 h-5 text-forenseGold"></i>
-                        Solicitud de Convenio RELAM
+                        <i data-lucide="building-2" class="w-5 h-5 text-forenseGold"></i>
+                        Solicitar información
                     </h3>
-                    <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-0.5">Institutos internacionales</p>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-0.5">Instituciones internacionales</p>
                 </div>
                 <button onclick="cerrarModalConvenio()" class="text-slate-400 hover:text-red-400 transition-colors">
                     <i data-lucide="x-circle" class="w-6 h-6"></i>
@@ -396,62 +598,39 @@
             </div>
 
             <form id="form-convenio-relam" onsubmit="enviarSolicitudConvenio(event)" class="p-6 space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="md:col-span-2">
+                <div class="space-y-4">
+                    <div>
                         <label class="form-label">Nombre de la Institución *</label>
                         <input type="text" id="conv-institucion" required class="form-input" placeholder="Ej: Universidad de la República">
                     </div>
-                    <div>
-                        <label class="form-label">País *</label>
-                        <select id="conv-pais" required class="form-input">
-                            <option value="AR">Argentina</option>
-                            <option value="UY">Uruguay</option>
-                            <option value="PY">Paraguay</option>
-                            <option value="BO">Bolivia</option>
-                            <option value="PE">Perú</option>
-                            <option value="MX">México</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="form-label" id="conv-fiscal-label">CUIT / ID Fiscal *</label>
-                        <input type="text" id="conv-cuit" required class="form-input" placeholder="Identificación fiscal">
-                    </div>
-                    <div>
-                        <label class="form-label">Director / Rector</label>
-                        <input type="text" id="conv-director" class="form-input" placeholder="Nombre y apellido">
-                    </div>
-                    <div>
-                        <label class="form-label">Teléfono institucional</label>
-                        <input type="tel" id="conv-telefono" class="form-input" placeholder="+00 000 000 000">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="form-label">Email de contacto *</label>
-                        <input type="email" id="conv-email" required class="form-input" placeholder="director@institucion.edu">
-                    </div>
-                    <div>
-                        <label class="form-label">Plan elegido</label>
-                        <select id="conv-plan" class="form-input">
-                            <option value="ANUAL">Anual · 12 meses</option>
-                            <option value="SEMESTRAL">Semestral · 6 meses</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="form-label">Forma de pago</label>
-                        <select id="conv-pago" class="form-input">
-                            <option value="AHORA">Pago ahora</option>
-                            <option value="DESPUES">Pago posterior (pre-acuerdo)</option>
-                        </select>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="form-label">Descripción corta de la institución</label>
-                        <textarea id="conv-descripcion" rows="2" maxlength="200" class="form-input" placeholder="Breve descripción de la oferta académica"></textarea>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">País *</label>
+                            <select id="conv-pais" required class="form-input">
+                                <option value="AR">Argentina</option>
+                                <option value="UY">Uruguay</option>
+                                <option value="PY">Paraguay</option>
+                                <option value="BO">Bolivia</option>
+                                <option value="PE">Perú</option>
+                                <option value="MX">México</option>
+                                <option value="CL">Chile</option>
+                                <option value="CO">Colombia</option>
+                                <option value="EC">Ecuador</option>
+                                <option value="ES">España</option>
+                                <option value="BR">Brasil</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Email institucional *</label>
+                            <input type="email" id="conv-email" required class="form-input" placeholder="director@institucion.edu">
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-3 p-4 rounded-xl bg-black/30 border border-forenseGold/20 mt-4">
+                <div class="flex items-start gap-3 p-3 rounded-lg bg-black/30 border border-forenseGold/20 mt-2">
                     <input type="checkbox" id="conv-acepta" required class="w-5 h-5 mt-0.5 accent-forenseGold">
                     <label for="conv-acepta" class="text-[10px] text-slate-400 leading-relaxed cursor-pointer">
-                        Declaro que la información proporcionada es veraz, comprendo el carácter privado de la validación RELAM y me someto a la jurisdicción de Córdoba, Argentina. *
+                        Declaro que la información es veraz y acepto ser contactado por RELAM. *
                     </label>
                 </div>
 
@@ -463,7 +642,7 @@
                         Cancelar
                     </button>
                     <button type="submit" id="btn-enviar-convenio" class="btn-gold px-6 py-3 rounded-xl text-xs flex items-center gap-2">
-                        <i data-lucide="send" class="w-4 h-4"></i> Enviar solicitud
+                        <i data-lucide="send" class="w-4 h-4"></i> Enviar
                     </button>
                 </div>
             </form>
@@ -475,9 +654,7 @@
         lucide.createIcons();
     </script>
 
-    <!-- ============================================================ -->
-    <!-- 🧠 SUPABASE · Cliente compartido para RELAM                  -->
-    <!-- ============================================================ -->
+    <!-- SUPABASE -->
     <script>
     window.RELAM_SUPABASE = (function () {
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
@@ -486,9 +663,7 @@
     })();
     </script>
 
-    <!-- ============================================================ -->
-    <!-- 📇 DIRECTORIO · Render en vivo desde Supabase                -->
-    <!-- ============================================================ -->
+    <!-- DIRECTORIO -->
     <script>
     (function () {
         'use strict';
@@ -528,39 +703,27 @@
                 ? `<div class="flex items-center gap-2 pt-4 mt-4 border-t border-white/10">${footer}</div>`
                 : '';
 
-            // Fallback: iniciales sobre navy con oro (mismo tamaño que el logo real)
             const iniciales = (a.nombre || 'RELAM')
-                .split(' ')
-                .filter(Boolean)
-                .slice(0, 3)
-                .map(p => p[0])
-                .join('')
-                .toUpperCase();
+                .split(' ').filter(Boolean).slice(0, 3)
+                .map(p => p[0]).join('').toUpperCase();
             const logoFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(iniciales)}&background=0a1128&color=d4af37&bold=true&size=256&font-size=0.45`;
 
             const logo = a.logo_url && a.logo_url !== 'null' ? a.logo_url : logoFallback;
-
             const subtitulo = [a.tipo_formacion, a.provincia].filter(Boolean).join(' · ');
 
             return `
                 <article class="group relative flex flex-col p-6 md:p-7 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-forenseGold/40 hover:bg-white/[0.07] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-forenseGold/10"
                          data-aos="fade-up" data-aos-delay="${index * 100}">
-
-                    <!-- Badge país (superior derecho) -->
                     <div class="absolute top-4 right-4 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/50 border border-white/10 text-[10px] font-bold text-slate-200 uppercase tracking-widest z-10">
                         ${htmlBandera(a.pais_codigo)}
                         <span>${a.pais_codigo || '—'}</span>
                     </div>
-
-                    <!-- BLOQUE DE IDENTIDAD: logo grande + nombre al lado -->
                     <div class="flex items-start gap-4 md:gap-5 mb-5 pr-16">
                         <div class="logo-escudo">
-                            <img src="${logo}"
-                                 alt="Logo de ${a.nombre || 'Institución'}"
+                            <img src="${logo}" alt="Logo de ${a.nombre || 'Institución'}"
                                  loading="lazy"
                                  onerror="this.onerror=null; this.src='${logoFallback}';">
                         </div>
-
                         <div class="flex-1 min-w-0 pt-1">
                             <h3 class="font-title text-base md:text-lg font-bold text-white leading-snug group-hover:text-forenseGold transition-colors duration-300 mb-1.5">
                                 ${a.nombre || 'Institución aliada'}
@@ -568,12 +731,9 @@
                             ${subtitulo ? `<p class="text-[11px] uppercase tracking-widest text-forenseGold/70 font-bold">${subtitulo}</p>` : ''}
                         </div>
                     </div>
-
-                    <!-- Descripción -->
                     <p class="text-sm text-slate-400 leading-relaxed flex-grow">
                         ${a.descripcion || 'Institución aliada a la red RELAM.'}
                     </p>
-
                     ${footerHTML}
                 </article>`;
         }
@@ -633,18 +793,344 @@
     })();
     </script>
 
-    <!-- ============================================================ -->
-    <!-- 📝 MODAL CONVENIO · Captación B2B → renmcycf_convenios       -->
-    <!-- ============================================================ -->
+    <!-- CONTADOR ACREDITADOS (RPC) -->
+    <script>
+    (async function cargarContadorAcreditados() {
+        try {
+            const { data, error } = await window.RELAM_SUPABASE.rpc('contar_acreditados_relam');
+            if (error) throw error;
+            const el = document.getElementById('contador-numero');
+            const cont = document.getElementById('contador-acreditados');
+            if (el && cont && data !== null) {
+                el.textContent = data.toLocaleString('es-AR');
+                cont.classList.remove('hidden');
+            }
+        } catch (e) {
+            console.warn('Contador no disponible:', e.message);
+        }
+    })();
+    </script>
+
+    <!-- TÉRMINOS Y CONDICIONES -->
+    <script>
+    (function () {
+        'use strict';
+        const db = window.RELAM_SUPABASE;
+        let terminosCargados = false;
+
+        window.abrirTerminos = async function () {
+            const modal = document.getElementById('modal-terminos');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            if (!terminosCargados) {
+                const cont = document.getElementById('terminos-contenido');
+                try {
+                    const { data } = await db
+                        .from('renmcycf_contenido')
+                        .select('valor')
+                        .eq('clave', 'terminos_b2c')
+                        .maybeSingle();
+
+                    if (data && data.valor) {
+                        cont.innerHTML = data.valor.split('\n\n').map(p => `<p>${p}</p>`).join('');
+                    } else {
+                        cont.innerHTML = `
+                            <p><strong class="text-white">1. Naturaleza privada del servicio.</strong> RELAM es una red privada de validación de antecedentes académicos. La credencial emitida no reemplaza ni otorga matriculación estatal.</p>
+                            <p><strong class="text-white">2. Arancel.</strong> El pago de auditoría no es reembolsable salvo error administrativo comprobado.</p>
+                            <p><strong class="text-white">3. Jurisdicción.</strong> Cualquier controversia se somete a los tribunales de Córdoba, Argentina.</p>
+                        `;
+                    }
+                    terminosCargados = true;
+                } catch (err) {
+                    cont.innerHTML = `<p class="text-red-400">No se pudieron cargar los términos. Contactanos por email.</p>`;
+                }
+            }
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        window.cerrarTerminos = function () {
+            const modal = document.getElementById('modal-terminos');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        };
+    })();
+    </script>
+
+    <!-- MODAL ACREDITACIÓN (3 PASOS) -->
     <script>
     (function () {
         'use strict';
 
         const db = window.RELAM_SUPABASE;
+        const PROJECT_URL = 'https://hiiruhuohxpzsphlduypo.supabase.co';
 
-        const FISCAL_POR_PAIS = {
-            AR: 'CUIT', UY: 'RUT', PY: 'RUC', BO: 'NIT', PE: 'RUC', MX: 'RFC'
+        const ARANCEL_POR_PAIS = {
+            AR: 90, UY: 90, PY: 90, BO: 90, PE: 90, MX: 90,
+            CL: 90, CO: 90, EC: 90, ES: 120, BR: 90
         };
+
+        let acrStep = 1;
+        let acrData = { identidad: null, titulo: null, pago: null };
+
+        window.abrirModalAcreditacion = function () {
+            const modal = document.getElementById('modal-acreditacion');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            acrStep = 1;
+            acrData = { identidad: null, titulo: null, pago: null };
+            acrRenderStep();
+
+            if (window.RELAM_GEO && window.RELAM_GEO.codigo) {
+                const sel = document.getElementById('acr-pais');
+                if (sel) sel.value = window.RELAM_GEO.codigo;
+                acrActualizarMonto();
+            }
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        window.cerrarModalAcreditacion = function () {
+            const modal = document.getElementById('modal-acreditacion');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        };
+
+        function acrActualizarMonto() {
+            const sel = document.getElementById('acr-pais');
+            if (!sel) return;
+            const pais = sel.value;
+            const monto = ARANCEL_POR_PAIS[pais] || 90;
+            document.getElementById('acr-monto').textContent = monto;
+
+            const esAR = pais === 'AR';
+            document.getElementById('acr-pago-transferencia').classList.toggle('hidden', !esAR);
+            document.getElementById('acr-pago-stripe').classList.toggle('hidden', esAR);
+
+            const compInput = document.getElementById('acr-comprobante');
+            if (compInput) compInput.required = esAR;
+
+            const lbl = document.getElementById('acr-doc-label');
+            const docPorPais = {
+                AR: 'DNI', UY: 'Cédula de Identidad', PY: 'Cédula de Identidad',
+                BO: 'Cédula de Identidad', PE: 'DNI', MX: 'CURP / INE',
+                CL: 'RUN', CO: 'Cédula de Ciudadanía', EC: 'Cédula de Identidad',
+                ES: 'DNI / NIE', BR: 'CPF'
+            };
+            if (lbl) lbl.textContent = (docPorPais[pais] || 'Documento') + ' *';
+        }
+        document.getElementById('acr-pais')?.addEventListener('change', acrActualizarMonto);
+
+        function acrRenderStep() {
+            [1, 2, 3].forEach(n => {
+                const p = document.getElementById('acr-paso-' + n);
+                if (p) p.classList.toggle('hidden', n !== acrStep);
+            });
+
+            for (let n = 1; n <= 3; n++) {
+                const bar = document.getElementById('acr-bar-' + n);
+                if (bar) {
+                    bar.className = 'flex-1 h-1 rounded-full transition-all ' +
+                        (n <= acrStep ? 'bg-forenseGold' : 'bg-white/10');
+                }
+            }
+
+            document.getElementById('acr-step-num').textContent = acrStep;
+            document.getElementById('acr-btn-atras').classList.toggle('hidden', acrStep === 1);
+            document.getElementById('acr-btn-label').textContent = acrStep === 3 ? '✓ Enviar' : '→';
+
+            const err = document.getElementById('acr-error');
+            if (err) err.classList.add('hidden');
+
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function acrValidarPaso1() {
+            const nombre = document.getElementById('acr-nombre').value.trim();
+            const doc = document.getElementById('acr-documento').value.trim();
+            const email = document.getElementById('acr-email').value.trim();
+            const tel = document.getElementById('acr-telefono').value.trim();
+            if (!nombre || !doc || !email || !tel) throw new Error('Completá todos los campos obligatorios.');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('El email no es válido.');
+            return {
+                nombre, documento: doc,
+                pais: document.getElementById('acr-pais').value,
+                email, telefono: tel
+            };
+        }
+
+        function acrValidarPaso2() {
+            const profesion = document.getElementById('acr-profesion').value.trim();
+            const categoria = document.getElementById('acr-categoria').value;
+            const foto = document.getElementById('acr-foto').files[0];
+            const titulo = document.getElementById('acr-titulo').files[0];
+            if (!profesion) throw new Error('Declará tu profesión o título.');
+            if (!foto) throw new Error('Subí una foto de perfil.');
+            if (!titulo) throw new Error('Subí el archivo de tu título.');
+            if (foto.size > 5 * 1024 * 1024) throw new Error('La foto supera los 5 MB.');
+            if (titulo.size > 10 * 1024 * 1024) throw new Error('El título supera los 10 MB.');
+            return { profesion, categoria, foto, titulo };
+        }
+
+        window.acrSiguiente = async function () {
+            const errBox = document.getElementById('acr-error');
+            if (errBox) errBox.classList.add('hidden');
+
+            try {
+                if (acrStep === 1) {
+                    acrData.identidad = acrValidarPaso1();
+                    acrStep = 2;
+                    acrRenderStep();
+                } else if (acrStep === 2) {
+                    acrData.titulo = acrValidarPaso2();
+                    acrStep = 3;
+                    acrRenderStep();
+                    acrActualizarMonto();
+                } else {
+                    await acrEnviar();
+                }
+            } catch (err) {
+                if (errBox) {
+                    errBox.textContent = 'Error: ' + err.message;
+                    errBox.classList.remove('hidden');
+                }
+            }
+        };
+
+        window.acrAtras = function () {
+            if (acrStep > 1) {
+                acrStep--;
+                acrRenderStep();
+            }
+        };
+
+        async function acrEnviar() {
+            const btn = document.getElementById('acr-btn-siguiente');
+            const orig = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Enviando...';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            try {
+                const { identidad, titulo } = acrData;
+                const pais = identidad.pais;
+                const esAR = pais === 'AR';
+
+                let comprobanteFile = null;
+                if (esAR) {
+                    comprobanteFile = document.getElementById('acr-comprobante').files[0];
+                    if (!comprobanteFile) throw new Error('Subí el comprobante de transferencia.');
+                }
+
+                if (!document.getElementById('acr-acepta-final').checked) {
+                    throw new Error('Tenés que aceptar los Términos y Condiciones finales.');
+                }
+
+                // 1) Subir foto
+                const extFoto = titulo.foto.name.split('.').pop().toLowerCase();
+                const nombreFoto = `relam_acred_${Date.now()}_foto.${extFoto}`;
+                const { error: errFoto } = await db.storage
+                    .from('renmcycf-documentos')
+                    .upload(nombreFoto, titulo.foto, { cacheControl: '3600', upsert: false });
+                if (errFoto) throw new Error('Error al subir foto: ' + errFoto.message);
+                const urlFoto = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${nombreFoto}`;
+
+                // 2) Subir título
+                const extTit = titulo.titulo.name.split('.').pop().toLowerCase();
+                const nombreTit = `relam_acred_${Date.now()}_titulo.${extTit}`;
+                const { error: errTit } = await db.storage
+                    .from('renmcycf-documentos')
+                    .upload(nombreTit, titulo.titulo, { cacheControl: '3600', upsert: false });
+                if (errTit) throw new Error('Error al subir título: ' + errTit.message);
+                const urlTit = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${nombreTit}`;
+
+                // 3) Subir comprobante (solo AR)
+                let urlComp = null;
+                if (comprobanteFile) {
+                    const extComp = comprobanteFile.name.split('.').pop().toLowerCase();
+                    const nombreComp = `relam_acred_${Date.now()}_comp.${extComp}`;
+                    const { error: errComp } = await db.storage
+                        .from('renmcycf-documentos')
+                        .upload(nombreComp, comprobanteFile, { cacheControl: '3600', upsert: false });
+                    if (errComp) throw new Error('Error al subir comprobante: ' + errComp.message);
+                    urlComp = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${nombreComp}`;
+                }
+
+                // 4) INSERT en tabla nueva
+                const payload = {
+                    nombre:             identidad.nombre,
+                    documento:          identidad.documento,
+                    pais_codigo:        pais,
+                    pais_residencia:    pais,
+                    email:              identidad.email,
+                    telefono:           identidad.telefono,
+                    profesion:          titulo.profesion,
+                    categoria:          titulo.categoria,
+                    foto_perfil_url:    urlFoto,
+                    titulo_url:         urlTit,
+                    comprobante_url:    urlComp,
+                    estado_pago:        'PENDIENTE',
+                    estado:             'PENDIENTE',
+                    terminos_aceptados: true,
+                    fecha_aceptacion:   new Date().toISOString(),
+                    pago_monto_usd:     ARANCEL_POR_PAIS[pais] || 90
+                };
+
+                const { error: errIns } = await db.from('renmcycf_acreditaciones_relam').insert([payload]);
+                if (errIns) throw new Error('Error al guardar la solicitud: ' + errIns.message);
+
+                // 5) Feedback + éxito
+                const paso3 = document.getElementById('acr-paso-3');
+                paso3.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="w-20 h-20 mx-auto mb-5 rounded-full bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center">
+                            <i data-lucide="check-circle" class="w-10 h-10 text-emerald-400"></i>
+                        </div>
+                        <h4 class="text-xl font-black text-white mb-2">¡Solicitud enviada!</h4>
+                        <p class="text-sm text-slate-300 max-w-md mx-auto mb-4">
+                            Tu acreditación quedó registrada con estado <strong class="text-forenseGold">pago pendiente</strong>.
+                            Te enviamos por email las instrucciones para completar el pago.
+                        </p>
+                        <p class="text-[11px] text-slate-500">
+                            Cuando el pago se acredite, tu solicitud entra en auditoría automáticamente.
+                        </p>
+                    </div>`;
+                btn.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i> ¡Enviado!';
+                btn.classList.remove('btn-gold');
+                btn.classList.add('bg-emerald-600', 'text-white');
+                btn.disabled = true;
+
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            } catch (err) {
+                const errBox = document.getElementById('acr-error');
+                if (errBox) {
+                    errBox.textContent = err.message;
+                    errBox.classList.remove('hidden');
+                }
+                btn.disabled = false;
+                btn.innerHTML = orig;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+    })();
+    </script>
+
+    <!-- MODAL INSTITUCIÓN -->
+    <script>
+    (function () {
+        'use strict';
+        const db = window.RELAM_SUPABASE;
 
         window.abrirModalConvenio = function () {
             const modal = document.getElementById('modal-convenio');
@@ -653,11 +1139,9 @@
             modal.classList.add('flex');
             document.body.style.overflow = 'hidden';
 
-            // Pre-cargar país detectado por Geo-IP (si ya corrió)
             if (window.RELAM_GEO && window.RELAM_GEO.codigo) {
                 const sel = document.getElementById('conv-pais');
                 if (sel) sel.value = window.RELAM_GEO.codigo;
-                actualizarFiscalLabel();
             }
             if (typeof lucide !== 'undefined') lucide.createIcons();
         };
@@ -669,15 +1153,6 @@
             modal.classList.remove('flex');
             document.body.style.overflow = '';
         };
-
-        function actualizarFiscalLabel() {
-            const sel = document.getElementById('conv-pais');
-            const lbl = document.getElementById('conv-fiscal-label');
-            if (!sel || !lbl) return;
-            const fiscal = FISCAL_POR_PAIS[sel.value] || 'ID Fiscal';
-            lbl.textContent = fiscal + ' / ID Fiscal *';
-        }
-        document.getElementById('conv-pais')?.addEventListener('change', actualizarFiscalLabel);
 
         window.enviarSolicitudConvenio = async function (e) {
             e.preventDefault();
@@ -695,17 +1170,11 @@
 
             try {
                 const payload = {
-                    institucion:        document.getElementById('conv-institucion').value.trim(),
-                    pais_codigo:        document.getElementById('conv-pais').value,
-                    cuit:               document.getElementById('conv-cuit').value.trim(),
-                    director_nombre:    document.getElementById('conv-director').value.trim() || null,
-                    tel_institucional:  document.getElementById('conv-telefono').value.trim() || null,
-                    email:              document.getElementById('conv-email').value.trim(),
-                    plan_elegido:       document.getElementById('conv-plan').value,
-                    forma_pago:         document.getElementById('conv-pago').value,
-                    descripcion:        document.getElementById('conv-descripcion').value.trim() || null,
-                    estado:             'PENDIENTE',
-                    es_internacional:   true
+                    institucion:      document.getElementById('conv-institucion').value.trim(),
+                    pais_codigo:      document.getElementById('conv-pais').value,
+                    email:            document.getElementById('conv-email').value.trim(),
+                    estado:           'PENDIENTE',
+                    es_internacional: true
                 };
 
                 if (!payload.institucion) throw new Error('El nombre de la institución es obligatorio.');
@@ -714,17 +1183,17 @@
                 const { error } = await db.from('renmcycf_convenios').insert([payload]);
                 if (error) throw error;
 
-                okBox.textContent = '✅ Solicitud enviada. Nos pondremos en contacto en menos de 48 hs hábiles.';
+                okBox.textContent = '✅ Solicitud recibida. Te escribimos en menos de 48 hs hábiles.';
                 okBox.classList.remove('hidden');
 
                 setTimeout(() => {
                     window.cerrarModalConvenio();
                     document.getElementById('form-convenio-relam').reset();
                     okBox.classList.add('hidden');
-                }, 2500);
+                }, 3000);
 
             } catch (err) {
-                errBox.textContent = 'Error: ' + (err.message || 'No se pudo enviar la solicitud.');
+                errBox.textContent = 'Error: ' + (err.message || 'No se pudo enviar.');
                 errBox.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
@@ -735,9 +1204,7 @@
     })();
     </script>
 
-    <!-- ============================================================ -->
-    <!-- 🧠 CEREBRO GEO-IP · RELAM                                    -->
-    <!-- ============================================================ -->
+    <!-- CEREBRO GEO-IP -->
     <script>
     (function () {
         'use strict';
@@ -760,13 +1227,6 @@
             origen: 'default'
         };
 
-        function setTexto(selector, valor) {
-            document.querySelectorAll(selector).forEach(function (el) {
-                const tieneAsterisco = /\*\s*$/.test(el.textContent || '');
-                el.textContent = tieneAsterisco ? valor + ' *' : valor;
-            });
-        }
-
         function htmlBandera(codigoIso, altPais) {
             return '<img src="https://flagcdn.com/24x18/' + codigoIso + '.png" ' +
                 'srcset="https://flagcdn.com/48x36/' + codigoIso + '.png 2x" ' +
@@ -776,64 +1236,23 @@
         function aplicarContextoGeo(codigoPais) {
             const cfg = GEO_MAP[codigoPais] || GEO_MAP[PAIS_FALLBACK];
 
-            setTexto('[data-geo="fiscal"]', cfg.fiscal);
-            setTexto('label[data-geo="fiscal"]', cfg.fiscal);
-            document.querySelectorAll('label').forEach(function (lbl) {
-                if (/^\s*CUIT\s*\*?\s*$/.test(lbl.textContent)) lbl.textContent = cfg.fiscal + ' *';
-            });
-
-            setTexto('[data-geo="documento"]', cfg.documento);
-            setTexto('label[data-geo="documento"]', cfg.documento);
-            document.querySelectorAll('label').forEach(function (lbl) {
-                if (/^\s*DNI\s*\*?\s*$/.test(lbl.textContent)) lbl.textContent = cfg.documento + ' *';
-            });
-
-            document.querySelectorAll('[data-geo="prefijo"]').forEach(function (input) {
-                if (input.tagName === 'INPUT' || input.tagName === 'TEXTAREA') {
-                    if (!input.value) input.placeholder = cfg.prefijo + ' ...';
-                    input.dataset.prefijo = cfg.prefijo;
-                } else {
-                    input.textContent = cfg.prefijo;
-                }
-            });
-
-            document.querySelectorAll('input[type="tel"], input[placeholder*="+54"]').forEach(function (inp) {
-                if (inp.placeholder && inp.placeholder.indexOf('+54') === 0) {
-                    inp.placeholder = inp.placeholder.replace(/^\+54/, cfg.prefijo);
-                }
-            });
-
-            const divTransferencia = document.getElementById('metodo-transferencia');
-            const divStripe        = document.getElementById('metodo-stripe');
-            if (cfg.pasarela === 'TRANSFERENCIA') {
-                if (divTransferencia) divTransferencia.classList.remove('hidden');
-                if (divStripe)        divStripe.classList.add('hidden');
-            } else {
-                if (divTransferencia) divTransferencia.classList.add('hidden');
-                if (divStripe)        divStripe.classList.remove('hidden');
-            }
-
-            document.querySelectorAll('[data-geo="moneda"]').forEach(function (el) {
-                el.textContent = cfg.moneda;
-            });
-
             const banderaActiva = document.getElementById('geo-bandera-activa');
             const paisActivo    = document.getElementById('geo-pais-activo');
             if (banderaActiva) banderaActiva.innerHTML = htmlBandera(cfg.bandera, cfg.pais);
             if (paisActivo)    paisActivo.textContent = cfg.pais;
 
             document.documentElement.setAttribute('data-geo-pais', codigoPais);
-            document.documentElement.setAttribute('data-geo-moneda', cfg.moneda);
-            document.documentElement.setAttribute('data-geo-pasarela', cfg.pasarela);
 
             window.RELAM_GEO.codigo = codigoPais;
             window.RELAM_GEO.config = cfg;
 
-            // Refrescar el select del modal si está abierto
             const selConv = document.getElementById('conv-pais');
-            if (selConv) {
-                selConv.value = codigoPais;
-                selConv.dispatchEvent(new Event('change'));
+            if (selConv) selConv.value = codigoPais;
+
+            const selAcr = document.getElementById('acr-pais');
+            if (selAcr) {
+                selAcr.value = codigoPais;
+                selAcr.dispatchEvent(new Event('change'));
             }
         }
 
