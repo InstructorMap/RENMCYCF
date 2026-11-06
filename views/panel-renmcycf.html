@@ -189,6 +189,11 @@
             border: 1px solid rgba(16, 185, 129, 0.3);
         }
         .btn-success:hover { background: rgba(16, 185, 129, 0.28); }
+
+        /* RELAM · Chip de filtro */
+        .filtro-chip { padding: 6px 14px; border-radius: 999px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all .2s; border: 1px solid rgba(212,175,55,.2); color: #cbd5e1; background: rgba(0,0,0,.25); }
+        .filtro-chip:hover { border-color: rgba(212,175,55,.5); color: #fff; }
+        .filtro-chip.activo { background: rgba(212,175,55,.15); border-color: var(--forense-gold); color: var(--forense-gold); }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -225,7 +230,6 @@
                 <p class="font-bold text-sm uppercase tracking-widest mt-1 text-slate-200 relative z-20">Registro Nacional RENMCYCF</p>
             </div>
 
-            <!-- ============ BANNER BLOQUEO (Entregable 2) ============ -->
             <div id="banner-bloqueo" class="hidden bg-amber-100 border-l-4 border-amber-500 text-amber-900 px-6 py-3 flex items-center gap-3 print:hidden">
                 <i data-lucide="alert-triangle" class="w-6 h-6 flex-shrink-0"></i>
                 <div>
@@ -429,7 +433,6 @@
                 <button onclick="showTab('biblioteca')" id="nav-biblioteca" class="sidebar-link"><i data-lucide="library" class="w-4 h-4"></i> Biblioteca</button>
                 <button onclick="showTab('tesis')" id="nav-tesis" class="sidebar-link"><i data-lucide="microscope" class="w-4 h-4"></i> Auditoría Tesis</button>
 
-                <!-- ============ EXPANSIÓN B2B (Actualizado) ============ -->
                 <div class="px-2 py-2 text-[9px] font-bold text-[#d4af37] uppercase tracking-widest mt-6">Expansión B2B</div>
                 <button onclick="showTab('convenios')" id="nav-convenios" class="sidebar-link w-full"><i data-lucide="handshake" class="w-4 h-4"></i> Alianzas (Institutos)</button>
                 <button onclick="showTab('red-judicial')" id="nav-red-judicial" class="sidebar-link w-full"><i data-lucide="scale" class="w-4 h-4"></i> Red Judicial (Abogados)</button>
@@ -748,44 +751,105 @@
                 </div>
             </div>
 
-            <!-- ALIADOS -->
+            <!-- ALIADOS (ACTUALIZADO · soporta RELAM internacional) -->
             <div id="view-aliados" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
-                        <h3 class="text-white font-bold mb-4 border-b border-[#d4af37]/15 pb-2">Nuevo Aliado</h3>
+                        <h3 class="text-white font-bold mb-4 border-b border-[#d4af37]/15 pb-2">Nuevo Aliado / RELAM</h3>
                         <form id="form-aliado" onsubmit="crearAliado(event)" class="space-y-4">
                             <input type="hidden" id="aliado-id">
                             <div><label>Nombre de la Institución</label><input type="text" id="aliado-nombre" required></div>
+
+                            <div class="bg-black/20 p-3 rounded-xl border border-purple-500/20">
+                                <label class="text-purple-300 font-black text-xs mb-2 flex items-center gap-2"><i data-lucide="globe-2" class="w-4 h-4"></i> País / RELAM</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="text-[10px]">Código ISO (AR, UY, MX...)</label>
+                                        <input type="text" id="aliado-pais" maxlength="2" placeholder="AR" class="font-mono uppercase" value="AR">
+                                    </div>
+                                    <div class="flex items-end pb-2">
+                                        <label class="flex items-center gap-2 mb-0 cursor-pointer">
+                                            <input type="checkbox" id="aliado-internacional" class="w-4 h-4">
+                                            <span class="text-[11px] font-bold text-white">Es RELAM Internacional</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <p class="text-[9px] text-slate-400 mt-1">Marcá "RELAM Internacional" para que aparezca en el directorio público de la landing.</p>
+                            </div>
+
+                            <div>
+                                <label>Descripción corta (máx 120 car.)</label>
+                                <textarea id="aliado-desc" rows="2" maxlength="120" placeholder="Breve descripción para el directorio público"></textarea>
+                            </div>
+
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label>Provincia Sede Central</label>
-                                    <input type="text" id="aliado-prov" placeholder="Ej: Córdoba..." required>
+                                    <label>Provincia / Ciudad Sede</label>
+                                    <input type="text" id="aliado-prov" placeholder="Ej: Córdoba / Lima...">
                                 </div>
                                 <div>
                                     <label>Tipo de Formación</label>
-                                    <input type="text" id="aliado-tipo" placeholder="Ej: Tecnicaturas..." required>
+                                    <input type="text" id="aliado-tipo" placeholder="Ej: Tecnicaturas...">
                                 </div>
                             </div>
+
                             <div>
                                 <label>Estado de Auditoría</label>
-                                <select id="aliado-estado" class="form-input font-bold" required>
-                                    <option value="PENDIENTE" class="text-amber-600">PENDIENTE</option>
-                                    <option value="AUDITADO" class="text-emerald-600">AUDITADO</option>
+                                <select id="aliado-estado" class="form-input font-bold">
+                                    <option value="PENDIENTE">PENDIENTE</option>
+                                    <option value="AUDITADO">AUDITADO</option>
                                 </select>
                             </div>
-                            <div><label>Enlace Web Oficial</label><input type="url" id="aliado-web" placeholder="https://..." class="text-slate-400"></div>
-                            <div><label>Logo de la Institución</label><input type="file" id="aliado-logo" accept="image/*" class="text-slate-400"></div>
-                            <div class="bg-black/30 p-4 rounded-xl border border-[#d4af37]/15 flex items-center gap-3">
-                                <input type="checkbox" id="aliado-activo" checked class="w-5 h-5">
-                                <label for="aliado-activo" class="text-sm font-bold text-white mb-0 cursor-pointer">Visible en el Directorio Público</label>
+
+                            <div class="bg-black/20 p-3 rounded-xl border border-[#d4af37]/10">
+                                <label class="text-[#d4af37] font-black text-xs mb-2 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Redes Sociales</label>
+                                <div class="space-y-2">
+                                    <div><label class="text-[10px]">Web</label><input type="url" id="aliado-web" placeholder="https://..." class="text-slate-300"></div>
+                                    <div><label class="text-[10px]">Facebook</label><input type="url" id="aliado-facebook" placeholder="https://facebook.com/..." class="text-slate-300"></div>
+                                    <div><label class="text-[10px]">Instagram</label><input type="url" id="aliado-instagram" placeholder="https://instagram.com/..." class="text-slate-300"></div>
+                                    <div><label class="text-[10px]">LinkedIn</label><input type="url" id="aliado-linkedin" placeholder="https://linkedin.com/..." class="text-slate-300"></div>
+                                </div>
                             </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label>Orden (menor = primero)</label>
+                                    <input type="number" id="aliado-orden" value="0">
+                                </div>
+                                <div class="flex items-end pb-2">
+                                    <label class="flex items-center gap-2 mb-0 cursor-pointer">
+                                        <input type="checkbox" id="aliado-activo" checked class="w-4 h-4">
+                                        <span class="text-[11px] font-bold text-white">Visible en Directorio</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div><label>Logo de la Institución</label><input type="file" id="aliado-logo" accept="image/*" class="text-slate-400"></div>
+
                             <button type="submit" class="btn-primary w-full py-3 rounded-xl">GUARDAR INSTITUCIÓN</button>
                             <button type="button" onclick="resetFormAliado()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs">CANCELAR EDICIÓN</button>
                         </form>
                     </div>
                     <div class="glass-card p-6 xl:col-span-2">
-                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg text-white">Directorio Nacional de Aliados</h3><button onclick="cargarAliadosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button></div>
-                        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-3">Logo</th><th class="p-3">Institución</th><th class="p-3">Provincia / Formación</th><th class="p-3">Estado Auditoría</th><th class="p-3 text-center">Timbres</th><th class="p-3 text-right">Acciones</th></tr></thead><tbody id="aliados-body"></tbody></table></div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-lg text-white">Directorio de Aliados</h3>
+                            <button onclick="cargarAliadosPanel()" class="text-slate-400 hover:text-white"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="p-3">Logo</th>
+                                        <th class="p-3">Institución</th>
+                                        <th class="p-3">País / Formación</th>
+                                        <th class="p-3">Estado</th>
+                                        <th class="p-3 text-center">Timbres</th>
+                                        <th class="p-3 text-right">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="aliados-body"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -809,27 +873,35 @@
                 </div>
             </div>
 
-            <!-- ============ ALIANZAS EDUCATIVAS (Institutos) - Simplificada ============ -->
+            <!-- ============ ALIANZAS EDUCATIVAS (Institutos) — con RELAM ============ -->
             <div id="view-convenios" class="tab-content space-y-6">
                 <div class="glass-card p-6">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b border-[#d4af37]/15">
                         <div>
                             <h3 class="font-bold text-lg text-white flex items-center gap-2">
-                                <i data-lucide="handshake" class="text-[#d4af37] w-5 h-5"></i> Solicitudes de Alianzas (Institutos)
+                                <i data-lucide="handshake" class="text-[#d4af37] w-5 h-5"></i> Solicitudes de Alianzas (Institutos + RELAM)
                             </h3>
-                            <p class="text-xs text-slate-400 mt-1">Instituciones que completaron el Pre-Acuerdo para emitir diplomas.</p>
+                            <p class="text-xs text-slate-400 mt-1">Institutos que completaron el Pre-Acuerdo. Aprobá y publicá en el directorio RELAM.</p>
                         </div>
-                        <button onclick="cargarConveniosPanel()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2">
-                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> REFRESCAR
-                        </button>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <!-- Filtro rápido -->
+                            <div class="flex gap-1.5">
+                                <button onclick="setFiltroConvenios('todos')" id="chip-todos" class="filtro-chip activo">Todos</button>
+                                <button onclick="setFiltroConvenios('nacional')" id="chip-nacional" class="filtro-chip">Nacionales</button>
+                                <button onclick="setFiltroConvenios('relam')" id="chip-relam" class="filtro-chip">RELAM</button>
+                            </div>
+                            <button onclick="cargarConveniosPanel()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i> REFRESCAR
+                            </button>
+                        </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
                             <thead>
                                 <tr>
                                     <th class="p-3">Instituto</th>
-                                    <th class="p-3">Plan Elegido</th>
-                                    <th class="p-3">Pre-Acuerdo PDF</th>
+                                    <th class="p-3">Plan / Pago</th>
+                                    <th class="p-3">Acuerdo / Comprobante</th>
                                     <th class="p-3">Estado</th>
                                     <th class="p-3 text-right">Acciones</th>
                                 </tr>
@@ -1294,7 +1366,7 @@
     <div id="toast-container" class="fixed top-4 right-4 z-[300] space-y-2 pointer-events-none"></div>
 
     <script>
-                // ==========================================
+        // ==========================================
         // CONFIGURACIÓN SUPABASE
         // ==========================================
         lucide.createIcons();
@@ -1303,7 +1375,7 @@
         const db = supabase.createClient(PROJECT_URL, PUBLIC_KEY);
 
         // ==========================================
-        // UTILITARIO · UPLOAD CON REINTENTOS (Entregable 5)
+        // UTILITARIO · UPLOAD CON REINTENTOS
         // ==========================================
         async function uploadConReintentos(bucket, fileName, file, maxRetries = 3) {
             let ultimoError = null;
@@ -1343,9 +1415,10 @@
         let suscriptoresCache = [];
         let conveniosCache = [];
         let omniboxDebounce = null;
+        let filtroConvenios = 'todos'; // 'todos' | 'nacional' | 'relam'
 
         // ==========================================
-        // 22. SISTEMA DE TOASTS
+        // SISTEMA DE TOASTS
         // ==========================================
         function mostrarToast(mensaje, tipo = 'info', duracion = 3000) {
             const container = document.getElementById('toast-container');
@@ -1381,7 +1454,7 @@
         window.mostrarToast = mostrarToast;
 
         // ==========================================
-        // 23. LOG DE AUDITORÍA + HISTORIAL
+        // LOG DE AUDITORÍA
         // ==========================================
         async function logAccion(accion, modulo, registroId = null, detalles = {}) {
             try {
@@ -1418,7 +1491,7 @@
         window.registrarCambioEstado = registrarCambioEstado;
 
         // ==========================================
-        // 24. SOFT-DELETE (PAPELERA)
+        // SOFT-DELETE (PAPELERA)
         // ==========================================
         async function softDelete(tabla, id, nombreEntidad = 'registro') {
             if (!confirm(`⚠️ ¿Mover "${nombreEntidad}" a la papelera?`)) return false;
@@ -1488,7 +1561,7 @@
         window.cargarPapelera = cargarPapelera;
 
         // ==========================================
-        // 25. VALIDACIONES CUIT / DNI
+        // VALIDACIONES
         // ==========================================
         function validarCuit(cuit) {
             if (!cuit) return false;
@@ -1533,7 +1606,7 @@
         window.asociarValidacionInput = asociarValidacionInput;
 
         // ==========================================
-        // 26. VISOR DE PDF INTERNO
+        // VISOR PDF
         // ==========================================
         function abrirPdfViewer(url, titulo = 'Documento') {
             const modal = document.getElementById('modal-pdf-viewer');
@@ -1560,7 +1633,7 @@
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarPdfViewer(); });
 
         // ==========================================
-        // 27. NOTIFICACIONES
+        // NOTIFICACIONES
         // ==========================================
         async function cargarNotificaciones() {
             try {
@@ -1613,7 +1686,7 @@
         });
 
         // ==========================================
-        // 28. OMNIBOX (Ctrl+K)
+        // OMNIBOX
         // ==========================================
         function abrirOmnibox() {
             const o = document.getElementById('omnibox-overlay');
@@ -1688,7 +1761,7 @@
         window.abrirExpedientePorId = abrirExpedientePorId;
 
         // ==========================================
-        // 29. FINANCIERO Y CIERRE DE CAJA
+        // FINANCIERO
         // ==========================================
         async function cargarFinancieroPanel() {
             try {
@@ -1837,7 +1910,7 @@
         window.cerrarCajaMensual = cerrarCajaMensual;
 
         // ==========================================
-        // 30. VENCIMIENTOS
+        // VENCIMIENTOS
         // ==========================================
         async function cargarVencimientosProximos() {
             const container = document.getElementById('vencimientos-lista');
@@ -2033,7 +2106,7 @@
                 'auditoria':'Auditoría Comité', 'padron':'Padrón Nacional',
                 'financiero':'Cierre de Caja y Financiero', 'papelera':'Papelera',
                 'aliados':'Gestión de Aliados', 'cursos-b2b':'Auditoría de Cursos B2B',
-                'convenios':'Alianzas (Institutos)',
+                'convenios':'Alianzas (Institutos + RELAM)',
                 'red-judicial':'Red Judicial (Abogados)',
                 'empresas':'Red de Empresas',
                 'comite':'Comité Evaluador', 'campus':'Portal Científico',
@@ -2237,7 +2310,7 @@
         }
 
         // ==========================================
-        // CRM TRÁMITES
+        // CRM
         // ==========================================
         async function cargarSolicitudes() {
             const tbody = document.getElementById('crm-body');
@@ -2348,7 +2421,7 @@
         }
 
         // ==========================================
-        // ABRIR EXPEDIENTE (con lock)
+        // ABRIR EXPEDIENTE
         // ==========================================
         async function abrirExpediente(item) {
             itemDossierActual = item;
@@ -2894,37 +2967,51 @@
         }
 
         // ==========================================
-        // ALIADOS
+        // ALIADOS (ACTUALIZADO · soporta RELAM)
         // ==========================================
         async function cargarAliadosPanel() {
             const tbody = document.getElementById('aliados-body'); if (!tbody) return;
             tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center">Cargando...</td></tr>';
             try {
-                const { data, error } = await db.from('renmcycf_aliados').select('*').is('deleted_at', null).order('created_at', { ascending: false });
+                const { data, error } = await db.from('renmcycf_aliados').select('*').is('deleted_at', null).order('orden', { ascending: true }).order('created_at', { ascending: false });
                 if (error) throw error;
                 if (!data || data.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center text-slate-400">No hay instituciones.</td></tr>'; return; }
-                tbody.innerHTML = data.map(a => `
-                <tr class="border-b border-white/5 hover:bg-white/5">
-                    <td class="p-3"><img src="${a.logo_url}" class="w-16 h-12 object-contain bg-white rounded p-1"></td>
-                    <td class="p-3"><span class="text-white font-bold block">${a.nombre}</span>${a.web_url ? `<a href="${a.web_url}" target="_blank" class="text-[10px] text-blue-400 hover:underline block mt-1">${a.web_url}</a>` : ''}</td>
-                    <td class="p-3"><span class="text-white font-bold block text-xs">${a.provincia || 'S/D'}</span><span class="text-[10px] text-slate-400 block">${a.tipo_formacion || 'S/D'}</span></td>
-                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${a.estado_auditoria==='AUDITADO'?'bg-emerald-900/30 text-emerald-400':'bg-amber-900/30 text-amber-400'}">${a.estado_auditoria || 'PENDIENTE'}</span></td>
-                    <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${a.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">${a.activo?'VISIBLE':'OCULTO'}</span></td>
-                    <td class="p-3 text-center">
-                        <div class="flex items-center justify-center gap-2">
-                            <span class="text-lg font-mono font-black text-[#d4af37]">${a.saldo_timbres || 0}</span>
-                            <div class="flex flex-col gap-1">
-                                <button onclick="modificarTimbres('${a.id}', 10, '${a.nombre.replace(/'/g, "\\'")}')" class="bg-emerald-500/20 text-emerald-400 p-1 rounded hover:bg-emerald-500/40"><i data-lucide="plus" class="w-3 h-3"></i></button>
-                                <button onclick="modificarTimbres('${a.id}', -1, '${a.nombre.replace(/'/g, "\\'")}')" class="bg-red-500/20 text-red-400 p-1 rounded hover:bg-red-500/40"><i data-lucide="minus" class="w-3 h-3"></i></button>
+                const banderaEmoji = (iso) => {
+                    if (!iso || iso.length !== 2) return '🏳️';
+                    return String.fromCodePoint(...iso.toUpperCase().split('').map(c => 127397 + c.charCodeAt(0)));
+                };
+                tbody.innerHTML = data.map(a => {
+                    const logo = a.logo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(a.nombre || 'X')}&background=0a1128&color=d4af37&bold=true`;
+                    const esIntl = a.es_internacional ? `<span class="ml-2 px-1.5 py-0.5 bg-purple-900/40 text-purple-300 rounded text-[9px] font-black uppercase">RELAM</span>` : '';
+                    return `
+                    <tr class="border-b border-white/5 hover:bg-white/5">
+                        <td class="p-3"><img src="${logo}" class="w-16 h-12 object-contain bg-white rounded p-1"></td>
+                        <td class="p-3">
+                            <span class="text-white font-bold block">${a.nombre}${esIntl}</span>
+                            ${a.web_url ? `<a href="${a.web_url}" target="_blank" class="text-[10px] text-blue-400 hover:underline block mt-1">${a.web_url}</a>` : ''}
+                        </td>
+                        <td class="p-3">
+                            <span class="text-white font-bold block text-xs">${banderaEmoji(a.pais_codigo)} ${a.pais_codigo || 'AR'} · ${a.provincia || 'S/D'}</span>
+                            <span class="text-[10px] text-slate-400 block">${a.tipo_formacion || 'S/D'}</span>
+                        </td>
+                        <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${a.estado_auditoria==='AUDITADO'?'bg-emerald-900/30 text-emerald-400':'bg-amber-900/30 text-amber-400'}">${a.estado_auditoria || 'PENDIENTE'}</span></td>
+                        <td class="p-3 text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                <span class="text-lg font-mono font-black text-[#d4af37]">${a.saldo_timbres || 0}</span>
+                                <div class="flex flex-col gap-1">
+                                    <button onclick="modificarTimbres('${a.id}', 10, '${(a.nombre || '').replace(/'/g, "\\'")}')" class="bg-emerald-500/20 text-emerald-400 p-1 rounded hover:bg-emerald-500/40"><i data-lucide="plus" class="w-3 h-3"></i></button>
+                                    <button onclick="modificarTimbres('${a.id}', -1, '${(a.nombre || '').replace(/'/g, "\\'")}')" class="bg-red-500/20 text-red-400 p-1 rounded hover:bg-red-500/40"><i data-lucide="minus" class="w-3 h-3"></i></button>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td class="p-3 text-right">
-                        <button class="border border-blue-500/30 text-blue-400 px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-blue-500/10" onclick='editarAliado(${JSON.stringify(a).replace(/'/g, "&#39;")})'><i data-lucide="edit" class="w-3 h-3 inline"></i> EDITAR</button>
-                        <button class="border border-white/20 text-white px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-white/10" onclick="toggleAliado('${a.id}', ${!a.activo})">${a.activo?'Ocultar':'Mostrar'}</button>
-                        <button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40" onclick="eliminarAliado('${a.id}', '${a.nombre.replace(/'/g, "\\'")}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </td>
-                </tr>`).join('');
+                        </td>
+                        <td class="p-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase ${a.activo?'bg-emerald-900/30 text-emerald-400':'bg-red-900/30 text-red-400'}">${a.activo?'VISIBLE':'OCULTO'}</span></td>
+                        <td class="p-3 text-right">
+                            <button class="border border-blue-500/30 text-blue-400 px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-blue-500/10" onclick='editarAliado(${JSON.stringify(a).replace(/'/g, "&#39;")})'><i data-lucide="edit" class="w-3 h-3 inline"></i> EDITAR</button>
+                            <button class="border border-white/20 text-white px-2 py-1 rounded text-[10px] uppercase mr-2 hover:bg-white/10" onclick="toggleAliado('${a.id}', ${!a.activo})">${a.activo?'Ocultar':'Mostrar'}</button>
+                            <button class="bg-red-500/20 text-red-400 p-1.5 rounded hover:bg-red-500/40" onclick="eliminarAliado('${a.id}', '${(a.nombre || '').replace(/'/g, "\\'")}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </td>
+                    </tr>`;
+                }).join('');
                 lucide.createIcons();
             } catch (err) { tbody.innerHTML = `<tr><td colspan="7" class="p-3 text-center text-red-400">Error: ${err.message}</td></tr>`; }
         }
@@ -2941,9 +3028,25 @@
                 const tipo_formacion = document.getElementById('aliado-tipo').value.trim();
                 const estado_auditoria = document.getElementById('aliado-estado').value;
                 const webUrl = document.getElementById('aliado-web').value.trim();
+                const facebookUrl = document.getElementById('aliado-facebook').value.trim();
+                const instagramUrl = document.getElementById('aliado-instagram').value.trim();
+                const linkedinUrl = document.getElementById('aliado-linkedin').value.trim();
                 const activo = document.getElementById('aliado-activo').checked;
+                const pais_codigo = (document.getElementById('aliado-pais').value || 'AR').trim().toUpperCase().substring(0, 2);
+                const es_internacional = document.getElementById('aliado-internacional').checked;
+                const descripcion = document.getElementById('aliado-desc').value.trim();
+                const orden = parseInt(document.getElementById('aliado-orden').value) || 0;
                 const imgFile = document.getElementById('aliado-logo').files[0];
-                const payload = { nombre, provincia, tipo_formacion, estado_auditoria, web_url: webUrl, activo };
+                const payload = {
+                    nombre, provincia, tipo_formacion, estado_auditoria,
+                    web_url: webUrl || null,
+                    facebook_url: facebookUrl || null,
+                    instagram_url: instagramUrl || null,
+                    linkedin_url: linkedinUrl || null,
+                    activo, pais_codigo, es_internacional,
+                    descripcion: descripcion || null,
+                    orden
+                };
                 if (imgFile) {
                     const fileName = `aliado_${Date.now()}.${imgFile.name.split('.').pop()}`;
                     await uploadConReintentos('renmcycf-media', fileName, imgFile, 3);
@@ -2951,9 +3054,11 @@
                 } else if (!id) throw new Error("Debe subir un logo.");
                 if (id) {
                     await db.from('renmcycf_aliados').update(payload).eq('id', id);
+                    await logAccion('EDITAR_ALIADO', 'aliados', id, { nombre });
                     mostrarToast('Aliado actualizado', 'success');
                 } else {
                     await db.from('renmcycf_aliados').insert([payload]);
+                    await logAccion('CREAR_ALIADO', 'aliados', null, { nombre, pais: pais_codigo });
                     mostrarToast('Aliado creado', 'success');
                 }
                 resetFormAliado(); cargarAliadosPanel();
@@ -2968,6 +3073,13 @@
             document.getElementById('aliado-tipo').value = a.tipo_formacion || '';
             document.getElementById('aliado-estado').value = a.estado_auditoria || 'PENDIENTE';
             document.getElementById('aliado-web').value = a.web_url || '';
+            document.getElementById('aliado-facebook').value = a.facebook_url || '';
+            document.getElementById('aliado-instagram').value = a.instagram_url || '';
+            document.getElementById('aliado-linkedin').value = a.linkedin_url || '';
+            document.getElementById('aliado-pais').value = a.pais_codigo || 'AR';
+            document.getElementById('aliado-internacional').checked = !!a.es_internacional;
+            document.getElementById('aliado-desc').value = a.descripcion || '';
+            document.getElementById('aliado-orden').value = a.orden || 0;
             document.getElementById('aliado-activo').checked = a.activo !== false;
             document.getElementById('aliado-logo').removeAttribute('required');
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2978,6 +3090,9 @@
             document.getElementById('aliado-id').value = '';
             document.getElementById('aliado-estado').value = 'PENDIENTE';
             document.getElementById('aliado-activo').checked = true;
+            document.getElementById('aliado-pais').value = 'AR';
+            document.getElementById('aliado-internacional').checked = false;
+            document.getElementById('aliado-orden').value = 0;
             document.getElementById('aliado-logo').setAttribute('required', 'true');
         }
         async function toggleAliado(id, estado) { await db.from('renmcycf_aliados').update({ activo: estado }).eq('id', id); cargarAliadosPanel(); }
@@ -3888,31 +4003,53 @@
         }
 
         // ==========================================
-        // ALIANZAS EDUCATIVAS (Institutos) — Simplificada
+        // ALIANZAS EDUCATIVAS + RELAM (Filtro y publicación)
         // ==========================================
+        function setFiltroConvenios(f) {
+            filtroConvenios = f;
+            ['todos','nacional','relam'].forEach(id => {
+                const chip = document.getElementById('chip-' + id);
+                if (chip) chip.classList.toggle('activo', id === f);
+            });
+            cargarConveniosPanel();
+        }
+        window.setFiltroConvenios = setFiltroConvenios;
+
         async function cargarConveniosPanel() {
             const tbody = document.getElementById('convenios-body');
             if (!tbody) return;
             tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400"><i data-lucide="loader-2" class="animate-spin w-5 h-5 mx-auto"></i></td></tr>';
             lucide.createIcons();
             try {
-                const { data, error } = await db.from('renmcycf_convenios').select('*').is('deleted_at', null).order('created_at', { ascending: false });
+                let q = db.from('renmcycf_convenios').select('*').is('deleted_at', null).order('created_at', { ascending: false });
+                if (filtroConvenios === 'relam')       q = q.eq('es_internacional', true);
+                else if (filtroConvenios === 'nacional') q = q.eq('es_internacional', false);
+
+                const { data, error } = await q;
                 if (error) throw error;
                 conveniosCache = data || [];
                 if (!data || data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-slate-400">No hay solicitudes de alianzas.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-slate-400">No hay solicitudes con ese filtro.</td></tr>';
                     return;
                 }
+
+                const PAISES_ADMIN = {
+                    AR:'🇦🇷', UY:'🇺🇾', PY:'🇵🇾', BO:'🇧🇴', PE:'🇵🇪', MX:'🇲🇽',
+                    CL:'🇨🇱', CO:'🇨🇴', EC:'🇪🇨', ES:'🇪🇸', BR:'🇧🇷'
+                };
+
                 tbody.innerHTML = data.map(c => {
                     const estado = c.estado || 'PENDIENTE';
                     const ec = estado === 'APROBADO' ? 'bg-emerald-900/30 text-emerald-400' : estado === 'RECHAZADO' ? 'bg-red-900/30 text-red-400' : 'bg-amber-900/30 text-amber-400';
                     const pdfBtn = c.pdf_url ? `<a href="${c.pdf_url}" target="_blank" class="flex items-center gap-1 text-blue-400 hover:text-blue-300 font-bold"><i data-lucide="file-text" class="w-4 h-4"></i> Ver Acuerdo</a>` : '<span class="text-slate-500 text-xs">Sin PDF</span>';
                     const compBtn = c.comprobante_url ? `<a href="${c.comprobante_url}" target="_blank" class="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-bold mt-1 text-[10px]"><i data-lucide="receipt" class="w-3 h-3"></i> Comprobante</a>` : '';
+                    const esIntl = c.es_internacional ? `<span class="ml-2 px-1.5 py-0.5 bg-purple-900/40 text-purple-300 rounded text-[9px] font-black uppercase">RELAM</span>` : '';
+                    const flag = PAISES_ADMIN[c.pais_codigo] || '🏳️';
 
                     return `
                     <tr class="border-b border-white/5 hover:bg-[#d4af37]/[0.02]">
                         <td class="p-3">
-                            <span class="text-white font-bold block">${c.institucion || c.nombre_institucion || 'S/D'}</span>
+                            <span class="text-white font-bold block">${flag} ${c.institucion || c.nombre_institucion || 'S/D'}${esIntl}</span>
                             <span class="text-[10px] text-slate-400">${c.director_nombre || ''} · ${c.tel_institucional || ''}</span>
                         </td>
                         <td class="p-3">
@@ -3925,6 +4062,9 @@
                             <div class="flex justify-end gap-1.5 flex-wrap">
                                 ${estado !== 'APROBADO' ? `<button onclick="auditarConvenio('${c.id}', 'APROBADO')" class="btn-success px-3 py-1.5 rounded text-[10px] font-bold uppercase"><i data-lucide="check" class="w-3 h-3 inline mr-1"></i> Aprobar</button>` : ''}
                                 ${estado !== 'RECHAZADO' ? `<button onclick="auditarConvenio('${c.id}', 'RECHAZADO')" class="btn-danger px-3 py-1.5 rounded text-[10px] font-bold uppercase"><i data-lucide="x" class="w-3 h-3 inline mr-1"></i> Rechazar</button>` : ''}
+                                <button onclick="publicarEnDirectorio('${c.id}')" class="border border-[#d4af37]/40 text-[#d4af37] px-3 py-1.5 rounded text-[10px] font-bold uppercase hover:bg-[#d4af37]/10" title="Crear ficha pública en el directorio RELAM de la landing">
+                                    <i data-lucide="globe" class="w-3 h-3 inline mr-1"></i> Directorio
+                                </button>
                             </div>
                         </td>
                     </tr>`;
@@ -3932,7 +4072,7 @@
                 lucide.createIcons();
             } catch (err) {
                 console.error(err);
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-amber-400 text-xs font-bold"><i data-lucide="database" class="w-6 h-6 mx-auto mb-2"></i>Tabla 'renmcycf_convenios' en configuración.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-amber-400 text-xs font-bold"><i data-lucide="database" class="w-6 h-6 mx-auto mb-2"></i>Tabla 'renmcycf_convenios' en configuración. ${err.message}</td></tr>`;
                 lucide.createIcons();
             }
         }
@@ -3945,8 +4085,57 @@
             cargarConveniosPanel();
         }
 
+        /**
+         * Publica una ficha de aliado en el directorio público RELAM
+         * a partir de una solicitud de convenio aprobada.
+         */
+        async function publicarEnDirectorio(convenioId) {
+            try {
+                const { data: c, error } = await db.from('renmcycf_convenios').select('*').eq('id', convenioId).single();
+                if (error) throw error;
+                if (!c) throw new Error('Convenio no encontrado.');
+
+                const nombre = prompt('Nombre público en el directorio:', c.institucion || c.nombre_institucion || '');
+                if (!nombre) return;
+
+                const descripcion = prompt('Descripción corta (máx 120 car.):', 'Institución aliada a RELAM.');
+                const pais = prompt('Código ISO del país (AR, UY, PY, BO, PE, MX, CL, CO, EC, ES, BR):', c.pais_codigo || 'AR');
+                const web = prompt('URL web (opcional):', c.web_url || '');
+                const facebook = prompt('URL Facebook (opcional):', '');
+                const instagram = prompt('URL Instagram (opcional):', '');
+                const linkedin = prompt('URL LinkedIn (opcional):', '');
+
+                const payload = {
+                    nombre,
+                    descripcion: (descripcion || '').substring(0, 120),
+                    pais_codigo: (pais || 'AR').toUpperCase().substring(0, 2),
+                    web_url: web || null,
+                    facebook_url: facebook || null,
+                    instagram_url: instagram || null,
+                    linkedin_url: linkedin || null,
+                    logo_url: c.logo_url || null,
+                    tipo_formacion: c.tipo_formacion || null,
+                    provincia: c.provincia || null,
+                    activo: true,
+                    es_internacional: true,
+                    orden: 0,
+                    estado_auditoria: 'AUDITADO'
+                };
+
+                const { error: e2 } = await db.from('renmcycf_aliados').insert([payload]);
+                if (e2) throw e2;
+
+                await logAccion('PUBLICAR_DIRECTORIO', 'aliados', null, { institucion: nombre, convenio_id: convenioId });
+                mostrarToast(`"${nombre}" publicado en el directorio RELAM`, 'success');
+                if (typeof cargarAliadosPanel === 'function') cargarAliadosPanel();
+            } catch (err) {
+                mostrarToast('Error: ' + err.message, 'error');
+            }
+        }
+        window.publicarEnDirectorio = publicarEnDirectorio;
+
         // ==========================================
-        // RED JUDICIAL (Abogados y Juzgados)
+        // RED JUDICIAL
         // ==========================================
         async function cargarRedJudicialPanel() {
             const tbody = document.getElementById('red-judicial-body');
@@ -3983,7 +4172,7 @@
                 lucide.createIcons();
             } catch (err) {
                 console.error(err);
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-amber-400 text-xs font-bold"><i data-lucide="database" class="w-6 h-6 mx-auto mb-2"></i>Tabla 'renmcycf_red_judicial' en configuración.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-amber-400 text-xs font-bold"><i data-lucide="database" class="w-6 h-6 mx-auto mb-2"></i>Tabla 'renmcycf_red_judicial' en configuración. ${err.message}</td></tr>`;
                 lucide.createIcons();
             }
         }
