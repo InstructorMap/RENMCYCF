@@ -81,6 +81,66 @@
             color: #94a3b8; text-transform: uppercase;
             letter-spacing: 1px; margin-bottom: 6px;
         }
+
+        /* ============================================
+           LOGO INSTITUCIONAL · Presencia imponente
+           ============================================ */
+        .logo-escudo {
+            position: relative;
+            width: 96px;
+            height: 96px;
+            flex-shrink: 0;
+            border-radius: 20px;
+            padding: 6px;
+            background: linear-gradient(145deg, #ffffff 0%, #f4f1e8 100%);
+            border: 2px solid rgba(212, 175, 55, 0.55);
+            box-shadow:
+                0 8px 24px -6px rgba(212, 175, 55, 0.45),
+                0 0 0 1px rgba(212, 175, 55, 0.15) inset;
+            transition: all 0.35s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .logo-escudo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+        }
+        /* Halo dorado detrás del logo (refuerza la presencia) */
+        .logo-escudo::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 26px;
+            background: radial-gradient(circle, rgba(212,175,55,0.22) 0%, transparent 70%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        article.group:hover .logo-escudo {
+            border-color: #d4af37;
+            transform: translateY(-2px) scale(1.02);
+            box-shadow:
+                0 12px 32px -6px rgba(212, 175, 55, 0.65),
+                0 0 0 1px rgba(212, 175, 55, 0.3) inset;
+        }
+        article.group:hover .logo-escudo::before {
+            opacity: 1;
+        }
+
+        @media (min-width: 768px) {
+            .logo-escudo {
+                width: 128px;
+                height: 128px;
+                border-radius: 26px;
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-forenseGold selection:text-forenseNavy">
@@ -468,30 +528,52 @@
                 ? `<div class="flex items-center gap-2 pt-4 mt-4 border-t border-white/10">${footer}</div>`
                 : '';
 
-            const logoFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(a.nombre || 'RELAM')}&background=0a1128&color=d4af37&bold=true&size=128`;
+            // Fallback: iniciales sobre navy con oro (mismo tamaño que el logo real)
+            const iniciales = (a.nombre || 'RELAM')
+                .split(' ')
+                .filter(Boolean)
+                .slice(0, 3)
+                .map(p => p[0])
+                .join('')
+                .toUpperCase();
+            const logoFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(iniciales)}&background=0a1128&color=d4af37&bold=true&size=256&font-size=0.45`;
+
             const logo = a.logo_url && a.logo_url !== 'null' ? a.logo_url : logoFallback;
 
+            const subtitulo = [a.tipo_formacion, a.provincia].filter(Boolean).join(' · ');
+
             return `
-                <article class="group relative flex flex-col p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-forenseGold/40 hover:bg-white/[0.07] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-forenseGold/10"
+                <article class="group relative flex flex-col p-6 md:p-7 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-forenseGold/40 hover:bg-white/[0.07] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-forenseGold/10"
                          data-aos="fade-up" data-aos-delay="${index * 100}">
-                    <div class="absolute top-4 right-4 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/40 border border-white/10 text-xs font-bold text-slate-200 uppercase tracking-widest">
+
+                    <!-- Badge país (superior derecho) -->
+                    <div class="absolute top-4 right-4 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/50 border border-white/10 text-[10px] font-bold text-slate-200 uppercase tracking-widest z-10">
                         ${htmlBandera(a.pais_codigo)}
                         <span>${a.pais_codigo || '—'}</span>
                     </div>
-                    <div class="mb-4">
-                        <div class="w-16 h-16 rounded-full p-0.5 bg-gradient-to-br from-forenseGold to-yellow-600 shadow-lg shadow-forenseGold/20">
-                            <img src="${logo}" alt="Logo de ${a.nombre}"
+
+                    <!-- BLOQUE DE IDENTIDAD: logo grande + nombre al lado -->
+                    <div class="flex items-start gap-4 md:gap-5 mb-5 pr-16">
+                        <div class="logo-escudo">
+                            <img src="${logo}"
+                                 alt="Logo de ${a.nombre || 'Institución'}"
                                  loading="lazy"
-                                 class="w-full h-full rounded-full object-cover bg-forenseNavy"
-                                 onerror="this.src='${logoFallback}'">
+                                 onerror="this.onerror=null; this.src='${logoFallback}';">
+                        </div>
+
+                        <div class="flex-1 min-w-0 pt-1">
+                            <h3 class="font-title text-base md:text-lg font-bold text-white leading-snug group-hover:text-forenseGold transition-colors duration-300 mb-1.5">
+                                ${a.nombre || 'Institución aliada'}
+                            </h3>
+                            ${subtitulo ? `<p class="text-[11px] uppercase tracking-widest text-forenseGold/70 font-bold">${subtitulo}</p>` : ''}
                         </div>
                     </div>
-                    <h3 class="font-title text-lg font-bold text-white leading-snug mb-2 pr-16 group-hover:text-forenseGold transition-colors duration-300">
-                        ${a.nombre || 'Institución aliada'}
-                    </h3>
+
+                    <!-- Descripción -->
                     <p class="text-sm text-slate-400 leading-relaxed flex-grow">
-                        ${a.descripcion || (a.tipo_formacion ? a.tipo_formacion + ' · ' + (a.provincia || '') : 'Institución aliada a la red RELAM.')}
+                        ${a.descripcion || 'Institución aliada a la red RELAM.'}
                     </p>
+
                     ${footerHTML}
                 </article>`;
         }
