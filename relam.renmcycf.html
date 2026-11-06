@@ -83,6 +83,7 @@
             </div>
             <div class="hidden md:flex gap-6 items-center">
                 <a href="#academias" class="text-xs font-bold text-slate-300 hover:text-forenseGold uppercase tracking-widest transition">Academias B2B</a>
+                <a href="#directorio-convenios-relam" class="text-xs font-bold text-slate-300 hover:text-forenseGold uppercase tracking-widest transition">Directorio</a>
                 <a href="#profesionales" class="btn-gold px-6 py-2.5 rounded-lg text-[10px]">Acreditación B2C</a>
             </div>
             <!-- Selector Geo activo (lo pinta el Cerebro Geo-IP con imagen PNG) -->
@@ -221,6 +222,41 @@
         </div>
     </section>
 
+    <!-- ============================================ -->
+    <!-- SECCIÓN: DIRECTORIO DE CONVENIOS INTERNACIONALES -->
+    <!-- ============================================ -->
+    <section id="directorio-convenios-relam" class="py-24 bg-forenseDeep relative overflow-hidden border-t border-white/5">
+        <!-- Decoración de fondo (acentos dorados) -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-forenseGold/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute inset-0 bg-grid-subtle opacity-20 pointer-events-none"></div>
+
+        <div class="relative max-w-7xl mx-auto px-6">
+            <!-- Encabezado -->
+            <div class="text-center mb-16" data-aos="fade-up">
+                <span class="inline-block text-forenseGold text-xs md:text-sm font-bold tracking-[0.25em] uppercase mb-3">
+                    Red Internacional
+                </span>
+                <h2 class="font-title text-3xl md:text-5xl font-black text-white uppercase mb-4">
+                    Directorio de <span class="text-forenseGold">Convenios Internacionales</span>
+                </h2>
+                <div class="w-16 h-1.5 bg-forenseGold mx-auto mb-6"></div>
+                <p class="text-slate-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+                    Instituciones aliadas que fortalecen nuestra red académica y profesional en toda Latinoamérica y el mundo.
+                </p>
+            </div>
+
+            <!-- Grid de alianzas (se llena vía JS) -->
+            <div id="grid-alianzas-relam" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <!-- Las tarjetas se inyectan aquí -->
+            </div>
+
+            <!-- Estado vacío (oculto por defecto) -->
+            <p id="empty-alianzas-relam" class="hidden text-center text-slate-500 py-12">
+                No hay convenios disponibles por el momento.
+            </p>
+        </div>
+    </section>
+
     <!-- AVISO LEGAL PRE-FOOTER -->
     <section class="py-12 bg-slate-100 border-t border-slate-200">
         <div class="max-w-7xl mx-auto px-6">
@@ -254,6 +290,180 @@
     <script>
         AOS.init({ duration: 800, once: true });
         lucide.createIcons();
+    </script>
+
+    <!-- ============================================================
+         📇 DIRECTORIO DE CONVENIOS INTERNACIONALES · RELAM
+         Mock data + renderizado dinámico · Vanilla JS
+         ============================================================ -->
+    <script>
+    (function () {
+        'use strict';
+
+        /* ------------------------------------------------------------
+           1. MOCK DATA: Convenios institucionales internacionales
+           ------------------------------------------------------------ */
+        const alianzasInternacionales = [
+            {
+                id: 'uni-mex-001',
+                nombre: 'Universidad Autónoma de México',
+                pais_codigo: 'MX',
+                bandera: 'mx', // ISO para flagcdn.com
+                logo_url: 'https://ui-avatars.com/api/?name=UAM&background=0a1128&color=d4af37&bold=true&size=128',
+                descripcion: 'Institución líder en investigación jurídica y formación de posgrado en derecho comparado.',
+                contacto: {
+                    web: 'https://www.unam.mx',
+                    facebook: 'https://facebook.com/unam',
+                    instagram: 'https://instagram.com/unam',
+                    linkedin: null
+                }
+            },
+            {
+                id: 'uni-per-002',
+                nombre: 'Pontificia Universidad Católica del Perú',
+                pais_codigo: 'PE',
+                bandera: 'pe',
+                logo_url: 'https://ui-avatars.com/api/?name=PUCP&background=0a1128&color=d4af37&bold=true&size=128',
+                descripcion: 'Referente en ciencias sociales y derecho, con programas de intercambio académico internacional.',
+                contacto: {
+                    web: 'https://www.pucp.edu.pe',
+                    facebook: null,
+                    instagram: 'https://instagram.com/pucp',
+                    linkedin: 'https://linkedin.com/school/pucp'
+                }
+            },
+            {
+                id: 'uni-uru-003',
+                nombre: 'Universidad de la República',
+                pais_codigo: 'UY',
+                bandera: 'uy',
+                logo_url: 'https://ui-avatars.com/api/?name=UdelaR&background=0a1128&color=d4af37&bold=true&size=128',
+                descripcion: 'Principal universidad pública de Uruguay, con fuerte vínculo en cooperación regional y extensión.',
+                contacto: {
+                    web: 'https://www.udelar.edu.uy',
+                    facebook: 'https://facebook.com/udelar',
+                    instagram: null,
+                    linkedin: null
+                }
+            }
+        ];
+
+        /* ------------------------------------------------------------
+           2. HELPER: bandera como <img> PNG (compatible con Windows)
+           Reutiliza el mismo patrón visual de .flag-img del sitio.
+           ------------------------------------------------------------ */
+        function htmlBandera(codigoIso, altPais) {
+            const iso = (codigoIso || 'un').toLowerCase();
+            return '<img ' +
+                'src="https://flagcdn.com/24x18/' + iso + '.png" ' +
+                'srcset="https://flagcdn.com/48x36/' + iso + '.png 2x" ' +
+                'alt="' + (altPais || '') + '" ' +
+                'class="flag-img">';
+        }
+
+        /* ------------------------------------------------------------
+           3. GENERADOR DE TARJETA INDIVIDUAL
+           ------------------------------------------------------------ */
+        function crearTarjetaAlianza(alianza, index) {
+            const iconosRedes = [
+                { key: 'web',       icon: 'globe',     label: 'Sitio web' },
+                { key: 'facebook',  icon: 'facebook',  label: 'Facebook' },
+                { key: 'instagram', icon: 'instagram', label: 'Instagram' },
+                { key: 'linkedin',  icon: 'linkedin',  label: 'LinkedIn' }
+            ];
+
+            const footerIconos = iconosRedes
+                .filter(({ key }) => alianza.contacto && alianza.contacto[key])
+                .map(({ key, icon, label }) => `
+                    <a href="${alianza.contacto[key]}" target="_blank" rel="noopener noreferrer"
+                       aria-label="${label} de ${alianza.nombre}"
+                       class="w-9 h-9 flex items-center justify-center rounded-full border border-white/10 text-slate-300 hover:text-forenseGold hover:border-forenseGold/50 hover:bg-forenseGold/10 transition-all duration-300">
+                        <i data-lucide="${icon}" class="w-4 h-4"></i>
+                    </a>
+                `).join('');
+
+            const footerHTML = footerIconos
+                ? `<div class="flex items-center gap-2 pt-4 mt-4 border-t border-white/10">${footerIconos}</div>`
+                : '';
+
+            return `
+                <article class="group relative flex flex-col p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-forenseGold/40 hover:bg-white/[0.07] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-forenseGold/10"
+                         data-aos="fade-up" data-aos-delay="${index * 100}">
+
+                    <!-- Badge país (superior derecho) -->
+                    <div class="absolute top-4 right-4 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/40 border border-white/10 text-xs font-bold text-slate-200 uppercase tracking-widest">
+                        ${htmlBandera(alianza.bandera, alianza.pais_codigo)}
+                        <span>${alianza.pais_codigo}</span>
+                    </div>
+
+                    <!-- Logo circular con borde dorado -->
+                    <div class="mb-4">
+                        <div class="w-16 h-16 rounded-full p-0.5 bg-gradient-to-br from-forenseGold to-yellow-600 shadow-lg shadow-forenseGold/20">
+                            <img
+                                src="${alianza.logo_url}"
+                                alt="Logo de ${alianza.nombre}"
+                                loading="lazy"
+                                class="w-full h-full rounded-full object-cover bg-forenseNavy"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Título y descripción -->
+                    <h3 class="font-title text-lg font-bold text-white leading-snug mb-2 pr-16 group-hover:text-forenseGold transition-colors duration-300">
+                        ${alianza.nombre}
+                    </h3>
+                    <p class="text-sm text-slate-400 leading-relaxed flex-grow">
+                        ${alianza.descripcion}
+                    </p>
+
+                    <!-- Footer con íconos de contacto (solo si existen) -->
+                    ${footerHTML}
+                </article>
+            `;
+        }
+
+        /* ------------------------------------------------------------
+           4. RENDERIZADO DEL DIRECTORIO
+           ------------------------------------------------------------ */
+        function renderizarDirectorioRelam() {
+            const grid = document.getElementById('grid-alianzas-relam');
+            const emptyState = document.getElementById('empty-alianzas-relam');
+
+            if (!grid) return;
+
+            if (!Array.isArray(alianzasInternacionales) || alianzasInternacionales.length === 0) {
+                grid.innerHTML = '';
+                if (emptyState) emptyState.classList.remove('hidden');
+                return;
+            }
+
+            if (emptyState) emptyState.classList.add('hidden');
+
+            grid.innerHTML = alianzasInternacionales.map(crearTarjetaAlianza).join('');
+
+            // Re-inicializar íconos Lucide (incluye los inyectados dinámicamente)
+            if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+                lucide.createIcons();
+            }
+
+            // Refrescar AOS para animar las tarjetas recién inyectadas
+            if (typeof AOS !== 'undefined' && typeof AOS.refresh === 'function') {
+                AOS.refresh();
+            }
+        }
+
+        /* ------------------------------------------------------------
+           5. ARRANQUE
+           ------------------------------------------------------------ */
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', renderizarDirectorioRelam);
+        } else {
+            renderizarDirectorioRelam();
+        }
+
+        // Exponer para debugging manual
+        window.renderizarDirectorioRelam = renderizarDirectorioRelam;
+    })();
     </script>
 
     <!-- ============================================================
