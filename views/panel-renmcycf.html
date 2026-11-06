@@ -456,7 +456,7 @@
         </nav>
     </aside>
 
-    <!-- ============ MENÚ MÓVIL ============ -->
+    <!-- MENÚ MÓVIL -->
     <div id="menu-movil-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden md:hidden" onclick="toggleMenuMovil(false)"></div>
     <aside id="menu-movil" class="fixed top-0 left-0 h-full w-72 glass-panel m-0 rounded-none z-50 hidden md:hidden flex-col transition-transform duration-300 -translate-x-full">
         <div class="h-24 flex items-center justify-between px-6 border-b border-[#d4af37]/10">
@@ -751,7 +751,7 @@
                 </div>
             </div>
 
-            <!-- ALIADOS (ACTUALIZADO · soporta RELAM internacional) -->
+            <!-- ALIADOS (soporta RELAM + contador 568) -->
             <div id="view-aliados" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                     <div class="glass-card p-6 xl:col-span-1">
@@ -778,8 +778,21 @@
                             </div>
 
                             <div>
-                                <label>Descripción corta (máx 120 car.)</label>
-                                <textarea id="aliado-desc" rows="2" maxlength="120" placeholder="Breve descripción para el directorio público"></textarea>
+                                <label>Descripción institucional <span class="text-[#d4af37]">(máx 568 car.)</span></label>
+                                <textarea id="aliado-desc" rows="5" maxlength="568"
+                                          placeholder="Ej: La Academia Uruguaya de Criminología, Investigación Criminal y Ciencias Forenses (AUCICCF) es una institución académica dedicada a la formación y actualización profesional en criminología, investigación criminal, psicología jurídica y forense y ciencias forenses."
+                                          oninput="actualizarContadorDesc()"></textarea>
+                                <div class="flex justify-between items-center mt-1">
+                                    <p class="text-[9px] text-slate-500 leading-tight max-w-[70%]">
+                                        Los primeros <strong class="text-slate-300">120 car.</strong> se muestran en la tarjeta del directorio. Hasta 568 car. quedan como descripción extendida.
+                                    </p>
+                                    <div class="flex items-center gap-2 shrink-0 ml-2">
+                                        <div class="w-16 h-1.5 bg-black/40 rounded-full overflow-hidden">
+                                            <div id="aliado-desc-barra" class="h-full bg-emerald-500 transition-all duration-200" style="width: 0%"></div>
+                                        </div>
+                                        <span id="aliado-desc-contador" class="text-[10px] font-mono font-bold text-slate-500">0 / 568</span>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="grid grid-cols-2 gap-4">
@@ -873,7 +886,7 @@
                 </div>
             </div>
 
-            <!-- ============ ALIANZAS EDUCATIVAS (Institutos) — con RELAM ============ -->
+            <!-- ALIANZAS EDUCATIVAS (Institutos + RELAM) -->
             <div id="view-convenios" class="tab-content space-y-6">
                 <div class="glass-card p-6">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b border-[#d4af37]/15">
@@ -884,7 +897,6 @@
                             <p class="text-xs text-slate-400 mt-1">Institutos que completaron el Pre-Acuerdo. Aprobá y publicá en el directorio RELAM.</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2">
-                            <!-- Filtro rápido -->
                             <div class="flex gap-1.5">
                                 <button onclick="setFiltroConvenios('todos')" id="chip-todos" class="filtro-chip activo">Todos</button>
                                 <button onclick="setFiltroConvenios('nacional')" id="chip-nacional" class="filtro-chip">Nacionales</button>
@@ -914,7 +926,7 @@
                 </div>
             </div>
 
-            <!-- ============ RED JUDICIAL (Abogados y Juzgados) ============ -->
+            <!-- RED JUDICIAL -->
             <div id="view-red-judicial" class="tab-content space-y-6">
                 <div class="glass-card p-6">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b border-[#d4af37]/15">
@@ -1402,6 +1414,7 @@
         window.uploadConReintentos = uploadConReintentos;
 
         const MAX_DIPLOMAS = 30;
+        const MAX_DESC_ALIADO = 568;
 
         let adminUser = null;
         let padronCompleto = [];
@@ -1415,7 +1428,7 @@
         let suscriptoresCache = [];
         let conveniosCache = [];
         let omniboxDebounce = null;
-        let filtroConvenios = 'todos'; // 'todos' | 'nacional' | 'relam'
+        let filtroConvenios = 'todos';
 
         // ==========================================
         // SISTEMA DE TOASTS
@@ -2967,8 +2980,36 @@
         }
 
         // ==========================================
-        // ALIADOS (ACTUALIZADO · soporta RELAM)
+        // ALIADOS (con contador 568)
         // ==========================================
+        function actualizarContadorDesc() {
+            const ta = document.getElementById('aliado-desc');
+            const cnt = document.getElementById('aliado-desc-contador');
+            const bar = document.getElementById('aliado-desc-barra');
+            if (!ta || !cnt) return;
+
+            const len = ta.value.length;
+            const MAX = MAX_DESC_ALIADO;
+            const WARN = 120;
+
+            cnt.textContent = len + ' / ' + MAX;
+
+            let color = 'text-slate-500';
+            let barColor = 'bg-slate-500';
+            if (len === 0)                { color = 'text-slate-500'; barColor = 'bg-slate-500'; }
+            else if (len <= WARN)         { color = 'text-emerald-400'; barColor = 'bg-emerald-500'; }
+            else if (len <= MAX - 20)     { color = 'text-amber-400'; barColor = 'bg-amber-500'; }
+            else                          { color = 'text-red-400'; barColor = 'bg-red-500'; }
+
+            cnt.className = 'text-[10px] font-mono font-bold ' + color;
+            if (bar) {
+                const pct = Math.min(100, (len / MAX) * 100);
+                bar.style.width = pct + '%';
+                bar.className = 'h-full transition-all duration-200 ' + barColor;
+            }
+        }
+        window.actualizarContadorDesc = actualizarContadorDesc;
+
         async function cargarAliadosPanel() {
             const tbody = document.getElementById('aliados-body'); if (!tbody) return;
             tbody.innerHTML = '<tr><td colspan="7" class="p-3 text-center">Cargando...</td></tr>';
@@ -3034,7 +3075,8 @@
                 const activo = document.getElementById('aliado-activo').checked;
                 const pais_codigo = (document.getElementById('aliado-pais').value || 'AR').trim().toUpperCase().substring(0, 2);
                 const es_internacional = document.getElementById('aliado-internacional').checked;
-                const descripcion = document.getElementById('aliado-desc').value.trim();
+                const descripcionRaw = document.getElementById('aliado-desc').value.trim();
+                const descripcion = descripcionRaw.substring(0, MAX_DESC_ALIADO);
                 const orden = parseInt(document.getElementById('aliado-orden').value) || 0;
                 const imgFile = document.getElementById('aliado-logo').files[0];
                 const payload = {
@@ -3082,6 +3124,7 @@
             document.getElementById('aliado-orden').value = a.orden || 0;
             document.getElementById('aliado-activo').checked = a.activo !== false;
             document.getElementById('aliado-logo').removeAttribute('required');
+            actualizarContadorDesc();
             window.scrollTo({ top: 0, behavior: 'smooth' });
             document.getElementById('form-aliado').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -3094,6 +3137,7 @@
             document.getElementById('aliado-internacional').checked = false;
             document.getElementById('aliado-orden').value = 0;
             document.getElementById('aliado-logo').setAttribute('required', 'true');
+            actualizarContadorDesc();
         }
         async function toggleAliado(id, estado) { await db.from('renmcycf_aliados').update({ activo: estado }).eq('id', id); cargarAliadosPanel(); }
         async function eliminarAliado(id, nombre) { await softDelete('renmcycf_aliados', id, nombre || 'Institución'); }
@@ -4085,10 +4129,6 @@
             cargarConveniosPanel();
         }
 
-        /**
-         * Publica una ficha de aliado en el directorio público RELAM
-         * a partir de una solicitud de convenio aprobada.
-         */
         async function publicarEnDirectorio(convenioId) {
             try {
                 const { data: c, error } = await db.from('renmcycf_convenios').select('*').eq('id', convenioId).single();
@@ -4098,7 +4138,7 @@
                 const nombre = prompt('Nombre público en el directorio:', c.institucion || c.nombre_institucion || '');
                 if (!nombre) return;
 
-                const descripcion = prompt('Descripción corta (máx 120 car.):', 'Institución aliada a RELAM.');
+                const descripcion = prompt('Descripción institucional (máx ' + MAX_DESC_ALIADO + ' car.):', 'Institución aliada a RELAM.');
                 const pais = prompt('Código ISO del país (AR, UY, PY, BO, PE, MX, CL, CO, EC, ES, BR):', c.pais_codigo || 'AR');
                 const web = prompt('URL web (opcional):', c.web_url || '');
                 const facebook = prompt('URL Facebook (opcional):', '');
@@ -4107,7 +4147,7 @@
 
                 const payload = {
                     nombre,
-                    descripcion: (descripcion || '').substring(0, 120),
+                    descripcion: (descripcion || '').substring(0, MAX_DESC_ALIADO),
                     pais_codigo: (pais || 'AR').toUpperCase().substring(0, 2),
                     web_url: web || null,
                     facebook_url: facebook || null,
@@ -4209,6 +4249,8 @@
             const o = document.getElementById('omnibox-overlay');
             if (o) o.addEventListener('click', (e) => { if (e.target === o) cerrarOmnibox(); });
             inicializarMenuMovil();
+            // Inicializar contador de descripción
+            actualizarContadorDesc();
             lucide.createIcons();
         });
     </script>
