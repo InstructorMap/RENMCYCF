@@ -911,8 +911,7 @@
         </button>
     </div>
 
-    <!-- SCRIPTS -->
-    <script>
+        <script>
         // ==========================================
         // UTILIDADES BÁSICAS
         // ==========================================
@@ -964,6 +963,13 @@
 
         lucide.createIcons();
         const { jsPDF } = window.jspdf;
+        
+        // ==========================================
+        // MAPAS DE PAÍS (RELAM)
+        // ==========================================
+        const PAISES_ISO3 = { AR:'ARG', UY:'URY', PY:'PRY', BO:'BOL', PE:'PER', MX:'MEX', CL:'CHL', CO:'COL', EC:'ECU', ES:'ESP', BR:'BRA' };
+        const BANDERAS_ISO2 = { AR:'ar', UY:'uy', PY:'py', BO:'bo', PE:'pe', MX:'mx', CL:'cl', CO:'co', EC:'ec', ES:'es', BR:'br' };
+        const PAISES_NOMBRE = { AR:'Argentina', UY:'Uruguay', PY:'Paraguay', BO:'Bolivia', PE:'Perú', MX:'México', CL:'Chile', CO:'Colombia', EC:'Ecuador', ES:'España', BR:'Brasil' };
         
         // ==========================================
         // CONFIGURACIÓN SUPABASE
@@ -1293,7 +1299,6 @@
 
         // ✅ RENOVAR MATRÍCULA — carga datos bancarios desde configGlobal
         function renovarMatricula() {
-            // Cargar datos bancarios
             const alias = configGlobal.alias_cbu || '---';
             const cbu = configGlobal.cbu || '---';
             const titular = configGlobal.titular_cuenta || '---';
@@ -1304,7 +1309,6 @@
             if (el('dato-titular')) el('dato-titular').innerText = titular;
             if (el('dato-banco')) el('dato-banco').innerText = banco;
 
-            // Si NO hay datos bancarios cargados, mostrar mensaje de advertencia
             const sinDatos = (!configGlobal.alias_cbu && !configGlobal.cbu && !configGlobal.titular_cuenta && !configGlobal.banco);
             if (el('bloque-datos-bancarios')) {
                 if (sinDatos) {
@@ -1376,7 +1380,7 @@
         }
 
         // ==========================================
-        // ABRIR MODAL NUEVO DIPLOMA + SUBIR (PAYLOAD CORREGIDO)
+        // ABRIR MODAL NUEVO DIPLOMA + SUBIR
         // ==========================================
         function abrirModalNuevoDiploma() {
             safeClass('modal-nuevo-diploma', 'remove', 'hidden');
@@ -1548,8 +1552,20 @@
                         <div style="${getSafeStyle('ano_nac')} z-index: 10;">${alumnoActual.ano_nacimiento || ''}</div>
                         <div style="${getSafeStyle('matricula')} z-index: 10;">${alumnoActual.matricula_oficial || ''}</div>
                         <div style="${getSafeStyle('vence')} z-index: 10;">${vence}</div>
+                        <div style="${getSafeStyle('pais_bandera')} z-index: 10; display: flex; align-items: center; justify-content: center;">
+                            <img src="https://flagcdn.com/w80/${BANDERAS_ISO2[alumnoActual.pais_codigo] || 'ar'}.png"
+                                 style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;" crossorigin="anonymous">
+                        </div>
+                        <div style="${getSafeStyle('pais_siglas')} z-index: 10; display: flex; align-items: center;">
+                            ${PAISES_ISO3[alumnoActual.pais_codigo] || 'ARG'}
+                        </div>
                     </div>`;
             } else if (vista === 'back') {
+                if (!bgCredencialDorso) {
+                    container.innerHTML = `<div style="position:relative;width:1000px;height:630px;border-radius:30px;background:#f8fafc;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;"><i data-lucide="image-off" style="width:48px;height:48px;color:#94a3b8;"></i><p style="color:#64748b;font-size:14px;font-weight:700;">Fondo de dorso no configurado</p></div>`;
+                    lucide.createIcons();
+                    return;
+                }
                 const baseUrl = window.location.origin.includes('github.io') ? `${window.location.origin}/RENMCYCF` : window.location.origin;
                 const urlValidador = `${baseUrl}/validador.renmcycf.html?mat=${encodeURIComponent(alumnoActual.matricula_oficial)}`;
                 
@@ -1563,6 +1579,10 @@
                     <div style="position: relative; width: 1000px; height: 630px; border-radius: 30px; overflow: hidden; background-color: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.15);">
                         <img src="${bgCredencialDorso}" style="position: absolute; top: 0; left: 0; width: 1000px; height: 630px; z-index: 1;" crossorigin="anonymous">
                         <div style="${getSafeStyle('dorso_cat')} z-index: 10;">${textoCat}</div>
+                        <div style="${getSafeStyle('dorso_pais')} z-index: 10; display: flex; align-items: center; gap: 8px;">
+                            <img src="https://flagcdn.com/24x18/${BANDERAS_ISO2[alumnoActual.pais_codigo] || 'ar'}.png" style="width: 20px; height: 15px; border-radius: 2px; object-fit: cover;" crossorigin="anonymous">
+                            <span>Emitido en ${PAISES_NOMBRE[alumnoActual.pais_codigo] || 'Argentina'} · Válido en 6 países RELAM</span>
+                        </div>
                         <div id="qr-container" style="${getSafeStyle('qr')} z-index: 10; background: white;"></div>
                     </div>`;
                 
@@ -1821,6 +1841,13 @@
                         <div style="${getSafeStyle('ano_nac')} z-index:10;">${alumnoActual.ano_nacimiento || ''}</div>
                         <div style="${getSafeStyle('matricula')} z-index:10;">${alumnoActual.matricula_oficial || ''}</div>
                         <div style="${getSafeStyle('vence')} z-index:10;">${vence}</div>
+                        <div style="${getSafeStyle('pais_bandera')} z-index:10; display: flex; align-items: center; justify-content: center;">
+                            <img src="https://flagcdn.com/w80/${BANDERAS_ISO2[alumnoActual.pais_codigo] || 'ar'}.png"
+                                 style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;" crossorigin="anonymous">
+                        </div>
+                        <div style="${getSafeStyle('pais_siglas')} z-index:10; display: flex; align-items: center;">
+                            ${PAISES_ISO3[alumnoActual.pais_codigo] || 'ARG'}
+                        </div>
                     </div>`;
                 
                 let textoCat = '';
@@ -1833,6 +1860,10 @@
                     <div id="export-back" style="position:relative;width:1000px;height:630px;overflow:hidden;background:#fff;border-radius:30px;">
                         <img src="${bgCredencialDorso}" style="position:absolute;top:0;left:0;width:1000px;height:630px;z-index:1;" crossorigin="anonymous">
                         <div style="${getSafeStyle('dorso_cat')} z-index:10;">${textoCat}</div>
+                        <div style="${getSafeStyle('dorso_pais')} z-index:10; display: flex; align-items: center; gap: 8px;">
+                            <img src="https://flagcdn.com/24x18/${BANDERAS_ISO2[alumnoActual.pais_codigo] || 'ar'}.png" style="width: 20px; height: 15px; border-radius: 2px; object-fit: cover;" crossorigin="anonymous">
+                            <span>Emitido en ${PAISES_NOMBRE[alumnoActual.pais_codigo] || 'Argentina'} · Válido en 6 países RELAM</span>
+                        </div>
                         <div id="export-qr" style="${getSafeStyle('qr')} z-index:10;background:white;"></div>
                     </div>` : '';
                 
@@ -2313,7 +2344,6 @@
             lucide.createIcons();
 
             try {
-                // Traemos los casos ABIERTOS
                 const { data, error } = await db.from('renmcycf_licitaciones')
                                                 .select('*')
                                                 .eq('estado', 'ABIERTO')
@@ -2372,7 +2402,6 @@
             lucide.createIcons();
 
             try {
-                // Aquí en el futuro haremos un INSERT en una tabla `renmcycf_postulaciones`
                 const payload = {
                     caso_id: casoId,
                     profesional_id: alumnoActual.id,
