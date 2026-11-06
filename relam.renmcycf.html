@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RELAM · Red Latinoamericana de Acreditación y Validación</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- AOS Animations -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -60,13 +62,32 @@
         .country-card:hover { border-color: #d4af37; transform: translateY(-5px); box-shadow: 0 20px 40px -10px rgba(212, 175, 55, 0.2); }
         /* Banderas como imagen, consistente en Windows/Mac/Linux */
         .flag-img { display: inline-block; width: 24px; height: 18px; border-radius: 3px; vertical-align: middle; object-fit: cover; }
+
+        /* Inputs del formulario B2B */
+        .form-input {
+            width: 100%;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: white;
+            outline: none;
+            transition: all .25s;
+            font-size: 0.9rem;
+        }
+        .form-input:focus { border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212,175,55,0.12); }
+        .form-label {
+            display: block; font-size: .65rem; font-weight: 800;
+            color: #94a3b8; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 6px;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-forenseGold selection:text-forenseNavy">
 
     <!-- TOP BAR -->
     <div class="bg-forenseNavy border-b border-forenseGold/20 text-white text-[10px] py-2.5 px-4 text-center font-black tracking-[0.2em] uppercase">
-        <span class="text-forenseGold">NUEVO:</span> Expansión internacional operativa en 5 países de LATAM
+        <span class="text-forenseGold">NUEVO:</span> Expansión internacional operativa en 6 países de LATAM
     </div>
 
     <!-- NAVBAR -->
@@ -86,7 +107,6 @@
                 <a href="#directorio-convenios-relam" class="text-xs font-bold text-slate-300 hover:text-forenseGold uppercase tracking-widest transition">Directorio</a>
                 <a href="#profesionales" class="btn-gold px-6 py-2.5 rounded-lg text-[10px]">Acreditación B2C</a>
             </div>
-            <!-- Selector Geo activo (lo pinta el Cerebro Geo-IP con imagen PNG) -->
             <div class="hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3 py-1.5">
                 <span id="geo-bandera-activa" class="inline-flex items-center">
                     <img src="https://flagcdn.com/24x18/ar.png" srcset="https://flagcdn.com/48x36/ar.png 2x" alt="Argentina" class="flag-img">
@@ -103,7 +123,7 @@
         <div class="hero-glow bg-blue-900/20 w-[500px] h-[500px] bottom-[-200px] left-[-100px]"></div>
 
         <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
-            <!-- Badges Países (banderas como imágenes PNG) -->
+            <!-- Badges Países -->
             <div class="inline-flex flex-wrap justify-center gap-3 mb-8" data-aos="fade-down">
                 <div class="bg-white/5 border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2">
                     <img src="https://flagcdn.com/24x18/ar.png" srcset="https://flagcdn.com/48x36/ar.png 2x" alt="Argentina" class="flag-img">
@@ -160,18 +180,33 @@
             </div>
 
             <div class="grid md:grid-cols-2 gap-8">
-                <!-- B2B -->
+                <!-- B2B · Copy reescrito desde el beneficio del instituto -->
                 <div id="academias" class="bg-slate-50 border border-slate-200 rounded-3xl p-10 hover:shadow-2xl hover:border-forenseGold/50 transition-all flex flex-col" data-aos="fade-right">
                     <div class="w-14 h-14 bg-forenseNavy rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                         <i data-lucide="building" class="w-7 h-7 text-forenseGold"></i>
                     </div>
-                    <h3 class="font-title text-2xl font-black text-forenseNavy uppercase mb-3">Para Academias e Institutos</h3>
-                    <p class="text-slate-600 mb-8 leading-relaxed">Asóciese con nuestra plataforma mediante un Convenio de Alianza Estratégica Internacional. Usted aporta la currícula; nosotros aportamos el Hash criptográfico, el QR y la página de verificación.</p>
-                    
+                    <h3 class="font-title text-2xl font-black text-forenseNavy uppercase mb-3">Para Academias e Institutos Internacionales</h3>
+                    <p class="text-slate-600 mb-8 leading-relaxed">
+                        Su institución suma un sello de validación internacional reconocido en toda LATAM. Usted conserva la currícula y la autonomía académica; RELAM aporta la infraestructura tecnológica de <strong>trazabilidad inmutable, verificación QR y una página pública de verificación</strong> que sus egresados pueden mostrar en cualquier país.
+                    </p>
+
                     <ul class="space-y-4 mb-10 flex-1">
-                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i> Cobros simplificados en USD vía Stripe.</li>
-                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i> Formularios dinámicos adaptados a identificaciones fiscales locales (RUT, NIT, RFC).</li>
-                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i> Inclusión en el Directorio de Aliados Internacionales.</li>
+                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                            <span><strong>Presencia regional inmediata:</strong> su institución aparece en el Directorio de Aliados Internacionales de RELAM, visible para profesionales y empleadores de 6 países.</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                            <span><strong>Credenciales verificables:</strong> cada certificado que emita lleva hash criptográfico + QR de verificación público, sin que usted tenga que montar infraestructura propia.</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                            <span><strong>Cobros sin fricción:</strong> facturación internacional simplificada en USD, con formularios adaptados a la identificación fiscal local de cada país (RUT, NIT, RFC, RUC, CUIT).</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-slate-700 font-medium">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                            <span><strong>Respaldo tecnológico ASARI Core:</strong> la misma infraestructura que usa RENMCYCF Argentina, sin costo de desarrollo ni mantenimiento para su institución.</span>
+                        </li>
                     </ul>
 
                     <!-- Pasarela Transferencia (visible sólo en AR por el Cerebro Geo-IP) -->
@@ -183,8 +218,9 @@
                         Pago internacional con tarjeta vía Stripe (USD)
                     </div>
 
-                    <button class="w-full bg-forenseNavy text-white hover:bg-slate-800 font-black uppercase tracking-widest text-xs px-6 py-4 rounded-xl transition-colors mt-auto">
-                        Solicitar Convenio Institucional
+                    <button onclick="abrirModalConvenio()" class="w-full bg-forenseNavy text-white hover:bg-slate-800 font-black uppercase tracking-widest text-xs px-6 py-4 rounded-xl transition-colors mt-auto flex items-center justify-center gap-2">
+                        <i data-lucide="handshake" class="w-4 h-4"></i>
+                        Quiero sumar mi institución a RELAM
                     </button>
                 </div>
 
@@ -197,7 +233,7 @@
                         </div>
                         <h3 class="font-title text-2xl font-black text-white uppercase mb-3">Para Profesionales Forenses</h3>
                         <p class="text-slate-300 mb-8 leading-relaxed">No importa si en su país es "Licenciado", "Tecnólogo" o "Perito". Homologamos su perfil mediante una tabla de equivalencias regional y le otorgamos una <strong>Acreditación Privada Internacional</strong>.</p>
-                        
+
                         <ul class="space-y-4 mb-8 flex-1">
                             <li class="flex items-start gap-3 text-sm text-slate-300 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0"></i> Credencial Digital privada.</li>
                             <li class="flex items-start gap-3 text-sm text-slate-300 font-medium"><i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0"></i> Alta en el Directorio Continental.</li>
@@ -205,7 +241,6 @@
                         </ul>
 
                         <div class="mt-auto">
-                            <!-- Fricción Legal UX (Clickwrap) -->
                             <label class="flex items-start gap-3 cursor-pointer p-4 rounded-xl bg-black/20 border border-forenseGold/20 hover:border-forenseGold/50 transition-all mb-4">
                                 <input type="checkbox" id="acepto-terminos-b2c" class="appearance-none w-5 h-5 border-[1.5px] border-forenseGold/40 rounded bg-black/30 checked:bg-forenseGold checked:border-forenseGold transition-colors cursor-pointer shrink-0 mt-0.5 relative after:content-[''] after:absolute after:hidden checked:after:block after:left-[6px] after:top-[2px] after:w-[5px] after:h-[10px] after:border-solid after:border-[#0a1128] after:border-b-2 after:border-r-2 after:rotate-45" required onchange="document.getElementById('btn-b2c-acreditar').disabled = !this.checked;">
                                 <span class="text-[9px] text-slate-400 leading-relaxed">
@@ -223,15 +258,14 @@
     </section>
 
     <!-- ============================================ -->
-    <!-- SECCIÓN: DIRECTORIO DE CONVENIOS INTERNACIONALES -->
+    <!-- DIRECTORIO DE CONVENIOS INTERNACIONALES -->
+    <!-- Conectado a Supabase (renmcycf_aliados)     -->
     <!-- ============================================ -->
     <section id="directorio-convenios-relam" class="py-24 bg-forenseDeep relative overflow-hidden border-t border-white/5">
-        <!-- Decoración de fondo (acentos dorados) -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-forenseGold/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute inset-0 bg-grid-subtle opacity-20 pointer-events-none"></div>
 
         <div class="relative max-w-7xl mx-auto px-6">
-            <!-- Encabezado -->
             <div class="text-center mb-16" data-aos="fade-up">
                 <span class="inline-block text-forenseGold text-xs md:text-sm font-bold tracking-[0.25em] uppercase mb-3">
                     Red Internacional
@@ -245,14 +279,10 @@
                 </p>
             </div>
 
-            <!-- Grid de alianzas (se llena vía JS) -->
-            <div id="grid-alianzas-relam" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                <!-- Las tarjetas se inyectan aquí -->
-            </div>
+            <div id="grid-alianzas-relam" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"></div>
 
-            <!-- Estado vacío (oculto por defecto) -->
             <p id="empty-alianzas-relam" class="hidden text-center text-slate-500 py-12">
-                No hay convenios disponibles por el momento.
+                No hay convenios publicados por el momento.
             </p>
         </div>
     </section>
@@ -287,203 +317,349 @@
         </div>
     </footer>
 
+    <!-- ============================================ -->
+    <!-- MODAL · SOLICITUD DE CONVENIO B2B (RELAM)   -->
+    <!-- ============================================ -->
+    <div id="modal-convenio" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[200] hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-forenseNavy border border-forenseGold/30 rounded-2xl w-full max-w-2xl shadow-2xl my-auto">
+            <div class="p-5 border-b border-forenseGold/15 flex justify-between items-center bg-black/40 rounded-t-2xl">
+                <div>
+                    <h3 class="text-lg font-black text-white uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="handshake" class="w-5 h-5 text-forenseGold"></i>
+                        Solicitud de Convenio RELAM
+                    </h3>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-0.5">Institutos internacionales</p>
+                </div>
+                <button onclick="cerrarModalConvenio()" class="text-slate-400 hover:text-red-400 transition-colors">
+                    <i data-lucide="x-circle" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <form id="form-convenio-relam" onsubmit="enviarSolicitudConvenio(event)" class="p-6 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="form-label">Nombre de la Institución *</label>
+                        <input type="text" id="conv-institucion" required class="form-input" placeholder="Ej: Universidad de la República">
+                    </div>
+                    <div>
+                        <label class="form-label">País *</label>
+                        <select id="conv-pais" required class="form-input">
+                            <option value="AR">Argentina</option>
+                            <option value="UY">Uruguay</option>
+                            <option value="PY">Paraguay</option>
+                            <option value="BO">Bolivia</option>
+                            <option value="PE">Perú</option>
+                            <option value="MX">México</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label" id="conv-fiscal-label">CUIT / ID Fiscal *</label>
+                        <input type="text" id="conv-cuit" required class="form-input" placeholder="Identificación fiscal">
+                    </div>
+                    <div>
+                        <label class="form-label">Director / Rector</label>
+                        <input type="text" id="conv-director" class="form-input" placeholder="Nombre y apellido">
+                    </div>
+                    <div>
+                        <label class="form-label">Teléfono institucional</label>
+                        <input type="tel" id="conv-telefono" class="form-input" placeholder="+00 000 000 000">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="form-label">Email de contacto *</label>
+                        <input type="email" id="conv-email" required class="form-input" placeholder="director@institucion.edu">
+                    </div>
+                    <div>
+                        <label class="form-label">Plan elegido</label>
+                        <select id="conv-plan" class="form-input">
+                            <option value="ANUAL">Anual · 12 meses</option>
+                            <option value="SEMESTRAL">Semestral · 6 meses</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">Forma de pago</label>
+                        <select id="conv-pago" class="form-input">
+                            <option value="AHORA">Pago ahora</option>
+                            <option value="DESPUES">Pago posterior (pre-acuerdo)</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="form-label">Descripción corta de la institución</label>
+                        <textarea id="conv-descripcion" rows="2" maxlength="200" class="form-input" placeholder="Breve descripción de la oferta académica"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-3 p-4 rounded-xl bg-black/30 border border-forenseGold/20 mt-4">
+                    <input type="checkbox" id="conv-acepta" required class="w-5 h-5 mt-0.5 accent-forenseGold">
+                    <label for="conv-acepta" class="text-[10px] text-slate-400 leading-relaxed cursor-pointer">
+                        Declaro que la información proporcionada es veraz, comprendo el carácter privado de la validación RELAM y me someto a la jurisdicción de Córdoba, Argentina. *
+                    </label>
+                </div>
+
+                <div id="conv-error" class="hidden bg-red-900/30 border border-red-500/40 text-red-300 text-xs font-bold p-3 rounded-lg"></div>
+                <div id="conv-success" class="hidden bg-emerald-900/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold p-3 rounded-lg"></div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="cerrarModalConvenio()" class="bg-slate-700 hover:bg-slate-600 text-white px-5 py-3 rounded-xl text-xs font-bold uppercase">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-enviar-convenio" class="btn-gold px-6 py-3 rounded-xl text-xs flex items-center gap-2">
+                        <i data-lucide="send" class="w-4 h-4"></i> Enviar solicitud
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         AOS.init({ duration: 800, once: true });
         lucide.createIcons();
     </script>
 
-    <!-- ============================================================
-         📇 DIRECTORIO DE CONVENIOS INTERNACIONALES · RELAM
-         Mock data + renderizado dinámico · Vanilla JS
-         ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- 🧠 SUPABASE · Cliente compartido para RELAM                  -->
+    <!-- ============================================================ -->
+    <script>
+    window.RELAM_SUPABASE = (function () {
+        const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
+        const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
+        return supabase.createClient(PROJECT_URL, PUBLIC_KEY);
+    })();
+    </script>
+
+    <!-- ============================================================ -->
+    <!-- 📇 DIRECTORIO · Render en vivo desde Supabase                -->
+    <!-- ============================================================ -->
     <script>
     (function () {
         'use strict';
 
-        /* ------------------------------------------------------------
-           1. MOCK DATA: Convenios institucionales internacionales
-           ------------------------------------------------------------ */
-        const alianzasInternacionales = [
-            {
-                id: 'uni-mex-001',
-                nombre: 'Universidad Autónoma de México',
-                pais_codigo: 'MX',
-                bandera: 'mx', // ISO para flagcdn.com
-                logo_url: 'https://ui-avatars.com/api/?name=UAM&background=0a1128&color=d4af37&bold=true&size=128',
-                descripcion: 'Institución líder en investigación jurídica y formación de posgrado en derecho comparado.',
-                contacto: {
-                    web: 'https://www.unam.mx',
-                    facebook: 'https://facebook.com/unam',
-                    instagram: 'https://instagram.com/unam',
-                    linkedin: null
-                }
-            },
-            {
-                id: 'uni-per-002',
-                nombre: 'Pontificia Universidad Católica del Perú',
-                pais_codigo: 'PE',
-                bandera: 'pe',
-                logo_url: 'https://ui-avatars.com/api/?name=PUCP&background=0a1128&color=d4af37&bold=true&size=128',
-                descripcion: 'Referente en ciencias sociales y derecho, con programas de intercambio académico internacional.',
-                contacto: {
-                    web: 'https://www.pucp.edu.pe',
-                    facebook: null,
-                    instagram: 'https://instagram.com/pucp',
-                    linkedin: 'https://linkedin.com/school/pucp'
-                }
-            },
-            {
-                id: 'uni-uru-003',
-                nombre: 'Universidad de la República',
-                pais_codigo: 'UY',
-                bandera: 'uy',
-                logo_url: 'https://ui-avatars.com/api/?name=UdelaR&background=0a1128&color=d4af37&bold=true&size=128',
-                descripcion: 'Principal universidad pública de Uruguay, con fuerte vínculo en cooperación regional y extensión.',
-                contacto: {
-                    web: 'https://www.udelar.edu.uy',
-                    facebook: 'https://facebook.com/udelar',
-                    instagram: null,
-                    linkedin: null
-                }
-            }
-        ];
+        const db = window.RELAM_SUPABASE;
 
-        /* ------------------------------------------------------------
-           2. HELPER: bandera como <img> PNG (compatible con Windows)
-           Reutiliza el mismo patrón visual de .flag-img del sitio.
-           ------------------------------------------------------------ */
-        function htmlBandera(codigoIso, altPais) {
-            const iso = (codigoIso || 'un').toLowerCase();
-            return '<img ' +
-                'src="https://flagcdn.com/24x18/' + iso + '.png" ' +
-                'srcset="https://flagcdn.com/48x36/' + iso + '.png 2x" ' +
-                'alt="' + (altPais || '') + '" ' +
-                'class="flag-img">';
+        const PAISES = {
+            AR: 'ar', UY: 'uy', PY: 'py', BO: 'bo', PE: 'pe', MX: 'mx',
+            CL: 'cl', CO: 'co', EC: 'ec', ES: 'es', BR: 'br'
+        };
+
+        function htmlBandera(codigoIso) {
+            const iso = PAISES[codigoIso] || (codigoIso || 'un').toLowerCase();
+            return '<img src="https://flagcdn.com/24x18/' + iso + '.png" ' +
+                   'srcset="https://flagcdn.com/48x36/' + iso + '.png 2x" ' +
+                   'alt="' + (codigoIso || '') + '" class="flag-img">';
         }
 
-        /* ------------------------------------------------------------
-           3. GENERADOR DE TARJETA INDIVIDUAL
-           ------------------------------------------------------------ */
-        function crearTarjetaAlianza(alianza, index) {
-            const iconosRedes = [
-                { key: 'web',       icon: 'globe',     label: 'Sitio web' },
-                { key: 'facebook',  icon: 'facebook',  label: 'Facebook' },
-                { key: 'instagram', icon: 'instagram', label: 'Instagram' },
-                { key: 'linkedin',  icon: 'linkedin',  label: 'LinkedIn' }
+        function crearTarjeta(a, index) {
+            const redes = [
+                { key: 'web_url',       icon: 'globe',     label: 'Sitio web' },
+                { key: 'facebook_url',  icon: 'facebook',  label: 'Facebook' },
+                { key: 'instagram_url', icon: 'instagram', label: 'Instagram' },
+                { key: 'linkedin_url',  icon: 'linkedin',  label: 'LinkedIn' }
             ];
 
-            const footerIconos = iconosRedes
-                .filter(({ key }) => alianza.contacto && alianza.contacto[key])
+            const footer = redes
+                .filter(({ key }) => a[key] && String(a[key]).trim() !== '' && a[key] !== 'null')
                 .map(({ key, icon, label }) => `
-                    <a href="${alianza.contacto[key]}" target="_blank" rel="noopener noreferrer"
-                       aria-label="${label} de ${alianza.nombre}"
+                    <a href="${a[key]}" target="_blank" rel="noopener noreferrer"
+                       aria-label="${label} de ${a.nombre}"
                        class="w-9 h-9 flex items-center justify-center rounded-full border border-white/10 text-slate-300 hover:text-forenseGold hover:border-forenseGold/50 hover:bg-forenseGold/10 transition-all duration-300">
                         <i data-lucide="${icon}" class="w-4 h-4"></i>
-                    </a>
-                `).join('');
+                    </a>`).join('');
 
-            const footerHTML = footerIconos
-                ? `<div class="flex items-center gap-2 pt-4 mt-4 border-t border-white/10">${footerIconos}</div>`
+            const footerHTML = footer
+                ? `<div class="flex items-center gap-2 pt-4 mt-4 border-t border-white/10">${footer}</div>`
                 : '';
+
+            const logoFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(a.nombre || 'RELAM')}&background=0a1128&color=d4af37&bold=true&size=128`;
+            const logo = a.logo_url && a.logo_url !== 'null' ? a.logo_url : logoFallback;
 
             return `
                 <article class="group relative flex flex-col p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-forenseGold/40 hover:bg-white/[0.07] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-forenseGold/10"
                          data-aos="fade-up" data-aos-delay="${index * 100}">
-
-                    <!-- Badge país (superior derecho) -->
                     <div class="absolute top-4 right-4 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/40 border border-white/10 text-xs font-bold text-slate-200 uppercase tracking-widest">
-                        ${htmlBandera(alianza.bandera, alianza.pais_codigo)}
-                        <span>${alianza.pais_codigo}</span>
+                        ${htmlBandera(a.pais_codigo)}
+                        <span>${a.pais_codigo || '—'}</span>
                     </div>
-
-                    <!-- Logo circular con borde dorado -->
                     <div class="mb-4">
                         <div class="w-16 h-16 rounded-full p-0.5 bg-gradient-to-br from-forenseGold to-yellow-600 shadow-lg shadow-forenseGold/20">
-                            <img
-                                src="${alianza.logo_url}"
-                                alt="Logo de ${alianza.nombre}"
-                                loading="lazy"
-                                class="w-full h-full rounded-full object-cover bg-forenseNavy"
-                            />
+                            <img src="${logo}" alt="Logo de ${a.nombre}"
+                                 loading="lazy"
+                                 class="w-full h-full rounded-full object-cover bg-forenseNavy"
+                                 onerror="this.src='${logoFallback}'">
                         </div>
                     </div>
-
-                    <!-- Título y descripción -->
                     <h3 class="font-title text-lg font-bold text-white leading-snug mb-2 pr-16 group-hover:text-forenseGold transition-colors duration-300">
-                        ${alianza.nombre}
+                        ${a.nombre || 'Institución aliada'}
                     </h3>
                     <p class="text-sm text-slate-400 leading-relaxed flex-grow">
-                        ${alianza.descripcion}
+                        ${a.descripcion || (a.tipo_formacion ? a.tipo_formacion + ' · ' + (a.provincia || '') : 'Institución aliada a la red RELAM.')}
                     </p>
-
-                    <!-- Footer con íconos de contacto (solo si existen) -->
                     ${footerHTML}
-                </article>
-            `;
+                </article>`;
         }
 
-        /* ------------------------------------------------------------
-           4. RENDERIZADO DEL DIRECTORIO
-           ------------------------------------------------------------ */
-        function renderizarDirectorioRelam() {
+        async function renderizarDirectorioRelam() {
             const grid = document.getElementById('grid-alianzas-relam');
             const emptyState = document.getElementById('empty-alianzas-relam');
-
             if (!grid) return;
 
-            if (!Array.isArray(alianzasInternacionales) || alianzasInternacionales.length === 0) {
-                grid.innerHTML = '';
-                if (emptyState) emptyState.classList.remove('hidden');
-                return;
-            }
+            grid.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto text-forenseGold mb-3"></i>
+                    <p class="text-slate-400 text-sm">Cargando directorio internacional…</p>
+                </div>`;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
 
-            if (emptyState) emptyState.classList.add('hidden');
+            try {
+                const { data, error } = await db
+                    .from('renmcycf_aliados')
+                    .select('id, nombre, pais_codigo, logo_url, descripcion, tipo_formacion, provincia, web_url, facebook_url, instagram_url, linkedin_url, orden')
+                    .eq('activo', true)
+                    .eq('es_internacional', true)
+                    .is('deleted_at', null)
+                    .order('orden', { ascending: true })
+                    .order('nombre', { ascending: true });
 
-            grid.innerHTML = alianzasInternacionales.map(crearTarjetaAlianza).join('');
+                if (error) throw error;
 
-            // Re-inicializar íconos Lucide (incluye los inyectados dinámicamente)
-            if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
-                lucide.createIcons();
-            }
+                if (!data || data.length === 0) {
+                    grid.innerHTML = '';
+                    if (emptyState) emptyState.classList.remove('hidden');
+                    return;
+                }
+                if (emptyState) emptyState.classList.add('hidden');
+                grid.innerHTML = data.map(crearTarjeta).join('');
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                if (typeof AOS !== 'undefined' && AOS.refresh) AOS.refresh();
 
-            // Refrescar AOS para animar las tarjetas recién inyectadas
-            if (typeof AOS !== 'undefined' && typeof AOS.refresh === 'function') {
-                AOS.refresh();
+            } catch (err) {
+                console.error('Directorio RELAM:', err);
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i data-lucide="alert-circle" class="w-8 h-8 mx-auto text-red-400 mb-3"></i>
+                        <p class="text-red-400 text-sm font-bold">No se pudo cargar el directorio.</p>
+                        <p class="text-slate-500 text-xs mt-1">${err.message || 'Error de conexión'}</p>
+                    </div>`;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
             }
         }
 
-        /* ------------------------------------------------------------
-           5. ARRANQUE
-           ------------------------------------------------------------ */
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', renderizarDirectorioRelam);
         } else {
             renderizarDirectorioRelam();
         }
-
-        // Exponer para debugging manual
         window.renderizarDirectorioRelam = renderizarDirectorioRelam;
     })();
     </script>
 
-    <!-- ============================================================
-         🧠 CEREBRO GEO-IP · RELAM
-         ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- 📝 MODAL CONVENIO · Captación B2B → renmcycf_convenios       -->
+    <!-- ============================================================ -->
     <script>
-    /* ============================================================
-       🧠 CEREBRO GEO-IP · RELAM
-       Detección de país vía IP + mutación de DOM para adaptar
-       variables legales, impositivas y de pago.
-       Vanilla JS · Cero backend · Fallback silencioso a AR
-       Banderas como imágenes PNG (compatibles con Windows).
-       ============================================================ */
     (function () {
         'use strict';
 
-        /* ------------------------------------------------------------
-           1. MAPA DE CONFIGURACIÓN POR PAÍS (ISO 2)
-           `bandera` guarda el código ISO en minúscula para flagcdn.com
-           ------------------------------------------------------------ */
+        const db = window.RELAM_SUPABASE;
+
+        const FISCAL_POR_PAIS = {
+            AR: 'CUIT', UY: 'RUT', PY: 'RUC', BO: 'NIT', PE: 'RUC', MX: 'RFC'
+        };
+
+        window.abrirModalConvenio = function () {
+            const modal = document.getElementById('modal-convenio');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            // Pre-cargar país detectado por Geo-IP (si ya corrió)
+            if (window.RELAM_GEO && window.RELAM_GEO.codigo) {
+                const sel = document.getElementById('conv-pais');
+                if (sel) sel.value = window.RELAM_GEO.codigo;
+                actualizarFiscalLabel();
+            }
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        };
+
+        window.cerrarModalConvenio = function () {
+            const modal = document.getElementById('modal-convenio');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        };
+
+        function actualizarFiscalLabel() {
+            const sel = document.getElementById('conv-pais');
+            const lbl = document.getElementById('conv-fiscal-label');
+            if (!sel || !lbl) return;
+            const fiscal = FISCAL_POR_PAIS[sel.value] || 'ID Fiscal';
+            lbl.textContent = fiscal + ' / ID Fiscal *';
+        }
+        document.getElementById('conv-pais')?.addEventListener('change', actualizarFiscalLabel);
+
+        window.enviarSolicitudConvenio = async function (e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('btn-enviar-convenio');
+            const errBox = document.getElementById('conv-error');
+            const okBox = document.getElementById('conv-success');
+            const orig = btn.innerHTML;
+
+            errBox.classList.add('hidden');
+            okBox.classList.add('hidden');
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Enviando...';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            try {
+                const payload = {
+                    institucion:        document.getElementById('conv-institucion').value.trim(),
+                    pais_codigo:        document.getElementById('conv-pais').value,
+                    cuit:               document.getElementById('conv-cuit').value.trim(),
+                    director_nombre:    document.getElementById('conv-director').value.trim() || null,
+                    tel_institucional:  document.getElementById('conv-telefono').value.trim() || null,
+                    email:              document.getElementById('conv-email').value.trim(),
+                    plan_elegido:       document.getElementById('conv-plan').value,
+                    forma_pago:         document.getElementById('conv-pago').value,
+                    descripcion:        document.getElementById('conv-descripcion').value.trim() || null,
+                    estado:             'PENDIENTE',
+                    es_internacional:   true
+                };
+
+                if (!payload.institucion) throw new Error('El nombre de la institución es obligatorio.');
+                if (!payload.email) throw new Error('El email es obligatorio.');
+
+                const { error } = await db.from('renmcycf_convenios').insert([payload]);
+                if (error) throw error;
+
+                okBox.textContent = '✅ Solicitud enviada. Nos pondremos en contacto en menos de 48 hs hábiles.';
+                okBox.classList.remove('hidden');
+
+                setTimeout(() => {
+                    window.cerrarModalConvenio();
+                    document.getElementById('form-convenio-relam').reset();
+                    okBox.classList.add('hidden');
+                }, 2500);
+
+            } catch (err) {
+                errBox.textContent = 'Error: ' + (err.message || 'No se pudo enviar la solicitud.');
+                errBox.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = orig;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        };
+    })();
+    </script>
+
+    <!-- ============================================================ -->
+    <!-- 🧠 CEREBRO GEO-IP · RELAM                                    -->
+    <!-- ============================================================ -->
+    <script>
+    (function () {
+        'use strict';
+
         const GEO_MAP = {
             AR: { pais: 'Argentina', bandera: 'ar', moneda: 'ARS', pasarela: 'TRANSFERENCIA', fiscal: 'CUIT', documento: 'DNI',        prefijo: '+54'  },
             UY: { pais: 'Uruguay',   bandera: 'uy', moneda: 'USD', pasarela: 'STRIPE',        fiscal: 'RUT',  documento: 'CI',         prefijo: '+598' },
@@ -496,81 +672,57 @@
         const PAIS_FALLBACK = 'AR';
         const API_URL = 'https://ipapi.co/json/';
 
-        /* Estado global del cerebro (accesible para debugging) */
         window.RELAM_GEO = {
             codigo: PAIS_FALLBACK,
             config: GEO_MAP[PAIS_FALLBACK],
             origen: 'default'
         };
 
-        /* ------------------------------------------------------------
-           2. HELPERS DE MUTACIÓN DEL DOM
-           ------------------------------------------------------------ */
-
         function setTexto(selector, valor) {
-            const nodos = document.querySelectorAll(selector);
-            nodos.forEach(function (el) {
+            document.querySelectorAll(selector).forEach(function (el) {
                 const tieneAsterisco = /\*\s*$/.test(el.textContent || '');
                 el.textContent = tieneAsterisco ? valor + ' *' : valor;
             });
         }
 
-        /**
-         * Genera el HTML de una bandera como <img> (compatible con Windows).
-         * Usa flagcdn.com con srcset 2x para pantallas retina.
-         */
         function htmlBandera(codigoIso, altPais) {
-            return '<img ' +
-                'src="https://flagcdn.com/24x18/' + codigoIso + '.png" ' +
+            return '<img src="https://flagcdn.com/24x18/' + codigoIso + '.png" ' +
                 'srcset="https://flagcdn.com/48x36/' + codigoIso + '.png 2x" ' +
-                'alt="' + (altPais || '') + '" ' +
-                'class="flag-img">';
+                'alt="' + (altPais || '') + '" class="flag-img">';
         }
 
         function aplicarContextoGeo(codigoPais) {
             const cfg = GEO_MAP[codigoPais] || GEO_MAP[PAIS_FALLBACK];
 
-            /* 2.1 — Labels fiscales (CUIT / RUT / RUC / NIT / RFC) */
             setTexto('[data-geo="fiscal"]', cfg.fiscal);
             setTexto('label[data-geo="fiscal"]', cfg.fiscal);
             document.querySelectorAll('label').forEach(function (lbl) {
-                if (/^\s*CUIT\s*\*?\s*$/.test(lbl.textContent)) {
-                    lbl.textContent = cfg.fiscal + ' *';
-                }
+                if (/^\s*CUIT\s*\*?\s*$/.test(lbl.textContent)) lbl.textContent = cfg.fiscal + ' *';
             });
 
-            /* 2.2 — Labels de documento (DNI / CI / CURP / INE) */
             setTexto('[data-geo="documento"]', cfg.documento);
             setTexto('label[data-geo="documento"]', cfg.documento);
             document.querySelectorAll('label').forEach(function (lbl) {
-                if (/^\s*DNI\s*\*?\s*$/.test(lbl.textContent)) {
-                    lbl.textContent = cfg.documento + ' *';
-                }
+                if (/^\s*DNI\s*\*?\s*$/.test(lbl.textContent)) lbl.textContent = cfg.documento + ' *';
             });
 
-            /* 2.3 — Prefijos telefónicos en inputs y placeholders */
             document.querySelectorAll('[data-geo="prefijo"]').forEach(function (input) {
                 if (input.tagName === 'INPUT' || input.tagName === 'TEXTAREA') {
-                    if (!input.value) {
-                        input.placeholder = cfg.prefijo + ' ...';
-                    }
+                    if (!input.value) input.placeholder = cfg.prefijo + ' ...';
                     input.dataset.prefijo = cfg.prefijo;
                 } else {
                     input.textContent = cfg.prefijo;
                 }
             });
 
-            /* 2.4 — Reemplazo de prefijos +54 hardcodeados en placeholders */
             document.querySelectorAll('input[type="tel"], input[placeholder*="+54"]').forEach(function (inp) {
                 if (inp.placeholder && inp.placeholder.indexOf('+54') === 0) {
                     inp.placeholder = inp.placeholder.replace(/^\+54/, cfg.prefijo);
                 }
             });
 
-            /* 2.5 — Mostrar / Ocultar pasarelas de pago */
             const divTransferencia = document.getElementById('metodo-transferencia');
             const divStripe        = document.getElementById('metodo-stripe');
-
             if (cfg.pasarela === 'TRANSFERENCIA') {
                 if (divTransferencia) divTransferencia.classList.remove('hidden');
                 if (divStripe)        divStripe.classList.add('hidden');
@@ -579,45 +731,38 @@
                 if (divStripe)        divStripe.classList.remove('hidden');
             }
 
-            /* 2.6 — Símbolo de moneda en precios (si el DOM lo expone) */
             document.querySelectorAll('[data-geo="moneda"]').forEach(function (el) {
                 el.textContent = cfg.moneda;
             });
 
-            /* 2.7 — Selector manual en el navbar (bandera como IMAGEN PNG) */
             const banderaActiva = document.getElementById('geo-bandera-activa');
             const paisActivo    = document.getElementById('geo-pais-activo');
-            if (banderaActiva) {
-                banderaActiva.innerHTML = htmlBandera(cfg.bandera, cfg.pais);
-            }
-            if (paisActivo) paisActivo.textContent = cfg.pais;
+            if (banderaActiva) banderaActiva.innerHTML = htmlBandera(cfg.bandera, cfg.pais);
+            if (paisActivo)    paisActivo.textContent = cfg.pais;
 
-            /* 2.8 — Atributo en <html> para estilos condicionales por país */
             document.documentElement.setAttribute('data-geo-pais', codigoPais);
             document.documentElement.setAttribute('data-geo-moneda', cfg.moneda);
             document.documentElement.setAttribute('data-geo-pasarela', cfg.pasarela);
 
-            /* 2.9 — Actualiza estado global para debugging */
             window.RELAM_GEO.codigo = codigoPais;
             window.RELAM_GEO.config = cfg;
+
+            // Refrescar el select del modal si está abierto
+            const selConv = document.getElementById('conv-pais');
+            if (selConv) {
+                selConv.value = codigoPais;
+                selConv.dispatchEvent(new Event('change'));
+            }
         }
 
-        /* ------------------------------------------------------------
-           3. LECTURA DE OVERRIDE POR URL (?country=MX)
-           ------------------------------------------------------------ */
         function getOverridePorURL() {
             try {
                 const params = new URLSearchParams(window.location.search);
                 const override = (params.get('country') || '').toUpperCase().trim();
                 return GEO_MAP[override] ? override : null;
-            } catch (e) {
-                return null;
-            }
+            } catch (e) { return null; }
         }
 
-        /* ------------------------------------------------------------
-           4. DETECCIÓN VÍA IP (Fetch + Fallback silencioso)
-           ------------------------------------------------------------ */
         function detectarPais() {
             const override = getOverridePorURL();
             if (override) {
@@ -636,11 +781,8 @@
                 })
                 .then(function (data) {
                     clearTimeout(timeoutId);
-                    const codigo = (data && data.country_code ? String(data.country_code).toUpperCase() : '')
-                        || PAIS_FALLBACK;
-
+                    const codigo = (data && data.country_code ? String(data.country_code).toUpperCase() : '') || PAIS_FALLBACK;
                     const codigoFinal = GEO_MAP[codigo] ? codigo : PAIS_FALLBACK;
-
                     window.RELAM_GEO.origen = GEO_MAP[codigo] ? 'ip' : 'ip-no-mapeado';
                     aplicarContextoGeo(codigoFinal);
                 })
@@ -651,9 +793,6 @@
                 });
         }
 
-        /* ------------------------------------------------------------
-           5. API PÚBLICA PARA REUTILIZAR DESDE OTROS SCRIPTS
-           ------------------------------------------------------------ */
         window.RELAM_GEO.aplicarPais = function (codigo) {
             if (GEO_MAP[codigo]) {
                 window.RELAM_GEO.origen = 'manual';
@@ -661,15 +800,11 @@
             }
         };
 
-        /* ------------------------------------------------------------
-           6. ARRANQUE
-           ------------------------------------------------------------ */
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', detectarPais);
         } else {
             detectarPais();
         }
-
     })();
     </script>
 </body>
