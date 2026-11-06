@@ -215,28 +215,28 @@
                 </p>
             </div>
 
-            <div class="grid lg:grid-cols-3 gap-6 md:gap-8">
+            <div class="grid lg:grid-cols-2 gap-6 md:gap-8 items-stretch">
 
-                <!-- PROTAGONISTA: PROFESIONALES (2/3) -->
-                <div id="profesionales" class="lg:col-span-2 bg-forenseNavy rounded-3xl p-8 md:p-10 relative overflow-hidden flex flex-col shadow-2xl shadow-forenseNavy/30" data-aos="fade-up">
+                <!-- PROFESIONALES (fondo navy, protagonista) -->
+                <div id="profesionales" class="bg-forenseNavy rounded-3xl p-8 md:p-10 relative overflow-hidden flex flex-col shadow-2xl shadow-forenseNavy/30" data-aos="fade-up">
                     <div class="absolute -top-32 -right-32 w-96 h-96 bg-forenseGold/15 rounded-full blur-3xl pointer-events-none"></div>
                     <div class="absolute -bottom-32 -left-32 w-96 h-96 bg-blue-900/20 rounded-full blur-3xl pointer-events-none"></div>
 
                     <div class="relative z-10 flex flex-col h-full">
                         <div class="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full bg-forenseGold/15 border border-forenseGold/40 mb-6">
                             <i data-lucide="user-badge" class="w-4 h-4 text-forenseGold"></i>
-                            <span class="text-[10px] font-black text-forenseGold uppercase tracking-widest">Profesionales</span>
+                            <span class="text-[10px] font-black text-forenseGold uppercase tracking-widest">Para profesionales</span>
                         </div>
 
                         <h3 class="font-title text-3xl md:text-4xl font-black text-white leading-tight mb-4">
                             Acreditación internacional<br>
                             <span class="text-transparent bg-clip-text bg-gradient-to-r from-forenseGold to-yellow-200">para peritos, licenciados y técnicos</span>
                         </h3>
-                        <p class="text-slate-300 mb-8 leading-relaxed max-w-xl">
+                        <p class="text-slate-300 mb-8 leading-relaxed">
                             Homologamos tu título con la tabla de equivalencias regional y te damos una credencial con QR verificable en <strong class="text-white">6 países</strong>.
                         </p>
 
-                        <ul class="space-y-3 mb-8 max-w-xl">
+                        <ul class="space-y-3 mb-8">
                             <li class="flex items-start gap-3 text-sm text-slate-300">
                                 <i data-lucide="check-circle" class="w-5 h-5 text-forenseGold shrink-0 mt-0.5"></i>
                                 <span>Credencial digital privada con QR de verificación.</span>
@@ -290,40 +290,53 @@
                     </div>
                 </div>
 
-                <!-- SECUNDARIO: INSTITUCIONES (1/3) -->
-                <div id="academias" class="bg-slate-50 border border-slate-200 rounded-3xl p-8 flex flex-col hover:shadow-2xl hover:border-forenseGold/50 transition-all" data-aos="fade-up" data-aos-delay="150">
+                <!-- INSTITUCIONES (fondo claro, MISMA ALTURA) -->
+                <div id="academias" class="bg-slate-50 border-2 border-slate-200 rounded-3xl p-8 md:p-10 flex flex-col hover:shadow-2xl hover:border-forenseGold/60 transition-all relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
 
                     <div class="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full bg-forenseNavy/5 border border-forenseNavy/15 mb-6">
                         <i data-lucide="building-2" class="w-4 h-4 text-forenseNavy"></i>
-                        <span class="text-[10px] font-black text-forenseNavy uppercase tracking-widest">Instituciones</span>
+                        <span class="text-[10px] font-black text-forenseNavy uppercase tracking-widest">Para instituciones</span>
                     </div>
 
-                    <h3 class="font-title text-2xl font-black text-forenseNavy leading-tight mb-3">
-                        Sumá tu oferta al <span class="text-forenseGold">directorio internacional</span>
+                    <h3 class="font-title text-3xl md:text-4xl font-black text-forenseNavy leading-tight mb-4">
+                        Sumá tu oferta al<br>
+                        <span class="text-forenseGold">directorio internacional</span>
                     </h3>
-                    <p class="text-slate-600 text-sm mb-6 leading-relaxed">
-                        Aparecés en el directorio que consultan egresados y empleadores de LATAM. Tus certificados salen con hash + QR sin que montes infraestructura.
+                    <p class="text-slate-600 mb-8 leading-relaxed">
+                        Aparecés en el directorio que consultan egresados y empleadores de LATAM. Tus certificados salen con hash + QR sin que montes infraestructura propia.
                     </p>
 
                     <ul class="space-y-3 mb-8 flex-1">
-                        <li class="flex items-start gap-2.5 text-xs text-slate-700">
-                            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i>
-                            <span><strong>Presencia regional:</strong> visible en 6 países.</span>
+                        <li class="flex items-start gap-3 text-sm text-slate-700">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5"></i>
+                            <span><strong>Presencia regional inmediata:</strong> visible para profesionales y empleadores de 6 países.</span>
                         </li>
-                        <li class="flex items-start gap-2.5 text-xs text-slate-700">
-                            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i>
-                            <span><strong>Credenciales verificables:</strong> hash + QR público.</span>
+                        <li class="flex items-start gap-3 text-sm text-slate-700">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5"></i>
+                            <span><strong>Credenciales verificables:</strong> hash + QR público sin que montes nada.</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-slate-700">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5"></i>
+                            <span><strong>Cobros sin fricción:</strong> facturación internacional en USD, con identificación fiscal local (RUT, NIT, RFC, RUC, CUIT).</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-slate-700">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5"></i>
+                            <span><strong>Respaldo ASARI Core:</strong> la misma infraestructura que usa RENMCYCF Argentina.</span>
                         </li>
                     </ul>
 
+                    <div class="mb-4 text-[10px] text-slate-500 text-center uppercase tracking-widest">
+                        Te escribimos en menos de 48 hs hábiles
+                    </div>
+
                     <button onclick="abrirModalConvenio()"
                             class="w-full bg-forenseNavy text-white hover:bg-slate-800 font-black uppercase tracking-widest text-xs px-6 py-4 rounded-xl transition-colors flex items-center justify-center gap-2">
-                        <i data-lucide="mail" class="w-4 h-4"></i>
-                        Solicitar información
+                        <i data-lucide="handshake" class="w-4 h-4"></i>
+                        Solicitar convenio institucional
                     </button>
 
                     <p class="text-[10px] text-slate-500 text-center mt-3">
-                        Te escribimos en menos de 48 hs hábiles.
+                        Sin compromiso. Solo para conocer tu institución.
                     </p>
                 </div>
 
@@ -580,17 +593,17 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- MODAL · INSTITUCIÓN (SIMPLIFICADO)           -->
+    <!-- MODAL · SOLICITUD DE CONVENIO INSTITUCIONAL  -->
     <!-- ============================================ -->
     <div id="modal-convenio" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[200] hidden items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-forenseNavy border border-forenseGold/30 rounded-2xl w-full max-w-xl shadow-2xl my-auto">
+        <div class="bg-forenseNavy border border-forenseGold/30 rounded-2xl w-full max-w-2xl shadow-2xl my-auto">
             <div class="p-5 border-b border-forenseGold/15 flex justify-between items-center bg-black/40 rounded-t-2xl">
                 <div>
                     <h3 class="text-lg font-black text-white uppercase tracking-wider flex items-center gap-2">
-                        <i data-lucide="building-2" class="w-5 h-5 text-forenseGold"></i>
-                        Solicitar información
+                        <i data-lucide="handshake" class="w-5 h-5 text-forenseGold"></i>
+                        Solicitud de Convenio RELAM
                     </h3>
-                    <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-0.5">Instituciones internacionales</p>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-0.5">Institutos internacionales</p>
                 </div>
                 <button onclick="cerrarModalConvenio()" class="text-slate-400 hover:text-red-400 transition-colors">
                     <i data-lucide="x-circle" class="w-6 h-6"></i>
@@ -598,39 +611,67 @@
             </div>
 
             <form id="form-convenio-relam" onsubmit="enviarSolicitudConvenio(event)" class="p-6 space-y-4">
-                <div class="space-y-4">
-                    <div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
                         <label class="form-label">Nombre de la Institución *</label>
                         <input type="text" id="conv-institucion" required class="form-input" placeholder="Ej: Universidad de la República">
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="form-label">País *</label>
-                            <select id="conv-pais" required class="form-input">
-                                <option value="AR">Argentina</option>
-                                <option value="UY">Uruguay</option>
-                                <option value="PY">Paraguay</option>
-                                <option value="BO">Bolivia</option>
-                                <option value="PE">Perú</option>
-                                <option value="MX">México</option>
-                                <option value="CL">Chile</option>
-                                <option value="CO">Colombia</option>
-                                <option value="EC">Ecuador</option>
-                                <option value="ES">España</option>
-                                <option value="BR">Brasil</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="form-label">Email institucional *</label>
-                            <input type="email" id="conv-email" required class="form-input" placeholder="director@institucion.edu">
-                        </div>
+                    <div>
+                        <label class="form-label">País *</label>
+                        <select id="conv-pais" required class="form-input">
+                            <option value="AR">Argentina</option>
+                            <option value="UY">Uruguay</option>
+                            <option value="PY">Paraguay</option>
+                            <option value="BO">Bolivia</option>
+                            <option value="PE">Perú</option>
+                            <option value="MX">México</option>
+                            <option value="CL">Chile</option>
+                            <option value="CO">Colombia</option>
+                            <option value="EC">Ecuador</option>
+                            <option value="ES">España</option>
+                            <option value="BR">Brasil</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label" id="conv-fiscal-label">CUIT / ID Fiscal *</label>
+                        <input type="text" id="conv-cuit" required class="form-input" placeholder="Identificación fiscal">
+                    </div>
+                    <div>
+                        <label class="form-label">Director / Rector</label>
+                        <input type="text" id="conv-director" class="form-input" placeholder="Nombre y apellido">
+                    </div>
+                    <div>
+                        <label class="form-label">Teléfono institucional</label>
+                        <input type="tel" id="conv-telefono" class="form-input" placeholder="+00 000 000 000">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="form-label">Email de contacto *</label>
+                        <input type="email" id="conv-email" required class="form-input" placeholder="director@institucion.edu">
+                    </div>
+                    <div>
+                        <label class="form-label">Plan elegido</label>
+                        <select id="conv-plan" class="form-input">
+                            <option value="ANUAL">Anual · 12 meses</option>
+                            <option value="SEMESTRAL">Semestral · 6 meses</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">Forma de pago</label>
+                        <select id="conv-pago" class="form-input">
+                            <option value="AHORA">Pago ahora</option>
+                            <option value="DESPUES">Pago posterior (pre-acuerdo)</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="form-label">Descripción corta de la institución</label>
+                        <textarea id="conv-descripcion" rows="2" maxlength="200" class="form-input" placeholder="Breve descripción de la oferta académica"></textarea>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-3 p-3 rounded-lg bg-black/30 border border-forenseGold/20 mt-2">
+                <div class="flex items-start gap-3 p-4 rounded-xl bg-black/30 border border-forenseGold/20 mt-4">
                     <input type="checkbox" id="conv-acepta" required class="w-5 h-5 mt-0.5 accent-forenseGold">
                     <label for="conv-acepta" class="text-[10px] text-slate-400 leading-relaxed cursor-pointer">
-                        Declaro que la información es veraz y acepto ser contactado por RELAM. *
+                        Declaro que la información proporcionada es veraz, comprendo el carácter privado de la validación RELAM y me someto a la jurisdicción de Córdoba, Argentina. *
                     </label>
                 </div>
 
@@ -642,7 +683,7 @@
                         Cancelar
                     </button>
                     <button type="submit" id="btn-enviar-convenio" class="btn-gold px-6 py-3 rounded-xl text-xs flex items-center gap-2">
-                        <i data-lucide="send" class="w-4 h-4"></i> Enviar
+                        <i data-lucide="send" class="w-4 h-4"></i> Enviar solicitud
                     </button>
                 </div>
             </form>
@@ -868,7 +909,7 @@
         'use strict';
 
         const db = window.RELAM_SUPABASE;
-        const PROJECT_URL = 'https://hiiruhuohxpzsphlduypo.supabase.co';
+        const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
 
         const ARANCEL_POR_PAIS = {
             AR: 90, UY: 90, PY: 90, BO: 90, PE: 90, MX: 90,
@@ -1036,7 +1077,6 @@
                     throw new Error('Tenés que aceptar los Términos y Condiciones finales.');
                 }
 
-                // 1) Subir foto
                 const extFoto = titulo.foto.name.split('.').pop().toLowerCase();
                 const nombreFoto = `relam_acred_${Date.now()}_foto.${extFoto}`;
                 const { error: errFoto } = await db.storage
@@ -1045,7 +1085,6 @@
                 if (errFoto) throw new Error('Error al subir foto: ' + errFoto.message);
                 const urlFoto = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${nombreFoto}`;
 
-                // 2) Subir título
                 const extTit = titulo.titulo.name.split('.').pop().toLowerCase();
                 const nombreTit = `relam_acred_${Date.now()}_titulo.${extTit}`;
                 const { error: errTit } = await db.storage
@@ -1054,7 +1093,6 @@
                 if (errTit) throw new Error('Error al subir título: ' + errTit.message);
                 const urlTit = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${nombreTit}`;
 
-                // 3) Subir comprobante (solo AR)
                 let urlComp = null;
                 if (comprobanteFile) {
                     const extComp = comprobanteFile.name.split('.').pop().toLowerCase();
@@ -1066,7 +1104,6 @@
                     urlComp = `${PROJECT_URL}/storage/v1/object/public/renmcycf-documentos/${nombreComp}`;
                 }
 
-                // 4) INSERT en tabla nueva
                 const payload = {
                     nombre:             identidad.nombre,
                     documento:          identidad.documento,
@@ -1089,7 +1126,6 @@
                 const { error: errIns } = await db.from('renmcycf_acreditaciones_relam').insert([payload]);
                 if (errIns) throw new Error('Error al guardar la solicitud: ' + errIns.message);
 
-                // 5) Feedback + éxito
                 const paso3 = document.getElementById('acr-paso-3');
                 paso3.innerHTML = `
                     <div class="text-center py-8">
@@ -1132,6 +1168,11 @@
         'use strict';
         const db = window.RELAM_SUPABASE;
 
+        const FISCAL_POR_PAIS = {
+            AR: 'CUIT', UY: 'RUT', PY: 'RUC', BO: 'NIT', PE: 'RUC', MX: 'RFC',
+            CL: 'RUT', CO: 'NIT', EC: 'RUC', ES: 'NIF', BR: 'CNPJ'
+        };
+
         window.abrirModalConvenio = function () {
             const modal = document.getElementById('modal-convenio');
             if (!modal) return;
@@ -1142,6 +1183,7 @@
             if (window.RELAM_GEO && window.RELAM_GEO.codigo) {
                 const sel = document.getElementById('conv-pais');
                 if (sel) sel.value = window.RELAM_GEO.codigo;
+                actualizarFiscalLabel();
             }
             if (typeof lucide !== 'undefined') lucide.createIcons();
         };
@@ -1153,6 +1195,14 @@
             modal.classList.remove('flex');
             document.body.style.overflow = '';
         };
+
+        function actualizarFiscalLabel() {
+            const sel = document.getElementById('conv-pais');
+            const lbl = document.getElementById('conv-fiscal-label');
+            if (!sel || !lbl) return;
+            lbl.textContent = (FISCAL_POR_PAIS[sel.value] || 'ID Fiscal') + ' / ID Fiscal *';
+        }
+        document.getElementById('conv-pais')?.addEventListener('change', actualizarFiscalLabel);
 
         window.enviarSolicitudConvenio = async function (e) {
             e.preventDefault();
@@ -1170,20 +1220,27 @@
 
             try {
                 const payload = {
-                    institucion:      document.getElementById('conv-institucion').value.trim(),
-                    pais_codigo:      document.getElementById('conv-pais').value,
-                    email:            document.getElementById('conv-email').value.trim(),
-                    estado:           'PENDIENTE',
-                    es_internacional: true
+                    institucion:        document.getElementById('conv-institucion').value.trim(),
+                    pais_codigo:        document.getElementById('conv-pais').value,
+                    cuit:               document.getElementById('conv-cuit').value.trim(),
+                    director_nombre:    document.getElementById('conv-director').value.trim() || null,
+                    tel_institucional:  document.getElementById('conv-telefono').value.trim() || null,
+                    email:              document.getElementById('conv-email').value.trim(),
+                    plan_elegido:       document.getElementById('conv-plan').value,
+                    forma_pago:         document.getElementById('conv-pago').value,
+                    descripcion:        document.getElementById('conv-descripcion').value.trim() || null,
+                    estado:             'PENDIENTE',
+                    es_internacional:   true
                 };
 
                 if (!payload.institucion) throw new Error('El nombre de la institución es obligatorio.');
                 if (!payload.email) throw new Error('El email es obligatorio.');
+                if (!payload.cuit) throw new Error('La identificación fiscal es obligatoria.');
 
                 const { error } = await db.from('renmcycf_convenios').insert([payload]);
                 if (error) throw error;
 
-                okBox.textContent = '✅ Solicitud recibida. Te escribimos en menos de 48 hs hábiles.';
+                okBox.textContent = '✅ Solicitud enviada. Nos pondremos en contacto en menos de 48 hs hábiles.';
                 okBox.classList.remove('hidden');
 
                 setTimeout(() => {
@@ -1193,7 +1250,7 @@
                 }, 3000);
 
             } catch (err) {
-                errBox.textContent = 'Error: ' + (err.message || 'No se pudo enviar.');
+                errBox.textContent = 'Error: ' + (err.message || 'No se pudo enviar la solicitud.');
                 errBox.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
