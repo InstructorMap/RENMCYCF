@@ -511,13 +511,10 @@
                         <div class="md:col-span-2">
                             <label class="form-label">Categoría sugerida *</label>
                             <select id="acr-categoria" required class="form-input">
-                                <option value="A1">A.1 · Profesional con título de grado</option>
-                                <option value="A2">A.2 · Profesional con especialización</option>
-                                <option value="A3">A.3 · Profesional con maestría/doctorado</option>
-                                <option value="A4">A.4 · Profesional con trayectoria destacada</option>
-                                <option value="B1">B.1 · Técnico Superior</option>
-                                <option value="B2">B.2 · Lic./Téc. en Seguridad</option>
-                                <option value="B3">B.3 · Perito auxiliar de justicia</option>
+                                <option value="A1">A.1 · Título técnico, superior o universitario</option>
+                                <option value="A2">A.2 · Cursos y diplomaturas (sin título formal)</option>
+                                <option value="A3">A.3 · Estudiantes en formación</option>
+                                <option value="A4">A.4 · Formadores, docentes e instructores</option>
                             </select>
                         </div>
                         <div class="md:col-span-2">
@@ -914,7 +911,7 @@
         const db = window.RELAM_SUPABASE;
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
 
-        const ARANCEL_POR_CATEGORIA = Object.freeze({A1:90,B1:90,A2:75,B2:75,A3:60,B3:60,A4:45,B4:45});
+        const ARANCEL_POR_CATEGORIA = Object.freeze({A1:90,A2:75,A3:60,A4:45});
         function acrMontoCategoria(categoria) {
             return Object.prototype.hasOwnProperty.call(ARANCEL_POR_CATEGORIA, categoria) ? ARANCEL_POR_CATEGORIA[categoria] : null;
         }
