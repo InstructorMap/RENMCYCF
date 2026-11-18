@@ -140,6 +140,38 @@
 #relam-campaign .campaign-link:hover{background:#178656}
 @media(max-width:640px){#relam-campaign{padding:10px}#relam-campaign .campaign-wrap{border-radius:12px}#relam-campaign .campaign-action{padding:12px;justify-content:center;text-align:center;gap:10px}#relam-campaign .campaign-count{font-size:13px}#relam-campaign .campaign-link{width:100%;justify-content:center}#relam-promo .relam-promo-icon img{transform:scale(2.5)}}
 </style>
+<style id="relam-polish-v2">
+/* Alineación de identidad institucional */
+nav .max-w-7xl > .flex:first-child{min-width:0;gap:12px}
+#relam-logo-principal{display:block;width:100%;height:100%;object-fit:contain}
+#relam-logo-renmcycf{flex:none}
+#relam-campaign[hidden]{display:none!important}
+#relam-campaign .campaign-image{clip-path:none;margin-bottom:0;max-height:330px;object-fit:contain;object-position:center}
+#relam-campaign .campaign-wrap{box-shadow:0 14px 36px rgba(0,0,0,.18)}
+#relam-promo .relam-promo-icon img{transform:none;object-fit:contain;object-position:center}
+@media(max-width:640px){
+nav .max-w-7xl{padding-left:16px;padding-right:16px;height:76px}
+nav .max-w-7xl > .flex:first-child > div:first-child{width:58px;height:58px;flex:none;padding:0;border-radius:50%}
+nav .max-w-7xl > .flex:first-child > div:nth-child(2){min-width:0}
+nav .max-w-7xl > .flex:first-child > div:nth-child(2) span:first-child{font-size:22px;line-height:1.1}
+nav .max-w-7xl > .flex:first-child > div:nth-child(2) span:last-child{font-size:8px;line-height:1.35;letter-spacing:.08em;max-width:240px}
+#relam-campaign{padding:10px 12px}
+#relam-campaign .campaign-wrap{border-radius:13px}
+#relam-campaign .campaign-image{display:none}
+#relam-campaign .campaign-action{display:grid;grid-template-columns:42px minmax(0,1fr);gap:7px 10px;justify-items:start;text-align:left;padding:13px}
+#relam-campaign .campaign-action:before{content:"";grid-row:span 2;align-self:center;width:42px;height:42px;background:url('relam-logo-oficial.png') center/contain no-repeat}
+#relam-campaign .campaign-count{font-size:12px;line-height:1.5}
+#relam-campaign .campaign-link{width:auto;padding:7px 11px;font-size:11px;min-height:34px}
+#relam-promo{right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:194px;min-height:54px;padding:8px 10px;gap:7px;border-radius:12px}
+#relam-promo .relam-promo-icon{flex:0 0 26px;height:26px}
+#relam-promo .relam-promo-top{font-size:7px;line-height:1.15;letter-spacing:.025em}
+#relam-promo .relam-promo-price{font-size:12px;white-space:nowrap}
+#relam-promo .relam-promo-time{font-size:9px;white-space:nowrap}
+#relam-promo .relam-promo-arrow{display:none}
+#relam-promo .relam-promo-close{top:-7px;right:-7px;width:20px;height:20px;line-height:17px;font-size:14px}
+header.relative.pt-24{padding-top:44px}
+}
+</style>
 </head>
 <body class="antialiased selection:bg-forenseGold selection:text-forenseNavy">
 
@@ -1484,7 +1516,7 @@ VE:{pais:'Venezuela',bandera:'ve',moneda:'USD',pasarela:'PENDIENTE',fiscal:'RIF'
     })();
     </script>
 <a id="relam-promo" href="index.renmcycf.html" target="_blank" rel="noopener noreferrer" aria-label="Promoción RELAM USD 60, consultar contacto oficial RENMCYCF" hidden>
-  <span class="relam-promo-icon" aria-hidden="true"><img src="file_000000005ce8820ea1dcf5af1797d075.png" alt=""></span>
+  <span class="relam-promo-icon" aria-hidden="true"><img src="relam-logo-oficial.png" alt=""></span>
   <span class="relam-promo-main"><span class="relam-promo-top">RELAM · Inscripción general</span><span class="relam-promo-price">Promoción USD 60</span><span class="relam-promo-time" id="relam-promo-countdown">Hasta el 01/12/2026</span></span>
   <span class="relam-promo-arrow" aria-hidden="true">↗</span>
   <span class="relam-promo-close" aria-label="Ocultar promoción" onclick="event.preventDefault();event.stopPropagation();document.getElementById('relam-promo').dataset.dismissed='true';document.getElementById('relam-promo').hidden=true;">×</span>
