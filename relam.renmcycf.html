@@ -238,7 +238,7 @@ header.relative.pt-24{padding-top:44px}
     <img class="campaign-image" src="file_000000008260820eb6133b0c6245216c.png" alt="RELAM: promoción especial de inscripción general USD 60 hasta el 31/12/2026, imagen institucional azul y dorada" loading="lazy">
     <div class="campaign-action"><strong class="relam-campaign-heading">RELAM · Inscripción general USD 60 · Hasta el 31/12/2026</strong>
       <span class="campaign-count">⏳ Finaliza en <span id="relam-campaign-countdown">—</span></span>
-      <a id="relam-campaign-whatsapp" class="campaign-link" href="index.renmcycf.html" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp ↗</a>
+      <a id="relam-campaign-whatsapp" class="campaign-link" href="#inscripcion-relam" onclick="event.preventDefault();abrirModalAcreditacion();" >Inscribirme por USD 60 ↗</a>
     </div>
   </div>
 </section>
@@ -811,15 +811,8 @@ header.relative.pt-24{padding-top:44px}
                 if (url.protocol === 'https:') { img.src = url.href; img.hidden = false; }
             }
             const telefono = String(data.whatsapp || '').replace(/\D/g,'');
-            if (/^[1-9]\d{7,14}$/.test(telefono)) {
-                const boton = document.getElementById('relam-promo');
-                if (boton) {
-                    boton.href = 'https://wa.me/' + telefono + '?text=' + encodeURIComponent('Hola, quiero consultar por la promoción de inscripción general RELAM de USD 60, vigente hasta el 31/12/2026.');
-                    boton.setAttribute('aria-label','Consultar por WhatsApp oficial de RENMCYCF la promoción RELAM USD 60');
-                    boton.dataset.whatsappOficial = 'true';
-                    const enlaceBanner = document.getElementById('relam-campaign-whatsapp');
-                    if (enlaceBanner) enlaceBanner.href = boton.href;
-                }
+            if (/^[1-9]\\d{7,14}$/.test(telefono)) {
+                window.RELAM_WHATSAPP_OFICIAL = telefono;
             }
         } catch (error) { console.warn('RELAM: contacto oficial no disponible temporalmente.'); }
     })();
@@ -1225,6 +1218,21 @@ header.relative.pt-24{padding-top:44px}
             }
         };
 
+        function relamWhatsAppConsulta(tipo, datos) {
+            const numero = window.RELAM_WHATSAPP_OFICIAL;
+            if (!numero) {
+                alert('El WhatsApp oficial no está disponible en este momento. Podés consultar los medios de pago desde el registro principal.');
+                return;
+            }
+            const nombre = (datos?.nombre || '').trim();
+            const email = (datos?.email || '').trim();
+            const categoria = (datos?.categoria || '').trim();
+            const mensaje = tipo === 'pago'
+                ? 'Hola, soy ' + nombre + '. Completé mi solicitud de inscripción RELAM con promoción USD 60, categoría ' + categoria + ', correo ' + email + '. Informo que ya realicé el pago y solicito instrucciones para enviar el comprobante y verificar su recepción. Entiendo que el pago aún debe validarse.'
+                : 'Hola, soy ' + nombre + '. Registré mi solicitud RELAM con promoción USD 60, categoría ' + categoria + ', correo ' + email + '. Tengo una consulta sobre los medios de pago internacionales disponibles.';
+            window.open('https://wa.me/' + numero + '?text=' + encodeURIComponent(mensaje), '_blank', 'noopener,noreferrer');
+        }
+        window.relamWhatsAppConsulta = relamWhatsAppConsulta;
         async function acrEnviar() {
             const btn = document.getElementById('acr-btn-siguiente');
             const orig = btn.innerHTML;
@@ -1301,10 +1309,17 @@ header.relative.pt-24{padding-top:44px}
                             Tu acreditación quedó registrada con estado <strong class="text-forenseGold">pago pendiente</strong>.
                             El equipo confirmará el medio de pago y te facilitará las instrucciones; el envío de email no es automático.
                         </p>
-                        <p class="text-[11px] text-slate-500">
-                            Algunos pagos pueden demorar hasta 48 horas en acreditarse. Las hasta 48 horas administrativas para tramitar el alta comienzan después de confirmar el pago, con la documentación completa y aprobada.
+                        <div class="grid gap-3 mt-5 text-left">
+                          <button type="button" id="relam-pago-realizado" class="w-full bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl p-3 font-bold text-sm">✓ Ya realicé el pago · Informar por WhatsApp</button>
+                          <button type="button" id="relam-pago-consulta" class="w-full border border-forenseGold/50 text-forenseGold hover:bg-forenseGold/10 rounded-xl p-3 font-bold text-sm">¿Dudas sobre medios de pago? Consultar</button>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-4">
+                            Informar un pago no significa que esté confirmado. El pago puede tardar hasta 48 horas en acreditarse; luego de su verificación y con documentación aprobada, el alta puede demorar hasta 48 horas administrativas.
                         </p>
                     </div>`;
+                const datosContacto = {nombre: identidad.nombre, email: identidad.email, categoria: titulo.categoria};
+                document.getElementById('relam-pago-realizado')?.addEventListener('click', () => relamWhatsAppConsulta('pago', datosContacto));
+                document.getElementById('relam-pago-consulta')?.addEventListener('click', () => relamWhatsAppConsulta('consulta', datosContacto));
                 btn.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i> ¡Enviado!';
                 btn.classList.remove('btn-gold');
                 btn.classList.add('bg-emerald-600', 'text-white');
@@ -1538,7 +1553,7 @@ VE:{pais:'Venezuela',bandera:'ve',moneda:'USD',pasarela:'PENDIENTE',fiscal:'RIF'
         }
     })();
     </script>
-<a id="relam-promo" href="index.renmcycf.html" target="_blank" rel="noopener noreferrer" aria-label="Promoción RELAM USD 60, consultar contacto oficial RENMCYCF" hidden>
+<a id="relam-promo" href="#inscripcion-relam" onclick="event.preventDefault();abrirModalAcreditacion();" aria-label="Abrir formulario de inscripción promocional RELAM por USD 60" hidden>
   <span class="relam-promo-icon" aria-hidden="true"><img src="relam-logo-oficial.png" alt=""></span>
   <span class="relam-promo-main"><span class="relam-promo-top">RELAM · Inscripción general</span><span class="relam-promo-price">Promoción USD 60</span><span class="relam-promo-time" id="relam-promo-countdown">Hasta el 31/12/2026</span></span>
   <span class="relam-promo-arrow" aria-hidden="true">↗</span>
