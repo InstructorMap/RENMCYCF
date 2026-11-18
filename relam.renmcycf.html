@@ -172,6 +172,7 @@ nav .max-w-7xl > .flex:first-child > div:nth-child(2) span:last-child{font-size:
 header.relative.pt-24{padding-top:44px}
 }
 </style>
+<style id="relam-promo-date-fallback">#relam-campaign .campaign-image{display:block;max-height:340px;object-fit:contain}#relam-campaign .campaign-image:not([src]){display:none}#relam-campaign .relam-campaign-heading{color:#e9c979;font-size:13px;letter-spacing:.02em}@media(max-width:640px){#relam-campaign .campaign-image{display:none}#relam-campaign .relam-campaign-heading{grid-column:2;font-size:11px}}</style>
 </head>
 <body class="antialiased selection:bg-forenseGold selection:text-forenseNavy">
 
@@ -212,8 +213,8 @@ header.relative.pt-24{padding-top:44px}
     </div>
 <section id="relam-campaign" aria-label="Promoción RELAM inscripción general" hidden>
   <div class="campaign-wrap">
-    <img class="campaign-image" src="file_000000005ce8820ea1dcf5af1797d075.png" alt="RELAM: promoción especial de inscripción general USD 60 hasta el 01/12/2026, imagen institucional azul y dorada" loading="lazy">
-    <div class="campaign-action">
+    <img class="campaign-image" src="relam-promocion-31-12-2026.png" alt="RELAM: promoción especial de inscripción general USD 60 hasta el 31/12/2026, imagen institucional azul y dorada" loading="lazy">
+    <div class="campaign-action"><strong class="relam-campaign-heading">RELAM · Inscripción general USD 60 · Hasta el 31/12/2026</strong>
       <span class="campaign-count">⏳ Finaliza en <span id="relam-campaign-countdown">—</span></span>
       <a id="relam-campaign-whatsapp" class="campaign-link" href="index.renmcycf.html" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp ↗</a>
     </div>
@@ -791,7 +792,7 @@ header.relative.pt-24{padding-top:44px}
             if (/^[1-9]\d{7,14}$/.test(telefono)) {
                 const boton = document.getElementById('relam-promo');
                 if (boton) {
-                    boton.href = 'https://wa.me/' + telefono + '?text=' + encodeURIComponent('Hola, quiero consultar por la promoción de inscripción general RELAM de USD 60, vigente hasta el 01/12/2026.');
+                    boton.href = 'https://wa.me/' + telefono + '?text=' + encodeURIComponent('Hola, quiero consultar por la promoción de inscripción general RELAM de USD 60, vigente hasta el 31/12/2026.');
                     boton.setAttribute('aria-label','Consultar por WhatsApp oficial de RENMCYCF la promoción RELAM USD 60');
                     boton.dataset.whatsappOficial = 'true';
                     const enlaceBanner = document.getElementById('relam-campaign-whatsapp');
@@ -1007,8 +1008,8 @@ header.relative.pt-24{padding-top:44px}
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
 
         const ARANCEL_POR_CATEGORIA = Object.freeze({A1:90,A2:75,A3:60,A4:45,B1:90,B2:75,B3:60});
-        // Promoción general: válida hasta el 01/12/2026 inclusive, horario de Argentina.
-        const RELAM_PROMO_FIN = Date.parse('2026-12-02T00:00:00-03:00');
+        // Promoción general: válida hasta el 31/12/2026 inclusive, horario de Argentina.
+        const RELAM_PROMO_FIN = Date.parse('2027-01-01T00:00:00-03:00');
         function relamPromoActiva() { return Date.now() < RELAM_PROMO_FIN; }
         function acrMontoCategoria(categoria) {
             if (!Object.prototype.hasOwnProperty.call(ARANCEL_POR_CATEGORIA, categoria)) return null;
@@ -1517,7 +1518,7 @@ VE:{pais:'Venezuela',bandera:'ve',moneda:'USD',pasarela:'PENDIENTE',fiscal:'RIF'
     </script>
 <a id="relam-promo" href="index.renmcycf.html" target="_blank" rel="noopener noreferrer" aria-label="Promoción RELAM USD 60, consultar contacto oficial RENMCYCF" hidden>
   <span class="relam-promo-icon" aria-hidden="true"><img src="relam-logo-oficial.png" alt=""></span>
-  <span class="relam-promo-main"><span class="relam-promo-top">RELAM · Inscripción general</span><span class="relam-promo-price">Promoción USD 60</span><span class="relam-promo-time" id="relam-promo-countdown">Hasta el 01/12/2026</span></span>
+  <span class="relam-promo-main"><span class="relam-promo-top">RELAM · Inscripción general</span><span class="relam-promo-price">Promoción USD 60</span><span class="relam-promo-time" id="relam-promo-countdown">Hasta el 31/12/2026</span></span>
   <span class="relam-promo-arrow" aria-hidden="true">↗</span>
   <span class="relam-promo-close" aria-label="Ocultar promoción" onclick="event.preventDefault();event.stopPropagation();document.getElementById('relam-promo').dataset.dismissed='true';document.getElementById('relam-promo').hidden=true;">×</span>
 </a>
