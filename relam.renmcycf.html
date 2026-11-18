@@ -669,7 +669,11 @@ header.relative.pt-24{padding-top:44px}
                         </p>
                     </div>
 
-                    <div class="space-y-3"><label class="form-label" for="acr-metodo-pago">Modalidad de pago preferida</label><select id="acr-metodo-pago" class="form-input"><option value="PREX">Prex — sujeto a disponibilidad</option><option value="PAYONEER">Payoneer — sujeto a disponibilidad</option><option value="COORDINAR">Coordinar otro medio de pago</option></select><p class="text-xs text-slate-300 leading-relaxed">Primero se registra tu solicitud, sin cobrar automáticamente. Al finalizar se muestran el enlace de Payoneer o los datos de Prex según el medio elegido. Si seleccionás Prex, confirmá antes la compatibilidad y el equivalente en pesos.</p><div class="rounded-lg border border-amber-400/30 bg-amber-400/10 p-3 text-xs text-amber-100 leading-relaxed"><strong>Plazos administrativos:</strong> según el medio utilizado, el pago puede demorar hasta 48 horas en acreditarse. Una vez recibido y verificado el pago, comienza el plazo habitual de hasta 48 horas administrativas para tramitar el alta, siempre que la documentación esté completa y aprobada. El comprobante de transferencia no equivale a pago confirmado.</div><p class="text-xs text-amber-200">Estado inicial: pago pendiente. La acreditación requiere validación administrativa del pago y los antecedentes.</p></div>
+                    <div class="space-y-3"><label class="form-label" for="acr-metodo-pago">Modalidad de pago preferida</label><select id="acr-metodo-pago" class="form-input"><option value="PAYONEER" selected>Payoneer — pago internacional USD</option><option value="PREX">Prex — transferencia compatible</option><option value="COORDINAR">Coordinar otro medio de pago</option></select><div id="relam-pago-previo" class="rounded-xl border border-[#d4af37]/50 bg-[#0a2037] p-4 mt-3 text-sm">
+<p class="font-bold text-forenseGold mb-2">Payoneer · Enlace internacional de pago</p>
+<a id="relam-link-pago-previo" href="https://link.payoneer.com/Token?t=AE33D90FF07A4D47A25E076B9ABA8B11&amp;src=mobile" target="_blank" rel="noopener noreferrer" class="block w-full text-center rounded-lg bg-[#d4af37] text-[#071a32] font-black py-3 px-3">Abrir pago Payoneer · USD 60 ↗</a>
+<p class="text-xs text-slate-300 mt-2">El enlace es de importe abierto: ingresá exactamente USD 60. Si ya enviaste tu solicitud, no vuelvas a inscribirte.</p>
+</div><p class="text-xs text-slate-300 leading-relaxed">Primero se registra tu solicitud, sin cobrar automáticamente. Al finalizar se muestran el enlace de Payoneer o los datos de Prex según el medio elegido. Si seleccionás Prex, confirmá antes la compatibilidad y el equivalente en pesos.</p><div class="rounded-lg border border-amber-400/30 bg-amber-400/10 p-3 text-xs text-amber-100 leading-relaxed"><strong>Plazos administrativos:</strong> según el medio utilizado, el pago puede demorar hasta 48 horas en acreditarse. Una vez recibido y verificado el pago, comienza el plazo habitual de hasta 48 horas administrativas para tramitar el alta, siempre que la documentación esté completa y aprobada. El comprobante de transferencia no equivale a pago confirmado.</div><p class="text-xs text-amber-200">Estado inicial: pago pendiente. La acreditación requiere validación administrativa del pago y los antecedentes.</p></div>
 
                     <div class="flex items-start gap-3 p-3 rounded-lg bg-black/30 border border-white/10 mt-4">
                         <input type="checkbox" id="acr-acepta-final" required class="w-5 h-5 mt-0.5 accent-forenseGold">
@@ -1067,6 +1071,7 @@ header.relative.pt-24{padding-top:44px}
                 if (relojArte) relojArte.textContent = dias + 'd ' + String(horas).padStart(2,'0') + ':' + String(minutos).padStart(2,'0') + ':' + String(seg).padStart(2,'0');
             }
             acrActualizarMonto();
+            relamMostrarPagoPrevio();
         }
         setInterval(relamActualizarPromo, 1000);
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', relamActualizarPromo);
@@ -1135,6 +1140,19 @@ header.relative.pt-24{padding-top:44px}
             acrActualizarMonto();
         }
         document.getElementById('acr-profesion')?.addEventListener('input', acrClasificarProfesion);
+        function relamMostrarPagoPrevio() {
+            const medio = document.getElementById('acr-metodo-pago')?.value;
+            const caja = document.getElementById('relam-pago-previo');
+            if (!caja) return;
+            caja.hidden = medio !== 'PAYONEER';
+            const enlace = document.getElementById('relam-link-pago-previo');
+            if (enlace) {
+                const categoria = document.getElementById('acr-categoria')?.value || '';
+                const monto = acrMontoCategoria(categoria);
+                enlace.textContent = 'Abrir pago Payoneer · USD ' + (monto ?? 60) + ' ↗';
+            }
+        }
+        document.getElementById('acr-metodo-pago')?.addEventListener('change', relamMostrarPagoPrevio);
         function acrActualizarMonto() {
             const sel = document.getElementById('acr-pais');
             if (!sel) return;
@@ -1345,7 +1363,7 @@ header.relative.pt-24{padding-top:44px}
                         <h4 class="text-xl font-black text-white mb-2">¡Solicitud enviada!</h4>
                         <p class="text-sm text-slate-300 max-w-md mx-auto mb-4">
                             Tu acreditación quedó registrada con estado <strong class="text-forenseGold">pago pendiente</strong>.
-                            A continuación tenés las instrucciones de pago según el medio elegido. No se realizó ningún cobro automático ni se envió un correo.
+                            A continuación tenés el enlace o las instrucciones de pago. No se realizó ningún cobro automático ni se envió un correo.
                         </p>
                         <div class="mt-4 mb-3 text-center"><span class="text-xs uppercase tracking-widest text-slate-400">Importe de inscripción</span><p class="text-3xl font-black text-forenseGold">USD ${importeConfirmado}</p></div>
                         ${instruccionesPago}
