@@ -518,6 +518,7 @@
                                 <option value="B1">B.1 · Técnico Superior</option>
                                 <option value="B2">B.2 · Lic./Téc. en Seguridad</option>
                                 <option value="B3">B.3 · Perito auxiliar de justicia</option>
+                                <option value="B4">B.4 · Categoría B.4</option>
                             </select>
                         </div>
                         <div class="md:col-span-2">
@@ -914,7 +915,10 @@
         const db = window.RELAM_SUPABASE;
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
 
-        const ARANCEL_POR_PAIS = {AR:90,BO:90,BR:90,CL:90,CO:90,CR:90,CU:90,DO:90,EC:90,SV:90,GT:90,HT:90,HN:90,MX:90,NI:90,PA:90,PY:90,PE:90,UY:90,VE:90};
+        const ARANCEL_POR_CATEGORIA = Object.freeze({A1:90,B1:90,A2:75,B2:75,A3:60,B3:60,A4:45,B4:45});
+        function acrMontoCategoria(categoria) {
+            return Object.prototype.hasOwnProperty.call(ARANCEL_POR_CATEGORIA, categoria) ? ARANCEL_POR_CATEGORIA[categoria] : null;
+        }
 
         let acrStep = 1;
         let acrData = { identidad: null, titulo: null, pago: null };
@@ -951,8 +955,10 @@
             const sel = document.getElementById('acr-pais');
             if (!sel) return;
             const pais = sel.value;
-            const monto = ARANCEL_POR_PAIS[pais] || 90;
-            document.getElementById('acr-monto').textContent = monto;
+            const categoria = document.getElementById('acr-categoria')?.value;
+            const monto = acrMontoCategoria(categoria);
+            const montoEl = document.getElementById('acr-monto');
+            if (montoEl) montoEl.textContent = monto === null ? '—' : monto;
 
             // Pago coordinado; no se exige comprobante antes de recibir instrucciones.
 
@@ -961,6 +967,7 @@
             if (lbl) lbl.textContent = (docPorPais[pais] || 'Documento') + ' *';
         }
         document.getElementById('acr-pais')?.addEventListener('change', acrActualizarMonto);
+        document.getElementById('acr-categoria')?.addEventListener('change', acrActualizarMonto);
 
         function acrRenderStep() {
             [1, 2, 3].forEach(n => {
@@ -1055,6 +1062,7 @@
             try {
                 const { identidad, titulo } = acrData;
                 const pais = identidad.pais;
+                if (acrMontoCategoria(titulo.categoria) === null) throw new Error('Seleccioná una categoría válida para calcular el arancel.');
                 const comprobanteFile = null;
                 if (!document.getElementById('acr-acepta-final').checked) {
                     throw new Error('Tenés que aceptar los Términos y Condiciones finales.');
@@ -1103,7 +1111,7 @@
                     estado:             'PENDIENTE',
                     terminos_aceptados: true,
                     fecha_aceptacion:   new Date().toISOString(),
-                    pago_monto_usd:     ARANCEL_POR_PAIS[pais] || 90
+                    pago_monto_usd:     acrMontoCategoria(titulo.categoria)
                 };
 
                 const { error: errIns } = await db.from('renmcycf_acreditaciones_relam').insert([payload]);
