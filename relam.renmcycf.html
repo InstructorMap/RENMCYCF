@@ -669,10 +669,18 @@ header.relative.pt-24{padding-top:44px}
                         </p>
                     </div>
 
-                    <div class="space-y-3"><label class="form-label" for="acr-metodo-pago">Modalidad de pago preferida</label><select id="acr-metodo-pago" class="form-input"><option value="PAYONEER" selected>Payoneer — pago internacional USD</option><option value="PREX">Prex — transferencia compatible</option><option value="COORDINAR">Coordinar otro medio de pago</option></select><div id="relam-pago-previo" class="rounded-xl border border-[#d4af37]/50 bg-[#0a2037] p-4 mt-3 text-sm">
-<p class="font-bold text-forenseGold mb-2">Payoneer · Enlace internacional de pago</p>
-<a id="relam-link-pago-previo" href="https://link.payoneer.com/Token?t=AE33D90FF07A4D47A25E076B9ABA8B11&amp;src=mobile" target="_blank" rel="noopener noreferrer" class="block w-full text-center rounded-lg bg-[#d4af37] text-[#071a32] font-black py-3 px-3">Abrir pago Payoneer · USD 60 ↗</a>
-<p class="text-xs text-slate-300 mt-2">El enlace es de importe abierto: ingresá exactamente USD 60. Si ya enviaste tu solicitud, no vuelvas a inscribirte.</p>
+                    <div class="space-y-3"><label class="form-label" for="acr-metodo-pago">Modalidad de pago preferida</label><select id="acr-metodo-pago" class="form-input"><option value="PAYONEER" selected>Payoneer — pago internacional USD</option><option value="PREX">Prex — transferencia compatible</option><option value="COORDINAR">Coordinar otro medio de pago</option></select><div id="relam-pago-previo" class="rounded-xl border border-[#d4af37]/50 bg-[#0a2037] p-4 mt-3 text-sm" aria-live="polite">
+  <p id="relam-pago-previo-titulo" class="font-bold text-forenseGold mb-2">Payoneer · Pago internacional</p>
+  <div id="relam-pago-previo-payoneer">
+    <a id="relam-link-pago-previo" href="https://link.payoneer.com/Token?t=AE33D90FF07A4D47A25E076B9ABA8B11&amp;src=mobile" target="_blank" rel="noopener noreferrer" class="block w-full text-center rounded-lg bg-[#d4af37] text-[#071a32] font-black py-3 px-3">Seleccioná una categoría para ver el importe</a>
+    <p class="text-xs text-slate-300 mt-2">El enlace de Payoneer admite importe abierto: ingresá el valor exacto indicado en el formulario. El pago no se confirma automáticamente.</p>
+  </div>
+  <div id="relam-pago-previo-prex" hidden>
+    <p class="text-xs text-slate-300 mb-2">Cuenta Prex Argentina: <strong class="text-white select-all">4557589</strong></p>
+    <p class="text-xs text-slate-300 mb-2">Alias ARS: <strong class="text-white select-all">33656107.PREX</strong></p>
+    <p id="relam-prex-monto" class="text-xs text-amber-200">Seleccioná una categoría. Confirmá compatibilidad y cotización en ARS antes de transferir.</p>
+  </div>
+  <p id="relam-pago-previo-coordinar" class="text-xs text-slate-300" hidden>Consultá con administración el medio habilitado y el importe correspondiente antes de enviar fondos.</p>
 </div><p class="text-xs text-slate-300 leading-relaxed">Primero se registra tu solicitud, sin cobrar automáticamente. Al finalizar se muestran el enlace de Payoneer o los datos de Prex según el medio elegido. Si seleccionás Prex, confirmá antes la compatibilidad y el equivalente en pesos.</p><div class="rounded-lg border border-amber-400/30 bg-amber-400/10 p-3 text-xs text-amber-100 leading-relaxed"><strong>Plazos administrativos:</strong> según el medio utilizado, el pago puede demorar hasta 48 horas en acreditarse. Una vez recibido y verificado el pago, comienza el plazo habitual de hasta 48 horas administrativas para tramitar el alta, siempre que la documentación esté completa y aprobada. El comprobante de transferencia no equivale a pago confirmado.</div><p class="text-xs text-amber-200">Estado inicial: pago pendiente. La acreditación requiere validación administrativa del pago y los antecedentes.</p></div>
 
                     <div class="flex items-start gap-3 p-3 rounded-lg bg-black/30 border border-white/10 mt-4">
@@ -1141,16 +1149,27 @@ header.relative.pt-24{padding-top:44px}
         }
         document.getElementById('acr-profesion')?.addEventListener('input', acrClasificarProfesion);
         function relamMostrarPagoPrevio() {
-            const medio = document.getElementById('acr-metodo-pago')?.value;
-            const caja = document.getElementById('relam-pago-previo');
-            if (!caja) return;
-            caja.hidden = medio !== 'PAYONEER';
+            const medio = document.getElementById('acr-metodo-pago')?.value || 'PAYONEER';
+            const categoria = document.getElementById('acr-categoria')?.value || '';
+            const monto = acrMontoCategoria(categoria);
+            const titulo = document.getElementById('relam-pago-previo-titulo');
+            const payoneer = document.getElementById('relam-pago-previo-payoneer');
+            const prex = document.getElementById('relam-pago-previo-prex');
+            const coordinar = document.getElementById('relam-pago-previo-coordinar');
+            if (titulo) titulo.textContent = medio === 'PAYONEER' ? 'Payoneer · Pago internacional' : medio === 'PREX' ? 'Prex · Transferencia compatible' : 'Otro medio · Coordinar';
+            if (payoneer) payoneer.hidden = medio !== 'PAYONEER';
+            if (prex) prex.hidden = medio !== 'PREX';
+            if (coordinar) coordinar.hidden = medio !== 'COORDINAR';
             const enlace = document.getElementById('relam-link-pago-previo');
             if (enlace) {
-                const categoria = document.getElementById('acr-categoria')?.value || '';
-                const monto = acrMontoCategoria(categoria);
-                enlace.textContent = 'Abrir pago Payoneer · USD ' + (monto ?? 60) + ' ↗';
+                enlace.textContent = monto === null ? 'Seleccioná una categoría para ver el importe' : 'Abrir Payoneer · USD ' + monto + ' ↗';
+                enlace.style.pointerEvents = monto === null ? 'none' : 'auto';
+                enlace.setAttribute('aria-disabled', monto === null ? 'true' : 'false');
             }
+            const prexMonto = document.getElementById('relam-prex-monto');
+            if (prexMonto) prexMonto.textContent = monto === null
+                ? 'Seleccioná una categoría para calcular el arancel.'
+                : 'Arancel: USD ' + monto + '. Para pagar en ARS, consultá primero el equivalente y verificá compatibilidad de tu cuenta Prex. No uses el CBU USD para pagos de terceros.';
         }
         document.getElementById('acr-metodo-pago')?.addEventListener('change', relamMostrarPagoPrevio);
         function acrActualizarMonto() {
@@ -1161,6 +1180,7 @@ header.relative.pt-24{padding-top:44px}
             const monto = acrMontoCategoria(categoria);
             const montoEl = document.getElementById('acr-monto');
             if (montoEl) montoEl.textContent = monto === null ? '—' : monto;
+            relamMostrarPagoPrevio();
 
             // Pago coordinado; no se exige comprobante antes de recibir instrucciones.
 
@@ -1264,9 +1284,11 @@ header.relative.pt-24{padding-top:44px}
             const nombre = (datos?.nombre || '').trim();
             const email = (datos?.email || '').trim();
             const categoria = (datos?.categoria || '').trim();
+            const monto = acrMontoCategoria(categoria);
+            const montoTexto = monto === null ? 'según arancel vigente' : 'USD ' + monto;
             const mensaje = tipo === 'pago'
-                ? 'Hola, soy ' + nombre + '. Completé mi solicitud de inscripción RELAM con promoción USD 60, categoría ' + categoria + ', correo ' + email + '. Informo que ya realicé el pago y solicito instrucciones para enviar el comprobante y verificar su recepción. Entiendo que el pago aún debe validarse.'
-                : 'Hola, soy ' + nombre + '. Registré mi solicitud RELAM con promoción USD 60, categoría ' + categoria + ', correo ' + email + '. Tengo una consulta sobre los medios de pago internacionales disponibles.';
+                ? 'Hola, soy ' + nombre + '. Completé mi solicitud de inscripción RELAM por ' + montoTexto + ', categoría ' + categoria + ', correo ' + email + '. Informo que ya realicé el pago y solicito instrucciones para enviar el comprobante y verificar su recepción. Entiendo que el pago aún debe validarse.'
+                : 'Hola, soy ' + nombre + '. Registré mi solicitud RELAM por ' + montoTexto + ', categoría ' + categoria + ', correo ' + email + '. Tengo una consulta sobre los medios de pago internacionales disponibles.';
             window.open('https://wa.me/' + numero + '?text=' + encodeURIComponent(mensaje), '_blank', 'noopener,noreferrer');
         }
         window.relamWhatsAppConsulta = relamWhatsAppConsulta;
