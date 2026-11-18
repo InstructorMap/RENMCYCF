@@ -509,13 +509,15 @@
                             <input type="text" id="acr-profesion" required class="form-input" placeholder="Ej: Licenciado en Criminalística">
                         </div>
                         <div class="md:col-span-2">
-                            <label class="form-label">Categoría sugerida *</label>
+                            <label class="form-label">Categoría sugerida automáticamente *</label>
                             <select id="acr-categoria" required class="form-input">
-                                <option value="A1">A.1 · Título técnico, superior o universitario</option>
-                                <option value="A2">A.2 · Cursos y diplomaturas (sin título formal)</option>
-                                <option value="A3">A.3 · Estudiantes en formación</option>
-                                <option value="A4">A.4 · Formadores, docentes e instructores</option>
+                                <option value="" selected disabled>Seleccioná o escribí tu profesión para detectar la categoría</option>
+                                <option value="A1">A.1 · Técnicos, superiores y universitarios (títulos formales)</option>
+                                <option value="A2">A.2 · Cursos, capacitaciones y diplomaturas</option>
+                                <option value="A3">A.3 · Estudiantes y cursantes de carreras</option>
+                                <option value="A4">A.4 · Formadores, docentes, capacitadores e instructores</option>
                             </select>
+                            <p id="acr-categoria-ayuda" class="text-xs text-slate-400 mt-2">Escribí tu profesión o formación para sugerir la categoría automáticamente. Podés corregirla manualmente.</p>
                         </div>
                         <div class="md:col-span-2">
                             <label class="form-label">Foto de perfil *</label>
@@ -537,7 +539,7 @@
                     <div class="bg-forenseGold/10 border border-forenseGold/30 rounded-xl p-4 mb-4">
                         <div class="flex justify-between items-baseline">
                             <span class="text-xs text-slate-300 uppercase tracking-wider">Monto</span>
-                            <span class="text-3xl font-black text-forenseGold font-mono">USD <span id="acr-monto">90</span></span>
+                            <span class="text-3xl font-black text-forenseGold font-mono">USD <span id="acr-monto">—</span></span>
                         </div>
                         <p class="text-[10px] text-slate-400 mt-2">
                             Arancel de auditoría técnica. <strong class="text-white">No reembolsable</strong> salvo error administrativo comprobado.
@@ -928,6 +930,7 @@
 
             acrStep = 1;
             acrData = { identidad: null, titulo: null, pago: null };
+            acrClasificarProfesion();
             acrRenderStep();
 
             if (window.RELAM_GEO && window.RELAM_GEO.codigo) {
@@ -947,6 +950,30 @@
             document.body.style.overflow = '';
         };
 
+        // La clasificación se basa en el tipo de formación, no en palabras aisladas.
+        // Prioridad: formadores > estudiantes > cursos/diplomaturas > títulos formales.
+        function acrDetectarCategoria(profesion) {
+            const t = (profesion || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+            if (!t.trim()) return '';
+            if (/\b(instructor(?:a|es|as)?|formador(?:a|es|as)?|docente(?:s)?|profesor(?:a|es|as)?|capacitador(?:a|es|as)?|facilitador(?:a|es|as)?)\b/.test(t)) return 'A4';
+            if (/\b(estudiante(?:s)?|cursante(?:s)?|alumno(?:s)?|en formacion|estudiando)\b/.test(t)) return 'A3';
+            if (/\b(curso(?:s)?|diplomatura(?:s)?|diplomado(?:s|as)?|capacitacion(?:es)?|taller(?:es)?|seminario(?:s)?|certificacion(?:es)?|certificado(?:s)?)\b/.test(t)) return 'A2';
+            if (/\b(tecnicatura(?:s)?|tecnico(?:s|a|as)?|superior(?:es)?|universitari(?:o|a|os|as)|licenciad(?:o|a|os|as)|licenciatura(?:s)?|ingenier(?:o|a|os|as|ia)|medic(?:o|a|os|as|ina)|abogad(?:o|a|os|as)|grado|profesional(?:es)?|perito(?:s)?|enfermer(?:o|a|os|as|ia))\b/.test(t)) return 'A1';
+            return '';
+        }
+        function acrClasificarProfesion() {
+            const campo = document.getElementById('acr-profesion');
+            const categoria = document.getElementById('acr-categoria');
+            const ayuda = document.getElementById('acr-categoria-ayuda');
+            if (!campo || !categoria) return;
+            const sugerida = acrDetectarCategoria(campo.value);
+            if (sugerida) categoria.value = sugerida;
+            if (ayuda) ayuda.textContent = sugerida
+                ? 'Categoría detectada: ' + sugerida + '. Revisá la sugerencia; la auditoría documental determina la categoría definitiva.'
+                : 'No se pudo determinar la categoría por el texto. Seleccionala manualmente según tus antecedentes.';
+            acrActualizarMonto();
+        }
+        document.getElementById('acr-profesion')?.addEventListener('input', acrClasificarProfesion);
         function acrActualizarMonto() {
             const sel = document.getElementById('acr-pais');
             if (!sel) return;
@@ -1009,6 +1036,7 @@
             const foto = document.getElementById('acr-foto').files[0];
             const titulo = document.getElementById('acr-titulo').files[0];
             if (!profesion) throw new Error('Declará tu profesión o título.');
+            if (acrMontoCategoria(categoria) === null) throw new Error('Seleccioná una categoría válida.');
             if (!foto) throw new Error('Subí una foto de perfil.');
             if (!titulo) throw new Error('Subí el archivo de tu título.');
             if (foto.size > 5 * 1024 * 1024) throw new Error('La foto supera los 5 MB.');
