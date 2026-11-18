@@ -122,8 +122,8 @@
     <nav class="sticky top-0 z-50 bg-forenseDeep/90 backdrop-blur-md border-b border-forenseGold/10">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-forenseNavy border border-forenseGold/50 flex items-center justify-center">
-                    <i data-lucide="globe-2" class="w-6 h-6 text-forenseGold"></i>
+                <div class="w-12 h-12 rounded-xl bg-white border border-forenseGold/50 flex items-center justify-center overflow-hidden p-1">
+                    <img id="relam-logo-registro" src="logo-192.png" alt="Escudo institucional RENMCYCF" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='logo-512.png';">
                 </div>
                 <div class="leading-tight">
                     <span class="font-title font-black text-xl text-white tracking-tight">RELAM</span>
@@ -690,6 +690,23 @@
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
         const PUBLIC_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaXJodW9oeHB6c3BobGR1eXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyOTgyMTAsImV4cCI6MjA5OTg3NDIxMH0.qvEaRyo0vbnaW9hiX4bXhtRdMkW7n9mDMrApKBRmbhE';
         return supabase.createClient(PROJECT_URL, PUBLIC_KEY);
+    })();
+    </script>
+
+    <!-- Escudo del registro: misma fuente pública que index.renmcycf.html; solo lectura -->
+    <script>
+    (async function () {
+        try {
+            const { data, error } = await window.RELAM_SUPABASE
+                .from('renmcycf_config').select('logo_url').eq('id', 1).single();
+            if (error || !data || !data.logo_url) return;
+            const url = new URL(data.logo_url, window.location.href);
+            if (url.protocol !== 'https:') return;
+            const img = document.getElementById('relam-logo-registro');
+            if (img) img.src = url.href;
+        } catch (error) {
+            console.warn('RELAM: se mantiene escudo de respaldo local.');
+        }
     })();
     </script>
 
