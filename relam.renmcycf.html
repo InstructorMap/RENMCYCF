@@ -811,7 +811,7 @@ header.relative.pt-24{padding-top:44px}
                 if (url.protocol === 'https:') { img.src = url.href; img.hidden = false; }
             }
             const telefono = String(data.whatsapp || '').replace(/\D/g,'');
-            if (/^[1-9]\\d{7,14}$/.test(telefono)) {
+            if (/^[1-9]\d{7,14}$/.test(telefono)) {
                 window.RELAM_WHATSAPP_OFICIAL = telefono;
             }
         } catch (error) { console.warn('RELAM: contacto oficial no disponible temporalmente.'); }
