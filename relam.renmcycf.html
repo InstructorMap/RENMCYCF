@@ -202,7 +202,9 @@ header.relative.pt-24{padding-top:44px}
 #relam-campaign .relam-campaign-clock-mask{position:absolute;left:35.5%;top:59%;width:32%;height:22%;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(110deg,#03172a,#09233b);border:1px solid #b28a34;border-radius:12px;color:#f3d179;font-size:clamp(10px,1.3vw,18px);font-weight:700;letter-spacing:.02em;box-shadow:0 0 12px #001a30}
 #relam-campaign .relam-campaign-clock-mask strong{font-size:clamp(12px,2vw,26px);font-variant-numeric:tabular-nums;color:#fff}
 @media(max-width:640px){
-#relam-campaign .relam-campaign-art{display:none}
+#relam-campaign .relam-campaign-art{display:block!important;width:100%;border:0;border-radius:0;overflow:hidden}
+#relam-campaign .relam-campaign-art .campaign-image{display:block!important;width:100%;height:auto;aspect-ratio:auto;max-height:none;object-fit:contain;object-position:center}
+#relam-campaign .relam-campaign-clock-mask{display:none}
 #relam-campaign .campaign-action{display:flex!important;flex-direction:column;align-items:stretch;text-align:center;gap:10px;padding:14px}
 #relam-campaign .campaign-link{width:100%;min-width:0;white-space:normal;justify-content:center}
 }
