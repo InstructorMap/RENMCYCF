@@ -512,12 +512,19 @@
                             <label class="form-label">Categoría sugerida automáticamente *</label>
                             <select id="acr-categoria" required class="form-input">
                                 <option value="" selected disabled>Seleccioná o escribí tu profesión para detectar la categoría</option>
-                                <option value="A1">A.1 · Técnicos, superiores y universitarios (títulos formales)</option>
-                                <option value="A2">A.2 · Cursos, capacitaciones y diplomaturas</option>
-                                <option value="A3">A.3 · Estudiantes y cursantes de carreras</option>
-                                <option value="A4">A.4 · Formadores, docentes, capacitadores e instructores</option>
+                                <optgroup label="Área Criminalística y Forense">
+                                    <option value="A1">A1 · Licenciaturas y Títulos de Grado</option>
+                                    <option value="A2">A2 · Técnicos Superiores</option>
+                                    <option value="A3">A3 · Auxiliares y Diplomados</option>
+                                    <option value="A4">A4 · Consultores y Estudiantes</option>
+                                </optgroup>
+                                <optgroup label="Área Seguridad Pública y Privada">
+                                    <option value="B1">B1 · Licenciaturas en Seguridad</option>
+                                    <option value="B2">B2 · Técnicos Superiores en Seguridad</option>
+                                    <option value="B3">B3 · Técnicos y Auxiliares en Seguridad</option>
+                                </optgroup>
                             </select>
-                            <p id="acr-categoria-ayuda" class="text-xs text-slate-400 mt-2">Escribí tu profesión o formación para sugerir la categoría automáticamente. Podés corregirla manualmente.</p>
+                            <p id="acr-categoria-ayuda" class="text-xs text-slate-400 mt-2">La sugerencia automática sigue las categorías del registro RENMCYCF. Podés corregirla manualmente; la auditoría documental determina la categoría definitiva.</p>
                         </div>
                         <div class="md:col-span-2">
                             <label class="form-label">Foto de perfil *</label>
@@ -913,7 +920,7 @@
         const db = window.RELAM_SUPABASE;
         const PROJECT_URL = 'https://hiirhuohxpzsphlduypo.supabase.co';
 
-        const ARANCEL_POR_CATEGORIA = Object.freeze({A1:90,A2:75,A3:60,A4:45});
+        const ARANCEL_POR_CATEGORIA = Object.freeze({A1:90,A2:75,A3:60,A4:45,B1:90,B2:75,B3:60});
         function acrMontoCategoria(categoria) {
             return Object.prototype.hasOwnProperty.call(ARANCEL_POR_CATEGORIA, categoria) ? ARANCEL_POR_CATEGORIA[categoria] : null;
         }
@@ -953,12 +960,19 @@
         // La clasificación se basa en el tipo de formación, no en palabras aisladas.
         // Prioridad: formadores > estudiantes > cursos/diplomaturas > títulos formales.
         function acrDetectarCategoria(profesion) {
-            const t = (profesion || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-            if (!t.trim()) return '';
-            if (/\b(instructor(?:a|es|as)?|formador(?:a|es|as)?|docente(?:s)?|profesor(?:a|es|as)?|capacitador(?:a|es|as)?|facilitador(?:a|es|as)?)\b/.test(t)) return 'A4';
-            if (/\b(estudiante(?:s)?|cursante(?:s)?|alumno(?:s)?|en formacion|estudiando)\b/.test(t)) return 'A3';
-            if (/\b(curso(?:s)?|diplomatura(?:s)?|diplomado(?:s|as)?|capacitacion(?:es)?|taller(?:es)?|seminario(?:s)?|certificacion(?:es)?|certificado(?:s)?)\b/.test(t)) return 'A2';
-            if (/\b(tecnicatura(?:s)?|tecnico(?:s|a|as)?|superior(?:es)?|universitari(?:o|a|os|as)|licenciad(?:o|a|os|as)|licenciatura(?:s)?|ingenier(?:o|a|os|as|ia)|medic(?:o|a|os|as|ina)|abogad(?:o|a|os|as)|grado|profesional(?:es)?|perito(?:s)?|enfermer(?:o|a|os|as|ia))\b/.test(t)) return 'A1';
+            const t = (profesion || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+            if (t.length < 4) return '';
+            const seguridad = /\b(seguridad|policial|policia|criminologia|penitenciari[oa]|custodia|vigilancia)\b/.test(t);
+            // Se replica la jerarquía A/B que figura en el formulario de RENMCYCF.
+            if (seguridad) {
+                if (/\b(licenciad[oa]s?|licenciatura|grado|universitari[oa]s?)\b/.test(t)) return 'B1';
+                if (/\b(tecnic[oa]s? superior(?:es)?|tecnicatura)\b/.test(t)) return 'B2';
+                return 'B3';
+            }
+            if (/\b(licenciad[oa]s?|licenciatura|grado|universitari[oa]s?|abogad[oa]s?|medic[oa]s?|doctor(?:a|es|as)?)\b/.test(t)) return 'A1';
+            if (/\b(tecnic[oa]s? superior(?:es)?|tecnicatura)\b/.test(t)) return 'A2';
+            if (/\b(auxiliar(?:es)?|diplomad[oa]s?|diplomatura|perito(?:s)?)\b/.test(t)) return 'A3';
+            if (/\b(estudiante(?:s)?|consultor(?:a|es|as)?|cursante(?:s)?)\b/.test(t)) return 'A4';
             return '';
         }
         function acrClasificarProfesion() {
