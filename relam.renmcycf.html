@@ -195,6 +195,18 @@ header.relative.pt-24{padding-top:44px}
 #relam-promo .relam-promo-time{font-size:9px;white-space:nowrap}
 }
 </style>
+<style id="relam-new-banner">
+#relam-campaign .relam-campaign-art{position:relative;display:block;width:100%;padding:0;border:0;background:#071a32;cursor:pointer;overflow:hidden}
+#relam-campaign .relam-campaign-art:focus-visible{outline:3px solid #e9c979;outline-offset:-3px}
+#relam-campaign .relam-campaign-art .campaign-image{display:block!important;width:100%;height:auto;aspect-ratio:3/1;object-fit:contain;max-height:none}
+#relam-campaign .relam-campaign-clock-mask{position:absolute;left:35.5%;top:59%;width:32%;height:22%;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(110deg,#03172a,#09233b);border:1px solid #b28a34;border-radius:12px;color:#f3d179;font-size:clamp(10px,1.3vw,18px);font-weight:700;letter-spacing:.02em;box-shadow:0 0 12px #001a30}
+#relam-campaign .relam-campaign-clock-mask strong{font-size:clamp(12px,2vw,26px);font-variant-numeric:tabular-nums;color:#fff}
+@media(max-width:640px){
+#relam-campaign .relam-campaign-art{display:none}
+#relam-campaign .campaign-action{display:flex!important;flex-direction:column;align-items:stretch;text-align:center;gap:10px;padding:14px}
+#relam-campaign .campaign-link{width:100%;min-width:0;white-space:normal;justify-content:center}
+}
+</style>
 </head>
 <body class="antialiased selection:bg-forenseGold selection:text-forenseNavy">
 
@@ -235,7 +247,10 @@ header.relative.pt-24{padding-top:44px}
     </div>
 <section id="relam-campaign" aria-label="Promoción RELAM inscripción general" hidden>
   <div class="campaign-wrap">
-    <img class="campaign-image" src="file_000000008260820eb6133b0c6245216c.png" alt="RELAM: promoción especial de inscripción general USD 60 hasta el 31/12/2026, imagen institucional azul y dorada" loading="lazy">
+    <button class="relam-campaign-art" type="button" onclick="abrirModalAcreditacion()" aria-label="Abrir formulario de inscripción RELAM, promoción USD 60 hasta 31 de diciembre de 2026">
+      <img class="campaign-image" src="file_000000000da0820e9631e2469c5d2f3b.png" alt="RELAM · Inscripción general USD 60 hasta el 31/12/2026" loading="lazy">
+      <span class="relam-campaign-clock-mask" aria-hidden="true"><span>⏳ FINALIZA EN</span><strong id="relam-campaign-clock-art">—</strong></span>
+    </button>
     <div class="campaign-action"><strong class="relam-campaign-heading">RELAM · Inscripción general USD 60 · Hasta el 31/12/2026</strong>
       <span class="campaign-count">⏳ Finaliza en <span id="relam-campaign-countdown">—</span></span>
       <button id="relam-campaign-whatsapp" type="button" class="campaign-link" onclick="abrirModalAcreditacion()">Inscribirme por USD 60 ↗</button>
@@ -1046,6 +1061,8 @@ header.relative.pt-24{padding-top:44px}
                 reloj.textContent = 'Finaliza en ' + dias + 'd ' + String(horas).padStart(2,'0') + ':' + String(minutos).padStart(2,'0') + ':' + String(seg).padStart(2,'0');
                 const cuentaBanner = document.getElementById('relam-campaign-countdown');
                 if (cuentaBanner) cuentaBanner.textContent = dias + ' días · ' + String(horas).padStart(2,'0') + ':' + String(minutos).padStart(2,'0') + ':' + String(seg).padStart(2,'0');
+                const relojArte = document.getElementById('relam-campaign-clock-art');
+                if (relojArte) relojArte.textContent = dias + 'd ' + String(horas).padStart(2,'0') + ':' + String(minutos).padStart(2,'0') + ':' + String(seg).padStart(2,'0');
             }
             acrActualizarMonto();
         }
