@@ -173,6 +173,28 @@ header.relative.pt-24{padding-top:44px}
 }
 </style>
 <style id="relam-promo-date-fallback">#relam-campaign .campaign-image{display:block;max-height:340px;object-fit:contain}#relam-campaign .campaign-image:not([src]){display:none}#relam-campaign .relam-campaign-heading{color:#e9c979;font-size:13px;letter-spacing:.02em}@media(max-width:640px){#relam-campaign .campaign-image{display:none}#relam-campaign .relam-campaign-heading{grid-column:2;font-size:11px}}</style>
+<style id="relam-campaign-mobile-fix">
+#relam-campaign .campaign-wrap{max-width:960px}
+#relam-campaign .campaign-image{display:block;width:100%;height:auto;max-height:none;object-fit:contain;clip-path:none;margin:0}
+#relam-campaign .campaign-action{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 20px}
+#relam-campaign .relam-campaign-heading{flex:1 1 100%;font-size:13px;line-height:1.45}
+#relam-campaign .campaign-link{width:auto;white-space:nowrap;min-width:max-content;text-align:center}
+@media(max-width:640px){
+#relam-campaign{padding:10px 12px}
+#relam-campaign .campaign-wrap{border-radius:14px;overflow:hidden}
+#relam-campaign .campaign-image{display:block!important;max-height:none;aspect-ratio:3.1/1;object-fit:cover;object-position:center top}
+#relam-campaign .campaign-action{display:flex!important;flex-direction:column;align-items:stretch;gap:10px;padding:12px 14px 14px;text-align:center}
+#relam-campaign .campaign-action:before{display:none!important;content:none!important}
+#relam-campaign .relam-campaign-heading{display:block;flex:auto;grid-column:auto;font-size:12px;line-height:1.4}
+#relam-campaign .campaign-count{display:block;font-size:12px;line-height:1.45;white-space:normal}
+#relam-campaign .campaign-link{display:flex;width:100%;min-width:0;min-height:42px;align-items:center;justify-content:center;padding:10px 12px;font-size:12px;line-height:1.3;white-space:normal;border-radius:9px}
+#relam-promo{max-width:185px;padding:8px 10px;gap:7px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+#relam-promo .relam-promo-main{min-width:0}
+#relam-promo .relam-promo-top{font-size:7px;letter-spacing:0;line-height:1.25}
+#relam-promo .relam-promo-price{font-size:12px;white-space:nowrap}
+#relam-promo .relam-promo-time{font-size:9px;white-space:nowrap}
+}
+</style>
 </head>
 <body class="antialiased selection:bg-forenseGold selection:text-forenseNavy">
 
@@ -213,7 +235,7 @@ header.relative.pt-24{padding-top:44px}
     </div>
 <section id="relam-campaign" aria-label="Promoción RELAM inscripción general" hidden>
   <div class="campaign-wrap">
-    <img class="campaign-image" src="relam-promocion-31-12-2026.png" alt="RELAM: promoción especial de inscripción general USD 60 hasta el 31/12/2026, imagen institucional azul y dorada" loading="lazy">
+    <img class="campaign-image" src="file_000000008260820eb6133b0c6245216c.png" alt="RELAM: promoción especial de inscripción general USD 60 hasta el 31/12/2026, imagen institucional azul y dorada" loading="lazy">
     <div class="campaign-action"><strong class="relam-campaign-heading">RELAM · Inscripción general USD 60 · Hasta el 31/12/2026</strong>
       <span class="campaign-count">⏳ Finaliza en <span id="relam-campaign-countdown">—</span></span>
       <a id="relam-campaign-whatsapp" class="campaign-link" href="index.renmcycf.html" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp ↗</a>
